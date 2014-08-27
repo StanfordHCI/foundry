@@ -1,0 +1,15 @@
+<div style="background: white; padding: 10px;">
+<p>
+  <strong>Name:</strong>
+  <%= @flash_team.name %>
+</p>
+
+<p>
+  <strong>JSON:</strong>
+  <%= @flash_team.json %>
+</p>
+
+<%= link_to 'Back', flash_teams_path %>
+<%= link_to 'Edit', edit_flash_team_path(@flash_team) %>
+
+</div>

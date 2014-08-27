@@ -1,0 +1,8 @@
+<%= form_tag("/members/#{@id}/register", method: "post") do %>
+  <%= label_tag(:name, "Your name:") %>
+  <%= text_field_tag(:name) %>
+  <%= label_tag(:email, "Your email:") %>
+  <%= text_field_tag(:email) %>
+  <%= hidden_field_tag(:uniq, @uniq) %>
+  <%= submit_tag("Submit") %>
+<% end %>

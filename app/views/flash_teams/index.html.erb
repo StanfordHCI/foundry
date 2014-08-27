@@ -1,0 +1,44 @@
+<div style="padding: 5px 20px;">
+<meta charset="utf-8">
+<h1>Flash Teams Library</h1>
+ 
+<%= link_to 'New Flash Team', new_flash_team_path %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Edit</th>
+      <th>Delete</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody> 
+  <% @flash_teams.each do |flash_team| %>
+    <tr>
+      <td><%= flash_team.id %></td>
+      <td><a href="#" class="name" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name"><%= flash_team.name %></a></td>
+      <!-- <td><%= flash_team.name %></td> -->
+      <!-- <td><%= link_to 'Show', flash_team %></td> -->
+      <td><%= link_to 'Edit', edit_flash_team_path(flash_team) %></td>
+  	  <td><%= link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %></td>
+      <td><%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>
+
+  <%= javascript_include_tag "/assets/jquery" %>
+  <%= javascript_include_tag "/assets/jquery_ujs" %>
+  <%= javascript_include_tag "bootstrap/bootstrap.min" %>
+  <%= javascript_include_tag "bootstrap-editable.min" %>
+  <%= javascript_include_tag "bootstrap-tour.min" %>
+
+<script>
+  $(document).ready(function() {
+    $('.name').editable();
+  });
+</script>

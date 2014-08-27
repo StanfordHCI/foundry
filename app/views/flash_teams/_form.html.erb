@@ -1,0 +1,24 @@
+<%= form_for @flash_team do |f| %>
+  <% if @flash_team.errors.any? %>
+  <div id="error_explanation">
+    <h4><%= pluralize(@flash_team.errors.count, "error") %> prohibited
+      this flash team from being created:</h4>
+    <ul>
+    <% @flash_team.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+  <p>
+    <%= f.label :name %><br>
+    <%= f.text_field :name, :id => "nameVal" %>
+    <%= f.label :author %><br>
+    <%= f.text_field :author %>
+
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

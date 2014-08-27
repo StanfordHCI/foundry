@@ -1,0 +1,15 @@
+<!-- Project Overview Modal (triggered by info button next to the flash team title) -->
+<div id="projectOverviewModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="projectOverviewModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="projectOverviewModalLabel">Project Overview</h3>
+  </div>
+  <div class="modal-body">
+    <p id="po-text">Project description...</p>
+    <p><span id="po-edit-link"></span></p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary" id="edit-save" onclick="editProjectOverview(true)">Edit</button>
+  </div>
+</div>

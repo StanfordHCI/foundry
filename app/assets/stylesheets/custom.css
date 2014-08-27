@@ -1,0 +1,200 @@
+
+#confirmEnd {
+	color: black;
+	width: 350px;
+}
+
+
+/* sets width of delete member confirmation alert */
+#confirmDeleteMember {
+	width: 350px;
+}
+
+/* sets width of delete button on delete member confirmation alert 
+#deleteButton {
+	width: 100%;
+}*/
+
+
+#memberPills li {
+    float: none!important;
+    padding: 5px 0;
+}
+
+/* The X's next to the role names in the member pills */
+.close{
+	line-height: 15px;
+}
+
+.popover-content {
+    overflow-y: scroll;
+    max-height: 175px;
+    padding-bottom: 2px;
+}
+
+.popover {
+    max-width: 400px;
+    max-height: 225px;
+}
+
+.popover-title{
+	max-height: 25px;
+	padding-top: 5px;
+}
+
+.popover-title i {
+	float: right;
+	display: inline-block;
+}
+
+.popover-mname {
+	font-weight: bold;
+	display: inline-block;
+}
+
+.task_rectangle {
+    cursor:pointer;
+}
+
+.handoffLine, .collaborationRect {
+    cursor: pointer;
+}
+
+#timeline-container {
+    position: relative;
+}
+
+.overlay {
+    height: 100%;
+    width: 2400px;
+    background-color: rgba(0, 0, 100, 0);
+    display: none;
+    position: absolute;
+}
+
+#save_form {
+	float: left;
+}
+
+#addTimeBtn {
+	float: right;
+}
+
+.well{
+	padding-top: 5px;
+	border: 1px solid white;
+}
+
+#foundry-header{
+	background-color: #434343;
+	color: white;
+	position: fixed;
+	z-index: 1999;
+	top: 0;
+	left: 0;
+}
+
+.ft-buttons{
+	margin-top: 5px;
+}
+
+#ft-buttons-left{
+	padding-left: 19px;
+	/* padding-left: 38px; */
+}
+
+#ft-buttons-right{
+	float: right;
+	padding-left: 79px;
+}
+
+#ft-name{
+	padding-left: 19px;
+}
+
+#member-container {
+	height: 200px;
+}
+
+#newMemberForm{
+	margin-bottom: 5px;
+	margin-top: 15px;
+}
+
+#search-events-container {
+	height: 385px;
+}
+
+
+#project-overview-container{
+	padding-bottom: 10px;
+	max-height: 250px;
+}
+
+/* #project-overview-text span{ */
+/*
+#project-overview-text{
+	background: white;
+}
+*/
+
+#projectOverviewInput{
+	overflow: auto; 
+  overflow-y: auto;
+  word-wrap:break-word;
+  width: 96.5%;
+  /* height: 250px; */
+  resize:none;
+  padding:5px;
+  border:solid 1px #c3c3c3;
+
+#status-bar-container svg {
+	/* width: 280px; */
+}
+
+#status-bar-container text {
+	overflow-x: scroll;
+}
+
+/*NOTE/QUESTION: should this be with the 
+rest of the event-block style information
+in flash_teams.css.scss? */
+.event-block {
+	border: 1px solid;
+	margin: 5px;
+	padding: 5px;
+}
+
+.messages {
+    height: 150px;
+    overflow-y: scroll;
+    max-height: 150px;
+}
+
+#m0 {
+    background-color: #ffffff;
+}
+
+#m1 {
+    background-color: #f5f5f5;
+}
+
+#message-date {
+    font-size: 8px;
+    color: rgba(0,0,0,0.5);
+    padding-left:40%;
+}
+#gFolder {
+    cursor:pointer;
+}
+
+
+#TitleLength
+{
+    position: absolute;
+    visibility: hidden;
+    height: auto;
+    width: auto;
+    font-weight: bold;
+    font-size: 12px;
+}

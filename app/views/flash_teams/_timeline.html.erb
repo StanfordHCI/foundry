@@ -1,0 +1,24 @@
+<div class="row-fluid" id="timeline-header">
+	<div class="span11">
+		<h5 style="padding-bottom: 5px;">TIMELINE</h5>
+	</div>
+
+	<div class="span1">
+	
+		<% if @in_author_view %>
+<!-- <<<<<<< HEAD
+		<input type="button" class="btn btn-primary ft-buttons" id="addTimeBtn" value="Add Time" onclick="addTime()" style="float: right; 
+		margin-right: 15px;"/> -->
+
+		
+		<input type="button" class="btn btn-primary ft-buttons" id="addTimeBtn" value="Add Time" onclick="addTime()"/>
+
+		<!-- render partial with confirm action alert --> 
+		<%= render :partial => "confirm_action" %>
+
+		<% end %>
+	</div>
+
+</div>
+
+<div class="overlay" id="overlay" ondrop="drop(event)" ondragover="allowDrop(event)"> </div>

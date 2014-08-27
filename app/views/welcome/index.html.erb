@@ -1,0 +1,48 @@
+<!--
+<h1>Welcome to Foundry!</h1>
+<p><%= link_to "Flash Teams Library", controller: "flash_teams" %></p>
+-->
+
+<style>
+	body {
+		background-color: black;
+		padding-top: 100px;
+	}
+	a:hover {
+		text-decoration: none;
+	}
+	#center {
+		width: 200px;
+		margin: 0 auto;
+		text-align: center;
+		background-color: black;
+		color: white;
+		font-weight: 100;
+		font-size: 30px;
+		padding: 50px 100px;
+		border: 2px solid #FFF;
+		letter-spacing: 5px;
+	}
+	#actions {
+		width: 405px;
+		margin: 20px auto;
+		text-align: center;
+	}
+	#actions .link {
+		color: white;
+		padding: 10px 30px;
+		border: 2px solid #FFF;
+		letter-spacing: 2px;
+		font-weight: 300;
+	}
+	#actions .link:hover {
+		background-color: white;
+		color: black;
+	}
+</style>
+<div id="center">FOUNDRY</div>
+<div id="actions">
+	<%= link_to controller: "flash_teams" do %>
+	<div class="link">Library</div>
+	<% end %>
+</div>

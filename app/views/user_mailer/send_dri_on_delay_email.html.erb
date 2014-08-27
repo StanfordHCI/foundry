@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @event_name %> is running late</h1>
+    <p>   
+     Foundry must inform you that <%= @event_name %> is running late. <%= link_to 'Please fill out this form', @url %> to give other team members an estimate of how long it takes to finish the delayed task. If we do not hear back from you in <%= @minutes %> minutes, we will notify other team members anyway.
+    </p>
+    
+  </body>
+</html>
+

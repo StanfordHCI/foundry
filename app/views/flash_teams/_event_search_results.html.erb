@@ -1,0 +1,42 @@
+<% @events.each_with_index do |event, index| %>
+
+	<div data-hash="<%= @eventHashes[index] %>" class="event-block" draggable="true" ondragstart="dragEvent(event)" style="cursor:move;">
+	
+		<div class="row-fluid">
+			<div class="span9">
+				<b><span id="title-<%= @eventHashes[index] %>"><%= event['title'] %></span></b>
+			</div>
+			<div class="span3">
+				<% durationHrs = event['duration'].to_i/60 %>
+				<b><span id="duration-<%= @eventHashes[index] %>"><%= durationHrs %></span></b> hours
+			</div>
+		</div>
+				
+		<div class="event-block-data event-block-inputs"> Inputs: 
+		<% if !event['inputs'] %>
+			No inputs
+		<% else %>
+			<% event['inputs'].split(',').each do |input| %> 
+				<span><%= input %></span>
+			<% end %>		
+		<% end %>
+		</div>
+
+		<div class="event-block-data event-block-outputs"> Outputs: 
+		<% if !event['outputs'] %>
+			No outputs
+		<% else %>
+			<% event['outputs'].split(',').each do |output| %>
+				<span><%= output %></span>
+			<% end %>
+		<% end %>
+		</div>
+	
+		<div class="event-metadata">
+			<div id="inputs-<%= @eventHashes[index] %>"><%= event['inputs'] %></div>
+			<div id="outputs-<%= @eventHashes[index] %>"><%= event['outputs'] %></div>
+		</div>
+
+	</div>
+
+<% end %>
