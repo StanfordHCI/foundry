@@ -107,6 +107,7 @@ function startFlashTeam() {
     $("div#project-status-container").css('display','');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
+    //COMMENTED OUT FOR DISABLING TICKER
     //removeColabBtns();
     //removeHandoffBtns();
     //startTeam(true);
@@ -1379,6 +1380,7 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "blue");  
         }
         
+        //COMMENTED OUT FOR TICKER DISABLING
         //statusText.text(overallTime);
        
     }, fire_interval);
@@ -1505,6 +1507,7 @@ var sendEmailOnEarlyCompletion = function(blue_width){
     early_completion_helper(remaining_tasks,early_minutes);
 };
 
+//Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) {
     console.log("CLICKED COMPLETE TASK");
  
@@ -1528,14 +1531,15 @@ function confirmCompleteTask(groupNum) {
     document.getElementById("confirmButton").onclick=function(){
     
     	$('#confirmAction').modal('hide');
-    	//completeTask(groupNum)
+    	//completeTask(groupNum);
     };
     
     hidePopover(groupNum); 
 }
 
-
+//Called when user confirms event completion alert
 var completeTask = function(groupNum){
+    //COMMENTED OUT FOR TICKER DISABLING
     /*console.log("COMPLETED TASK");
     $('#confirmAction').modal('hide');
     var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];

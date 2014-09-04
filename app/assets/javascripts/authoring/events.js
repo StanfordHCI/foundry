@@ -906,7 +906,8 @@ function confirmDeleteEvent(eventId) {
     var eventToDelete = events[indexOfJSON];
 
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to delete " + eventToDelete["title"] + "?</b><br><font size = '2'>Deleting an event will permanently delete all its data, handoffs, and collaborations.</font>";
+    alertText.innerHTML = "<b>Are you sure you want to delete " + eventToDelete["title"] 
+    + "?</b><br><font size = '2'>Deleting an event will permanently delete all its data, handoffs, and collaborations.</font>";
 
     var deleteButton = document.getElementById("confirmButton");
     deleteButton.innerHTML = "Delete event";
