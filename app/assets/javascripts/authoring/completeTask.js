@@ -30,7 +30,6 @@ function confirmCompleteTask(groupNum) {
     	$('#confirmAction').modal('hide');
     	//completeTask(groupNum);
     };
-    
     hidePopover(groupNum); 
 }
 
