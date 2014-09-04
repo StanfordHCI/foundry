@@ -39,10 +39,40 @@
 		background-color: white;
 		color: black;
 	}
+		
+	#flash_notice {
+		width: 200px;
+		margin: 0 auto;
+		margin-bottom: 10px;
+		text-align: center;
+		background-color: grey;
+		color: black;
+		font-weight: bold;
+		font-size: 20px;
+		padding: 50px 100px;
+		border: 2px solid #FFF;
+		
+	}
 </style>
+
+<!-- Warning for invalid login --> 
+<% if flash[:notice] %>
+	<div class="flash_notice" id="flash_notice">
+		<p><%= flash[:notice] %></p>
+	</div>
+<% end %>
+
+
 <div id="center">FOUNDRY</div>
+
+
+
 <div id="actions">
-	<%= link_to controller: "flash_teams" do %>
-	<div class="link">Library</div>
+	<%= link_to new_user_path do %>
+	<div class="link">Register</div>
+	<% end %>
+	
+	<%= link_to users_login_path do %>
+	<div class="link">Login</div>
 	<% end %>
 </div>
