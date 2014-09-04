@@ -5,38 +5,54 @@
 
 
 //Alert firing on event complete buttons
-function confirmCompleteTask(groupNum) {
-    console.log("CLICKED COMPLETE TASK");
- 
+function confirmCompleteTask(groupNum) { 
+    //Creates the alert modeal title
     var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Complete Event?";
+    label.innerHTML = "Have You Completed This Task?";
 
+    //Gets information from event using id
     var indexOfJSON = getEventJSONIndex(groupNum);
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
+    //GET OUTPUTS HERE
+    var fakeOutputs = ["Output 1", "Output 2", "Output 3"];
+    var eventOutputs = fakeOutputs;
+
+    //Creates the alert modal 
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "Are you sure you want to complete " + eventToComplete["title"] + "?";
+    alertText.innerHTML = "Outputs for " + eventToComplete["title"] + ":";
+
+    //Create Checklist of outputs
+    alertText.innerHTML += "<form id='event_checklist_" + groupNum + "' >";
+    for (i=0; i<eventOutputs.length; i++) {
+        alertText.innerHTML += "<input type='checkbox'>" + eventOutputs[i] + "</input><br>";
+    }
+    alertText.innerHTML += "</form>";
+    alertText.innerHTML += "Click 'Task Completed' to alert the PC and move on to the documentation questons."
 
     var completeButton = document.getElementById("confirmButton");
-    completeButton.innerHTML = "Complete event";
+    completeButton.innerHTML = "Task Completed";
     $("#confirmButton").attr("class","btn btn-success");
-
     $('#confirmAction').modal('show');
     
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
-    
     	$('#confirmAction').modal('hide');
-    	//completeTask(groupNum);
+    	completeTask(groupNum);
     };
     hidePopover(groupNum); 
 }
 
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
-    //COMMENTED OUT FOR TICKER DISABLING
-    /*console.log("COMPLETED TASK");
+    console.log("COMPLETED TASK new function");
+
+
+
+
+    //OLD TICKER VERSION CODE
+    /*
     $('#confirmAction').modal('hide');
     var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
 

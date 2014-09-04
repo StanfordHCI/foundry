@@ -237,6 +237,7 @@ function renderEverything(firstTime) {
             else
                 renderMembersUser();
             renderMembersUser();
+            //COMMENTED OUT FOR TICKER DISABLING
             //startTeam(firstTime);
         } else {
             console.log("flash team not in progress");
