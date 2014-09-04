@@ -66,6 +66,14 @@ var completeTask = function(groupNum){
 
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
+    //Update the status of a task
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
+    eventToComplete.status = "completed";
+
+    //Update database, must be false b/c we are not using the old ticker
+    updateStatus(false);
+
     //Message the PC that the task has been completed
     //TODO
 
@@ -73,6 +81,7 @@ var completeTask = function(groupNum){
     //TODO
 
 
+    //------------------------------//
     //OLD TICKER VERSION CODE
     /*
     $('#confirmAction').modal('hide');
@@ -111,4 +120,7 @@ var completeTask = function(groupNum){
 
     // reload status bar
     load_statusBar(status_bar_timeline_interval);*/
+    //------------------------------//
+
+
 };

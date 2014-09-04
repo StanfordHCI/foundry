@@ -484,7 +484,7 @@ var loadData = function(){
     drawBlueBoxes();
     drawRedBoxes();
     drawDelayedTasks();
-    drawInteractions(); //START HERE, INT DEBUG
+    drawInteractions();
     googleDriveLink();
 };
 
@@ -537,9 +537,10 @@ var googleDriveLink = function(){
 var drawEvents = function(editable){
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
-        console.log("DRAWING EVENT " + i + ", with editable: " + editable);
+        //console.log("DRAWING EVENT " + i + ", with editable: " + editable);
         drawEvent(ev);
         drawPopover(ev, editable, false);
+        $("#rect_" + ev.id).attr("fill", findFillColor(ev)); //Update fill color based on status
     }
 };
 

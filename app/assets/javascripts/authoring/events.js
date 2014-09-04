@@ -240,12 +240,13 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
+//Create JSON event object for a new event
 function createEventObj(snapPoint) {
     event_counter++;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
-        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], 
+        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
@@ -352,6 +353,21 @@ function drawMainRect(eventObj, firstTime) {
             .attr("width", width);
     }
 };
+
+//Returns a fill color for the main rect based on task status
+function findFillColor(eventObj) {
+    var taskStatus = eventObj.status;
+    //Check status of event, change fill color appropriately 
+    if (taskStatus == "completed") {
+        return "#009933";
+    } else if (taskStatus == "delayed") {
+        return "RED";
+    } else if (taskStatus == "live") {
+        return "BLUE";
+    } else {
+        return "#C9C9C9";
+    }
+}
 
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
