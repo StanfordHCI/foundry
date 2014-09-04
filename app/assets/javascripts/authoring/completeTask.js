@@ -15,8 +15,8 @@ function confirmCompleteTask(groupNum) {
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
-    //GET OUTPUTS HERE
-    var fakeOutputs = ["Output 1", "Output 2", "Output 3"];
+    //GET OUTPUTS HERE, CHANGE LATER TO GET FROM EVENT, TODO
+    var fakeOutputs = ["Output 1", "Output 2", "Output 3"]; //placeholder text
     var eventOutputs = fakeOutputs;
 
     //Creates the alert modal 
@@ -26,16 +26,29 @@ function confirmCompleteTask(groupNum) {
     //Create Checklist of outputs
     alertText.innerHTML += "<form id='event_checklist_" + groupNum + "' >";
     for (i=0; i<eventOutputs.length; i++) {
-        alertText.innerHTML += "<input type='checkbox'>" + eventOutputs[i] + "</input><br>";
+        alertText.innerHTML += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
     }
     alertText.innerHTML += "</form>";
     alertText.innerHTML += "Click 'Task Completed' to alert the PC and move on to the documentation questons."
 
+    //Code for the Task Completed Button
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Task Completed";
     $("#confirmButton").attr("class","btn btn-success");
+    $("#confirmButton").prop('disabled', true); //Defaults to disabled
     $('#confirmAction').modal('show');
     
+    //Set change function on checkboxes, enable button if all checkboxes are checked
+    $(".outputCheckbox").change(function() {
+        var totalCheckboxes = $(".outputCheckbox").length;
+        var checkedCheckboxes = $(".outputCheckbox:checked").length;
+        if (totalCheckboxes == checkedCheckboxes) {
+            $("#confirmButton").prop('disabled', false);
+        } else {
+            $("#confirmButton").prop('disabled', true);
+        }
+    });
+
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
     	$('#confirmAction').modal('hide');
@@ -48,7 +61,16 @@ function confirmCompleteTask(groupNum) {
 var completeTask = function(groupNum){
     console.log("COMPLETED TASK new function");
 
+    //Update Color of the Task
+    $("#rect_" + groupNum).attr("fill", "#009933");
 
+    //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
+
+    //Message the PC that the task has been completed
+    //TODO
+
+    //Guide worker to documentation questions
+    //TODO
 
 
     //OLD TICKER VERSION CODE
