@@ -93,6 +93,12 @@ function renderMemberPopovers(members) {
         var member_id = member.id;
         var member_name = member.role;
         var invitation_link = member.invitation_link;
+        var member_type = member.type; 
+        
+        if(member_type==undefined){
+	        member_type = "worker";
+        }
+        console.log("member_id: " + member_id + " member_type: " + member_type);
 
         var content = '<form name="memberForm_' + member_id + '>'
         +'<div class="mForm_' + member_id + '">'
@@ -103,7 +109,8 @@ function renderMemberPopovers(members) {
 
         var category1 = member.category1;
         var category2 = member.category2;
-
+       
+        
         // add the drop-down for two-tiered oDesk job posting categories on popover
         for (var key in oDeskCategories) {
             //console.log("category1");
@@ -136,6 +143,8 @@ function renderMemberPopovers(members) {
             }
             content += '</select>';
         }
+        
+        
 
         content += '<br><br><input class="skillInput" id="addSkillInput_' + member_id + '" type="text" data-provide="typeahead" placeholder="New oDesk Skill" />'
         +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id + '" onclick="addSkill(' + member_id + ');">+</button>'
@@ -152,6 +161,13 @@ function renderMemberPopovers(members) {
         }
 
         content +='</ul>'
+        
+        + 'Member Type: <select name="membertype" id="member' + member_id + '_type">'
+        + '<option value="worker">Worker</option>' 
+        + '<option value="pc">Project Coordinator</option>'
+        + '<option value="client">Client</option>'
+        + '</select><br />'
+
         +'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
         +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
 
@@ -159,13 +175,13 @@ function renderMemberPopovers(members) {
          +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>     '
          +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     '
          +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button><br><br>'
-
+         
         + 'Invitation link: <a id="invitation_link_' + member_id + '" href="' + invitation_link + '" target="_blank">'
         + invitation_link
         + '</a>'
         +'</p></form>' 
         +'</div>';
-
+        
         $("#mPill_" + member_id).popover('destroy');
 
         $("#mPill_" + member_id).popover({
@@ -178,12 +194,13 @@ function renderMemberPopovers(members) {
             content:  content,
             container: $("#member-container"),
             callback: function(){
+               $("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
                 $(this).typeahead({source: oSkills})
             });  
            }
        });
-
+       
         $("#mPill_" + member_id).off('click', generateMemberPillClickHandlerFunction(member_id));
         $("#mPill_" + member_id).on('click', generateMemberPillClickHandlerFunction(member_id));
 
@@ -320,12 +337,15 @@ function deleteSkill(memberId, pillId, skillName) {
 };
 
 
+//NOTE FROM DR: I THINK WE CAN ERASE THIS B/C THERE IS ANOTHER ONE BELOW WITH SAME EXACT NAME (BUT CHECK THAT CODE IS THE SAME)
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
 function saveMemberInfo(popId) {
     var indexOfJSON = getMemberJSONIndex(popId);
 
     flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
     flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
+    
+    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
 
     var newColor = $("#color_" + popId).spectrum("get").toHexString();
 
@@ -405,12 +425,15 @@ function deleteMember(pillId) {
 
 };
 
+//Calling this one
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
 function saveMemberInfo(popId) {
     var indexOfJSON = getMemberJSONIndex(popId);
 
     flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
     flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
+    
+    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
 
     var newColor = $("#color_" + popId).spectrum("get").toHexString();
 
