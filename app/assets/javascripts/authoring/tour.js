@@ -28,6 +28,10 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
 	},
+	/*{
+		//ADD INFORMATION FOR THE TYPES OF WORKERS
+		//E.G., PC, WORKER, CLIENT
+	},*/
 	{
 		element: "#member-container",
 		title: "<b>Customize Each Role</b>",
