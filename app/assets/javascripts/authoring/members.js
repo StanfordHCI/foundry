@@ -164,15 +164,31 @@ function renderMemberPopovers(members) {
             + '<div class="close" onclick="deleteSkill(' + member_id + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>';
         }
 
-        content +='</ul>'
+        content +='</ul>';
         
-        + 'Member Type: <select name="membertype" id="member' + member_id + '_type">'
-        + '<option value="worker">Worker</option>' 
-        + '<option value="pc">Project Coordinator</option>'
-        + '<option value="client">Client</option>'
-        + '</select><br />'
+		content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
+		
+		if(member_type == "worker"){
+        	content += '<option value="worker" selected>Worker</option>';
+        } else{
+            content += '<option value="worker">Worker</option>';
+        }
+        
+        if(member_type == "pc"){
+        	content += '<option value="pc" selected>Project Coordinator</option>';
+        } else{
+            content += '<option value="pc">Project Coordinator </option>';
+        }
+        
+        if(member_type == "client"){
+        	content += '<option value="client" selected>Client</option>';
+        } else{
+            content += '<option value="client">Client</option>';
+        }
+                    
+        content += '</select><br />';
 
-        +'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
+        content += 'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
         +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
 
          +'<p><button class="btn btn-success" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
@@ -198,7 +214,7 @@ function renderMemberPopovers(members) {
             content:  content,
             container: $("#member-container"),
             callback: function(){
-               $("#member" + member_id + "_type").val(member_type);
+               //$("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
                 $(this).typeahead({source: oSkills})
             });  
