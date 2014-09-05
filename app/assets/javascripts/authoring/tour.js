@@ -187,7 +187,7 @@ var expertTour = new Tour({
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project requester."
+		+"members of the team as well as the project coordinator."
 	},
 	{
 		element: "#timeline-container" ,
@@ -197,17 +197,11 @@ var expertTour = new Tour({
 		placement: "left"
 	},
 	{
-		element: ".cursor" ,
-		title: "<b>Time Ticker</b>", 
-		content: "You can see the stage of the project as indicated by " 
-		+"the red time ticker."
-	},
-	{
 		orphan: true,
 		title: "<b>Complete Your Events</b>", 
 		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have completed the work for your event, uploaded " 
 		+"any relevant files, etc. you can click the event and choose 'Complete' to mark "
-		+"the task as done and auto notifiy the next workers that they can begin working."
+		+"the task as done, message the PC, and open the documentation questions."
 		+"<img src='/assets/completeTask.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -235,7 +229,7 @@ var expertTour = new Tour({
 		title: "<b>Delayed Events</b>", 
 		content: "<div class='tour-content-wrapper'>If your work takes longer than the expected estimation, the event "
 		+"will extend in red and be marked as delayed. Foundry will email you to request "
-		+"a new estimated complete time so the downstream workers can be notified." 
+		+"a new estimated complete time so the PC can plan accordingly." 
 		+"<img src='/assets/delayedTask.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -273,4 +267,23 @@ $("#expertTourBtn").click(function(){
     expertTour.start(true);
     expertTour.goTo(0); //Always start the tour at the first step 
 });
+
+//TODO: PC Tour
+/* //SHELL FOR THE PC TOUR
+//A tour to walk the PCs through the use of Foundry
+var pcTour = new Tour({
+	steps: [
+	{
+	
+	},
+]});
+	
+//Initialize the PC tour
+pcTour.init();
+
+$("#").click(function(){
+    pcTour.start(true);
+    pcTour.goTo(0); //Always start the tour at the first step 
+});
+*/
 
