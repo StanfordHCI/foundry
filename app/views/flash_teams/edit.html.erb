@@ -125,9 +125,24 @@
      	<div class="span2 ft-buttons" id="ft-buttons-left">
 		 	<input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Tour"/>
 	  	</div>  	 
-		 <div class="span10">
-			 <h4 class="text-center">FOUNDRY</h4>
-	     </div>  
+		 
+	     
+	     <!--Add the start/end button if in project coordinator view-->
+	     <% if @member_type == "pc" %>
+		     <div class="span7 offset1">
+				 <h4 class="text-center">FOUNDRY</h4>
+		     </div> 
+		     
+		     <div class="span2 ft-buttons" id="ft-buttons-right">
+					<input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
+			        <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
+		     </div>  
+		<% else %>
+			<div class="span10">
+				 <h4 class="text-center">FOUNDRY</h4>
+		     </div> 
+	     <% end %>
+		
      </div>
      
      <div class="row-fluid" style="margin-top: 40px; margin-bottom: 5px;">
