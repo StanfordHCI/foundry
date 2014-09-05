@@ -245,7 +245,7 @@ function createEventObj(snapPoint) {
     event_counter++;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], "iteration":0,
         "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database

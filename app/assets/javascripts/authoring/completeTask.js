@@ -19,16 +19,16 @@ function confirmCompleteTask(groupNum) {
     var fakeOutputs = ["Output 1", "Output 2", "Output 3"]; //placeholder text
     var eventOutputs = fakeOutputs;
 
-    //Creates the alert modal 
+    //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "Outputs for " + eventToComplete["title"] + ":";
+    alertText.innerHTML = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
 
     //Create Checklist of outputs
     alertText.innerHTML += "<form id='event_checklist_" + groupNum + "' >";
     for (i=0; i<eventOutputs.length; i++) {
         alertText.innerHTML += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
     }
-    alertText.innerHTML += "</form>";
+    alertText.innerHTML += "</form><br>";
     alertText.innerHTML += "Click 'Task Completed' to alert the PC and move on to the documentation questons."
 
     //Code for the Task Completed Button
@@ -59,17 +59,16 @@ function confirmCompleteTask(groupNum) {
 
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
-    console.log("COMPLETED TASK new function");
-
     //Update Color of the Task
-    $("#rect_" + groupNum).attr("fill", "#009933");
-
-    //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
+    $("#rect_" + groupNum).attr("fill", "#009933");    
 
     //Update the status of a task
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     eventToComplete.status = "completed";
+
+    //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
+    eventToComplete.iteration++;
 
     //Update database, must be false b/c we are not using the old ticker
     updateStatus(false);
