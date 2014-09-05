@@ -329,6 +329,7 @@ function drawMainRect(eventObj, firstTime) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var width = getWidth(eventObj);
+    var fillColor = findFillColor(eventObj);
 
     var existingMainRect = task_g.selectAll("#rect_" + groupNum);
     if(existingMainRect[0].length == 0){ // first time
@@ -341,7 +342,7 @@ function drawMainRect(eventObj, firstTime) {
             .attr("groupNum", function(d) {return d.groupNum;})
             .attr("height", RECTANGLE_HEIGHT)
             .attr("width", width)
-            .attr("fill", "#C9C9C9")
+            .attr("fill", fillColor)
             .attr("fill-opacity", .6)
             .attr("stroke", "#5F5A5A")
             .attr('pointer-events', 'all')
@@ -350,7 +351,8 @@ function drawMainRect(eventObj, firstTime) {
         task_g.selectAll(".task_rectangle")
             .attr("x", function(d) {return d.x;})
             .attr("y", function(d) {return d.y;})
-            .attr("width", width);
+            .attr("width", width)
+            .attr("fill", fillColor);
     }
 };
 

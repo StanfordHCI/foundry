@@ -3,7 +3,6 @@
  *
  */
 
-
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
     //Creates the alert modeal title
@@ -15,21 +14,9 @@ function confirmCompleteTask(groupNum) {
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
-    //GET OUTPUTS HERE, CHANGE LATER TO GET FROM EVENT, TODO
-    var fakeOutputs = ["Output 1", "Output 2", "Output 3"]; //placeholder text
-    var eventOutputs = fakeOutputs;
-
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
-
-    //Create Checklist of outputs
-    alertText.innerHTML += "<form id='event_checklist_" + groupNum + "' >";
-    for (i=0; i<eventOutputs.length; i++) {
-        alertText.innerHTML += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
-    }
-    alertText.innerHTML += "</form><br>";
-    alertText.innerHTML += "Click 'Task Completed' to alert the PC and move on to the documentation questons."
+    alertText.innerHTML = completeTaskModalText(eventToComplete);
 
     //Code for the Task Completed Button
     var completeButton = document.getElementById("confirmButton");
@@ -57,11 +44,27 @@ function confirmCompleteTask(groupNum) {
     hidePopover(groupNum); 
 }
 
+//Return text to fill complete task modal
+function completeTaskModalText(eventToComplete) {
+    var modalText = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
+
+    //GET OUTPUTS HERE, CHANGE LATER TO GET FROM EVENT, TODO
+    var fakeOutputs = ["Output 1", "Output 2", "Output 3"]; //placeholder text
+    var eventOutputs = fakeOutputs;
+
+    //Create Checklist of outputs
+    modalText += "<form id='event_checklist_" + eventToComplete.id + "' >";
+    for (i=0; i<eventOutputs.length; i++) {
+        modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
+    }
+    modalText += "</form>";
+    modalText += "Iterations of <b>" + eventToComplete.title + "</b> Completed: " + eventToComplete.iteration;
+    modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
+    return modalText;
+}
+
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
-    //Update Color of the Task
-    $("#rect_" + groupNum).attr("fill", "#009933");    
-
     //Update the status of a task
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
@@ -72,6 +75,7 @@ var completeTask = function(groupNum){
 
     //Update database, must be false b/c we are not using the old ticker
     updateStatus(false);
+    drawEvent(eventToComplete);
 
     //Message the PC that the task has been completed
     //TODO
@@ -111,7 +115,6 @@ var completeTask = function(groupNum){
             live_tasks.splice(idx, 1);
         }
     }
-
     hidePopover(groupNum);
 
     // update db
@@ -120,6 +123,4 @@ var completeTask = function(groupNum){
     // reload status bar
     load_statusBar(status_bar_timeline_interval);*/
     //------------------------------//
-
-
 };
