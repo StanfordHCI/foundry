@@ -154,6 +154,16 @@ end
 
      member = Member.where(:uniq => uniq)[0]
      @user_name = member.name
+     
+     
+    flash_team_members = json_status['flash_teams_json']['members']
+        
+    flash_team_members.each do |member|
+    	if(member['uniq'] == uniq)
+    		@member_type = member['type']
+    	end
+    end
+
 
     else
      @in_expert_view = false

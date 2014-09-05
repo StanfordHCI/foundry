@@ -231,7 +231,7 @@ function renderEverything(firstTime) {
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
             loadData();
-            if(!isUser)
+            if(!isUser || memberType == "pc")
                 renderMembersRequester();
             else
                 renderMembersUser();
@@ -256,7 +256,7 @@ function renderEverything(firstTime) {
             }
             loadData();
             
-            if(!isUser) {
+            if(!isUser || memberType == "pc") {
                 renderMembersRequester();
             }
         }

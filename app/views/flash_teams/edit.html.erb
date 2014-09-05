@@ -183,6 +183,13 @@
 					<%= render :partial => "project_overview" %> 
 			</div>
 			
+			<% if @member_type == "pc" %>
+				<div id="member-container" class="well" style="overflow-y:scroll;">
+					<!-- Render member roles container --> 
+					<%= render :partial => "roles" %> 
+				</div>
+			<% end %>
+			
         </div> <!-- end of sidebar (e.g., class="span3") -->
 
         <div class="span9"> <!--Body Content-->

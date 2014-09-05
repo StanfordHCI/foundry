@@ -7,6 +7,7 @@
  var colorToChange = "#ff0000";
  var current = undefined;
  var isUser = false;
+ var memberType; 
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
@@ -62,11 +63,13 @@ function setCurrentMember() {
                 current = flash_team_members[i].id;
                 current_user = flash_team_members[i];
                 isUser = true;
+                memberType = flash_team_members[i].type;
             }
         }
     } else {
         current = undefined;
         isUser = false;
+        memberType = "author";
     }
 };
 
@@ -98,7 +101,8 @@ function renderMemberPopovers(members) {
         if(member_type==undefined){
 	        member_type = "worker";
         }
-        console.log("member_id: " + member_id + " member_type: " + member_type);
+        
+        //console.log("member_id: " + member_id + " member_type: " + member_type);
 
         var content = '<form name="memberForm_' + member_id + '>'
         +'<div class="mForm_' + member_id + '">'
@@ -339,6 +343,7 @@ function deleteSkill(memberId, pillId, skillName) {
 
 //NOTE FROM DR: I THINK WE CAN ERASE THIS B/C THERE IS ANOTHER ONE BELOW WITH SAME EXACT NAME (BUT CHECK THAT CODE IS THE SAME)
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
+/*
 function saveMemberInfo(popId) {
     var indexOfJSON = getMemberJSONIndex(popId);
 
@@ -351,12 +356,12 @@ function saveMemberInfo(popId) {
 
     updateMemberPillColor(newColor, popId);
     renderMemberPillColor(popId);
-    //updateMemberPopover(popId);
 
     $("#mPill_" + popId).popover("hide");
     renderAllMemberLines();
     renderMemberPopovers(flashTeamsJSON["members"]);
 };
+*/
 
 
 //Shows an alert asking to confirm delete member role
