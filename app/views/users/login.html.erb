@@ -1,0 +1,39 @@
+<div style="padding: 5px 15px;">
+
+<!--app/views/users/login.html.erb -->
+
+<!-- Warning for invalid login --> 
+<% if flash[:notice] %>
+	<div class="flash_notice">
+		<p><%= flash[:notice] %></p>
+	</div>
+<% end %>
+
+<div class = "form_container">
+
+	<h4> Login to an existing account </h4>	
+	
+	<%= form_tag("post_login", :method => "post") do %>
+	   <div>
+	   	<%= label_tag(:login, "Login:") %>
+	   	<%= text_field_tag(:login) %> <br />
+	  
+	   	<p><%= submit_tag("Login") %></p>
+
+     <% end %> <!-- end form -->
+     
+</div> <!-- end registration form div --> 
+
+ 		<% @reglink = link_to("Register", {:action => :new}) %>
+		<p class = "register-link"> 
+			Don't have an account? 
+			<%= @reglink %>
+		</p>
+		
+		
+		<% @homelink = link_to("Go back", welcome_index_path) %>
+		<p class = "home-link"> 
+			<%= @homelink %>
+		</p>
+
+</div>

@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20140729170357) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "original_status"
+    t.integer  "user_id"
   end
 
   create_table "handoffs", force: true do |t|
@@ -56,6 +57,16 @@ ActiveRecord::Schema.define(version: 20140729170357) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "skills", force: true do |t|
     t.string   "name"
@@ -77,6 +88,12 @@ ActiveRecord::Schema.define(version: 20140729170357) do
     t.integer  "end_minute"
     t.integer  "duration"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "username"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -8,20 +8,36 @@ class FlashTeamsController < ApplicationController
   helper_method :get_tasks
 
 	def new
-    @flash_team = FlashTeam.new
-  end
+	# check to see if the user id exists in the database 
+		#if User.where(:id => params[:user_id]).blank? #user id does not exist 
+		if !session[:user].nil?
+			#@user = User.find(params[:id])
+			@user = session[:user]
+			@flash_team = FlashTeam.new
+		else
+			@user = nil 
+			@title = "Invalid User ID"
+			flash[:notice] = "You must be logged in to create a team."
+			redirect_to(:controller => :users, :action => :new)
+			return 
+		end
+			
+	end
 
-  def create
+  def create 
+  	if !session[:user].nil?
     name = flash_team_params(params[:flash_team])[:name]
 
     author = flash_team_params(params[:flash_team])[:author]
-    @flash_team = FlashTeam.create(:name => name, :author => author)
+    
+    @user = session[:user]
+    
+    @flash_team = FlashTeam.create(:name => name, :author => author, :user_id => @user.id)
 
     # get id
     id = @flash_team[:id]
 
     # store in flash team
-
     @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
 
     if @flash_team.save
@@ -30,33 +46,59 @@ class FlashTeamsController < ApplicationController
     else
       render 'new'
     end
+    end #end if session user not nil 
   end
 
   def show
-    @flash_team = FlashTeam.find(params[:id])
+  	if session[:user].nil?
+		@user = nil 
+		@title = "Invalid User ID"
+		@flash_team = nil
+		redirect_to(welcome_index_path)				
+  	else
+    	@flash_team = FlashTeam.find(params[:id])
+    
+		if @flash_team.user_id != session[:user].id
+			flash[:notice] = 'You cannot access this flash team.' 
+    		redirect_to(flash_teams_path)
+		end
+	end
   end
 
+
   def duplicate
-    # Locate data from the original
-    original = FlashTeam.find(params[:id])
-
-    # Then create a copy from the original data
-    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author)
-    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-    
-    # Use the original_status of the original flash team when copying to prevent copying over the status information of teams that were already started
-    copy.status = original.original_status
-    #copy.status = original.status
-    copy.save
-
-    # Redirect to the list of things
-    redirect_to :action => 'index'
+  	if !session[:user].nil?
+	  	@user = session[:user]
+	  	
+	    # Locate data from the original
+	    original = FlashTeam.find(params[:id])
+	
+	    # Then create a copy from the original data
+	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
+	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+	    copy.status = original.status
+	    copy.save
+	
+	    # Redirect to the list of things
+	    redirect_to :action => 'index'   
+    end #end if session not nil
   end
 
 
   def index
-    @flash_teams = FlashTeam.all.order(:id).reverse_order
+  		# check to see if the user id exists in the database 
+		if session[:user].nil?
+			@user = nil 
+			@title = "Invalid User ID"
+			@flash_teams = nil
+			redirect_to(welcome_index_path)
+		else
+			@user = User.find(session[:user].id)
+			
+			@flash_teams = FlashTeam.where(:user_id => @user.id).order(:id).reverse_order	
+		end
   end
+
 
 rescue_from ActiveRecord::RecordNotFound do
   #flash[:notice] = 'The object you tried to access does not exist'
@@ -64,8 +106,28 @@ rescue_from ActiveRecord::RecordNotFound do
 end
  
   def edit
-    @flash_team = FlashTeam.find(params[:id])
-
+  
+  if !params.has_key?("uniq") #if in author view
+	  	if session[:user].nil? 
+			@user = nil 
+			@title = "Invalid User ID"
+			@flash_team = nil
+			redirect_to(welcome_index_path)			
+		else 
+			@flash_team = FlashTeam.find(params[:id])
+			
+			if @flash_team.user_id != session[:user].id 
+				flash[:notice] = 'You cannot access this flash team.' 
+				redirect_to(flash_teams_path)
+			end
+		end
+			
+  	else #else it is in worker view 
+    	@flash_team = FlashTeam.find(params[:id])
+    end 
+    
+	#note: member info is stored in status json in flash_teams_json
+		
     #customize user views
     status = @flash_team.status 
     if status == nil
@@ -92,6 +154,16 @@ end
 
      member = Member.where(:uniq => uniq)[0]
      @user_name = member.name
+     
+     
+    flash_team_members = json_status['flash_teams_json']['members']
+        
+    flash_team_members.each do |member|
+    	if(member['uniq'] == uniq)
+    		@member_type = member['type']
+    	end
+    end
+
 
     else
      @in_expert_view = false
@@ -110,7 +182,6 @@ end
       end
     end
     @events_json = @events_array.to_json
-
   end
 
   def rename
