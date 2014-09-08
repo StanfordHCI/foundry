@@ -169,7 +169,7 @@ var expertTour = new Tour({
 	{
 		orphan: true, 
 		title: "<b>Welcome to Foundry</b>", 
-		content: "Here you can view your upcoming tasks,"
+		content: "Here you can view your upcoming tasks, "
 		+ "see where you should communicate with other members of the team "
 		+ "track the progress of the project, "
 		+ "and upload and download files from a shared Google Drive folder.",
@@ -191,13 +191,13 @@ var expertTour = new Tour({
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project coordinator."
+		+"members of the team as well as the project coordinator (PC)."
 	},
 	{
 		element: "#timeline-container" ,
 		title: "<b>Timeline</b>", 
 		content: "This is the timeline. Here you can view the entire project's " 
-		+"workflow. And its current status.",
+		+"workflow and its current status.",
 		placement: "left"
 	},
 	{
@@ -205,7 +205,7 @@ var expertTour = new Tour({
 		title: "<b>Complete Your Events</b>", 
 		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have completed the work for your event, uploaded " 
 		+"any relevant files, etc. you can click the event and choose 'Complete' to mark "
-		+"the task as done, message the PC, and open the documentation questions."
+		+"the task as done, message the project coordinator (PC), and open the documentation questions."
 		+"<img src='/assets/completeTask.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
