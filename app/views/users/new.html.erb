@@ -1,0 +1,42 @@
+<div style="padding: 5px 15px;">
+	<% if @user.errors.any? %>
+	 		<div class="reg_errors">
+		 		<h4>There were <%= pluralize(@user.errors.count, "error") %> that prohibited your account from being created:</h4>
+
+		 		<ul>
+			 		<% @user.errors.full_messages.each do |msg| %>
+			 		<li><%= msg %></li>
+			 		<% end %>
+			 	</ul>
+			</div>
+		<% end %>
+
+<div class = "form_container">
+
+	<h4> Create an account </h4>	
+	
+     <%= form_for(@user, :method => :post, :url => {:action => :create}) do |f| %>
+	 	  
+        <div>
+             <%= f.label(:username, "Username:")%>
+             <%= f.text_field(:username) %> 
+            
+            <p><%= submit_tag "Register" %></p>
+          </div>
+     <% end %> <!-- end form -->
+     
+</div> <!-- end registration form div --> 
+
+ <% @loginlink = link_to("Login", {:action => :login}) %>
+		<p class = "register-link"> 
+			Already have an account?
+			<%= @loginlink %>
+		</p>
+		
+		<% @homelink = link_to("Go back", welcome_index_path) %>
+		<p class = "home-link"> 
+			<%= @homelink %>
+		</p>
+
+</div>
+

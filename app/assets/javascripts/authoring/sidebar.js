@@ -17,7 +17,7 @@ function showProjectOverview(){
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
 	var uniq_u=getParameterByName('uniq');
 		
-	if(uniq_u == "") {
+	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$('#projectOverviewEditLink').show();
 		$("#projectOverviewEditLink").html('<a onclick="editProjectOverview(false)" style="font-weight: normal;">Edit</a>');
 	}
@@ -30,7 +30,8 @@ function showProjectOverview(){
 	$('#po-text').html(projectOverviewContent);
 
 	//only allow authors to edit project overview
-	if(uniq_u == "") {
+	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
+		$("#edit-save").css('display', '');
 		$("#edit-save").attr('onclick', 'editProjectOverview(true)');
 		$("#edit-save").html('Edit');
 	}

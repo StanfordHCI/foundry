@@ -93,4 +93,17 @@ Foundry::Application.routes.draw do
       post :register
     end
   end
+  
+  get '/users/logout' => 'users#logout'
+  get '/users/login' => 'users#login'
+  
+  post '/users/post_login' => 'users#post_login'
+  post '/users/post_login' => 'users#post_login'
+  
+  resources :users do
+    member do
+      post :create
+    end
+  end
+
 end
