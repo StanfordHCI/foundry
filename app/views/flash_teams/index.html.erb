@@ -1,8 +1,19 @@
 <div style="padding: 5px 20px;">
+
+<!-- Warning for invalid login --> 
+<% if flash[:notice] %>
+	<div class="flash_notice">
+		<p><%= flash[:notice] %></p>
+	</div>
+<% end %>
+
+
 <meta charset="utf-8">
 <h1>Flash Teams Library</h1>
  
-<%= link_to 'New Flash Team', new_flash_team_path %>
+<p><%= link_to 'New Flash Team', new_flash_team_path %></p>
+
+<p><%= link_to 'Logout', users_logout_path %></p>
 
 <table class="table table-striped">
   <thead>
