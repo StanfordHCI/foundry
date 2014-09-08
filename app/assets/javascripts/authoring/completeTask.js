@@ -22,8 +22,8 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Task Completed";
     $("#confirmButton").attr("class","btn btn-success");
-    if (eventToComplete.outputs == null) { //Checks output lengths, CHANGE IF OUTPUTS NOT IN JSON
-        $("#confirmButton").prop('disabled', false); //Defaults to disabled
+    if (eventToComplete.outputs != null && eventToComplete.outputs != "") {
+        $("#confirmButton").prop('disabled', true); //Defaults to disabled
     }
     $('#confirmAction').modal('show');
     
@@ -50,13 +50,15 @@ function confirmCompleteTask(groupNum) {
 function completeTaskModalText(eventToComplete) {
     var modalText = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
 
-    //GET OUTPUTS HERE, CHANGE LATER TO GET FROM EVENT, TODO
+    //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
-    console.log(eventToComplete);
+    if (eventOutputs != null && eventOutputs != "") {
+        eventOutputs = eventToComplete.outputs.split(",");
+    }
 
     //Create Checklist of outputs
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' >";
-    if (eventOutputs == null) {
+    if (eventOutputs == null || eventOutputs == "") {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
@@ -65,7 +67,6 @@ function completeTaskModalText(eventToComplete) {
     }
     
     modalText += "</form>";
-    modalText += "Iterations of <b>" + eventToComplete.title + "</b> Completed: " + eventToComplete.iteration;
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
     return modalText;
 }
@@ -78,7 +79,6 @@ var completeTask = function(groupNum){
     eventToComplete.status = "completed";
 
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
-    eventToComplete.iteration++;
 
     //Update database, must be false b/c we are not using the old ticker
     updateStatus(false);
