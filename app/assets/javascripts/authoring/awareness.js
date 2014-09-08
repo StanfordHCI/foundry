@@ -107,11 +107,12 @@ function startFlashTeam() {
     $("div#project-status-container").css('display','');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
-    //removeColabBtns();
-    //removeHandoffBtns();
-    //startTeam(true);
-    addAllFolders();
-    googleDriveLink();
+    removeColabBtns();
+    removeHandoffBtns();
+    startTeam(true);
+    
+    //addAllFolders();
+    //googleDriveLink();
 }
 
 
@@ -462,7 +463,9 @@ var loadData = function(){
     } else {
         latest_time = loadedStatus.latest_time; // really only useful at end
     }
-    cursor_details = positionCursor(flashTeamsJSON, latest_time);
+   
+    //Next line is commented out after disabling the ticker
+   // cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
     live_tasks = loadedStatus.live_tasks;
     remaining_tasks = loadedStatus.remaining_tasks;
@@ -502,7 +505,8 @@ var startTeam = function(firstTime){
         in_progress = true; // TODO: set before this?
     }
 
-    setCursorMoving();
+    //Next line is commented out after disabling the ticker
+    //setCursorMoving();
 
     // page was loaded after team started
     // OR 
@@ -516,12 +520,17 @@ var startTeam = function(firstTime){
         if(page_loaded_before_start_and_now_started)
             user_loaded_before_team_start = false;
         updateAllPopoversToReadOnly();
-        project_status_handler = setProjectStatusMoving();
+       
+        
+        //Next line is commented out after disabling the ticker
+        /*project_status_handler = setProjectStatusMoving();
         trackLiveAndRemainingTasks();
-        trackUpcomingEvent();
+        trackUpcomingEvent();*/
     }
 
-    load_statusBar(status_bar_timeline_interval);
+
+    //Next line is commented out after disabling the ticker
+    //load_statusBar(status_bar_timeline_interval);
 };
 
 var googleDriveLink = function(){

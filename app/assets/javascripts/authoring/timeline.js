@@ -257,7 +257,9 @@ function redrawTimeline() {
     } else {
         latest_time = loadedStatus.latest_time;
     }
-    cursor_details = positionCursor(flashTeamsJSON, latest_time);
+    
+    //Next line is commented out after disabling the ticker
+    //cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
     //move all existing events back on top of timeline
     $(timeline_svg.selectAll('g')).each(function() {
