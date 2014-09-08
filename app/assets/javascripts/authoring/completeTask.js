@@ -1,11 +1,11 @@
 /* completeTask.js
  * ---------------------------------------------
- *
+ * 
  */
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
-    //Creates the alert modeal title
+    //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Have You Completed This Task?";
 
