@@ -22,7 +22,9 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Task Completed";
     $("#confirmButton").attr("class","btn btn-success");
-    $("#confirmButton").prop('disabled', true); //Defaults to disabled
+    if (eventToComplete.outputs == null) { //Checks output lengths, CHANGE IF OUTPUTS NOT IN JSON
+        $("#confirmButton").prop('disabled', false); //Defaults to disabled
+    }
     $('#confirmAction').modal('show');
     
     //Set change function on checkboxes, enable button if all checkboxes are checked
@@ -49,14 +51,19 @@ function completeTaskModalText(eventToComplete) {
     var modalText = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
 
     //GET OUTPUTS HERE, CHANGE LATER TO GET FROM EVENT, TODO
-    var fakeOutputs = ["Output 1", "Output 2", "Output 3"]; //placeholder text
-    var eventOutputs = fakeOutputs;
+    var eventOutputs = eventToComplete.outputs;
+    console.log(eventToComplete);
 
     //Create Checklist of outputs
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' >";
-    for (i=0; i<eventOutputs.length; i++) {
-        modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
+    if (eventOutputs == null) {
+        modalText += "No outputs were specified for this task.";
+    } else {
+        for (i=0; i<eventOutputs.length; i++) {
+            modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
+        }
     }
+    
     modalText += "</form>";
     modalText += "Iterations of <b>" + eventToComplete.title + "</b> Completed: " + eventToComplete.iteration;
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
