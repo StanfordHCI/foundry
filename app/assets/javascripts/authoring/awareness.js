@@ -191,7 +191,7 @@ function renderEverything(firstTime) {
         // !user_poll means a poll wasn't the one the generated this call to renderEverything
         //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
         if(firstTime){
-            renderChatbox();  
+            renderChatbox(); 
             renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
         }
 
@@ -213,6 +213,7 @@ function renderEverything(firstTime) {
             renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
         }
 
+
         // is this the user, and has he/she loaded the page
         // before the team started
         // is_user && firstTime && in_progress would be the case
@@ -231,7 +232,7 @@ function renderEverything(firstTime) {
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
             loadData();
-            if(!isUser || memberType == "pc")
+            if(!isUser || memberType == "pc" || memberType == "client")
                 renderMembersRequester();
             else
                 renderMembersUser();
@@ -256,7 +257,7 @@ function renderEverything(firstTime) {
             }
             loadData();
             
-            if(!isUser || memberType == "pc") {
+            if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
         }

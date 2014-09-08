@@ -201,7 +201,7 @@
 					<%= render :partial => "project_overview" %> 
 			</div>
 			
-			<% if @member_type == "pc" %>
+			<% if @member_type == "pc" || @member_type == "client" %>
 				<div id="member-container" class="well" style="overflow-y:scroll;">
 					<!-- Render member roles container --> 
 					<%= render :partial => "roles" %> 
