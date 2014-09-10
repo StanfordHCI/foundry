@@ -1540,6 +1540,10 @@ function confirmCompleteTask(groupNum) {
     document.getElementById("confirmButton").onclick=function(){
     
     	$('#confirmAction').modal('hide');
+
+          //added the next 2 lines after disabling the ticker. After the first user's task is completed, the next task turns to dark blue.
+        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];    
+        ev.completed_x = 1;
     	//completeTask(groupNum)
     };
     
@@ -1548,6 +1552,9 @@ function confirmCompleteTask(groupNum) {
 
 
 var completeTask = function(groupNum){
+   
+ 
+   
     /*console.log("COMPLETED TASK");
     $('#confirmAction').modal('hide');
     var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
