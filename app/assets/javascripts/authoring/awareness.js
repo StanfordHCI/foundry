@@ -504,6 +504,8 @@ var startTeam = function(firstTime){
 		recordStartTime();
         addAllFolders();
         in_progress = true; // TODO: set before this?
+        //added next line to disable the ticker
+        updateStatus(true);
     }
 
     //Next line is commented out after disabling the ticker
