@@ -4,8 +4,8 @@
  */
 
 var RECTANGLE_WIDTH = 100;
-var RECTANGLE_HEIGHT = 90;
-var ROW_HEIGHT = 100;
+var RECTANGLE_HEIGHT = 70;
+var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
 

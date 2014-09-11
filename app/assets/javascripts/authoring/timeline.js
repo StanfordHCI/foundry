@@ -4,10 +4,10 @@
  */
 
 var XTicks = 100,
-    YTicks = 5;
+    YTicks = 6;
 
 var SVG_WIDTH = 4850,
-    SVG_HEIGHT = 570;
+    SVG_HEIGHT = 550;
 
 var STEP_WIDTH = 25,
     HOUR_WIDTH = 100;
@@ -20,8 +20,8 @@ var x = d3.scale.linear()
     .range([0, TOTAL_HOUR_PIXELS]);
 
 var y = d3.scale.linear() 
-    .domain([15, 600])
-    .range([15, 600]);
+    .domain([17, 550])
+    .range([17, 550]);
 
 var current = undefined;
 var currentUserEvents = [];
@@ -38,7 +38,7 @@ var timeline_svg = d3.select("#timeline-container").append("svg")
 
 //console.log("APPENDED TIMELINE TO DOM!");
 
-//CHART CODE (http://synthesis.sbecker.net/articles/2012/07/11/learning-d3-part-4-intro-to-svg-gr_hics)
+//CHART CODE (http://synthesis.sbecker.net/?s=learning+d3+intro+to+svg)
 //Draw x grid lines
 timeline_svg.selectAll("line.x")
     .data(x.ticks(XTicks))
@@ -51,9 +51,12 @@ timeline_svg.selectAll("line.x")
     .style("stroke", "rgba(100, 100, 100, .5)");
 
 var yLines = y.ticks(YTicks);
+//Hack: subtract 20* to get the row heights shorter
 for (i = 0; i<yLines.length; i++) {
-    yLines[i] += 17;
+    yLines[i] -= 3;
+    yLines[i] -= (i*20);
 }
+
 
 //Draw y axis grid lines
 timeline_svg.selectAll("line.y")
