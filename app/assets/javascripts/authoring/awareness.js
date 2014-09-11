@@ -93,8 +93,7 @@ $("#flashTeamStartBtn").click(function(){
     label.innerHTML = "Start Team?";
     $('#confirmAction').modal('show');
 
-    document.getElementById("confirmButton").onclick=function(){startFlashTeam()};
-    
+    document.getElementById("confirmButton").onclick=function(){startFlashTeam()};    
 });
 
 function startFlashTeam() {
@@ -107,6 +106,7 @@ function startFlashTeam() {
     $("div#project-status-container").css('display','');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
+    console.log("here0");
     removeColabBtns();
     removeHandoffBtns();
     startTeam(true);
@@ -495,7 +495,7 @@ var loadData = function(){
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
     console.log("STARTING TEAM");
-
+    console.log("here1");
     if(!in_progress) {
         //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
         //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
@@ -508,6 +508,7 @@ var startTeam = function(firstTime){
         in_progress = true; // TODO: set before this?
         //added next line to disable the ticker
         updateStatus(true);
+        console.log("here2");
     }
 
     //Next line is commented out after disabling the ticker
@@ -1544,8 +1545,13 @@ function confirmCompleteTask(groupNum) {
     	$('#confirmAction').modal('hide');
 
         //added the next lines after disabling the ticker. After the first user's task is completed, the next task turns to dark blue.
+        
         var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];    
-        ev.completed_x = 1;
+        var task_start = parseFloat(ev.x);
+        var task_rect_curr_width = parseFloat(getWidth(ev));
+        var task_end = task_start + task_rect_curr_width;
+        ev.completed_x = task_end;
+        
         //next line is added so that other pages detect the change and redraw timeline  
         completed_red_tasks.push(groupNum);
     	updateStatus();
