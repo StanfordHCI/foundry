@@ -34,6 +34,13 @@ function eventMousedown(task2idNum) {
 
     if (DRAWING_HANDOFF == true) $("#handoff_btn_" + task1idNum).popover("hide");
     if (DRAWING_COLLAB == true) $("#collab_btn_" + task1idNum).popover("hide");
+ 
+ //show modal if handoff or collaboration is NOT being drawn
+    if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
+        console.log("here!");
+      $('#myModal').modal('show');   
+    }
+
     //Check if interaction already exists
     if (DRAWING_COLLAB == true || DRAWING_HANDOFF == true) {
         timeline_svg.on("mousemove", null);

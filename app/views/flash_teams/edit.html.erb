@@ -8,6 +8,9 @@
 	<!--Main Layout-->
 	<div class="container-fluid" style="min-width: 1300px; background: #e3e3e3;">
        
+    <!-- task modal shows up after clicking on a task -->
+    <%= render :partial => "task_modal" %>
+	
 	<% if @in_author_view %>
 	
      <div class="row-fluid" id="foundry-header">
@@ -221,6 +224,8 @@
 	</div><!-- end of div class="row-fluid" -->
 
 <% end %> <!--end if in expert view conditional--> 
+
+
 <div id="titleLength" style="visibility: hidden; "><span></span></div>
 </div> <!-- end of div class="container-fluid" -->
 
