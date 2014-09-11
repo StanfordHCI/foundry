@@ -196,10 +196,11 @@ function renderEverything(firstTime) {
             renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
         }
 
-
+        console.log("inside render everything"); 
+            
         //get user name and user role for the chat
         if(data == null){
-            //console.log("RETURNING BEFORE LOAD"); 
+            console.log("RETURNING BEFORE LOAD"); 
             return; // status not set yet
         }
 
@@ -413,6 +414,7 @@ var poll = function(){
             if(data == null) return;
             loadedStatus = data;
 
+            console.log("inside poll function");
             if(flashTeamEndedorStarted()) {
                 //stopPolling();
                 /*if(isUser) {
@@ -1541,10 +1543,13 @@ function confirmCompleteTask(groupNum) {
     
     	$('#confirmAction').modal('hide');
 
-        //added the next 2 lines after disabling the ticker. After the first user's task is completed, the next task turns to dark blue.
+        //added the next lines after disabling the ticker. After the first user's task is completed, the next task turns to dark blue.
         var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];    
         ev.completed_x = 1;
+        //next line is added so that other pages detect the change and redraw timeline  
+        completed_red_tasks.push(groupNum);
     	updateStatus();
+        //end
         //completeTask(groupNum)
     };
     
