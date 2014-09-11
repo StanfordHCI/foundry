@@ -266,6 +266,7 @@ function getEventFromId(id) {
     return null;
 };
 
+//Return the width in pixels of an event
 function getWidth(ev) {
     var durationInMinutes = ev.duration;
     var hrs = parseFloat(durationInMinutes)/parseFloat(60);
