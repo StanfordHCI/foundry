@@ -38,7 +38,8 @@ function eventMousedown(task2idNum) {
  //show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
         console.log("here!");
-      $('#myModal').modal('show');   
+      $('#task_modal').modal('show');   
+      showTaskOverview();
     }
 
     //Check if interaction already exists
