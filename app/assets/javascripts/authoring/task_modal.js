@@ -1,7 +1,7 @@
 
-function showTaskOverview(){
-	//todo:  add task id
-	var task_id =0;
+function showTaskOverview(groupNum){
+
+	var task_id = getEventJSONIndex(groupNum);
 	var description = flashTeamsJSON["events"][task_id].description;
 	
 	if(description === undefined){
@@ -13,7 +13,7 @@ function showTaskOverview(){
 		
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$('#taskOverviewEditLink').show();
-		$("#taskOverviewEditLink").html('<a onclick="editTaskOverview(false)" style="font-weight: normal;">Edit</a>');
+		$("#taskOverviewEditLink").html('<a onclick="editTaskOverview(false,'+groupNum+')" style="font-weight: normal;">Edit</a>');
 	}
 	
 	var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
@@ -26,7 +26,7 @@ function showTaskOverview(){
 	//only allow authors to edit project overview
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
-		$("#edit-save-task").attr('onclick', 'editTaskOverview(true)');
+		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
 	else{
@@ -34,9 +34,9 @@ function showTaskOverview(){
 	}
 }
 
-function editTaskOverview(popover){
-	//todo:  add task id
-	var task_id =0;
+function editTaskOverview(popover,groupNum){
+
+	var task_id =getEventJSONIndex(groupNum);
 	var description = flashTeamsJSON["events"][task_id].description;
 	
 	if(description === undefined){
@@ -48,11 +48,11 @@ function editTaskOverview(popover){
 		
 		var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
-					+ '<a onclick="showTaskOverview()" style="font-weight: normal;">Cancel</a>'
+					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
 					+'</form>';
 		$('#task-text').html(taskOverviewForm);
 		
-		$("#edit-save-task").attr('onclick', 'saveTaskOverview()');
+		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
 	}
 	
@@ -61,8 +61,8 @@ function editTaskOverview(popover){
 	
 		var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
-					+ '<a onclick="showTaskOverview()" style="font-weight: normal;">Cancel</a>'
-					+ '<button class="btn btn-success" type="button" onclick="saveTaskOverview()" style="float: right;">Save</button>'
+					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
+					+ '<button class="btn btn-success" type="button" onclick="saveTaskOverview('+groupNum+')" style="float: right;">Save</button>'
 					+'</form>';
 			
 		$('#taskOverview').html(taskOverviewForm);
@@ -71,9 +71,8 @@ function editTaskOverview(popover){
 }
 
 
-function saveTaskOverview(){
-	//todo
-	var task_id = 0; 
+function saveTaskOverview(groupNum){
+	var task_id = getEventJSONIndex(groupNum); 
 	// retrieve project overview from form
     var description_input = $("#descriptionInput").val();
     
@@ -85,9 +84,9 @@ function saveTaskOverview(){
 	 
     flashTeamsJSON["events"][task_id].description =description_input;
     
-    console.log("saved task description: " + flashTeamsJSON["events"][task_id].description);
+    console.log("saved task description: " +   flashTeamsJSON["events"][task_id].description);
     
     updateStatus();
     
-    showTaskOverview();
+    showTaskOverview(groupNum);
 }
