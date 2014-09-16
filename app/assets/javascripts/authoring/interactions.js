@@ -44,8 +44,8 @@ function eventMousedown(task2idNum) {
        '<button class="btn btn-primary" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+'">Edit</button>' ;
      
        $('#task_modal').modal('show'); 
-       $('.modal-footer').html(modal_footer);
-       $('.modal-body').html(modal_body);
+       $('.task-modal-footer').html(modal_footer);
+       $('.task-modal-body').html(modal_body);
 
       showTaskOverview(task2idNum);
     }
