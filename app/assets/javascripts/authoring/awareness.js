@@ -106,11 +106,9 @@ function startFlashTeam() {
     $("div#project-status-container").css('display','');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
-    console.log("here0");
     removeColabBtns();
     removeHandoffBtns();
     startTeam(true);
-    
     //addAllFolders();
     //googleDriveLink();
 }
@@ -239,6 +237,7 @@ function renderEverything(firstTime) {
             else
                 renderMembersUser();
             renderMembersUser();
+            //COMMENTED OUT FOR TICKER DISABLING
             //startTeam(firstTime);
         } else {
             console.log("flash team not in progress");
@@ -488,7 +487,7 @@ var loadData = function(){
     drawBlueBoxes();
     drawRedBoxes();
     drawDelayedTasks();
-    drawInteractions(); //START HERE, INT DEBUG
+    drawInteractions();
     googleDriveLink();
 };
 
@@ -550,9 +549,10 @@ var googleDriveLink = function(){
 var drawEvents = function(editable){
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
-        console.log("DRAWING EVENT " + i + ", with editable: " + editable);
+        //console.log("DRAWING EVENT " + i + ", with editable: " + editable);
         drawEvent(ev);
         drawPopover(ev, editable, false);
+        $("#rect_" + ev.id).attr("fill", findFillColor(ev)); //Update fill color based on status
     }
 };
 
@@ -1394,6 +1394,7 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "blue");  
         }
         
+        //COMMENTED OUT FOR TICKER DISABLING
         //statusText.text(overallTime);
        
     }, fire_interval);
@@ -1520,6 +1521,8 @@ var sendEmailOnEarlyCompletion = function(blue_width){
     early_completion_helper(remaining_tasks,early_minutes);
 };
 
+<<<<<<< HEAD
+=======
 function confirmCompleteTask(groupNum) {
     console.log("CLICKED COMPLETE TASK");
  
@@ -1605,3 +1608,4 @@ var completeTask = function(groupNum){
     // reload status bar
     load_statusBar(status_bar_timeline_interval);*/
 };
+>>>>>>> master

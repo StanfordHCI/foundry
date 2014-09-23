@@ -40,4 +40,5 @@
 //= require ./authoring/bootstrap-tagsinput
 //= require ./authoring/notifications
 //= require ./authoring/tour
+//= require ./authoring/completeTask
 //= require ./authoring/task_modal

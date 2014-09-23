@@ -240,12 +240,13 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
+//Create JSON event object for a new event
 function createEventObj(snapPoint) {
     event_counter++;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
-        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[],
+        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
@@ -329,6 +330,7 @@ function drawMainRect(eventObj, firstTime) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var width = getWidth(eventObj);
+    var fillColor = findFillColor(eventObj);
 
     var existingMainRect = task_g.selectAll("#rect_" + groupNum);
     if(existingMainRect[0].length == 0){ // first time
@@ -341,7 +343,7 @@ function drawMainRect(eventObj, firstTime) {
             .attr("groupNum", function(d) {return d.groupNum;})
             .attr("height", RECTANGLE_HEIGHT)
             .attr("width", width)
-            .attr("fill", "#C9C9C9")
+            .attr("fill", fillColor)
             .attr("fill-opacity", .6)
             .attr("stroke", "#5F5A5A")
             .attr('pointer-events', 'all')
@@ -350,9 +352,25 @@ function drawMainRect(eventObj, firstTime) {
         task_g.selectAll(".task_rectangle")
             .attr("x", function(d) {return d.x;})
             .attr("y", function(d) {return d.y;})
-            .attr("width", width);
+            .attr("width", width)
+            .attr("fill", fillColor);
     }
 };
+
+//Returns a fill color for the main rect based on task status
+function findFillColor(eventObj) {
+    var taskStatus = eventObj.status;
+    //Check status of event, change fill color appropriately 
+    if (taskStatus == "completed") {
+        return "#009933";
+    } else if (taskStatus == "delayed") {
+        return "RED";
+    } else if (taskStatus == "live") {
+        return "BLUE";
+    } else {
+        return "#C9C9C9";
+    }
+}
 
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
@@ -907,7 +925,8 @@ function confirmDeleteEvent(eventId) {
     var eventToDelete = events[indexOfJSON];
 
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to delete " + eventToDelete["title"] + "?</b><br><font size = '2'>Deleting an event will permanently delete all its data, handoffs, and collaborations.</font>";
+    alertText.innerHTML = "<b>Are you sure you want to delete " + eventToDelete["title"] 
+    + "?</b><br><font size = '2'>Deleting an event will permanently delete all its data, handoffs, and collaborations.</font>";
 
     var deleteButton = document.getElementById("confirmButton");
     deleteButton.innerHTML = "Delete event";

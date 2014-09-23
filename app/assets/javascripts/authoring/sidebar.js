@@ -338,9 +338,7 @@ var statusText = project_status_svg.append("foreignObject")
 .style("font-size", "18px")
 .style("background-color", "#f5f5f5")
 .style("width", "100%")
-.text("");
-
-
+.text(""); //MADE BLANK FOR TICKER DISABLING
 
 
 var status_width=100; 
