@@ -34,6 +34,22 @@ function eventMousedown(task2idNum) {
 
     if (DRAWING_HANDOFF == true) $("#handoff_btn_" + task1idNum).popover("hide");
     if (DRAWING_COLLAB == true) $("#collab_btn_" + task1idNum).popover("hide");
+ 
+ //show modal if handoff or collaboration is NOT being drawn
+    if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
+        
+       var modal_body = '<p id="task-text">Task Description</p>' +
+       '<p><span id="task-edit-link"></span></p>';
+       var modal_footer = '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>'+
+       '<button class="btn btn-primary" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+'">Edit</button>' ;
+     
+       $('#task_modal').modal('show'); 
+       $('.task-modal-footer').html(modal_footer);
+       $('.task-modal-body').html(modal_body);
+
+      showTaskOverview(task2idNum);
+    }
+
     //Check if interaction already exists
     if (DRAWING_COLLAB == true || DRAWING_HANDOFF == true) {
         timeline_svg.on("mousemove", null);

@@ -93,8 +93,7 @@ $("#flashTeamStartBtn").click(function(){
     label.innerHTML = "Start Team?";
     $('#confirmAction').modal('show');
 
-    document.getElementById("confirmButton").onclick=function(){startFlashTeam()};
-    
+    document.getElementById("confirmButton").onclick=function(){startFlashTeam()};    
 });
 
 function startFlashTeam() {
@@ -107,12 +106,11 @@ function startFlashTeam() {
     $("div#project-status-container").css('display','');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
-    //COMMENTED OUT FOR DISABLING TICKER
-    //removeColabBtns();
-    //removeHandoffBtns();
-    //startTeam(true);
-    addAllFolders();
-    googleDriveLink();
+    removeColabBtns();
+    removeHandoffBtns();
+    startTeam(true);
+    //addAllFolders();
+    //googleDriveLink();
 }
 
 
@@ -196,10 +194,11 @@ function renderEverything(firstTime) {
             renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
         }
 
-
+        console.log("inside render everything"); 
+            
         //get user name and user role for the chat
         if(data == null){
-            //console.log("RETURNING BEFORE LOAD"); 
+            console.log("RETURNING BEFORE LOAD"); 
             return; // status not set yet
         }
 
@@ -414,6 +413,7 @@ var poll = function(){
             if(data == null) return;
             loadedStatus = data;
 
+            console.log("inside poll function");
             if(flashTeamEndedorStarted()) {
                 //stopPolling();
                 /*if(isUser) {
@@ -465,7 +465,9 @@ var loadData = function(){
     } else {
         latest_time = loadedStatus.latest_time; // really only useful at end
     }
-    cursor_details = positionCursor(flashTeamsJSON, latest_time);
+   
+    //Next line is commented out after disabling the ticker
+   // cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
     live_tasks = loadedStatus.live_tasks;
     remaining_tasks = loadedStatus.remaining_tasks;
@@ -492,7 +494,7 @@ var loadData = function(){
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
     console.log("STARTING TEAM");
-
+    console.log("here1");
     if(!in_progress) {
         //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
         //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
@@ -503,9 +505,13 @@ var startTeam = function(firstTime){
 		recordStartTime();
         addAllFolders();
         in_progress = true; // TODO: set before this?
+        //added next line to disable the ticker
+        updateStatus(true);
+        console.log("here2");
     }
 
-    setCursorMoving();
+    //Next line is commented out after disabling the ticker
+    //setCursorMoving();
 
     // page was loaded after team started
     // OR 
@@ -519,12 +525,17 @@ var startTeam = function(firstTime){
         if(page_loaded_before_start_and_now_started)
             user_loaded_before_team_start = false;
         updateAllPopoversToReadOnly();
-        project_status_handler = setProjectStatusMoving();
+       
+        
+        //Next line is commented out after disabling the ticker
+        /*project_status_handler = setProjectStatusMoving();
         trackLiveAndRemainingTasks();
-        trackUpcomingEvent();
+        trackUpcomingEvent();*/
     }
 
-    load_statusBar(status_bar_timeline_interval);
+
+    //Next line is commented out after disabling the ticker
+    //load_statusBar(status_bar_timeline_interval);
 };
 
 var googleDriveLink = function(){
@@ -1510,3 +1521,91 @@ var sendEmailOnEarlyCompletion = function(blue_width){
     early_completion_helper(remaining_tasks,early_minutes);
 };
 
+<<<<<<< HEAD
+=======
+function confirmCompleteTask(groupNum) {
+    console.log("CLICKED COMPLETE TASK");
+ 
+    var label = document.getElementById("confirmActionLabel");
+    label.innerHTML = "Complete Event?";
+
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var events = flashTeamsJSON["events"];
+    var eventToComplete = events[indexOfJSON];
+
+    var alertText = document.getElementById("confirmActionText");
+    alertText.innerHTML = "Are you sure you want to complete " + eventToComplete["title"] + "?";
+
+    var completeButton = document.getElementById("confirmButton");
+    completeButton.innerHTML = "Complete event";
+    $("#confirmButton").attr("class","btn btn-success");
+
+    $('#confirmAction').modal('show');
+    
+    //Calls completeTask function if user confirms the complete
+    document.getElementById("confirmButton").onclick=function(){
+    
+    	$('#confirmAction').modal('hide');
+
+        //added the next lines after disabling the ticker. After the first user's task is completed, the next task turns to dark blue.
+        
+        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];    
+        var task_start = parseFloat(ev.x);
+        var task_rect_curr_width = parseFloat(getWidth(ev));
+        var task_end = task_start + task_rect_curr_width;
+        ev.completed_x = task_end;
+        
+        //next line is added so that other pages detect the change and redraw timeline  
+        completed_red_tasks.push(groupNum);
+    	updateStatus();
+        //end
+        //completeTask(groupNum)
+    };
+    
+    hidePopover(groupNum); 
+}
+
+
+var completeTask = function(groupNum){
+   
+ 
+   
+    /*console.log("COMPLETED TASK");
+    $('#confirmAction').modal('hide');
+    var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+
+    var cursor_x = cursor.attr("x1");
+    ev.completed_x = cursor_x;
+
+    // remove from either live or delayed tasks
+    var idx = delayed_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        delayed_tasks.splice(idx, 1);
+        completed_red_tasks.push(groupNum);
+        //updateStatus(true);
+        console.log("removed task from delayed and added to completed_red");
+        sendEmailOnCompletionOfDelayedTask(groupNum);
+    } else {
+        idx = live_tasks.indexOf(groupNum);
+        if (idx != -1){ // live task
+            var task_g = getTaskGFromGroupNum (groupNum);
+            var blue_width = drawBlueBox(ev, task_g);
+            if (blue_width !== null){
+                drawn_blue_tasks.push(groupNum);
+                moveRemainingTasksLeft(blue_width);
+                //updateStatus(true);
+                sendEmailOnEarlyCompletion(blue_width);
+            }
+            live_tasks.splice(idx, 1);
+        }
+    }
+
+    hidePopover(groupNum);
+
+    // update db
+    updateStatus(true);
+
+    // reload status bar
+    load_statusBar(status_bar_timeline_interval);*/
+};
+>>>>>>> master

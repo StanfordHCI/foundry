@@ -28,6 +28,10 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
 	},
+	/*{
+		//ADD INFORMATION FOR THE TYPES OF WORKERS
+		//E.G., PC, WORKER, CLIENT
+	},*/
 	{
 		element: "#member-container",
 		title: "<b>Customize Each Role</b>",
@@ -165,7 +169,7 @@ var expertTour = new Tour({
 	{
 		orphan: true, 
 		title: "<b>Welcome to Foundry</b>", 
-		content: "Here you can view your upcoming tasks,"
+		content: "Here you can view your upcoming tasks, "
 		+ "see where you should communicate with other members of the team "
 		+ "track the progress of the project, "
 		+ "and upload and download files from a shared Google Drive folder.",
@@ -187,27 +191,21 @@ var expertTour = new Tour({
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project requester."
+		+"members of the team as well as the project coordinator (PC)."
 	},
 	{
 		element: "#timeline-container" ,
 		title: "<b>Timeline</b>", 
 		content: "This is the timeline. Here you can view the entire project's " 
-		+"workflow. And its current status.",
+		+"workflow and its current status.",
 		placement: "left"
-	},
-	{
-		element: ".cursor" ,
-		title: "<b>Time Ticker</b>", 
-		content: "You can see the stage of the project as indicated by " 
-		+"the red time ticker."
 	},
 	{
 		orphan: true,
 		title: "<b>Complete Your Events</b>", 
 		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have completed the work for your event, uploaded " 
 		+"any relevant files, etc. you can click the event and choose 'Complete' to mark "
-		+"the task as done and auto notifiy the next workers that they can begin working."
+		+"the task as done, message the project coordinator (PC), and open the documentation questions."
 		+"<img src='/assets/completeTask.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -235,7 +233,7 @@ var expertTour = new Tour({
 		title: "<b>Delayed Events</b>", 
 		content: "<div class='tour-content-wrapper'>If your work takes longer than the expected estimation, the event "
 		+"will extend in red and be marked as delayed. Foundry will email you to request "
-		+"a new estimated complete time so the downstream workers can be notified." 
+		+"a new estimated complete time so the PC can plan accordingly." 
 		+"<img src='/assets/delayedTask.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -273,4 +271,23 @@ $("#expertTourBtn").click(function(){
     expertTour.start(true);
     expertTour.goTo(0); //Always start the tour at the first step 
 });
+
+//TODO: PC Tour
+/* //SHELL FOR THE PC TOUR
+//A tour to walk the PCs through the use of Foundry
+var pcTour = new Tour({
+	steps: [
+	{
+	
+	},
+]});
+	
+//Initialize the PC tour
+pcTour.init();
+
+$("#").click(function(){
+    pcTour.start(true);
+    pcTour.goTo(0); //Always start the tour at the first step 
+});
+*/
 
