@@ -26,7 +26,8 @@ function showTaskOverview(groupNum){
 	//only allow authors to edit project overview
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
-		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+		//$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+		$("#edit-save-task").attr('onclick', 'hireForm('+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
 	else{
@@ -89,4 +90,16 @@ function saveTaskOverview(groupNum){
     updateStatus();
     
     showTaskOverview(groupNum);
+}
+
+function hireForm(groupNum){
+	var task_id =getEventJSONIndex(groupNum);
+
+	var url = task_id +'/hire_form';
+        window.open(url);        
+        $.ajax({
+            url: url,
+            type: 'get'
+        }).done(function(data){console.log("opened hire form page")})
+	
 }

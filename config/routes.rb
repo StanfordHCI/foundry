@@ -75,12 +75,15 @@ Foundry::Application.routes.draw do
       post :get_user_name
       post :delayed_task_finished_email
       post :create
+      #get :hire_form
       get :settings
       get :duplicate
       post :settings
     end
   end
 
+  get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'
+  
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'
 

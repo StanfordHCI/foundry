@@ -420,6 +420,28 @@ end
     render :partial => "event_search_results"
 
    end
+   
+   
+   def hire_form
+   	@id_team = params[:id]
+   	@id_task = params[:event_id].to_i
+   	
+   	@flash_team = FlashTeam.find(params[:id])
+   	    
+   	# Extract data from the JSON
+    flash_team_status = JSON.parse(@flash_team.status)
+    flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+     
+    @task_title = flash_team_event["title"]
+    @task_description = flash_team_event["description"]
+    @task_duration = flash_team_event["duration"]
+    @task_startHr = flash_team_event["startHr"]
+    @task_startMin = flash_team_event["startMin"]
+    
+    @task_inputs = flash_team_event["inputs"]
+    @task_outputs = flash_team_event["outputs"]
+        
+   end
 
   def flash_team_params params
     params.permit(:name, :author)
