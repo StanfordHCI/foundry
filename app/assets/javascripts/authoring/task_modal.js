@@ -27,6 +27,8 @@ function showTaskOverview(groupNum){
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
 		//$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+		
+		//NOTE: ERASE THE NEXT LINE AND UNCOMMENT OUT THE ABOVE LINE WHEN NEGAR ADDS HIRE BUTTON TO MODAL
 		$("#edit-save-task").attr('onclick', 'hireForm('+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
@@ -92,14 +94,17 @@ function saveTaskOverview(groupNum){
     showTaskOverview(groupNum);
 }
 
+//NOTE: MOVE THIS FUNCTION TO A DIFFERENT JS FILE
 function hireForm(groupNum){
 	var task_id =getEventJSONIndex(groupNum);
 
 	var url = task_id +'/hire_form';
         window.open(url);        
-        $.ajax({
+        /*
+$.ajax({
             url: url,
             type: 'get'
         }).done(function(data){console.log("opened hire form page")})
+*/
 	
 }
