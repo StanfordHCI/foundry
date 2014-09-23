@@ -1,0 +1,98 @@
+<html lang="en">
+	<head>
+		
+		<meta charset="utf-8">
+	</head>
+	<body>
+		
+		
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand" >
+                    <a href="#">Task Title: <%=@task_title%></a>
+                </li>
+                               
+                <!--
+<li>
+                    <a href="#" data-toggle="collapse" data-target="#iterations"><i class="fa fa-fw fa-arrows-v"></i> Iterations <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="iterations" class="collapse in" style="">
+                        <li>
+                            <a href="#">Iteration 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Iteration 2</a>
+                        </li>
+                        <li>
+                            <a href="#">Current</a>
+                        </li>
+                    </ul>
+                </li>
+-->
+
+               <li>
+                    <a href="#" data-toggle="collapse" data-target="#hiring"><i class="fa fa-fw fa-arrows-v"></i> Hiring <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="hiring" class="collapse in" style="">
+                        <li>
+                            <a href="#">Task Available</a>
+                        </li>
+                        <li>
+                            <a href="#">Task Acceptance</a>
+                        </li>
+                        <li>
+                            <a href="#">Task Rejection</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!--
+<h1>Simple Sidebar</h1>
+                        <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
+                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
+-->
+						
+						<h1>Task Information</h1>
+
+						<h2>Task Title: <%=@task_title%> </h2>
+						
+						<p>Task Description: <%=@task_description%> </p>
+						
+						<p>Task Duration: <%=@task_duration%> minutes </p>
+						
+						<p>Task Start Hour: <%=@task_startHr%></p>
+						<p>Task Start Min: <%=@task_startMin%></p>
+						
+						<p>Task Inputs: <%=@task_inputs%></p>
+						<p>Task Outputs: <%=@task_outputs%></p>
+
+	                  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+   
+
+
+	</body>
+</html>
+
+  <%= javascript_include_tag "/assets/jquery" %>
+  <%= javascript_include_tag "/assets/jquery_ujs" %>
+  <%= javascript_include_tag "bootstrap/bootstrap.min" %>
+  <%= javascript_include_tag "bootstrap-editable.min" %>
+  <%= javascript_include_tag "bootstrap-tour.min" %>
