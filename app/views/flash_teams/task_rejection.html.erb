@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="col-lg-12">
 	
-						<h2>Task Rejection Email: </h2>
+					<h2>Task Rejection Email: </h2>
 						
 					<form role="form" name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 40px">
 					
@@ -88,14 +88,9 @@
 					Recipient Email: <input class="span5" type="email" required> <br />
 					Subject: <input class="span5" type="text" required> <br />
 					
-						<textarea type="text" id="rejectionEmailInput" class="input-block-level span10" rows="10" placeholder="Task Rejection Email Text ..." required>
-Thank you for applying to work on the "<%=@flash_team_event["title"]%>" task for the “<%=@flash_team_json["title"]%>” project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. 
-						
-If you don’t want to be informed about our future job opportunities, please reply to this email with your name in the content.
+					<textarea type="text" id="rejectionEmailInputv0" class="input-block-level span10" rows="10" placeholder="Task Rejection Email Text ..." required><%=@task_rej_email_content%>
+					</textarea>
 
-Thank you,
-Stanford HCI Research Team
-						</textarea>
 							<button type="submit" class="btn btn-primary">Send Task Rejection Email</button>
 							<button type="button" class="btn">Save Draft</button>
 					</form>
