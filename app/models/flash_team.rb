@@ -30,5 +30,5 @@ def getMemberById(teamId, taskId, memId)
     	end
     end
 
-    #return -1
+    return -1
 end

@@ -440,7 +440,11 @@ end
     member_obj = getMemberById(@id_team, @id_task, member_id) 
     
     #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
-    @task_members = member_obj['role']
+    if member_obj != -1
+    	@task_members = member_obj['role']
+    else
+    	@task_members = nil
+    end
         
    end
 
