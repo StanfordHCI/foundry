@@ -473,8 +473,18 @@ end
 	    @flash_team_json = flash_team_status['flash_teams_json']
 	    @flash_team_event = @flash_team_json['events'][@id_task]
 	    
+	   @task_rej_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is No Longer Available"
 	   @task_rej_email_content = "Thank you for applying to work on the " + @flash_team_event['title']+ " task for the " + @flash_team_json['title'] +" project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. \n\n If you don't want to be informed about our future job opportunities, please reply to this email with your name in the content. \n\n Thank you, \n Stanford HCI Research Team" 
 	   	    
+   end
+   
+   def send_task_rejection
+   
+   		@sender_email = params[:sender_email]
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		@message = params[:message]
+   
    end
 
   def flash_team_params params
