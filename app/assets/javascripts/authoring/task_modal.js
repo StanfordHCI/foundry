@@ -28,9 +28,12 @@ function showTaskOverview(groupNum){
 		$("#edit-save-task").css('display', '');
 		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
+
+
 	}
 	else{
 		$("#edit-save-task").css('display', 'none');
+		$("#hire-task").css('display','none');
 	}
 }
 
@@ -91,6 +94,7 @@ function saveTaskOverview(groupNum){
     showTaskOverview(groupNum);
 }
 
+
 //NOTE: MOVE THIS FUNCTION TO A DIFFERENT JS FILE
 function hireForm(groupNum){
 	var task_id =getEventJSONIndex(groupNum);
@@ -104,4 +108,8 @@ $.ajax({
         }).done(function(data){console.log("opened hire form page")})
 */
 	
+}
+
+function ATFunction(groupNum){
+alert("test");
 }
