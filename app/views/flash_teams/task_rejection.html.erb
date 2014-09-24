@@ -83,13 +83,13 @@
 					<h2>Task Rejection Email</h2><br />
 										
 					<%= form_tag({action: "send_task_rejection", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
-						<%= label_tag(:sender_email, "Your Email:", :style => "display:inline") %>
-						<%= text_field_tag(:sender_email) %> <br />
-						<%= label_tag(:recipient_email, "Recipient Email:", :style => "display:inline") %>
-						<%= text_field_tag(:recipient_email) %> <br />
-						<%= label_tag(:subject, "Subject:", :style => "display:inline") %>
-						<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span9') %> <br />
-						<%= text_area_tag(:message, @task_rej_email_content, :class => 'input-block-level span10', :rows =>10) %> 
+						<%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:sender_email, "", :class => 'span5') %> <br />
+						<%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:recipient_email, "", :class => 'span5') %> <br />
+						<%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span8') %> <br />
+						<%= text_area_tag(:message, @task_rej_email_content, :class => 'span10', :rows =>10) %> <br />
 <!-- 						<% submit_tag("Send Task Rejection Email", :class => 'btn btn-primary') %> -->
 						<%= button_tag("Send Task Rejection Email", :type => 'submit', :class => 'btn btn-primary') %>
 						<%= button_tag("Save Draft", :class => 'btn') %>
