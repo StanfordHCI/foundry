@@ -28,9 +28,12 @@ function showTaskOverview(groupNum){
 		$("#edit-save-task").css('display', '');
 		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
+
+
 	}
 	else{
 		$("#edit-save-task").css('display', 'none');
+		$("#hire-task").css('display','none');
 	}
 }
 
