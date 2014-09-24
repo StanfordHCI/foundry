@@ -83,6 +83,7 @@ Foundry::Application.routes.draw do
   end
 
   get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'
+  get '/flash_teams/:id/:event_id/hire_form/task_rejection' => 'flash_teams#task_rejection'
   
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'

@@ -423,29 +423,42 @@ end
    
    
    def hire_form
-   	@id_team = params[:id]
-   	@id_task = params[:event_id].to_i
-   	
-   	@flash_team = FlashTeam.find(params[:id])
-   	    
-   	# Extract data from the JSON
-    flash_team_status = JSON.parse(@flash_team.status)
-    @flash_team_json = flash_team_status['flash_teams_json']
-    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
-    @flash_team_event = @flash_team_json['events'][@id_task]
-    
-    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
-    member_id = @flash_team_event['members'][0]
-    
-    member_obj = getMemberById(@id_team, @id_task, member_id) 
-    
-    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
-    if member_obj != -1
-    	@task_members = member_obj['role']
-    else
-    	@task_members = nil
-    end
-        
+	   	@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
+	    member_id = @flash_team_event['members'][0]
+	    
+	    member_obj = getMemberById(@id_team, @id_task, member_id) 
+	    
+	    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
+	    if member_obj != -1
+	    	@task_members = member_obj['role']
+	    else
+	    	@task_members = nil
+	    end   
+   end
+   
+   def task_rejection
+   
+   @id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
    end
 
   def flash_team_params params
