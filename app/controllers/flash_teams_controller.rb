@@ -430,16 +430,17 @@ end
    	    
    	# Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
-    flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
-     
-    @task_title = flash_team_event["title"]
-    @task_description = flash_team_event["description"]
-    @task_duration = flash_team_event["duration"]
-    @task_startHr = flash_team_event["startHr"]
-    @task_startMin = flash_team_event["startMin"]
+    @flash_team_json = flash_team_status['flash_teams_json']
+    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+    @flash_team_event = @flash_team_json['events'][@id_task]
     
-    @task_inputs = flash_team_event["inputs"]
-    @task_outputs = flash_team_event["outputs"]
+    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
+    member_id = @flash_team_event['members'][0]
+    
+    member_obj = getMemberById(@id_team, @id_task, member_id) 
+    
+    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
+    @task_members = member_obj['role']
         
    end
 

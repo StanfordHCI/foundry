@@ -61,19 +61,23 @@
                         <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
 -->
 						
-						<h1>Task Information</h1>
-
-						<h2>Task Title: <%=@task_title%> </h2>
+						<h1>Project/Task Information</h1>
 						
-						<p>Task Description: <%=@task_description%> </p>
+						<h2>Task Title: <%=@flash_team_event["title"]%> </h2>
 						
-						<p>Task Duration: <%=@task_duration%> minutes </p>
+						<p> Project Description: <%=@flash_team_json["projectoverview"]%> </p>
 						
-						<p>Task Start Hour: <%=@task_startHr%></p>
-						<p>Task Start Min: <%=@task_startMin%></p>
+						<p>Task Description: <%=@flash_team_event["description"]%> </p>
 						
-						<p>Task Inputs: <%=@task_inputs%></p>
-						<p>Task Outputs: <%=@task_outputs%></p>
+						<p>Task Duration: <%=@flash_team_event["duration"]%> minutes </p>
+						
+						<p>Task Start Hour: <%=@flash_team_event["startHr"]%></p>
+						<p>Task Start Min: <%=@flash_team_event["startMin"]%></p>
+						
+						<p>Task Inputs: <%=@flash_team_event["inputs"]%></p>
+						<p>Task Outputs: <%=@flash_team_event["outputs"]%></p>
+						
+						<p>Task Members: <%=@task_members%></p>
 
 	                  
                     </div>

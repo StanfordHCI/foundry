@@ -26,10 +26,7 @@ function showTaskOverview(groupNum){
 	//only allow authors to edit project overview
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
-		//$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
-		
-		//NOTE: ERASE THE NEXT LINE AND UNCOMMENT OUT THE ABOVE LINE WHEN NEGAR ADDS HIRE BUTTON TO MODAL
-		$("#edit-save-task").attr('onclick', 'hireForm('+groupNum+')');
+		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
 	else{
