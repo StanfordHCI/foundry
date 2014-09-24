@@ -1,0 +1,100 @@
+<html lang="en">
+	<head>
+		
+		<meta charset="utf-8">
+	</head>
+	<body>
+		
+		
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand" >
+                    <a href="task_portal">Task Portal</a>
+                </li>
+                               
+                <!--
+<li>
+                    <a href="#" data-toggle="collapse" data-target="#iterations"><i class="fa fa-fw fa-arrows-v"></i> Iterations <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="iterations" class="collapse in" style="">
+                        <li>
+                            <a href="#">Iteration 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Iteration 2</a>
+                        </li>
+                        <li>
+                            <a href="#">Current</a>
+                        </li>
+                    </ul>
+                </li>
+-->
+
+               <!--
+<li>
+                    <a href="#" data-toggle="collapse" data-target="#hiring"><i class="fa fa-fw fa-arrows-v"></i> Hiring Emails <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="hiring" class="collapse in" style="">
+                        <li>
+                            <a href="hire_form">Task Available</a>
+                        </li>
+                        <li>
+                            <a href="#">Task Acceptance</a>
+                        </li>
+                        <li>
+                            <a href="hire_form/task_rejection">Task Rejection</a>
+                        </li>
+                    </ul>
+                </li>
+-->
+                
+                <li class="sidebar-brand" style="margin-top: 20px;">
+                    <a href="#" style="color: white;">Project Information</a>
+                 </li>
+
+                 <div style="margin-left: 25px; color: white; text-decoration:none">
+					 <p>Project: <%=@flash_team_json["title"]%></p>
+					 
+
+				</div>
+            </ul>
+            
+           
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+									
+					<h2>All Tasks in <%=@flash_team_json["title"]%> project </h2>
+					 	
+					<%@flash_team_events.each do |event|%>
+						<%url = event["id"].to_s + "/hire_form" %>
+						<a href="<%=url%>"><%=event["title"]%></a> <br />
+					<% end %>
+					
+					
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+   
+
+
+	</body>
+</html>
+
+  <%= javascript_include_tag "/assets/jquery" %>
+  <%= javascript_include_tag "/assets/jquery_ujs" %>
+  <%= javascript_include_tag "bootstrap/bootstrap.min" %>
+  <%= javascript_include_tag "bootstrap-editable.min" %>
+  <%= javascript_include_tag "bootstrap-tour.min" %>

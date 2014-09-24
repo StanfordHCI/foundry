@@ -1,0 +1,137 @@
+<html lang="en">
+	<head>
+		
+		<meta charset="utf-8">
+	</head>
+	<body>
+		
+		
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand" >
+                    <a href="../task_portal">Task Portal</a>
+                </li>
+                               
+                <!--
+<li>
+                    <a href="#" data-toggle="collapse" data-target="#iterations"><i class="fa fa-fw fa-arrows-v"></i> Iterations <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="iterations" class="collapse in" style="">
+                        <li>
+                            <a href="#">Iteration 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Iteration 2</a>
+                        </li>
+                        <li>
+                            <a href="#">Current</a>
+                        </li>
+                    </ul>
+                </li>
+-->
+
+               <li>
+                    <a href="#" data-toggle="collapse" data-target="#hiring"><i class="fa fa-fw fa-arrows-v"></i> Hiring <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="hiring" class="collapse in" style="">
+                        <li>
+                            <a href="../hire_form">Task Available</a>
+                        </li>
+                        <li>
+                            <a href="#">Task Acceptance</a>
+                        </li>
+                        <li>
+                            <a href="task_rejection">Task Rejection</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-brand" style="margin-top: 20px;">
+                    <a href="#" style="color: white;">Task Information</a>
+                 </li>
+
+                 <div style="margin-left: 25px; color: white; text-decoration:none">
+					 <p>Project: <%=@flash_team_json["title"]%></p>
+					 <p>Task Title: <%=@flash_team_event["title"]%></p>
+					 <p>Project Description: <%=@flash_team_json["projectoverview"]%> </p>
+						
+					 <p>Task Description: <%=@flash_team_event["description"]%> </p>
+						
+					 <p>Task Duration: <%=@flash_team_event["duration"]%> minutes </p>
+						
+					 <p>Task Start Hour: <%=@flash_team_event["startHr"]%></p>
+					 <p>Task Start Min: <%=@flash_team_event["startMin"]%></p>
+					
+					 <p>Task Inputs: <%=@flash_team_event["inputs"]%></p>
+					 <p>Task Outputs: <%=@flash_team_event["outputs"]%></p>
+					
+					 <p>Task Members: <%=@task_members%></p>
+
+				</div>
+				
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+	
+						<h2>Task Rejection Email: </h2>
+						
+					<form role="form" name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 40px">
+					
+					Your Email: <input class="span5" type="email" required> <br />
+					Recipient Email: <input class="span5" type="email" required> <br />
+					Subject: <input class="span5" type="text" required> <br />
+					
+						<textarea type="text" id="rejectionEmailInput" class="input-block-level span10" rows="10" placeholder="Task Rejection Email Text ..." required>
+Thank you for applying to work on the "<%=@flash_team_event["title"]%>" task for the “<%=@flash_team_json["title"]%>” project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. 
+						
+If you don’t want to be informed about our future job opportunities, please reply to this email with your name in the content.
+
+Thank you,
+Stanford HCI Research Team
+						</textarea>
+							<button type="submit" class="btn btn-primary">Send Task Rejection Email</button>
+							<button type="button" class="btn">Save Draft</button>
+					</form>
+
+	                  <!--
+<p>
+						Thank you for applying to work on the “<%=@flash_team_json["title"]%>” project.  
+						Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process 
+						that assigns the job to the first person who claims it. However, we have more upcoming projects 
+						and we will keep you posted as other job opportunities become available. 
+						<br /><br />
+						If you don’t want to be informed about our future job opportunities, please reply to this email 
+						with your name in the content.
+						<br /><br />
+						Thank you,
+						<br />
+						Stanford HCI Research Team
+						</p>
+-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+   
+
+
+	</body>
+</html>
+
+  <%= javascript_include_tag "/assets/jquery" %>
+  <%= javascript_include_tag "/assets/jquery_ujs" %>
+  <%= javascript_include_tag "bootstrap/bootstrap.min" %>
+  <%= javascript_include_tag "bootstrap-editable.min" %>
+  <%= javascript_include_tag "bootstrap-tour.min" %>

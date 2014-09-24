@@ -421,6 +421,17 @@ end
 
    end
    
+   def task_portal
+   
+   		@id_team = params[:id]
+   		@flash_team = FlashTeam.find(params[:id])
+   		
+   		# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_events = flash_team_status['flash_teams_json']['events']
+   
+   end
    
    def hire_form
 	   	@id_team = params[:id]
@@ -444,7 +455,10 @@ end
 	    	@task_members = member_obj['role']
 	    else
 	    	@task_members = nil
-	    end   
+	    end  
+	    
+	    #@my_text = "Here is some basic text...\n...with a line break."
+
    end
    
    def task_rejection

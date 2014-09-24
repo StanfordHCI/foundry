@@ -76,6 +76,7 @@ Foundry::Application.routes.draw do
       post :delayed_task_finished_email
       post :create
       #get :hire_form
+      get :task_portal
       get :settings
       get :duplicate
       post :settings
