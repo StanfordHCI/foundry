@@ -632,10 +632,10 @@ function drawMemberLines(eventObj) {
         var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
         var x_offset = 16 + (i*14); //unique for each member line
         var y_offset = 60;
+        var member = getMemberById(members[i]);
+        var color = member.color;
 
         if (existingMemCircle[0].length ==0) { //First time
-            var member = getMemberById(members[i]);
-            var color = member.color;
             var name = member.name;
 
             task_g.append("circle")
@@ -654,7 +654,10 @@ function drawMemberLines(eventObj) {
                 .attr("fill", color);
         
         } else { //Redrawing
-            console.log("redrawing member");
+            existingMemCircle
+                .attr("cx", function(d) {return d.x + x_offset})
+                .attr("cy", function(d) {return d.y + y_offset})
+                .attr("fill", color);
         }
 
     }
