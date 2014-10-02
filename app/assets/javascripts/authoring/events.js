@@ -620,12 +620,10 @@ function drawCollabBtn(eventObj, firstTime) {
     }
 }
 
-function drawMemberLines(eventObj) {
+function drawMemberCircles(eventObj) {
     var groupNum = eventObj["id"];
     var members = eventObj["members"];
     var task_g = getTaskGFromGroupNum(groupNum);
-
-    //NEW MEMBER CIRCLES
 
     //Find out if first draw or redrawing
     for (var i=0; i<members.length; i++) {
@@ -659,48 +657,7 @@ function drawMemberLines(eventObj) {
                 .attr("cy", function(d) {return d.y + y_offset})
                 .attr("fill", color);
         }
-
     }
-
-    /* OLD MEMBER LINES CODE
-    var x_offset = 8; // unique for member lines
-    var width = getWidth(eventObj) - 8;
-    // figure out if first time or not for each member line
-    for(var i=0;i<members.length;i++){
-        var existingLine = task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1));
-        var y_offset = 60 + (i*8); // unique for member lines
-        if(existingLine[0].length == 0){ // first time
-            var member = getMemberById(members[i]);
-            var color = member.color;
-            var name = member.name;
-            
-            task_g.append("rect")
-                .attr("class", "member_line")
-                .attr("id", function(d) {
-                    return "event_" + groupNum + "_eventMemLine_" + (i+1);
-                })
-                .attr("x", function(d) {
-                    return d.x + x_offset;})
-                .attr("y", function(d) {
-                    return d.y + y_offset;})
-                .attr("groupNum", groupNum)
-                .attr("height", 5)
-                .attr("width", width)
-                .attr("fill", color)
-                .attr("fill-opacity", .9);
-        } else { // line already exists, just need to redraw
-            var members = eventObj["members"];
-            var member = getMemberById(members[i]);
-            var color = member.color;
-
-            existingLine
-                .attr("x", function(d) {return d.x + x_offset})
-                .attr("y", function(d) {return d.y + y_offset})
-                .attr("fill", color)
-                .attr("width", width);
-        }
-    }
-    */
 };
 
 
@@ -850,7 +807,7 @@ function drawEvent(eventObj) {
     drawGdriveLink(eventObj);
     drawHandoffBtn(eventObj);
     drawCollabBtn(eventObj);
-    drawMemberLines(eventObj);
+    drawMemberCircles(eventObj);
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
@@ -865,21 +822,21 @@ function drawAllPopovers() {
 };
 
 
-function removeAllMemberLines(eventObj){
+function removeAllMemberCircles(eventObj){
     var groupNum = eventObj["id"];
     var members = eventObj["members"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
     for(var i=0;i<members.length;i++){
-        task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1)).remove();
+        task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1)).remove();
     }
 };
 
-function renderAllMemberLines() {
+function renderAllMemberCircles() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
-        drawMemberLines(ev);
+        drawMemberCircles(ev);
     }
 };
 
@@ -899,7 +856,7 @@ function addEventMember(eventId, memberIndex) {
     flashTeamsJSON["events"][indexOfEvent].members.push({name: memberName, uniq: memberUniq, color: memberColor});
 
     // render on events
-    renderAllMemberLines();
+    renderAllMemberCircles();
 }
 
 //Remove a team member from an event
@@ -920,17 +877,6 @@ function deleteEventMember(eventId, memberNum, memberName) {
         }
     }
 }
-
-//Remove all the lines from a given event
-function removeAllMemberLines(eventObj){
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    for(var i=0;i<members.length;i++){
-        task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1)).remove();
-    }
-};
 
 //shows an alert asking the user to confirm that they want to delete an event
 function confirmDeleteEvent(eventId) {
