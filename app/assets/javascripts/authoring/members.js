@@ -42,12 +42,12 @@ colorBox.replaceColor = function(color) {
     renderPills(members);
     renderMemberPopovers(members);
     renderDiagram(members);
-    renderAllMemberLines();
+    renderAllMemberCircles();
 };
 
 function renderMembersUser() {
     var members = flashTeamsJSON.members;
-    renderAllMemberLines();
+    renderAllMemberCircles();
 };
 
 function setCurrentMember() {
@@ -428,7 +428,7 @@ function deleteMember(pillId) {
         
         // remove member
         if(member_event_index != -1){ // found member in the event
-            removeAllMemberLines(ev);
+            removeAllMemberCircles(ev);
             ev.members.splice(member_event_index,1);
             drawEvent(ev,false);
         }
@@ -463,7 +463,7 @@ function saveMemberInfo(popId) {
     //updateMemberPopover(popId);
 
     $("#mPill_" + popId).popover("hide");
-    renderAllMemberLines();
+    renderAllMemberCircles();
     renderMemberPopovers(flashTeamsJSON["members"]);
 };
 
