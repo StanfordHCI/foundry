@@ -621,18 +621,50 @@ function drawCollabBtn(eventObj, firstTime) {
 }
 
 function drawMemberLines(eventObj) {
-    //console.log("drawing member lines for ", eventObj);
-    var x_offset = 8; // unique for member lines
-    var width = getWidth(eventObj) - 8;
-
     var groupNum = eventObj["id"];
     var members = eventObj["members"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
+    //NEW MEMBER CIRCLES
+
+    //Find out if first draw or redrawing
+    for (var i=0; i<members.length; i++) {
+        var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
+        var x_offset = 16 + (i*14); //unique for each member line
+        var y_offset = 60;
+
+        if (existingMemCircle[0].length ==0) { //First time
+            var member = getMemberById(members[i]);
+            var color = member.color;
+            var name = member.name;
+
+            task_g.append("circle")
+                .attr("class", "member_circle")
+                .attr("id", function(d) {
+                    return "event_" + groupNum + "_eventMemCircle_" + (i+1);
+                })
+                .attr("groupNum", groupNum)
+                .attr("r", 6)
+                .attr("cx", function(d) {
+                    return d.x + x_offset;
+                })
+                .attr("cy", function(d) {
+                    return d.y + y_offset;
+                })
+                .attr("fill", color);
+        
+        } else { //Redrawing
+            console.log("redrawing member");
+        }
+
+    }
+
+    /* OLD MEMBER LINES CODE
+    var x_offset = 8; // unique for member lines
+    var width = getWidth(eventObj) - 8;
     // figure out if first time or not for each member line
     for(var i=0;i<members.length;i++){
         var existingLine = task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1));
-        //console.log("EXISTING LINE", existingLine);
         var y_offset = 60 + (i*8); // unique for member lines
         if(existingLine[0].length == 0){ // first time
             var member = getMemberById(members[i]);
@@ -665,6 +697,7 @@ function drawMemberLines(eventObj) {
                 .attr("width", width);
         }
     }
+    */
 };
 
 
