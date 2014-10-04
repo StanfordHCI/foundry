@@ -38,6 +38,8 @@ function eventMousedown(task2idNum) {
  //show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
         
+     
+  
        var modal_body = '<p id="task-text">Task Description</p>' +
        '<p><span id="task-edit-link"></span></p>';
        var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="DRFunction('+task2idNum+')">Hire</button>' +

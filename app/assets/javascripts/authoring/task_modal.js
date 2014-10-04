@@ -2,7 +2,19 @@
 function showTaskOverview(groupNum){
 
 	var task_id = getEventJSONIndex(groupNum);
-	var description = flashTeamsJSON["events"][task_id].description;
+	var eventObj = flashTeamsJSON["events"][task_id];
+	var description = eventObj.description;
+	var title = eventObj["title"];
+    var startHr = eventObj["startHr"];
+    var startMin = eventObj["startMin"];
+    //var notes = eventObj["notes"];
+    var inputs = eventObj["inputs"];
+    if(!inputs) inputs = "";
+    var outputs = eventObj["outputs"];
+    if(!outputs) outputs = "";
+    var totalMinutes = eventObj["duration"];
+    var numHours = Math.floor(totalMinutes/60);
+    var dri_id = eventObj.dri;
 	
 	if(description === undefined){
 		description = "No description has been added yet.";
@@ -16,17 +28,21 @@ function showTaskOverview(groupNum){
 		$("#taskOverviewEditLink").html('<a onclick="editTaskOverview(false,'+groupNum+')" style="font-weight: normal;">Edit</a>');
 	}
 	
-	var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
-	
-	$('#taskOverview').html(taskOverviewContent);
-	
+	//modal label
+	var label = title;
+	$('#task_modal_Label').html(label);
+
 	//modal content
+	var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
+	$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
 
-	//only allow authors to edit project overview
+	
+
+	
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
-		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+		$("#edit-save-task").attr('onclick', 'editTaskOverview(false,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 
 
@@ -37,11 +53,24 @@ function showTaskOverview(groupNum){
 	}
 }
 
+//if popover is true only the author can edit.
 function editTaskOverview(popover,groupNum){
 
-	var task_id =getEventJSONIndex(groupNum);
-	var description = flashTeamsJSON["events"][task_id].description;
-	
+	var task_id = getEventJSONIndex(groupNum);
+	var eventObj = flashTeamsJSON["events"][task_id];
+	var description = eventObj.description;
+	var title = eventObj["title"];
+    var startHr = eventObj["startHr"];
+    var startMin = eventObj["startMin"];
+    //var notes = eventObj["notes"];
+    var inputs = eventObj["inputs"];
+    if(!inputs) inputs = "";
+    var outputs = eventObj["outputs"];
+    if(!outputs) outputs = "";
+    var totalMinutes = eventObj["duration"];
+    var numHours = Math.floor(totalMinutes/60);
+    var dri_id = eventObj.dri;
+
 	if(description === undefined){
 		description = "";
 	}
@@ -49,6 +78,11 @@ function editTaskOverview(popover,groupNum){
 	if(popover==true){
 		$('#task-edit-link').hide();
 		
+		//label
+		label = '<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'" >'	
+		$('#task_modal_Label').html(label);
+
+        //content
 		var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
@@ -62,6 +96,12 @@ function editTaskOverview(popover,groupNum){
 	else{
 		$('#taskOverviewEditLink').hide();
 	
+		
+		//label
+		var label = 'label<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'" >'	
+		$('#task_modal_Label').html(label);
+		
+     
 		var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
@@ -69,6 +109,7 @@ function editTaskOverview(popover,groupNum){
 					+'</form>';
 			
 		$('#taskOverview').html(taskOverviewForm);
+	
 	}
 				
 }
