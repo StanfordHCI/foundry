@@ -3,6 +3,19 @@
  * 
  */
 
+
+//Fires on "Start" button on task modal
+ function startTask(groupNum) {
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "started";
+
+    //START HERE
+    //
+
+    updateStatus();
+ }
+
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
     //Creates the alert modal title
@@ -91,8 +104,10 @@ var completeTask = function(groupNum){
     //TODO
 
 
+
+
     //------------------------------//
-    //OLD TICKER VERSION CODE
+    //OLD TICKER VERSION CODE, TO DELETE LATER, USE TO MAKE SURE NOT MISSING CASES??
     /*
     $('#confirmAction').modal('hide');
     var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
@@ -130,4 +145,5 @@ var completeTask = function(groupNum){
     // reload status bar
     load_statusBar(status_bar_timeline_interval);*/
     //------------------------------//
+
 };

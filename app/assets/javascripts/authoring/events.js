@@ -5,6 +5,7 @@
 
 var RECTANGLE_WIDTH = 100;
 var RECTANGLE_HEIGHT = 70;
+var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
@@ -245,7 +246,7 @@ function createEventObj(snapPoint) {
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
-        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], 
+        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
@@ -813,6 +814,15 @@ function drawEvent(eventObj) {
     drawEachCollabForEvent(eventObj);
 };
 
+
+//Draw a triangular hiring event on the timeline
+function drawHiringEvent() {
+    drawHiringRect();
+    //NOT DONE
+
+    
+}
+
 function drawAllPopovers() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
@@ -940,6 +950,38 @@ function deleteEvent(eventId){
     
     updateStatus(false);
 }
+
+//CODE ON HOLD
+//Draw the hiring event main rect for the hiring events
+/*function drawHiringRect() {
+    //START HERE
+
+    var width = RECTANGLE_HEIGHT * 2; //default 2 hours
+
+    var existingHireRect = task_g.selectAll("#hire_rect_" + groupNum);
+    if(existingMainRect[0].length == 0){ // first time
+        task_g.append("rect")
+            .attr("class", "hire_rect")
+            .attr("x", function(d) {return d.x;})
+            .attr("y", function(d) {return d.y;})
+            .attr("id", function(d) {
+                return "hire_rect_" + d.groupNum; })
+            .attr("groupNum", function(d) {return d.groupNum;})
+            .attr("height", HIRING_HEIGHT)
+            .attr("width", width)
+            .attr("fill", "#C9C9C9")
+            .attr("fill-opacity", .6)
+            .attr("stroke", "#5F5A5A")
+            .attr('pointer-events', 'all')
+            .call(drag);
+    } else {
+        task_g.selectAll(".task_rectangle")
+            .attr("x", function(d) {return d.x;})
+            .attr("y", function(d) {return d.y;})
+            .attr("width", width);
+    }
+}*/
+
 
 //This function is used to truncate the event title string since html tags cannot be attached to svg
 String.prototype.trunc = String.prototype.trunc ||
