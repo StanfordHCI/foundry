@@ -84,7 +84,7 @@
 	
 					<h2>Task Available Email</h2><br />
 										
-					<%= form_tag({action: "send_task_rejection", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
+					<%= form_tag({action: "send_task_available", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
 						<%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
 						<%= text_field_tag(:sender_email, "", :class => 'span5') %> <br />
 						<%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
@@ -102,68 +102,8 @@
 
             
             
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!--
-<h1>Simple Sidebar</h1>
-                        <p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-                        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>.</p>
--->
-						
-						
-						
-												<h2>Task Available Email: </h2>
-												<!-- <p><%simple_format(@my_text)%> </p> -->
-						
-					<form role="form" name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 40px">
-					
-					Your Email: <input class="span5" type="email" required> <br />
-					Recipient Email: <input class="span5" type="email" required> <br />
-					Subject: <input class="span5" type="text" value="From Stanford HCI Group: <%=@flash_team_event["title"]%> Task Is Available" required> <br />
-					
-					<!--
-Subject: <textarea type="text" id="availableEmailInput" class="span5" rows="1" placeholder="Task Available Email Subject ..." required>
-					Task Available
-					</textarea>
--->
-					
-					
-						<textarea type="text" id="availableEmailInput" class="input-block-level span10" rows="30" placeholder="Task Available Email Text ..." required>
-Hi,
-
-This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_members%> for the "<%=@flash_team_event["title"]%>" task for the “<%=@flash_team_json["title"]%>” project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.
-
-Project description: <%=@flash_team_json["projectoverview"]%>
-
-Task description: <%=@flash_team_event["description"]%>
-
-As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting http://bit.ly/foundryexample and clicking the “Start Foundry Tour” button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.  
-
-Input description: As the <%=@task_members%>, you will receive the following input(s): <%=@flash_team_event["inputs"]%>. Below is the link to the input of your task [INSERT LINK HERE]
-
-Output requirements: You are asked to produce the following output(s): <%=@flash_team_event["inputs"]%>. When you are done, you’ll need to upload the deliverables (specified below) to the "<%=@flash_team_event["title"]%>" task folder on Foundry and press complete on your task. 
-
-The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT].
-
-Deadline: You will have <%=@flash_team_event["duration"]%> minutes to finish this task. Since <%=@flash_team_event["duration"]%> minutes is a relatively short amount of time, we expect more of a working prototype rather than a finished product. 
-
-If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.
-
-If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@flash_team_event["title"]%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
-
-
-Best,
-Stanford HCI Research Team
-
-						</textarea>
-							<button type="submit" class="btn btn-primary">Send Task Available Email</button>
-							<button type="button" class="btn">Save Draft</button>
-					</form>
-					
-					
-                    </div>
-                </div>
-            </div>
+               
+            </div> <!-- #container-fluid -->
         </div>
         <!-- /#page-content-wrapper -->
 

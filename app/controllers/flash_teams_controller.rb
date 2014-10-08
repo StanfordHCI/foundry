@@ -480,8 +480,17 @@ If you are hired, you must start working on the task within 30 minutes. You shou
 
 If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the " + @flash_team_event['title'].to_s + " task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities. 
 
-Best, \n Stanford HCI Research Team"
+Best, \nStanford HCI Research Team"
 
+   end
+   
+   def send_task_available
+   
+   		@sender_email = params[:sender_email]
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		@message = params[:message]
+   
    end
    
    def task_rejection
@@ -497,7 +506,7 @@ Best, \n Stanford HCI Research Team"
 	    @flash_team_event = @flash_team_json['events'][@id_task]
 	    
 	   @task_rej_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is No Longer Available"
-	   @task_rej_email_content = "Thank you for applying to work on the " + @flash_team_event['title']+ " task for the " + @flash_team_json['title'] +" project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. \n\n If you don't want to be informed about our future job opportunities, please reply to this email with your name in the content. \n\n Thank you, \n Stanford HCI Research Team" 
+	   @task_rej_email_content = "Thank you for applying to work on the " + @flash_team_event['title']+ " task for the " + @flash_team_json['title'] +" project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. \n\nIf you don't want to be informed about our future job opportunities, please reply to this email with your name in the content. \n\nThank you, \nStanford HCI Research Team" 
 	   	    
    end
    
