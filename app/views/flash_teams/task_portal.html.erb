@@ -71,10 +71,14 @@
                     <div class="col-lg-12">
 									
 					<h2>All Tasks in <%=@flash_team_json["title"]%> project </h2>
-					 	
+					 
+					 <%i = 0%>
 					<%@flash_team_events.each do |event|%>
-						<%url = event["id"].to_s + "/hire_form" %>
-						<a href="<%=url%>"><%=event["title"]%></a> <br />
+						<%#url = event["id"].to_s + "/hire_form" %> <!--THIS IS WRONG (it gives us the event id but we need where in the json it is)--> 
+						<%url = i.to_s + "/hire_form" %>
+						<a href="<%=url%>"><%=event["title"]%></a> 
+						<br />
+						<%i+= 1%>
 					<% end %>
 					
 					

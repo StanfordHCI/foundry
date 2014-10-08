@@ -91,10 +91,10 @@
 						<%= text_field_tag(:recipient_email, "", :class => 'span5') %> <br />
 						<%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
 						<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span8') %> <br />
-						<%= text_area_tag(:message, @task_avail_email_content, :class => 'span10', :rows =>10) %> <br />
+						<%= text_area_tag(:message, @task_avail_email_content, :class => 'span10', :rows =>20) %> <br />
 <!-- 						<% submit_tag("Send Task Rejection Email", :class => 'btn btn-primary') %> -->
 						<%= button_tag("Send Task Available Email", :type => 'submit', :class => 'btn btn-primary') %>
-						<%= button_tag("Save Draft", :class => 'btn') %>
+						<!-- <% button_tag("Save Draft", :class => 'btn') %> -->
 					<% end %>
 					
                     </div>

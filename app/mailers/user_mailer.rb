@@ -54,7 +54,6 @@ class UserMailer < ActionMailer::Base
   
   
   def send_task_hiring_email(sender_email,recipient_email, subject, message)
-  	#for now, send from default from email (i.e. stanfordhci gmail set above)
   	
   	if sender_email.empty?
   		sender_email = "stanfordhci.odesk@gmail.com"
