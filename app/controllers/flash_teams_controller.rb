@@ -458,6 +458,29 @@ end
 	    end  
 	    
 	    #@my_text = "Here is some basic text...\n...with a line break."
+	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
+	    
+@task_avail_email_content = "Hi, 
+
+This is an email from the Stanford HCI Group notifying you that a job requiring a " + @task_members + " for the " + @flash_team_event['title'] + " task for the " + @flash_team_json['title'] + " project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline. 
+
+Project description: " + @flash_team_json['projectoverview'].to_s + 
+
+"Task description: " + @flash_team_event['description'].to_s + 
+
+"As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting http://bit.ly/foundryexample and clicking the \"Start Foundry Tour\" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry. 
+
+Input description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
+
+Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. \n\n The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
+
+Deadline: You will have " + @flash_team_event['duration'].to_s + " minutes to finish this task. Since " + @flash_team_event['duration'].to_s + " minutes is a relatively short amount of time, we expect more of a working prototype rather than a finished product. 
+
+If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you. 
+
+If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the " + @flash_team_event['title'].to_s + " task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities. 
+
+Best, \n Stanford HCI Research Team"
 
    end
    

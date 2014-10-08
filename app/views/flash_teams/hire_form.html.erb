@@ -78,6 +78,30 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
+            
+            <div class="row">
+                    <div class="col-lg-12">
+	
+					<h2>Task Available Email</h2><br />
+										
+					<%= form_tag({action: "send_task_rejection", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
+						<%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:sender_email, "", :class => 'span5') %> <br />
+						<%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:recipient_email, "", :class => 'span5') %> <br />
+						<%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span8') %> <br />
+						<%= text_area_tag(:message, @task_avail_email_content, :class => 'span10', :rows =>10) %> <br />
+<!-- 						<% submit_tag("Send Task Rejection Email", :class => 'btn btn-primary') %> -->
+						<%= button_tag("Send Task Available Email", :type => 'submit', :class => 'btn btn-primary') %>
+						<%= button_tag("Save Draft", :class => 'btn') %>
+					<% end %>
+					
+                    </div>
+                </div>
+
+            
+            
                 <div class="row">
                     <div class="col-lg-12">
                         <!--
