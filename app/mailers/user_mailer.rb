@@ -51,4 +51,18 @@ class UserMailer < ActionMailer::Base
       mail(:to => email, :cc => cc_emails, :subject => event_name +' run by ' + dri_role +' is running late')
        
   end
+  
+  
+  def send_task_hiring_email(sender_email,recipient_email, subject, message)
+  	#for now, send from default from email (i.e. stanfordhci gmail set above)
+  	
+  	if sender_email.empty?
+  		sender_email = "stanfordhci.odesk@gmail.com"
+  	end
+  		  	  
+  	  @message = message
+  	  
+  	  mail(:from => sender_email, :to => recipient_email, :subject => subject)
+  end
+  
 end

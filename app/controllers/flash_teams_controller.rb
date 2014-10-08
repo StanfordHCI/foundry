@@ -472,7 +472,9 @@ Project description: " + @flash_team_json['projectoverview'].to_s +
 
 Input description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
 
-Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. \n\n The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
+Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
+
+The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
 
 Deadline: You will have " + @flash_team_event['duration'].to_s + " minutes to finish this task. Since " + @flash_team_event['duration'].to_s + " minutes is a relatively short amount of time, we expect more of a working prototype rather than a finished product. 
 
@@ -490,6 +492,8 @@ Best, \nStanford HCI Research Team"
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		@message = params[:message]
+   		
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
    
    end
    
@@ -516,6 +520,8 @@ Best, \nStanford HCI Research Team"
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		@message = params[:message]
+   		
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
    
    end
 
