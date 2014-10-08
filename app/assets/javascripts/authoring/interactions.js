@@ -40,6 +40,7 @@ function eventMousedown(task2idNum) {
         
        var modal_body = '<p id="task-text">Task Description</p>' +
        '<p><span id="task-edit-link"></span></p>';
+
        var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        '<button class="btn " id="start-task" style="float :left " onclick="ATFunction('+task2idNum+')">Start</button>'+
        '<button class="btn " id="end-task" style="float :left " onclick="ATFunction('+task2idNum+')">End</button>' +
