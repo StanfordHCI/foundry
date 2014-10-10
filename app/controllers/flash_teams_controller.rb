@@ -497,6 +497,71 @@ Best, \nStanford HCI Research Team"
    
    end
    
+      def task_acceptance
+	   	@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
+	    member_id = @flash_team_event['members'][0]
+	    
+	    member_obj = getMemberById(@id_team, @id_task, member_id) 
+	    
+	    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
+	    if member_obj != -1
+	    	@task_members = member_obj['role']
+	    else
+	    	@task_members = nil
+	    end  
+	    
+	    #@my_text = "Here is some basic text...\n...with a line break."
+	    @task_acceptance_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Acceptance"
+	    
+@task_acceptance_email_content = "Hi, 
+
+Congratulations!  You have been hired to work on the " + @flash_team_event['title'] + " task as part of the " + @flash_team_json['title'] + "  project.  As stated in the job description, you will have 1 hour to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+
+Project description: " + @flash_team_json['projectoverview'].to_s + 
+
+"\n\nTask description: " + @flash_team_event['description'].to_s + 
+
+"\n\nInput description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
+
+Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
+
+The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
+
+Deadline: You will have " + @flash_team_event['duration'].to_s + " minutes to finish this task. Since " + @flash_team_event['duration'].to_s + " minutes is a relatively short amount of time, we expect more of a working prototype rather than a finished product. 
+
+How to start: We are asking you to use our platform, Foundry, to keep track of your 
+progress and submit your work.  Click the following URL to sign up for this project on Foundry: [INSERT URL]
+
+After you sign up, you will receive a unique link to the project, which you should use throughout the project. As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the \"Start Foundry Tour\" button on the top left of the page.  Feel free to contact us if you have any remaining questions.  
+
+Thank you for involvement in this project and we look forward to receiving your work!
+
+Best, \nStanford HCI Research Team"
+
+   end
+   
+   def send_task_acceptance
+   
+   		@sender_email = params[:sender_email]
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		@message = params[:message]
+   		
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
+   
+   end
+   
    def task_rejection
    
    		@id_team = params[:id]
