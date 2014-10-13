@@ -25,17 +25,18 @@ timeline_svg.append("defs").append("marker")
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
     //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
+   /*imported popover to modal
+   for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
         var idNum = flashTeamsJSON["events"][i].id;
         if (idNum != task1idNum && idNum != task2idNum) {
             hidePopover(idNum);
         }   
-    }
+    }*/
 
     if (DRAWING_HANDOFF == true) $("#handoff_btn_" + task1idNum).popover("hide");
     if (DRAWING_COLLAB == true) $("#collab_btn_" + task1idNum).popover("hide");
  
- //show modal if handoff or collaboration is NOT being drawn
+   //show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
         
      
@@ -144,8 +145,10 @@ function eventMousedown(task2idNum) {
         }
     //There is no interation being drawn
     } else {
+        /*imported popover to modal
         var data = getPopoverDataFromGroupNum(task2idNum);
         togglePopover(task2idNum);
+        */
         return;
     }
 }

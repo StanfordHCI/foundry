@@ -482,9 +482,12 @@ var loadData = function(){
     
     drawEvents(!in_progress);
 
+    /*imported popover to modal
     if(isUser){
         updateAllPopoversToReadOnly();  
     }
+    */
+    
     drawBlueBoxes();
     drawRedBoxes();
     drawDelayedTasks();
@@ -525,7 +528,7 @@ var startTeam = function(firstTime){
     if(page_loaded_after_start || page_loaded_before_start_and_now_started){
         if(page_loaded_before_start_and_now_started)
             user_loaded_before_team_start = false;
-        updateAllPopoversToReadOnly();
+        //updateAllPopoversToReadOnly();
        
         
         //Next line is commented out after disabling the ticker
@@ -552,7 +555,7 @@ var drawEvents = function(editable){
         var ev = flashTeamsJSON.events[i];
         console.log("DRAWING EVENT " + i + ", with editable: " + editable);
         drawEvent(ev);
-        drawPopover(ev, editable, false);
+        //drawPopover(ev, editable, false);
     }
 };
 
@@ -1044,7 +1047,7 @@ var moveTasksRight = function(tasks, amount, from_initial){
         flashTeamsJSON["events"][getEventJSONIndex(groupNum)] = ev;
 
         drawEvent(ev);
-        drawPopover(ev, false, false);
+        //drawPopover(ev, false, false);
     }
 
     var tasks_with_current = tasks.slice(0);
@@ -1078,7 +1081,7 @@ var moveTasksLeft = function(tasks, amount){
         ev.startMin = startTimeObj["startMin"];
 
         drawEvent(ev);
-        drawPopover(ev, false, false);
+        //drawPopover(ev, false, false);
     }
 
     var tasks_with_current = tasks.slice(0);

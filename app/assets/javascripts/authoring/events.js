@@ -30,7 +30,7 @@ var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
         var ev = getEventFromId(d.groupNum);
-        drawPopover(ev, true, false);
+        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -39,7 +39,7 @@ var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
         var ev = getEventFromId(d.groupNum);
-        drawPopover(ev, true, false);
+        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -51,7 +51,7 @@ var drag = d3.behavior.drag()
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
-            drawPopover(ev, true, false);
+            //drawPopover(ev, true, false);
             updateStatus(false);
         } else {
             // click
@@ -211,7 +211,7 @@ function createEvent(point) {
     drawEvent(eventObj, true);
 
     // render event popover
-    drawPopover(eventObj, true, true);
+    //drawPopover(eventObj, true, true);
 
     // save
     updateStatus(false);
@@ -823,13 +823,14 @@ function drawHiringEvent() {
     
 }
 
+/*imported popover to modal
 function drawAllPopovers() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
         drawPopover(ev, true, false);
     }
-};
+};*/
 
 
 function removeAllMemberCircles(eventObj){
