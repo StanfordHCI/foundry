@@ -5,6 +5,7 @@
 
 var RECTANGLE_WIDTH = 100;
 var RECTANGLE_HEIGHT = 70;
+var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
@@ -245,7 +246,7 @@ function createEventObj(snapPoint) {
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
-        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], 
+        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
@@ -620,49 +621,42 @@ function drawCollabBtn(eventObj, firstTime) {
     }
 }
 
-function drawMemberLines(eventObj) {
-    //console.log("drawing member lines for ", eventObj);
-    var x_offset = 8; // unique for member lines
-    var width = getWidth(eventObj) - 8;
-
+function drawMemberCircles(eventObj) {
     var groupNum = eventObj["id"];
     var members = eventObj["members"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
-    // figure out if first time or not for each member line
-    for(var i=0;i<members.length;i++){
-        var existingLine = task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1));
-        //console.log("EXISTING LINE", existingLine);
-        var y_offset = 60 + (i*8); // unique for member lines
-        if(existingLine[0].length == 0){ // first time
-            var member = getMemberById(members[i]);
-            var color = member.color;
-            var name = member.name;
-            
-            task_g.append("rect")
-                .attr("class", "member_line")
-                .attr("id", function(d) {
-                    return "event_" + groupNum + "_eventMemLine_" + (i+1);
-                })
-                .attr("x", function(d) {
-                    return d.x + x_offset;})
-                .attr("y", function(d) {
-                    return d.y + y_offset;})
-                .attr("groupNum", groupNum)
-                .attr("height", 5)
-                .attr("width", width)
-                .attr("fill", color)
-                .attr("fill-opacity", .9);
-        } else { // line already exists, just need to redraw
-            var members = eventObj["members"];
-            var member = getMemberById(members[i]);
-            var color = member.color;
+    //Find out if first draw or redrawing
+    for (var i=0; i<members.length; i++) {
+        var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
+        var x_offset = 16 + (i*14); //unique for each member line
+        var y_offset = 60;
+        var member = getMemberById(members[i]);
+        var color = member.color;
 
-            existingLine
-                .attr("x", function(d) {return d.x + x_offset})
-                .attr("y", function(d) {return d.y + y_offset})
-                .attr("fill", color)
-                .attr("width", width);
+        if (existingMemCircle[0].length ==0) { //First time
+            var name = member.name;
+
+            task_g.append("circle")
+                .attr("class", "member_circle")
+                .attr("id", function(d) {
+                    return "event_" + groupNum + "_eventMemCircle_" + (i+1);
+                })
+                .attr("groupNum", groupNum)
+                .attr("r", 6)
+                .attr("cx", function(d) {
+                    return d.x + x_offset;
+                })
+                .attr("cy", function(d) {
+                    return d.y + y_offset;
+                })
+                .attr("fill", color);
+        
+        } else { //Redrawing
+            existingMemCircle
+                .attr("cx", function(d) {return d.x + x_offset})
+                .attr("cy", function(d) {return d.y + y_offset})
+                .attr("fill", color);
         }
     }
 };
@@ -814,11 +808,20 @@ function drawEvent(eventObj) {
     drawGdriveLink(eventObj);
     drawHandoffBtn(eventObj);
     drawCollabBtn(eventObj);
-    drawMemberLines(eventObj);
+    drawMemberCircles(eventObj);
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
 };
+
+
+//Draw a triangular hiring event on the timeline
+function drawHiringEvent() {
+    drawHiringRect();
+    //NOT DONE
+
+    
+}
 
 function drawAllPopovers() {
     var events = flashTeamsJSON["events"];
@@ -829,21 +832,21 @@ function drawAllPopovers() {
 };
 
 
-function removeAllMemberLines(eventObj){
+function removeAllMemberCircles(eventObj){
     var groupNum = eventObj["id"];
     var members = eventObj["members"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
     for(var i=0;i<members.length;i++){
-        task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1)).remove();
+        task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1)).remove();
     }
 };
 
-function renderAllMemberLines() {
+function renderAllMemberCircles() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
-        drawMemberLines(ev);
+        drawMemberCircles(ev);
     }
 };
 
@@ -863,7 +866,7 @@ function addEventMember(eventId, memberIndex) {
     flashTeamsJSON["events"][indexOfEvent].members.push({name: memberName, uniq: memberUniq, color: memberColor});
 
     // render on events
-    renderAllMemberLines();
+    renderAllMemberCircles();
 }
 
 //Remove a team member from an event
@@ -884,17 +887,6 @@ function deleteEventMember(eventId, memberNum, memberName) {
         }
     }
 }
-
-//Remove all the lines from a given event
-function removeAllMemberLines(eventObj){
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    for(var i=0;i<members.length;i++){
-        task_g.selectAll("#event_" + groupNum + "_eventMemLine_" + (i+1)).remove();
-    }
-};
 
 //shows an alert asking the user to confirm that they want to delete an event
 function confirmDeleteEvent(eventId) {
@@ -958,6 +950,38 @@ function deleteEvent(eventId){
     
     updateStatus(false);
 }
+
+//CODE ON HOLD
+//Draw the hiring event main rect for the hiring events
+/*function drawHiringRect() {
+    //START HERE
+
+    var width = RECTANGLE_HEIGHT * 2; //default 2 hours
+
+    var existingHireRect = task_g.selectAll("#hire_rect_" + groupNum);
+    if(existingMainRect[0].length == 0){ // first time
+        task_g.append("rect")
+            .attr("class", "hire_rect")
+            .attr("x", function(d) {return d.x;})
+            .attr("y", function(d) {return d.y;})
+            .attr("id", function(d) {
+                return "hire_rect_" + d.groupNum; })
+            .attr("groupNum", function(d) {return d.groupNum;})
+            .attr("height", HIRING_HEIGHT)
+            .attr("width", width)
+            .attr("fill", "#C9C9C9")
+            .attr("fill-opacity", .6)
+            .attr("stroke", "#5F5A5A")
+            .attr('pointer-events', 'all')
+            .call(drag);
+    } else {
+        task_g.selectAll(".task_rectangle")
+            .attr("x", function(d) {return d.x;})
+            .attr("y", function(d) {return d.y;})
+            .attr("width", width);
+    }
+}*/
+
 
 //This function is used to truncate the event title string since html tags cannot be attached to svg
 String.prototype.trunc = String.prototype.trunc ||

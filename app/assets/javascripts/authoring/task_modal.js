@@ -128,8 +128,3 @@ function saveTaskOverview(groupNum){
     updateStatus();
     showTaskOverview(groupNum);
 }
-
-
-function ATFunction(groupNum){
-alert("test");
-}

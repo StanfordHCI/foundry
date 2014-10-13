@@ -283,7 +283,7 @@ function saveEventInfo (popId) {
     var indexOfJSON = getEventJSONIndex(popId);
     var ev = flashTeamsJSON["events"][indexOfJSON];
 
-    removeAllMemberLines(ev);
+    removeAllMemberCircles(ev);
     //Update members of event
     flashTeamsJSON["events"][indexOfJSON].members = [];
     for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
