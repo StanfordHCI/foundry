@@ -487,7 +487,7 @@ var loadData = function(){
         updateAllPopoversToReadOnly();  
     }
     */
-    
+
     drawBlueBoxes();
     drawRedBoxes();
     drawDelayedTasks();
@@ -953,7 +953,7 @@ var getDataIndexFromGroupNum = function(groupNum){
 // in events.js, which in turn calls this function
 var removeTask = function(groupNum){
     // destroy popover
-    destroyPopover(groupNum);
+    //destroyPopover(groupNum);
 
     // remove from data array
     var idx = null;

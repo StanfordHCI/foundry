@@ -56,7 +56,7 @@ function confirmCompleteTask(groupNum) {
     	$('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };
-    hidePopover(groupNum); 
+    //hidePopover(groupNum); 
 }
 
 //Return text to fill complete task modal
@@ -137,7 +137,7 @@ var completeTask = function(groupNum){
             live_tasks.splice(idx, 1);
         }
     }
-    hidePopover(groupNum);
+    //hidePopover(groupNum);
 
     // update db
     updateStatus(true);

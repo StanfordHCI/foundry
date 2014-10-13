@@ -29,6 +29,7 @@ function showTaskOverview(groupNum){
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#hire-task").css('display','none');
+		$("#delete").css('display','none');
 	}
 }
 
@@ -38,8 +39,7 @@ function editTaskOverview(popover,groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
-   
-	
+   	
 	if(popover==true){
 		$('#task-edit-link').hide();
 		

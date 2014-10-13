@@ -891,7 +891,8 @@ function deleteEventMember(eventId, memberNum, memberName) {
 
 //shows an alert asking the user to confirm that they want to delete an event
 function confirmDeleteEvent(eventId) {
-
+    $('#task_modal').modal('hide'); 
+    
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Delete Event?";
 
