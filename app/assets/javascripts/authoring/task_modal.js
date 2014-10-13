@@ -20,7 +20,7 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
 
 	
-	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
+	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '');
 		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
