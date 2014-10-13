@@ -1,4 +1,3 @@
-
 function showTaskOverview(groupNum){
 
 	var task_id = getEventJSONIndex(groupNum);
@@ -42,9 +41,8 @@ function showTaskOverview(groupNum){
 	
 	if(uniq_u == "" || memberType == "pc" || memberType == "client") {
 		$("#edit-save-task").css('display', '');
-		$("#edit-save-task").attr('onclick', 'editTaskOverview(false,'+groupNum+')');
+		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
-
 
 	}
 	else{
@@ -53,7 +51,7 @@ function showTaskOverview(groupNum){
 	}
 }
 
-//if popover is true only the author can edit.
+
 function editTaskOverview(popover,groupNum){
 
 	var task_id = getEventJSONIndex(groupNum);
@@ -117,21 +115,17 @@ function editTaskOverview(popover,groupNum){
 
 function saveTaskOverview(groupNum){
 	var task_id = getEventJSONIndex(groupNum); 
+	var eventObj = flashTeamsJSON["events"][task_id];
 	// retrieve project overview from form
     var description_input = $("#descriptionInput").val();
     
-    		if (description_input === "") {
-        		description_input =  "No task description has been added yet.";
-				//alert("Please enter a project overview.");
-				//return;
-		}
-	 
-    flashTeamsJSON["events"][task_id].description =description_input;
+    if (description_input != "")
+        eventObj.description =description_input;
     
-    console.log("saved task description: " +   flashTeamsJSON["events"][task_id].description);
+    if($("#eventName").val() !="")
+        eventObj.title = $("#eventName").val();
     
     updateStatus();
-    
     showTaskOverview(groupNum);
 }
 
