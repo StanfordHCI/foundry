@@ -373,9 +373,31 @@ function writeDRIMembers(idNum, driId){
     return DRIString;
 }
 
+// Adds/updates the PC dropdown on the event popover
+function writePCMembers(idNum, PCId){
+
+    var indexOfJSON = getEventJSONIndex(idNum);
+    var PCString = '<option value="0">-- Choose PC --</option>';
+    var eventPC = PCId;
+    
+    // at some point change this to only members for that event (not all members in the flash team)
+    if (flashTeamsJSON["members"].length == 0) return "No Team Members";
+    for (i = 0; i<flashTeamsJSON["members"].length; i++) {
+                var memberName = flashTeamsJSON["members"][i].role;
+                var memberId = flashTeamsJSON["members"][i].id;
+                if (eventPC == memberId){
+                    PCString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
+                }
+                else{
+                    PCString += '<option value="'+memberId+'">' + memberName + '</option>';
+                }                  
+    }
+    return PCString;
+}
+
 // returns the id of the selected DRI in the DRI dropdown menu on the event popover 
 function getDRI(groupNum) {    
-    var dri = document.getElementById("driEvent_" + groupNum);
+    var dri = document.getElementById("driEvent");
     var driId;
    
     if (dri == null){
@@ -385,6 +407,19 @@ function getDRI(groupNum) {
 	    var driId = dri.value;    
     }
     return driId;
+}
+
+function getPC(groupNum){
+      var pc = document.getElementById("pcEvent");
+    var pcId;
+   
+    if (pc == null){
+         pcId = 0;       
+    }
+    else{
+        var pcId = pc.value;    
+    }
+    return pcId;
 }
 
 //Adds member checkboxes onto the popover of an event, checks if a member is involved in event
