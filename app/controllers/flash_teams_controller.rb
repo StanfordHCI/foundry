@@ -433,6 +433,71 @@ end
    
    end
    
+  def hire_form_v2
+	   	@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	    #array for all members associated with this event
+	    @event_members = Array.new
+	    
+	    # Add all the members associated with event to @event_members array
+	    @flash_team_event['members'].each do |event_member|
+	    	@event_members << getMemberById(@id_team, @id_task, event_member)
+	    end
+	    
+	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
+  end
+  
+ def send_task_available_v2
+
+ 		@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+   		if !params[:sender_email].empty?
+   			@sender_email = params[:sender_email]
+  		else
+  			@sender_email = "stanfordhci.odesk@gmail.com"
+  		end
+   		
+   		
+   		@event_member = params[:event_member] #i.e. role of recipient 
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		
+   		@task_name = params[:task_name]
+   		@project_overview = params[:project_overview]
+   		@task_description = params[:task_description]
+   		
+   		
+   		@inputs = params[:inputs]
+   		@input_link = params[:input_link]
+   		
+   		@outputs = params[:outputs]
+   		@output_description = params[:output_description]
+   		
+   		@task_duration = params[:task_duration]
+   		
+   		@message = params[:message]
+   		
+   		#UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
+   
+   end
+   
    def hire_form
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
@@ -445,6 +510,18 @@ end
 	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
 	    @flash_team_event = @flash_team_json['events'][@id_task]
 	    
+	    #array for all members associated with this event
+	    @event_members = Array.new
+	    
+	    # Add all the members associated with event to @event_members array
+        @flash_team_event['members'].each do |event_member|
+        
+        	@event_members << getMemberById(@id_team, @id_task, event_member)
+        
+        end
+        
+        #@project_overview = @flash_team_json['projectoverview']
+	    	    
 	    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
 	    member_id = @flash_team_event['members'][0]
 	    
@@ -472,7 +549,7 @@ Project description: " + @flash_team_json['projectoverview'].to_s +
 
 Input description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
 
-Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
+Output requirements: You are asked to produce the following output(s): " + @flash_team_event['outputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
 
 The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
 
@@ -487,7 +564,8 @@ Best, \nStanford HCI Research Team"
    end
    
    def send_task_available
-   
+   		
+   		@event_member = params[:event_member]
    		@sender_email = params[:sender_email]
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]

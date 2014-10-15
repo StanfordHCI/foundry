@@ -79,12 +79,22 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
             
-            <div class="row">
+
+                
+                <div class="row">
                     <div class="col-lg-12">
 	
 					<h2>Task Available Email</h2><br />
 										
 					<%= form_tag({action: "send_task_available", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
+						<!--
+<%label_tag(:event_member, "Member Role:", :class => 'span2', :style => "display:inline") %>
+						<select name="event_member">
+							<%@event_members.each do |event_member|%>
+								<%options_for_select([[event_member['role'], event_member['id']]])%>
+							<%end%>
+						</select> <br />
+-->
 						<%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
 						<%= text_field_tag(:sender_email, "", :class => 'span5') %> <br />
 						<%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
@@ -99,6 +109,7 @@
 					
                     </div>
                 </div>
+
 
             
             
