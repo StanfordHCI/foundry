@@ -529,30 +529,26 @@ end
 	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
 	    @flash_team_event = @flash_team_json['events'][@id_task]
 	    
-	    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
-	    member_id = @flash_team_event['members'][0]
+	    #array for all members associated with this event
+	    @task_members = Array.new
 	    
-	    member_obj = getMemberById(@id_team, @id_task, member_id) 
-	    
-	    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
-	    if member_obj != -1
-	    	@task_members = member_obj['role']
-	    else
-	    	@task_members = nil
-	    end  
-	    
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
+	    	    
 	    #@my_text = "Here is some basic text...\n...with a line break."
 	    @task_acceptance_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Acceptance"
 	    
 @task_acceptance_email_content = "Hi, 
 
-Congratulations!  You have been hired to work on the " + @flash_team_event['title'] + " task as part of the " + @flash_team_json['title'] + "  project.  As stated in the job description, you will have 1 hour to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+Congratulations!  You have been hired to work on the " + @flash_team_event['title'] + " task as part of the " + @flash_team_json['title'] + " project.  As stated in the job description, you will have 1 hour to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
 
 Project description: " + @flash_team_json['projectoverview'].to_s + 
 
 "\n\nTask description: " + @flash_team_event['description'].to_s + 
 
-"\n\nInput description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
+"\n\nInput description: As the + @TASK MEMBER + , you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
 
 Output requirements: You are asked to produce the following output(s): " + @flash_team_event['inputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
 
@@ -593,6 +589,14 @@ Best, \nStanford HCI Research Team"
 	    flash_team_status = JSON.parse(@flash_team.status)
 	    @flash_team_json = flash_team_status['flash_teams_json']
 	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	     #array for all members associated with this event
+	    @task_members = Array.new
+	    
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
 	    
 	   @task_rej_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is No Longer Available"
 	   @task_rej_email_content = "Thank you for applying to work on the " + @flash_team_event['title']+ " task for the " + @flash_team_json['title'] +" project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. \n\nIf you don't want to be informed about our future job opportunities, please reply to this email with your name in the content. \n\nThank you, \nStanford HCI Research Team" 
