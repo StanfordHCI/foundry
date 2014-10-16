@@ -64,4 +64,21 @@ class UserMailer < ActionMailer::Base
   	  mail(:from => sender_email, :to => recipient_email, :subject => subject)
   end
   
+  def send_task_hiring_email_v3(sender_email, recipient_email, subject, flash_team_name, event_member, task_name, project_overview, task_description, inputs, input_link, outputs, output_description, task_duration)
+  
+  	#@message = message.html_safe
+  	@flash_team_name = flash_team_name
+  	@event_member = event_member
+  	@task_name = task_name
+  	@project_overview = project_overview
+  	@task_description = task_description
+  	@inputs = inputs
+  	@input_link = input_link
+  	@outputs = outputs
+  	@output_description = output_description
+  	@task_duration = task_duration
+  		    	  
+  	mail(:from => sender_email, :to => recipient_email, :subject => subject)
+  end
+  
 end

@@ -1,0 +1,126 @@
+<html lang="en">
+	<head>
+		
+		<meta charset="utf-8">
+	</head>
+	<body>
+		
+		
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand" >
+                    <a href="../task_portal">Task Portal</a>
+                </li>
+
+               <li>
+                    <a href="#" data-toggle="collapse" data-target="#hiring"><i class="fa fa-fw fa-arrows-v"></i> Hiring Emails <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="hiring" class="collapse in" style="">
+                        <li>
+                            <a href="hire_form">Task Available</a>
+                        </li>
+                        <li>
+                            <a href="hire_form/task_acceptance">Task Acceptance</a>
+                        </li>
+                        <li>
+                            <a href="hire_form/task_rejection">Task Rejection</a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <li class="sidebar-brand" style="margin-top: 20px;">
+                    <a href="#" style="color: white;">Task Information</a>
+                 </li>
+
+                 <div style="margin-left: 25px; color: white; text-decoration:none">
+					 <p>Project: <%=@flash_team_json["title"]%></p>
+					 <p>Task Title: <%=@flash_team_event["title"]%></p>
+					 <p>Project Description: <%=@flash_team_json["projectoverview"]%> </p>
+						
+					 <p>Task Description: <%=@flash_team_event["description"]%> </p>
+						
+					 <p>Task Duration: <%=@flash_team_event["duration"]%> minutes </p>
+						
+					 <p>Task Start Hour: <%=@flash_team_event["startHr"]%></p>
+					 <p>Task Start Min: <%=@flash_team_event["startMin"]%></p>
+					
+					 <p>Task Inputs: <%=@flash_team_event["inputs"]%></p>
+					 <p>Task Outputs: <%=@flash_team_event["outputs"]%></p>
+					
+					 <p>Task Members: <%=@task_members%></p>
+
+				</div>
+            </ul>
+            
+           
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+            
+
+                
+                <div class="row">
+                    <div class="col-lg-12">
+
+<h2>Email Sent</h2>
+
+<p><b>From:</b> <%=@sender_email%></p>
+<p><b>To:</b> <%=@recipient_email%></p>
+<p><b>Subject:</b> <%=@subject%></p>
+
+<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@event_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
+
+<p><b>Project overview:</b> <%=@project_overview%></p>
+<p><b>Task description:</b> <%=@task_description%></p>
+
+<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>, which you can access at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+
+<p><b>Deliverable(s):</b> <%=@outputs%></p>
+<p><b>Deliverable information:</b> <%=@output_description%></p>
+
+<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
+
+<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.</p>
+
+<p>If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.</p>
+
+<p>If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.</p>
+
+<p>
+Best, <br />
+Stanford HCI Research Team
+</p>
+
+<!-- <%simple_format(@message)%> -->
+   		
+ </div>
+</div>
+
+
+            
+            
+               
+            </div> <!-- #container-fluid -->
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+   
+
+
+	</body>
+</html>
+
+  <%= javascript_include_tag "/assets/jquery" %>
+  <%= javascript_include_tag "/assets/jquery_ujs" %>
+  <%= javascript_include_tag "bootstrap/bootstrap.min" %>
+  <%= javascript_include_tag "bootstrap-editable.min" %>
+  <%= javascript_include_tag "bootstrap-tour.min" %>
+

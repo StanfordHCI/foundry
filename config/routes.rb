@@ -93,6 +93,9 @@ Foundry::Application.routes.draw do
   get '/flash_teams/:id/:event_id/hire_form_v2' => 'flash_teams#hire_form_v2'
   post '/flash_teams/:id/:event_id/hire_form/send_task_available_v2' => 'flash_teams#send_task_available_v2'
   
+   get '/flash_teams/:id/:event_id/hire_form_v3' => 'flash_teams#hire_form_v3'
+   post '/flash_teams/:id/:event_id/hire_form/send_task_available_v3' => 'flash_teams#send_task_available_v3'
+  
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'
 
