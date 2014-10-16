@@ -433,73 +433,8 @@ end
    
    end
    
-  def hire_form_v2
-	   	@id_team = params[:id]
-	   	@id_task = params[:event_id].to_i
-	   	
-	   	@flash_team = FlashTeam.find(params[:id])
-	   	    
-	   	# Extract data from the JSON
-	    flash_team_status = JSON.parse(@flash_team.status)
-	    @flash_team_json = flash_team_status['flash_teams_json']
-	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
-	    @flash_team_event = @flash_team_json['events'][@id_task]
-	    
-	    #array for all members associated with this event
-	    @event_members = Array.new
-	    
-	    # Add all the members associated with event to @event_members array
-	    @flash_team_event['members'].each do |event_member|
-	    	@event_members << getMemberById(@id_team, @id_task, event_member)
-	    end
-	    
-	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
-  end
-  
-  
- def send_task_available_v2
-
- 		@id_team = params[:id]
-	   	@id_task = params[:event_id].to_i
-	   	
-	   	@flash_team = FlashTeam.find(params[:id])
-	   	    
-	   	# Extract data from the JSON
-	    flash_team_status = JSON.parse(@flash_team.status)
-	    @flash_team_json = flash_team_status['flash_teams_json']
-	    @flash_team_event = @flash_team_json['events'][@id_task]
-	    
-   		if !params[:sender_email].empty?
-   			@sender_email = params[:sender_email]
-  		else
-  			@sender_email = "stanfordhci.odesk@gmail.com"
-  		end
-   		
-   		
-   		@event_member = params[:event_member] #i.e. role of recipient 
-   		@recipient_email = params[:recipient_email]
-   		@subject = params[:subject]
-   		
-   		@task_name = params[:task_name]
-   		@project_overview = params[:project_overview]
-   		@task_description = params[:task_description]
-   		
-   		
-   		@inputs = params[:inputs]
-   		@input_link = params[:input_link]
-   		
-   		@outputs = params[:outputs]
-   		@output_description = params[:output_description]
-   		
-   		@task_duration = params[:task_duration]
-   		
-   		@message = params[:message]
-   		
-   		#UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
    
-   end
-   
-     def hire_form_v3
+     def hire_form
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
@@ -526,17 +461,17 @@ end
 		end
 	    
 	    #array for all members associated with this event
-	    @event_members = Array.new
+	    @task_members = Array.new
 	    
-	    # Add all the members associated with event to @event_members array
-	    @flash_team_event['members'].each do |event_member|
-	    	@event_members << getMemberById(@id_team, @id_task, event_member)
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
 	    end
 	    
 	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
   end
   
-  def send_task_available_v3
+  def send_task_available
 
  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
@@ -556,7 +491,7 @@ end
    		
    		@flash_team_name = @flash_team_json['title']
    		
-   		@event_member = params[:event_member] #i.e. role of recipient 
+   		@task_member = params[:task_member] #i.e. role of recipient 
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		
@@ -575,104 +510,13 @@ end
    		
    		#@message = params[:message]
    		
-   		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@event_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
+   		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
    		
-   		UserMailer.send_task_hiring_email_v3(@sender_email, @recipient_email, @subject, @flash_team_name, @event_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
    
    end
    
-   def hire_form
-	   	@id_team = params[:id]
-	   	@id_task = params[:event_id].to_i
-	   	
-	   	@flash_team = FlashTeam.find(params[:id])
-	   	    
-	   	# Extract data from the JSON
-	    flash_team_status = JSON.parse(@flash_team.status)
-	    @flash_team_json = flash_team_status['flash_teams_json']
-	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
-	    @flash_team_event = @flash_team_json['events'][@id_task]
-	    
-	    #array for all members associated with this event
-	    @event_members = Array.new
-	    
-	    # Add all the members associated with event to @event_members array
-        @flash_team_event['members'].each do |event_member|
-        
-        	@event_members << getMemberById(@id_team, @id_task, event_member)
-        
-        end
-        
-        minutes = @flash_team_event['duration']
-		hh, mm = minutes.divmod(60)
-		@task_duration = hh.to_s 
-		
-		if hh==1
-			@task_duration += " hour"
-		else
-			@task_duration += " hours"
-		end
-		
-		if mm>0
-			@task_duration += " and " + mm.to_s + " minutes"
-		end
-
-		
-        #@project_overview = @flash_team_json['projectoverview']
-	    	    
-	    #right now, this only takes the first member assigned to a task (need to figure out what to do when a task has more than 1 member)
-	    member_id = @flash_team_event['members'][0]
-	    
-	    member_obj = getMemberById(@id_team, @id_task, member_id) 
-	    
-	    #@task_members = flash_team_status['flash_teams_json']['members'][member_index]['role']
-	    if member_obj != -1
-	    	@task_members = member_obj['role']
-	    else
-	    	@task_members = nil
-	    end  
-	    
-	    #@my_text = "Here is some basic text...\n...with a line break."
-	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
-	    
-@task_avail_email_content = "Hi, 
-
-This is an email from the Stanford HCI Group notifying you that a job requiring a " + @task_members + " for the " + @flash_team_event['title'] + " task for the " + @flash_team_json['title'] + " project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline. 
-
-Project description: " + @flash_team_json['projectoverview'].to_s + 
-
-"Task description: " + @flash_team_event['description'].to_s + 
-
-"As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting http://bit.ly/foundryexample and clicking the \"Start Foundry Tour\" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry. 
-
-Input description: As the "+ @task_members + ", you will receive the following input(s): " + @flash_team_event['inputs'].to_s + ". Below is the link to the input of your task [INSERT LINK HERE] 
-
-Output requirements: You are asked to produce the following output(s): " + @flash_team_event['outputs'].to_s + ". When you are done, you'll need to upload the deliverables (specified below) to the " + @flash_team_event['title'].to_s + " task folder on Foundry and press complete on your task. 
-
-The deliverables are the [INSERT DELIVERABLE DESCRIPTION/FORMAT]. 
-
-Deadline: You will have " + @flash_team_event['duration'].to_s + " minutes to finish this task. Since " + @flash_team_event['duration'].to_s + " minutes is a relatively short amount of time, we expect more of a working prototype rather than a finished product. 
-
-If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you. 
-
-If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the " + @flash_team_event['title'].to_s + " task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities. 
-
-Best, \nStanford HCI Research Team"
-
-   end
-   
-   def send_task_available
-   		
-   		@event_member = params[:event_member]
-   		@sender_email = params[:sender_email]
-   		@recipient_email = params[:recipient_email]
-   		@subject = params[:subject]
-   		@message = params[:message]
-   		
-   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @message).deliver
-   
-   end
-   
+      
       def task_acceptance
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
