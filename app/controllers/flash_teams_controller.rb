@@ -621,13 +621,12 @@ end
 	    @foundry_url = params[:foundry_url]
 	    
 	   @task_rej_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is No Longer Available"
-	   @task_rej_email_content = "Thank you for applying to work on the " + @flash_team_event['title']+ " task for the " + @flash_team_json['title'] +" project. Unfortunately, the job is no longer available. As you know, we use an on-demand hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will keep you posted as other job opportunities become available. \n\nIf you don't want to be informed about our future job opportunities, please reply to this email with your name in the content. \n\nThank you, \nStanford HCI Research Team" 
 	   	   	    
    end
    
    def send_task_rejection
    
-  		 @id_team = params[:id]
+  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
 	   	@flash_team = FlashTeam.find(params[:id])
@@ -652,7 +651,6 @@ end
    		@task_name = params[:task_name]
    		
    		@task_member = params[:task_member]
-   		
    		
    		UserMailer.send_task_rejection_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_name, @task_member).deliver
    
