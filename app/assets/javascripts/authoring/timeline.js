@@ -11,9 +11,14 @@ var SVG_WIDTH = 4850,
 
 var STEP_WIDTH = 25,
     HOUR_WIDTH = 100;
+var STEP_INTERVAL = 15; // minutes per step
 
 var TIMELINE_HOURS = 48;
 var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
+
+var STROKE_COLOR = 'rgba(233,233,233,0.2)';
+var MARKER_COLOR = '#28282b';
+var ALT_MARKER_COLOR = '#2c2c2f';
 
 var x = d3.scale.linear()
     .domain([0, TOTAL_HOUR_PIXELS])
@@ -39,16 +44,29 @@ var timeline_svg = d3.select("#timeline-container").append("svg")
 //console.log("APPENDED TIMELINE TO DOM!");
 
 //CHART CODE (http://synthesis.sbecker.net/?s=learning+d3+intro+to+svg)
+
+console.log(x.ticks(XTicks));
+
+//Draw black rectangles
+timeline_svg.selectAll("rect")
+  .data(x.ticks(XTicks/2))
+  .enter().append("rect")
+  .style("fill", function(d) {return (d / (STEP_WIDTH*4)) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR})
+  .attr("x", x)
+  .attr("width", STEP_WIDTH * 4)
+  .attr("y", 15)
+  .attr("height", SVG_HEIGHT-50)
+  
 //Draw x grid lines
 timeline_svg.selectAll("line.x")
-    .data(x.ticks(XTicks))
+    .data(x.ticks(XTicks*2))
     .enter().append("line")
     .attr("class", "x")
     .attr("x1", x)
     .attr("x2", x)
     .attr("y1", 15)
     .attr("y2", SVG_HEIGHT-50)
-    .style("stroke", "rgba(100, 100, 100, .5)");
+    .style("stroke", STROKE_COLOR);
 
 var yLines = y.ticks(YTicks);
 //Hack: subtract 20* to get the row heights shorter
@@ -67,7 +85,7 @@ timeline_svg.selectAll("line.y")
     .attr("x2", SVG_WIDTH-50)
     .attr("y1", y)
     .attr("y2", y)
-    .style("stroke", "#d3d1d1");
+    .style("stroke", STROKE_COLOR);
 
 //Remove existing X-axis labels
 var numMins = -30;
@@ -104,6 +122,7 @@ timeline_svg.append("line")
     .style("stroke", "#000")
     .style("stroke-width", "4");
 
+
 //Extend the timeline the necessary amount for the project
 function initializeTimelineDuration() {
     var totalHours = findTotalHours();
@@ -111,7 +130,7 @@ function initializeTimelineDuration() {
         TIMELINE_HOURS = totalHours;
         TOTAL_HOUR_PIXELS = TIMELINE_HOURS * HOUR_WIDTH;
         SVG_WIDTH = TIMELINE_HOURS * 100 + 50;
-        XTicks = TIMELINE_HOURS * 2;
+        XTicks = TIMELINE_HOURS * 4;
         redrawTimeline();
     }
 }
@@ -177,7 +196,7 @@ function redrawTimeline() {
         .attr("x2", x)
         .attr("y1", 15)
         .attr("y2", SVG_HEIGHT-50)
-        .style("stroke", "rgba(100, 100, 100, .5)");
+        .style("stroke", STROKE_COLOR);
     
     //Redraw all y-axis grid lines
     timeline_svg.selectAll("line.y")
@@ -188,7 +207,7 @@ function redrawTimeline() {
         .attr("x2", SVG_WIDTH-50)
         .attr("y1", y)
         .attr("y2", y)
-        .style("stroke", "#d3d1d1");
+        .style("stroke", STROKE_COLOR);
     
     //Redraw darker first x and y grid lines
     timeline_svg.append("line")
