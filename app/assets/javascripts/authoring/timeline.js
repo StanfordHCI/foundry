@@ -58,6 +58,7 @@ var timeline_svg = d3.select("#timeline-container").append("svg")
 //console.log("APPENDED TIMELINE TO DOM!");
 
 function drawTimeline() {
+  // an array of the numbers [0, 1, 2, ..., numSteps-1]
   var intervals = (
       function (steps){
           var a = []; steps++;
@@ -67,6 +68,9 @@ function drawTimeline() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
+  // reset header svg width
+  header_svg.attr("width", TOTAL_HOUR_PIXELS)
+  
   // draw lines to header svg
   header_svg.selectAll("line")
       .data(intervals.slice(0, intervals.length/4))
@@ -77,10 +81,13 @@ function drawTimeline() {
       .attr("y2", HEADER_HEIGHT)
       .style("stroke", STROKE_COLOR);
   
+  console.log('drawing');
+  
   // draw timeline time intervals to header svg
-  header_svg.selectAll("p")
+  header_svg.selectAll("text.time-marker")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("text")
+          .attr("class", "time-marker")
           .style("width", STEP_WIDTH * 4)
           .text(function(d) {return d + ':00';})
           .attr("x", function(d) {return d * (STEP_WIDTH * 4) + 4})
@@ -92,10 +99,14 @@ function drawTimeline() {
               "fill": "#777",
           });
 
+  // reset timeline svg width
+  timeline_svg.attr("width", TOTAL_HOUR_PIXELS);
+  
   // draw alternating markers to timeline svg
-  timeline_svg.selectAll("rect")
+  timeline_svg.selectAll("rect.background")
       .data(intervals.slice(0, intervals.length/4)) // hour intervals
       .enter().append("rect")
+          .attr("class", "background")
           .style("fill", function(d) {return d % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
           .attr("x", function(d) {return d * STEP_WIDTH * 4})
           .attr("width", STEP_WIDTH * 4)
