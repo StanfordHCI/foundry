@@ -57,7 +57,7 @@ var timeline_svg = d3.select("#timeline-container").append("svg")
 
 //console.log("APPENDED TIMELINE TO DOM!");
 
-function drawLines() {
+function drawTimeline() {
   var intervals = (
       function (steps){
           var a = []; steps++;
@@ -67,6 +67,7 @@ function drawLines() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
+  // draw lines to header svg
   header_svg.selectAll("line")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("line")
@@ -76,6 +77,7 @@ function drawLines() {
       .attr("y2", HEADER_HEIGHT)
       .style("stroke", STROKE_COLOR);
   
+  // draw timeline time intervals to header svg
   header_svg.selectAll("p")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("text")
@@ -90,6 +92,7 @@ function drawLines() {
               "fill": "#777",
           });
 
+  // draw alternating markers to timeline svg
   timeline_svg.selectAll("rect")
       .data(intervals.slice(0, intervals.length/4)) // hour intervals
       .enter().append("rect")
@@ -99,7 +102,7 @@ function drawLines() {
           .attr("y", 0)
           .attr("height", SVG_HEIGHT-65)
 
-  //Draw x grid lines
+  // draw x grid lines to timeline svg
   timeline_svg.selectAll("line.x")
       .data(intervals)
       .enter().append("line")
@@ -111,7 +114,7 @@ function drawLines() {
       .style("stroke", STROKE_COLOR);
 }
 
-drawLines();
+drawTimeline();
 
 var yLines = y.ticks(YTicks);
 //Hack: subtract 20* to get the row heights shorter
@@ -134,40 +137,6 @@ timeline_svg.selectAll("line.y")
 
 //Remove existing X-axis labels
 var numMins = -60;
-
-/*
-//Add X Axis Labels
-timeline_svg.selectAll("text.timelabel")
-    .data(x.ticks(XTicks/2)) 
-    .enter().append("text")
-    .attr("class", "timelabel")
-    .attr("x", x)
-    .attr("y", 15)
-    .attr("dy", -3)
-    .attr("text-anchor", "middle")
-    .text(function(d) {
-        numMins+= 60;
-        var hours = Math.floor(numMins/60);
-        var minutes = numMins%60;
-        if (minutes == 0 && hours == 0) return ".     .      .    .    0:00";
-        else if (minutes == 0) return hours + ":00";
-        else return hours + ":" + minutes; 
-    });
-
-//Darker First X and Y line
-timeline_svg.append("line")
-    .attr("x1", 0)
-    .attr("x2", SVG_WIDTH-50)
-    .attr("y1", 15)
-    .attr("y2", 15)
-    .style("stroke", "#000")
-    .style("stroke-width", "4")
-timeline_svg.append("line")
-    .attr("y1", 15)
-    .attr("y2", SVG_HEIGHT-50)
-    .style("stroke", "#000")
-    .style("stroke-width", "4");
-*/
 
 //Extend the timeline the necessary amount for the project
 function initializeTimelineDuration() {
@@ -233,7 +202,7 @@ function redrawTimeline() {
     timeline_svg.selectAll("line").remove();
     timeline_svg.selectAll("rect.background").remove();
     
-    drawLines();
+    drawTimeline();
     
     //Redraw all y-axis grid lines
     timeline_svg.selectAll("line.y")
@@ -246,22 +215,6 @@ function redrawTimeline() {
         .attr("y2", y)
         .style("stroke", STROKE_COLOR);
     
-    /*
-    //Redraw darker first x and y grid lines
-    timeline_svg.append("line")
-        .attr("x1", 0)
-        .attr("x2", SVG_WIDTH-50)
-        .attr("y1", 15)
-        .attr("y2", 15)
-        .style("stroke", "#000")
-        .style("stroke-width", "4");
-    
-    timeline_svg.append("line")
-        .attr("y1", 15)
-        .attr("y2", SVG_HEIGHT-50)
-        .style("stroke", "#000")
-        .style("stroke-width", "4");
-    */
     //Redraw Add Time Button
     document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
     
@@ -269,25 +222,7 @@ function redrawTimeline() {
     timeline_svg.selectAll("text.timelabel").remove();
     numMins = -60;
 
-    /*
-    //Redraw X-axis labels
-    timeline_svg.selectAll("text.timelabel")
-        .data(x.ticks(XTicks/4))
-        .enter().append("text")
-        .attr("class", "timelabel")
-        .attr("x", x)
-        .attr("y", 15)
-        .attr("dy", -3)
-        .attr("text-anchor", "middle")
-        .text(function(d) {
-            numMins+= 60;
-            var hours = Math.floor(numMins/60);
-            var minutes = numMins%60;
-            if (minutes == 0 && hours == 0) return ".     .      .    .    0:00";
-            else if (minutes == 0) return hours + ":00";
-            else return hours + ":" + minutes; 
-        });
-        */
+
     
     //Add ability to draw rectangles on extended timeline
     timeline_svg.append("rect")
@@ -303,7 +238,7 @@ function redrawTimeline() {
 
     //Redraw the cursor
     timeline_svg.append("line")
-        .attr("y1", 15)
+        .attr("y1", 0)
         .attr("y2", SVG_HEIGHT-50)
         .attr("x1", 0)
         .attr("x2", 0)
