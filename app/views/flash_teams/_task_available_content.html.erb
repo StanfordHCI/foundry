@@ -1,0 +1,69 @@
+<div class="row"><h2>Task Available Email</h2></div>
+
+<br />
+<div class="row">
+<div class="col-lg-12">
+
+
+<%= form_tag({action: "send_task_available", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
+
+	
+<p><%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline; font-weight:bold;") %>
+<%= text_field_tag(:sender_email, "", :class => 'span5') %></p>
+
+<p><%= label_tag(:recipient_email, "Recipient Email(s):", :class => 'span2', :style => "display:inline; font-weight:bold;") %>
+<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %></p>
+
+<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline; font-weight:bold;") %>
+<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span8') %> </p>
+
+<br />
+
+<div class="span10">
+<p>This is an email from the Stanford HCI Group notifying you that a job requiring a 
+<select name="task_member">
+<%@task_members.each do |task_member|%>
+<%=options_for_select([[task_member['role'], task_member['role']]])%>
+<%end%>
+</select> 
+
+for the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task for the <em><%=@flash_team_json['title']%></em> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
+
+<br />
+
+<p><%= label_tag(:project_overview, "Project Overview:" , :style => "display:inline; font-weight:bold;") %>
+<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5) %></p>
+
+<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
+<%= text_area_tag(:task_description, @flash_team_event['description'], :class => 'span10', :rows =>5) %></p>
+
+<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
+For this task, you will receive the following input(s):
+		<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>, which you can access at the following link:
+		<%= text_field_tag(:input_link, "", :placeholder => "[INSERT LINK TO INPUT]", :class => 'span7') %></p>
+
+<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
+<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>
+<p><%= label_tag(:output_description, "Deliverable Information:", :style => "display:inline; font-weight:bold;") %>
+<%= text_field_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :required => true) %></p>
+
+<p><%= label_tag(:task_duration, "Task Duration:", :style => "display:inline; font-weight: bold;") %>
+You will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3')%> to finish this task.</p>
+
+<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.</p>
+
+<p>If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.</p>
+
+<p>If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.</p>
+
+<p>
+Best, <br />
+Stanford HCI Research Team
+</p>
+<%= button_tag("Send Task Available Email", :type => 'submit', :class => 'btn btn-primary') %>
+<!-- <% button_tag("Save Draft", :class => 'btn') %> -->
+<% end %>
+</div>			
+		
+	
+    </div>
