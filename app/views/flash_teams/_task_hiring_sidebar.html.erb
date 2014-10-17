@@ -41,7 +41,7 @@
                             <%=link_to "Task Acceptance", controller: "flash_teams", action: "task_acceptance"%>
                         </li>
                         <li>
-                            <%=link_to "Task Rejection", controller: "flash_teams", action: "task_rejection"%>
+                            <%=link_to "Task Unavailable", controller: "flash_teams", action: "task_rejection"%>
                         </li>
                     </ul>
                 </li>
@@ -67,7 +67,8 @@
 					
 					 <p>Task Members: <br />
 					 
-					 <%@task_members.each do |task_member|%>
+					 <%@flash_team_event['members'].each do |tm|%>
+					 		<%task_member = getMemberById(@id_team, @id_task, tm)%>
 					 		<%=task_member['role']%><br />
 					 <%end%>
 					 </p>

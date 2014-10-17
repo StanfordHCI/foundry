@@ -5,23 +5,58 @@
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid">
+            
+            	<div class="row"><h2>Task Unavailable Email</h2></div>
+            	
+            	<br />
+
                 <div class="row">
                     <div class="col-lg-12">
 	
-					<h2>Task Rejection Email</h2><br />
 										
 					<%= form_tag({action: "send_task_rejection", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
-						<%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
-						<%= text_field_tag(:sender_email, "", :class => 'span5') %> <br />
-						<%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
-						<%= text_field_tag(:recipient_email, "", :class => 'span5') %> <br />
-						<%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
-						<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span8') %> <br />
-						<%= text_area_tag(:message, @task_rej_email_content, :class => 'span10', :rows =>10) %> <br />
+						
+						<p><%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:sender_email, "", :class => 'span5') %> </p>
+						
+						<p><%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:recipient_email, "", :class => 'span5') %> </p>
+						
+						<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
+						<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span8') %> </p>
+						
+						<br />
+						
+						<div class="span10">
+						<p>Thank you for applying for the 
+						<select name="task_member">
+							<%@task_members.each do |task_member|%>
+								<%=options_for_select([[task_member['role'], task_member['role']]])%>
+							<%end%>
+						</select> 
+						
+						role to work on the
+						<%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task as part of the 
+						<em><%=@flash_team_json['title']%></em> project.
+						
+						Unfortunately, the job is no longer available. As you know, we use an on-demand 
+						hiring process that assigns the job to the first person who claims it. However, we have more upcoming projects and we will 
+						keep you posted as other job opportunities become available.</p>
+   
+						<p>If you don't want to be informed about our future job opportunities, please reply to this email with your name in the content.</p>
+						
+						<p>
+							Best, <br />
+							Stanford HCI Research Team
+						</p>
+						
+<!-- 						<% text_area_tag(:message, @task_rej_email_content, :class => 'span10', :rows =>10) %> <br /> -->
 <!-- 						<% submit_tag("Send Task Rejection Email", :class => 'btn btn-primary') %> -->
-						<%= button_tag("Send Task Rejection Email", :type => 'submit', :class => 'btn btn-primary') %>
+						<%= button_tag("Send Task Unavailable Email", :type => 'submit', :class => 'btn btn-primary') %>
 						<!-- <% button_tag("Save Draft", :class => 'btn') %> -->
 					<% end %>
+					
+						</div>
 					
                     </div>
                 </div>
