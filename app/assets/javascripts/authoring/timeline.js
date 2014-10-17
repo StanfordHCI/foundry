@@ -7,6 +7,8 @@
 var SVG_WIDTH = 4850,
     SVG_HEIGHT = 550;
 
+var HEADER_HEIGHT = 28;
+
 var STEP_WIDTH = 25,
     HOUR_WIDTH = 100;
 var STEP_INTERVAL = 15; // minutes per step
@@ -18,9 +20,10 @@ var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
 var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
     YTicks = 6;
 
-var STROKE_COLOR = 'rgba(233,233,233,0.2)';
-var MARKER_COLOR = '#28282b';
-var ALT_MARKER_COLOR = '#2c2c2f';
+var BKG_COLOR = "#202020";
+var STROKE_COLOR = "rgba(233,233,233,0.2)";
+var MARKER_COLOR = "#28282b";
+var ALT_MARKER_COLOR = "#2c2c2f";
 
 var x = d3.scale.linear()
     .domain([0, TOTAL_HOUR_PIXELS])
@@ -36,6 +39,16 @@ var upcomingEvent;
 
 var overlayIsOn = false;
 
+$("#timeline-container").css({
+  backgroundColor: BKG_COLOR,
+});
+
+
+var header_svg = d3.select("#timeline-container").append("svg")
+    .attr("width", SVG_WIDTH)
+    .attr("height", HEADER_HEIGHT)
+    .style({"display": "block",
+            "border-bottom": "solid 1px " + STROKE_COLOR});
 
 var timeline_svg = d3.select("#timeline-container").append("svg")
     .attr("width", SVG_WIDTH)
@@ -54,14 +67,37 @@ function drawLines() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
+  header_svg.selectAll("line")
+      .data(intervals.slice(0, intervals.length/4))
+      .enter().append("line")
+      .attr("x1", function(d) {return d * (STEP_WIDTH * 4)})
+      .attr("x2", function(d) {return d * (STEP_WIDTH * 4)})
+      .attr("y1", HEADER_HEIGHT - 12)
+      .attr("y2", HEADER_HEIGHT)
+      .style("stroke", STROKE_COLOR);
+  
+  header_svg.selectAll("p")
+      .data(intervals.slice(0, intervals.length/4))
+      .enter().append("text")
+          .style("width", STEP_WIDTH * 4)
+          .text(function(d) {return d + ':00';})
+          .attr("x", function(d) {return d * (STEP_WIDTH * 4) + 4})
+          .attr("y", HEADER_HEIGHT - 2)
+          .style({
+              "font-family": "Helvetica Neue",
+              "font-size": "10px",
+              "font-weight": "400",
+              "fill": "#777",
+          });
+
   timeline_svg.selectAll("rect")
       .data(intervals.slice(0, intervals.length/4)) // hour intervals
       .enter().append("rect")
-      .style("fill", function(d) {return d % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
-      .attr("x", function(d) {return d * STEP_WIDTH * 4})
-      .attr("width", STEP_WIDTH * 4)
-      .attr("y", 15)
-      .attr("height", SVG_HEIGHT-50)
+          .style("fill", function(d) {return d % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
+          .attr("x", function(d) {return d * STEP_WIDTH * 4})
+          .attr("width", STEP_WIDTH * 4)
+          .attr("y", 0)
+          .attr("height", SVG_HEIGHT-65)
 
   //Draw x grid lines
   timeline_svg.selectAll("line.x")
@@ -70,8 +106,8 @@ function drawLines() {
       .attr("class", "x")
       .attr("x1", function(d) {return d * STEP_WIDTH})
       .attr("x2", function(d) {return d * STEP_WIDTH})
-      .attr("y1", 15)
-      .attr("y2", SVG_HEIGHT-50)
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT-65)
       .style("stroke", STROKE_COLOR);
 }
 
@@ -97,8 +133,9 @@ timeline_svg.selectAll("line.y")
     .style("stroke", STROKE_COLOR);
 
 //Remove existing X-axis labels
-var numMins = -30;
+var numMins = -60;
 
+/*
 //Add X Axis Labels
 timeline_svg.selectAll("text.timelabel")
     .data(x.ticks(XTicks/2)) 
@@ -109,7 +146,7 @@ timeline_svg.selectAll("text.timelabel")
     .attr("dy", -3)
     .attr("text-anchor", "middle")
     .text(function(d) {
-        numMins+= 30;
+        numMins+= 60;
         var hours = Math.floor(numMins/60);
         var minutes = numMins%60;
         if (minutes == 0 && hours == 0) return ".     .      .    .    0:00";
@@ -130,7 +167,7 @@ timeline_svg.append("line")
     .attr("y2", SVG_HEIGHT-50)
     .style("stroke", "#000")
     .style("stroke-width", "4");
-
+*/
 
 //Extend the timeline the necessary amount for the project
 function initializeTimelineDuration() {
@@ -209,6 +246,7 @@ function redrawTimeline() {
         .attr("y2", y)
         .style("stroke", STROKE_COLOR);
     
+    /*
     //Redraw darker first x and y grid lines
     timeline_svg.append("line")
         .attr("x1", 0)
@@ -223,14 +261,15 @@ function redrawTimeline() {
         .attr("y2", SVG_HEIGHT-50)
         .style("stroke", "#000")
         .style("stroke-width", "4");
-    
+    */
     //Redraw Add Time Button
     document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
     
     //Remove existing X-axis labels
     timeline_svg.selectAll("text.timelabel").remove();
-    numMins = -30;
+    numMins = -60;
 
+    /*
     //Redraw X-axis labels
     timeline_svg.selectAll("text.timelabel")
         .data(x.ticks(XTicks/4))
@@ -241,13 +280,14 @@ function redrawTimeline() {
         .attr("dy", -3)
         .attr("text-anchor", "middle")
         .text(function(d) {
-            numMins+= 30;
+            numMins+= 60;
             var hours = Math.floor(numMins/60);
             var minutes = numMins%60;
             if (minutes == 0 && hours == 0) return ".     .      .    .    0:00";
             else if (minutes == 0) return hours + ":00";
             else return hours + ":" + minutes; 
         });
+        */
     
     //Add ability to draw rectangles on extended timeline
     timeline_svg.append("rect")
