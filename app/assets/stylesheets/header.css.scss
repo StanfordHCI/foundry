@@ -1,0 +1,90 @@
+@import url(http://fonts.googleapis.com/css?family=Quicksand:300);
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+       -o-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin transition($t) {
+  -webkit-transition: $t;
+     -moz-transition: $t;
+      -ms-transition: $t;
+       -o-transition: $t;
+          transition: $t;
+}
+
+.icon {
+  display: inline-block;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#foundry-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  
+  width: 100%;
+  height: 64px;
+
+  box-sizing: border-box;
+  padding: 8px;
+  
+  background-color: #121314;
+  border-bottom: solid 1px rgba(255,255,255,0.08);
+}
+
+#foundry-header > .menu-button {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+
+  background-image: url('../assets/icons/menu/menu.svg');
+  background-size: 24px 24px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  
+  box-sizing: border-box;
+  
+  @include border-radius(4px);
+  @include transition( (background 0.2s, border 0.2s) );
+}
+
+#foundry-header > .menu-button:hover {
+  background-color: rgba(0,0,0,0.8);
+  border-right: solid 1px rgb(73, 73, 73);
+  border-bottom: solid 1px rgb(73, 73, 73);
+}
+
+#foundry-header > .logo {
+  position: fixed;
+  top: 8px;
+  left: 80px;
+  
+  display: inline-block;
+  text-align: center;
+   
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  
+  box-sizing: border-box;
+  
+  color: white;
+  cursor: pointer;
+  
+  font-size: 24px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 200;
+  
+  @include transition( (border 0.4s, color 0.4s) );
+}
+
+#foundry-header > .logo:hover {
+  color: #fc7373;
+}

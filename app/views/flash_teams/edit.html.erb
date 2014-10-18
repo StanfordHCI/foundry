@@ -13,6 +13,8 @@
 	
 	<% if @in_author_view %>
 	
+	   <%= render :partial => "header" %>
+	   <!--
      <div class="row-fluid" id="foundry-header">
 	     <div class="span3 ft-buttons" id="ft-buttons-left">
 			 	<input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
@@ -28,11 +30,12 @@
 		        <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
 	     </div> 
      </div>
+     -->
 
      	<!-- render partial with confirm action alert --> 
 		<%= render :partial => "confirm_action" %>
      
-     <div class="row-fluid" style="margin-top: 40px; margin-bottom: 5px;">
+     <div class="row-fluid" style="margin-top: 64px; margin-bottom: 5px;">
      
      <h4>
      	<span id="ft-name"><%= @flash_team.name.upcase%></span>
