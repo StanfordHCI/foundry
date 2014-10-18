@@ -11,9 +11,9 @@
     <!-- task modal shows up after clicking on a task -->
     <%= render :partial => "task_modal" %>
 	
-	<% if @in_author_view %>
+	<%= render :partial => "header", :locals => {:in_author_view => @in_author_view} %>
 	
-	   <%= render :partial => "header" %>
+	<% if @in_author_view %>
 	   <!--
      <div class="row-fluid" id="foundry-header">
 	     <div class="span3 ft-buttons" id="ft-buttons-left">
@@ -49,6 +49,8 @@
      </div>
 	    
 	    <div class="row-fluid">
+	    
+	    <!-- begin sidebar -->
 	        <div class="span3">
 	         <% if @author_runtime %>
 	            
@@ -112,7 +114,9 @@
                 	<!-- render partial with team diagram --> 
 					<%= render :partial => "teamdiagram" %>
             </div>
-		</div> <!-- end of sidebar (e.g., class="span3") -->
+		</div>
+		
+		<!-- end of sidebar (e.g., class="span3") -->
 
 		<div class="span9"> <!--Body Content-->
 	    	<div id="timeline-container" class="well" style="overflow-x:scroll; overflow-y:scroll; height:575px">
@@ -126,12 +130,6 @@
 <% end %> <!--end if in author view conditional--> 
        
 <% if  @in_expert_view %>
-
-     <div class="row-fluid" id="foundry-header"> 
-     	<div class="span2 ft-buttons" id="ft-buttons-left">
-		 	<input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Tour"/>
-	  	</div>  	 
-		 
 	     
 	     <!--Add the start/end button if in project coordinator view-->
 	     <% if @member_type == "pc" %>
