@@ -28,6 +28,7 @@
 //= require ./authoring/idle
 //= require ./authoring/awareness
 //= require ./authoring/interactions
+//= require ./authoring/left-sidebar
 //= require ./authoring/sidebar
 //= require ./authoring/odeskArrays
 //= require ./authoring/spectrum
