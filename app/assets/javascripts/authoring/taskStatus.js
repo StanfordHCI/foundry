@@ -21,6 +21,9 @@
     //START TIMER
     //START HERE ALEXANDRA
 
+    //Close the task modal
+    $("#task_modal").modal('hide');
+
     updateStatus();
     drawEvent(eventObj); //Will update color
  }
