@@ -123,28 +123,28 @@ function drawTimeline() {
       .attr("y1", 0)
       .attr("y2", SVG_HEIGHT-65)
       .style("stroke", STROKE_COLOR);
+  
+  var yLines = y.ticks(YTicks);
+  //Hack: subtract 20* to get the row heights shorter
+  for (i = 0; i<yLines.length; i++) {
+      yLines[i] -= 3;
+      yLines[i] -= (i*20);
+  }
+
+  //Draw y axis grid lines
+  timeline_svg.selectAll("line.y")
+      .data(yLines) 
+      .enter().append("line")
+      .attr("class", "y")
+      .attr("x1", 0)
+      .attr("x2", SVG_WIDTH-50)
+      .attr("y1", y)
+      .attr("y2", y)
+      .style("stroke", STROKE_COLOR);
 }
 
 drawTimeline();
 
-var yLines = y.ticks(YTicks);
-//Hack: subtract 20* to get the row heights shorter
-for (i = 0; i<yLines.length; i++) {
-    yLines[i] -= 3;
-    yLines[i] -= (i*20);
-}
-
-
-//Draw y axis grid lines
-timeline_svg.selectAll("line.y")
-    .data(yLines) 
-    .enter().append("line")
-    .attr("class", "y")
-    .attr("x1", 0)
-    .attr("x2", SVG_WIDTH-50)
-    .attr("y1", y)
-    .attr("y2", y)
-    .style("stroke", STROKE_COLOR);
 
 //Remove existing X-axis labels
 var numMins = -60;
@@ -214,17 +214,6 @@ function redrawTimeline() {
     timeline_svg.selectAll("rect.background").remove();
     
     drawTimeline();
-    
-    //Redraw all y-axis grid lines
-    timeline_svg.selectAll("line.y")
-        .data(yLines) 
-        .enter().append("line")
-        .attr("class", "y")
-        .attr("x1", 0)
-        .attr("x2", SVG_WIDTH-50)
-        .attr("y1", y)
-        .attr("y2", y)
-        .style("stroke", STROKE_COLOR);
     
     //Redraw Add Time Button
     document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
