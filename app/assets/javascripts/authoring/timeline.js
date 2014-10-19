@@ -19,6 +19,8 @@ var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
 
 var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
     YTicks = 6;
+    
+var ROW_HEIGHT = SVG_HEIGHT / YTicks;
 
 var BKG_COLOR = "#202020";
 var STROKE_COLOR = "rgba(233,233,233,0.2)";
@@ -124,22 +126,18 @@ function drawTimeline() {
       .attr("y2", SVG_HEIGHT-65)
       .style("stroke", STROKE_COLOR);
   
-  var yLines = y.ticks(YTicks);
-  //Hack: subtract 20* to get the row heights shorter
-  for (i = 0; i<yLines.length; i++) {
-      yLines[i] -= 3;
-      yLines[i] -= (i*20);
-  }
-
   //Draw y axis grid lines
   timeline_svg.selectAll("line.y")
-      .data(yLines) 
+      .data(intervals.slice(0, YTicks-1)) 
       .enter().append("line")
       .attr("class", "y")
       .attr("x1", 0)
-      .attr("x2", SVG_WIDTH-50)
-      .attr("y1", y)
-      .attr("y2", y)
+      .attr("x2", "100%")
+      // TODO: same hack carried over, adds height to first row
+      //       will adjust blocks on that row to stay at the same
+      //       height as blocks on lower rows
+      .attr("y1", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
+      .attr("y2", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
       .style("stroke", STROKE_COLOR);
 }
 
