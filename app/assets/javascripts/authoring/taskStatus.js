@@ -27,7 +27,7 @@
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
-
+    //Close the first (task) modal
     $("#task_modal").modal('hide');
 
     //Creates the alert modal title
@@ -90,8 +90,8 @@ function completeTaskModalText(eventToComplete) {
             modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
         }
     }
-    
     modalText += "</form>";
+    
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
     return modalText;
 }
