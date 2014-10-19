@@ -18,7 +18,7 @@ function showTaskOverview(groupNum){
 	var taskOverviewContent = getTaskOverviewContent(groupNum);
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
-
+    
 	
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '');
@@ -31,8 +31,9 @@ function showTaskOverview(groupNum){
 		$("#hire-task").css('display','none');
 		$("#delete").css('display','none');
 	}
-}
 
+
+}
 
 function editTaskOverview(popover,groupNum){
 
@@ -57,9 +58,11 @@ function editTaskOverview(popover,groupNum){
 		
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
+        
+        $("#inputs").tagsinput();
+        $("#outputs").tagsinput();
 	}
-	
-	
+
 				
 }
 
