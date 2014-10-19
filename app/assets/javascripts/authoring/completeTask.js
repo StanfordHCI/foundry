@@ -10,7 +10,7 @@
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
 
-    //START HERE
+    //START HERE for color, etc.
     //
 
     updateStatus();
@@ -18,6 +18,9 @@
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
+
+    $("#task_modal").modal('hide');
+
     //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Have You Completed This Task?";
