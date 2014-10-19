@@ -1,7 +1,15 @@
-/* completeTask.js
+/* taskStatus.js
  * ---------------------------------------------
- * 
+ * Handles status of the task ("started", "not_started", "delayed", "completed")
+ * Formerly completeTask.js
  */
+
+
+ //TASK STATUS COLORS
+ var TASK_NOT_START_COLOR = "#C9C9C9";
+ var TASK_START_COLOR = "blue";
+ var TASK_DELAY_COLOR = "red";
+ var TASK_COMPLETE_COLOR = "green";
 
 
 //Fires on "Start" button on task modal
@@ -10,10 +18,11 @@
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
 
-    //START HERE for color, etc.
-    //
+    //START TIMER
+    //START HERE ALEXANDRA
 
     updateStatus();
+    drawEvent(eventObj); //Will update color
  }
 
 //Alert firing on event complete buttons
