@@ -86,10 +86,11 @@ function completeTaskModalText(eventToComplete) {
     questionArray = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
     modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;">' + '<div class="event-table-wrapper">';
     for (i = 0; i < questionArray.length; i++){
-        modalText += questionArray[i] + ": </br><input type='textarea' id='q1' rows=3></br>";
+        modalText += questionArray[i] + ": </br><input type='textarea' style='height:50px'></br>";
+      //  modalText += '<br /><b>Notes: </br></b><textarea rows="3" id="notes">' + '</textarea>';
     } 
     modalText += "</form>";
-    modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
+    modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
     return modalText;
 }
 
