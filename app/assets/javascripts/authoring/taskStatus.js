@@ -1,7 +1,15 @@
-/* completeTask.js
+/* taskStatus.js
  * ---------------------------------------------
- * 
+ * Handles status of the task ("started", "not_started", "delayed", "completed")
+ * Formerly completeTask.js
  */
+
+
+ //TASK STATUS COLORS
+ var TASK_NOT_START_COLOR = "#C9C9C9";
+ var TASK_START_COLOR = "blue";
+ var TASK_DELAY_COLOR = "red";
+ var TASK_COMPLETE_COLOR = "green";
 
 
 //Fires on "Start" button on task modal
@@ -10,14 +18,21 @@
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
 
-    //START HERE
-    //
+    //START TIMER
+    //START HERE ALEXANDRA
+
+    //Close the task modal
+    $("#task_modal").modal('hide');
 
     updateStatus();
+    drawEvent(eventObj); //Will update color
  }
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
+    //Close the first (task) modal
+    $("#task_modal").modal('hide');
+
     //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Have You Completed This Task?";
@@ -56,7 +71,7 @@ function confirmCompleteTask(groupNum) {
     	$('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };
-    hidePopover(groupNum); 
+    //hidePopover(groupNum); 
 }
 
 //Return text to fill complete task modal
@@ -81,7 +96,6 @@ function completeTaskModalText(eventToComplete) {
             modalText += "If there is anything else about the deliverable you want other team members, the project coordinator, or the client to know, please explain it here/br><input type='textarea' class='docBox' id = 'q1' style='height:50px'></br>";
         }
     }
-    
     modalText += "</form>";
     questionArray = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
     modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;">' + '<div class="event-table-wrapper">';
@@ -154,7 +168,7 @@ var completeTask = function(groupNum){
             live_tasks.splice(idx, 1);
         }
     }
-    hidePopover(groupNum);
+    //hidePopover(groupNum);
 
     // update db
     updateStatus(true);

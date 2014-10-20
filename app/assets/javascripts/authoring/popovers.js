@@ -21,6 +21,8 @@ $.fn.popover.Constructor.prototype.show = function () {
  * Output(s):
  * an object that contains all info necessary to render an 'editable' popover
  */
+
+ /*imported popover to modal
 function editablePopoverObj(eventObj) {
     var totalMinutes = eventObj["duration"];
     var groupNum = eventObj["id"];
@@ -84,7 +86,7 @@ function editablePopoverObj(eventObj) {
 
     return obj;
 };
-
+*/
 
 /*
  * Input(s): 
@@ -93,6 +95,7 @@ function editablePopoverObj(eventObj) {
  * Output(s):
  * an object that contains all info necessary to render an 'editable' popover
  */
+/*imported popover to modal
 function readOnlyPopoverObj(ev) {
     var groupNum = ev.id;
     var hrs = Math.floor(ev.duration/60);
@@ -175,6 +178,7 @@ function readOnlyPopoverObj(ev) {
 
     return obj;
 }
+*/
 
 /*
  * Draw popover on event.
@@ -188,6 +192,7 @@ function readOnlyPopoverObj(ev) {
  * None
  */
 
+/*imported popover to modal
 function drawPopover(eventObj, editable, show) {
    var groupNum = eventObj.id;
      // draw it
@@ -218,47 +223,64 @@ function drawPopover(eventObj, editable, show) {
         pressEnterKeyToSubmit("#eventMember_" + groupNum, "#addEventMember_" + groupNum);
     });
 };
+*/
 
+/*imported popover to modal
 function updateAllPopoversToReadOnly() {
     for(var i=0;i<flashTeamsJSON.events.length;i++) {
         var ev = flashTeamsJSON.events[i];
         drawPopover(ev, false, false);
     }
 };
+*/
 
+/*imported popover to modal
 var setPopoverOnTask = function(groupNum, obj){
     $(timeline_svg.selectAll("g#g_"+groupNum)[0][0]).popover(obj);
 };
+*/
 
+/*imported popover to modal
 function hidePopover(popId){
     //console.log("hiding popover " + popId);
     $(timeline_svg.selectAll("g#g_"+popId)[0][0]).popover('hide');
     //overlayOff();
 };
-
+*/
+/*imported popover to modal
 function showPopover(popId){
     //console.log("showing popover " + popId);
     $(timeline_svg.selectAll("g#g_"+popId)[0][0]).popover('show');
     //overlayOn();
 };
+*/
 
+/*imported popover to modal
 function togglePopover(popId){
     //console.log("showing popover " + popId);
     $(timeline_svg.selectAll("g#g_"+popId)[0][0]).popover('toggle');
     //overlayOn();
 };
+*/
 
+/*imported popover to modal
 function destroyPopover(popId){
     //console.log("destroying popover " + popId);
     $(timeline_svg.selectAll("g#g_"+popId)[0][0]).popover('destroy');
 };
+*/
 
+/*imported popover to modal
 var getPopoverDataFromGroupNum = function(groupNum){
    //console.log($(timeline_svg.selectAll("g#g_"+groupNum)[0][0]).data);
    return $(timeline_svg.selectAll("g#g_"+groupNum)[0][0]).data('popover');
 };
+*/
+
 //Called when the user clicks save on an event popover, grabs new info from user and updates 
 //both the info in the popover and the event rectangle graphics
+
+/*imported popover to modal
 function saveEventInfo (popId) {
     //Update title
     var newTitle = $("#eventName_" + popId).val();
@@ -327,6 +349,7 @@ function saveEventInfo (popId) {
     
     updateStatus(false);
 };
+*/
 
 // Adds/updates the DRI dropdown on the event popover
 function writeDRIMembers(idNum, driId){
@@ -350,9 +373,31 @@ function writeDRIMembers(idNum, driId){
     return DRIString;
 }
 
+// Adds/updates the PC dropdown on the event popover
+function writePCMembers(idNum, PCId){
+
+    var indexOfJSON = getEventJSONIndex(idNum);
+    var PCString = '<option value="0">-- Choose PC --</option>';
+    var eventPC = PCId;
+    
+    // at some point change this to only members for that event (not all members in the flash team)
+    if (flashTeamsJSON["members"].length == 0) return "No Team Members";
+    for (i = 0; i<flashTeamsJSON["members"].length; i++) {
+                var memberName = flashTeamsJSON["members"][i].role;
+                var memberId = flashTeamsJSON["members"][i].id;
+                if (eventPC == memberId){
+                    PCString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
+                }
+                else{
+                    PCString += '<option value="'+memberId+'">' + memberName + '</option>';
+                }                  
+    }
+    return PCString;
+}
+
 // returns the id of the selected DRI in the DRI dropdown menu on the event popover 
 function getDRI(groupNum) {    
-    var dri = document.getElementById("driEvent_" + groupNum);
+    var dri = document.getElementById("driEvent");
     var driId;
    
     if (dri == null){
@@ -362,6 +407,19 @@ function getDRI(groupNum) {
 	    var driId = dri.value;    
     }
     return driId;
+}
+
+function getPC(groupNum){
+      var pc = document.getElementById("pcEvent");
+    var pcId;
+   
+    if (pc == null){
+         pcId = 0;       
+    }
+    else{
+        var pcId = pc.value;    
+    }
+    return pcId;
 }
 
 //Adds member checkboxes onto the popover of an event, checks if a member is involved in event

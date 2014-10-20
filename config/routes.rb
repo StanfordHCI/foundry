@@ -75,12 +75,22 @@ Foundry::Application.routes.draw do
       post :get_user_name
       post :delayed_task_finished_email
       post :create
+      #get :hire_form
+      get :task_portal
       get :settings
       get :duplicate
       post :settings
     end
   end
 
+  get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'
+  get '/flash_teams/:id/:event_id/hire_form/task_rejection' => 'flash_teams#task_rejection'
+  get '/flash_teams/:id/:event_id/hire_form/task_acceptance' => 'flash_teams#task_acceptance'
+  post '/flash_teams/:id/:event_id/hire_form/send_task_acceptance' => 'flash_teams#send_task_acceptance'
+  post '/flash_teams/:id/:event_id/hire_form/send_task_rejection' => 'flash_teams#send_task_rejection'
+  post '/flash_teams/:id/:event_id/hire_form/send_task_available' => 'flash_teams#send_task_available'
+  
+  
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'
 
