@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 20140729170357) do
     t.text     "notification_email_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "original_status"
     t.integer  "user_id"
+    t.text     "original_status"
   end
 
   create_table "handoffs", force: true do |t|
