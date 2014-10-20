@@ -9,7 +9,7 @@
 		
 			
 		<p><%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline; font-weight:bold;") %>
-		<%= text_field_tag(:sender_email, "", :class => 'span5') %></p>
+		<%= text_field_tag(:sender_email, "", :placeholder => "stanfordhci.odesk@gmail.com", :class => 'span5') %></p>
 		
 		<p><%= label_tag(:recipient_email, "Recipient Email(s):", :class => 'span2', :style => "display:inline; font-weight:bold;") %>
 		<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %></p>
