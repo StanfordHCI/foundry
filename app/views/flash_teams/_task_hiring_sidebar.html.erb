@@ -11,31 +11,14 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
             
-            	<li>
-                		<%=link_to "[Back to Foundry]", edit_flash_team_path%>
-                </li>
+            	<li><%=link_to "[Back to Foundry]", edit_flash_team_path%></li>
+                
+                <li style="color: white;">Project: <%=@flash_team_json["title"]%></li>
+				<li style="color: white;">Task Title: <%=@flash_team_event["title"]%></li>
                 
                 <li class="sidebar-brand" >
-                		<%=link_to "Task Portal", task_portal_flash_team_path%>		
+                	<%link_to "Task Portal", task_portal_flash_team_path%>		
                 </li>
-                
-                               
-                <!--
-<li>
-                    <a href="#" data-toggle="collapse" data-target="#iterations"><i class="fa fa-fw fa-arrows-v"></i> Iterations <i class="fa fa-fw fa-caret-down"></i></a>
-                    <ul id="iterations" class="collapse in" style="">
-                        <li>
-                            <a href="#">Iteration 1</a>
-                        </li>
-                        <li>
-                            <a href="#">Iteration 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Current</a>
-                        </li>
-                    </ul>
-                </li>
--->
 
                <li>
                     <a href="#" data-toggle="collapse" data-target="#hiring"><i class="fa fa-fw fa-arrows-v"></i> Hiring Emails <i class="fa fa-fw fa-caret-down"></i></a>
@@ -52,35 +35,46 @@
                     </ul>
                 </li>
                 
-                <li class="sidebar-brand" style="margin-top: 20px;">
-                    <a href="#" style="color: white;">Task Information</a>
-                 </li>
-
-                 <div style="margin-left: 25px; color: white; text-decoration:none">
-					 <p>Project: <%=@flash_team_json["title"]%></p>
-					 <p>Task Title: <%=@flash_team_event["title"]%></p>
-					 <p>Project Description: <%=@flash_team_json["projectoverview"]%> </p>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#tasks"><i class="fa fa-fw fa-arrows-v"></i> All Tasks <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="tasks" class="collapse in" style="">
+                        <%i = 0%>
+						<%@flash_team_json['events'].each do |event|%>
+							<%=link_to event["title"], :controller => "flash_teams", :action => "hire_form", :event_id => i %>
+							<%i+= 1%>
+						<% end %>
+                    </ul>
+                </li>
+           
+<!--
+				<p class="sidebar-brand"><a href="#" data-toggle="collapse" data-target="#taskinfo2" style="color: white; text-decoration: none;">
+                 <i class="fa fa-fw fa-arrows-v"></i> Task Information <i class="fa fa-fw fa-caret-down"></i></a></p>
+                 <div id="taskinfo2" class="collapse in" style="margin-left: 25px; color: white; text-decoration:none">
+					 <p>Project: <%@flash_team_json["title"]%></p>
+					 <p>Task Title: <%@flash_team_event["title"]%></p>
+					 <p>Project Description: <%@flash_team_json["projectoverview"]%> </p>
 						
-					 <p>Task Description: <%=@flash_team_event["description"]%> </p>
+					 <p>Task Description: <%@flash_team_event["description"]%> </p>
 						
-					 <p>Task Duration: <%=@flash_team_event["duration"]%> minutes </p>
+					 <p>Task Duration: <%@flash_team_event["duration"]%> minutes </p>
 						
-					 <p>Task Start Hour: <%=@flash_team_event["startHr"]%></p>
-					 <p>Task Start Min: <%=@flash_team_event["startMin"]%></p>
+					 <p>Task Start Hour: <%@flash_team_event["startHr"]%></p>
+					 <p>Task Start Min: <%@flash_team_event["startMin"]%></p>
 					
-					 <p>Task Inputs: <%=@flash_team_event["inputs"]%></p>
-					 <p>Task Outputs: <%=@flash_team_event["outputs"]%></p>
+					 <p>Task Inputs: <%@flash_team_event["inputs"]%></p>
+					 <p>Task Outputs: <%@flash_team_event["outputs"]%></p>
 					
 					 <p>Task Members: <br />
 					 
+					 <ul>
 					 <%@flash_team_event['members'].each do |tm|%>
 					 		<%task_member = getMemberById(@id_team, @id_task, tm)%>
-					 		<%=task_member['role']%><br />
+					 		<li><%task_member['role']%></li>
 					 <%end%>
-					 </p>
-
+					 </ul></p>
 
 				</div>
+-->
 				
             </ul>
         </div>
