@@ -84,18 +84,19 @@ function completeTaskModalText(eventToComplete) {
         eventOutputs = eventToComplete.outputs.split(",");
     }
 
-    //Create Checklist of outputs
+    //Create Checklist of outputs with the relevant documentation questions for each output
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' align='left' >";
     if (eventOutputs == null || eventOutputs == "") {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
             modalText += "<b><input type='checkbox' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
-            modalText += 'Please write a brief (1 sentence) description of this deliverable</br><textarea rows="1"></textarea></br>';
-            modalText += 'Please explain all important decisions made about the deliverable, and the reason they were made</br><textarea rows="3"></textarea></br>';
-            modalText += 'If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here</br><textarea rows="3"></textarea></br>';
+            modalText += 'Please write a brief (1 sentence) description of this deliverable</br><textarea id = "output' + i + 'q0" rows="1"></textarea></br>';
+            modalText += 'Please explain all important decisions made about the deliverable, and the reason they were made</br><textarea id = "output' + i + 'q1" rows="3"></textarea></br>';
+            modalText += 'If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here</br><textarea id = "output' + i + 'q2" rows="3"></textarea></br>';
         }
     }
+    //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
     modalText += '<p align="left"><b>General Questions:</b></p>';
     questionArray = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
@@ -108,15 +109,33 @@ function completeTaskModalText(eventToComplete) {
     return modalText;
 }
 
-// function saveDocQuestions(groupNum){
-    
-// }
+//Function to save the documentation questions in the form when the task is completed
+function saveDocQuestions(groupNum){
+    var task_id = getEventJSONIndex(groupNum); 
+    var ev = flashTeamsJSON["events"][task_id];
+    var docQuestions = [];
+    var totalCheckboxes = $(".outputCheckbox").length;
+    for (i = 0; i < totalCheckboxes; i++){
+        outputQ = [];
+        outputQ.push(ev["outputs"].split(",")[i]);
+        for (j = 0; j < 3; j++){
+            outputQ.push($("#output" + i + "q" + j).val());
+        }
+        docQuestions.push(outputQ);
+    }
+    for (i = 0; i < 2; i++){
+        docQuestions.push($("#q" + i).val());
+    }
+    ev["docQs"] = docQuestions;
+}
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
     //Update the status of a task
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     eventToComplete.status = "completed";
+    saveDocQuestions(groupNum);
+    console.log(eventToComplete["docQs"]);
 
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
