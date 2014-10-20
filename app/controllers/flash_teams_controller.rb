@@ -642,7 +642,6 @@ end
   			@sender_email = "stanfordhci.odesk@gmail.com"
   		end
    
-   		@sender_email = params[:sender_email]
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		
