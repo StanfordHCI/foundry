@@ -41,6 +41,9 @@ var upcomingEvent;
 
 var overlayIsOn = false;
 
+//Remove existing X-axis labels
+var numMins = -60;
+
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
 });
@@ -59,7 +62,66 @@ var timeline_svg = d3.select("#timeline-container").append("svg")
 
 //console.log("APPENDED TIMELINE TO DOM!");
 
-function drawTimeline() {
+//Extend the timeline the necessary amount for the project
+function initializeTimelineDuration() {
+    var totalHours = findTotalHours();
+    if (totalHours > 48) {
+        TIMELINE_HOURS = totalHours;
+        TOTAL_HOUR_PIXELS = TIMELINE_HOURS * HOUR_WIDTH;
+        SVG_WIDTH = TIMELINE_HOURS * 100 + 50;
+        XTicks = TIMELINE_HOURS * 4;
+        redrawTimeline();
+    }
+}
+
+
+var task_g = timeline_svg.selectAll(".task_g");
+
+//Set the width of the timeline header row so add time button is all the way to the right
+document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
+
+//Turn on the overlay so a user cannot continue to draw events when focus is on a popover
+function overlayOn() {
+    console.log("overlay on");
+    //$("#overlay").css("display", "block");
+};
+
+//Remove the overlay so a user can draw events again
+function overlayOff() {
+    console.log("overlay off");
+    $(".task_rectangle").popover("hide");
+    //$("#overlay").css("display", "none");
+};
+
+//Access a particular "event" in the JSON by its id number and return its index in the JSON array of events
+function getEventJSONIndex(idNum) {
+    var num_events = flashTeamsJSON["events"].length;
+    for (var i = 0; i < num_events; i++) {
+        if (flashTeamsJSON["events"][i].id == idNum) {
+            return i;
+        }
+    }
+};
+
+//VCom Time expansion button trial 
+function addTime() {
+    calcAddHours(TIMELINE_HOURS);
+    redrawTimeline();
+}
+
+
+//VCom Calculates how many hours to add when user expands timeline manually 
+//Increases by 1/3 each time (130% original length)
+function calcAddHours(currentHours) {
+    TIMELINE_HOURS = currentHours + Math.floor(currentHours/3);
+    TOTAL_HOUR_PIXELS = TIMELINE_HOURS * HOUR_WIDTH;
+    SVG_WIDTH = TIMELINE_HOURS * HOUR_WIDTH + 50;
+    XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH;
+}
+
+//Should have updated the variables: TIMELINE_HOURS, TOTAL_HOUR_PIXELS, SVG_WIDTH, XTicks
+//Redraws timeline based on those numbers
+function redrawTimeline() {
   // an array of the numbers [0, 1, 2, ..., numSteps-1]
   var intervals = (
       function (steps){
@@ -69,6 +131,18 @@ function drawTimeline() {
           }
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
+
+  console.log(SVG_HEIGHT);
+  console.log(YTicks);
+  console.log(ROW_HEIGHT);
+
+  //Reset overlay and svg width
+  document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
+  timeline_svg.attr("width", SVG_WIDTH);
+  
+  //Remove all existing grid lines & background
+  timeline_svg.selectAll("line").remove();
+  timeline_svg.selectAll("rect.background").remove();
 
   // reset header svg width
   header_svg.attr("width", TOTAL_HOUR_PIXELS)
@@ -82,8 +156,6 @@ function drawTimeline() {
       .attr("y1", HEADER_HEIGHT - 12)
       .attr("y2", HEADER_HEIGHT)
       .style("stroke", STROKE_COLOR);
-  
-  console.log('drawing');
   
   // draw timeline time intervals to header svg
   header_svg.selectAll("text.time-marker")
@@ -139,134 +211,53 @@ function drawTimeline() {
       .attr("y1", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
       .attr("y2", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
       .style("stroke", STROKE_COLOR);
+      
+    
+  //Redraw Add Time Button
+  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
+  
+  //Remove existing X-axis labels
+  timeline_svg.selectAll("text.timelabel").remove();
+  numMins = -60;
+  
+  //Add ability to draw rectangles on extended timeline
+  timeline_svg.append("rect")
+      .attr("class", "background")
+      .attr("width", SVG_WIDTH)
+      .attr("height", SVG_HEIGHT)
+      .attr("fill", "white")
+      .attr("fill-opacity", 0)
+      .on("mousedown", function() {
+          var point = d3.mouse(this);
+          newEvent(point);
+      }); 
+
+  //Redraw the cursor
+  timeline_svg.append("line")
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT-50)
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("class", "cursor")
+      .style("stroke", "red")
+      .style("stroke-width", "2")
+
+  //Get the latest time and team status, update x position of cursor
+  cursor = timeline_svg.select(".cursor");
+  var latest_time;
+  if (in_progress){
+      latest_time = (new Date).getTime();
+  } else {
+      latest_time = loadedStatus.latest_time;
+  }
+  
+  //Next line is commented out after disabling the ticker
+  //cursor_details = positionCursor(flashTeamsJSON, latest_time);
+
+  //move all existing events back on top of timeline
+  $(timeline_svg.selectAll('g')).each(function() {
+      $('.chart').append(this);
+  });
 }
 
-drawTimeline();
-
-
-//Remove existing X-axis labels
-var numMins = -60;
-
-//Extend the timeline the necessary amount for the project
-function initializeTimelineDuration() {
-    var totalHours = findTotalHours();
-    if (totalHours > 48) {
-        TIMELINE_HOURS = totalHours;
-        TOTAL_HOUR_PIXELS = TIMELINE_HOURS * HOUR_WIDTH;
-        SVG_WIDTH = TIMELINE_HOURS * 100 + 50;
-        XTicks = TIMELINE_HOURS * 4;
-        redrawTimeline();
-    }
-}
-
-
-var task_g = timeline_svg.selectAll(".task_g");
-
-//Set the width of the timeline header row so add time button is all the way to the right
-document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
-
-//Turn on the overlay so a user cannot continue to draw events when focus is on a popover
-function overlayOn() {
-    console.log("overlay on");
-    //$("#overlay").css("display", "block");
-};
-
-//Remove the overlay so a user can draw events again
-function overlayOff() {
-    console.log("overlay off");
-    $(".task_rectangle").popover("hide");
-    //$("#overlay").css("display", "none");
-};
-
-//Access a particular "event" in the JSON by its id number and return its index in the JSON array of events
-function getEventJSONIndex(idNum) {
-    var num_events = flashTeamsJSON["events"].length;
-    for (var i = 0; i < num_events; i++) {
-        if (flashTeamsJSON["events"][i].id == idNum) {
-            return i;
-        }
-    }
-};
-
-//VCom Time expansion button trial 
-function addTime() {
-    calcAddHours(TIMELINE_HOURS);
-    redrawTimeline();
-}
-
-//Should have updated the variables: TIMELINE_HOURS, TOTAL_HOUR_PIXELS, SVG_WIDTH, XTicks
-//Redraws timeline based on those numbers
-function redrawTimeline() {
-    //debugger;
-    //Recalculate 'x' based on added hours
-    var x = d3.scale.linear()
-    .domain([0, TOTAL_HOUR_PIXELS])
-    .range([0, TOTAL_HOUR_PIXELS]);
-    
-    //Reset overlay and svg width
-    document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
-    timeline_svg.attr("width", SVG_WIDTH);
-    
-    //Remove all existing grid lines & background
-    timeline_svg.selectAll("line").remove();
-    timeline_svg.selectAll("rect.background").remove();
-    
-    drawTimeline();
-    
-    //Redraw Add Time Button
-    document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
-    
-    //Remove existing X-axis labels
-    timeline_svg.selectAll("text.timelabel").remove();
-    numMins = -60;
-
-
-    
-    //Add ability to draw rectangles on extended timeline
-    timeline_svg.append("rect")
-        .attr("class", "background")
-        .attr("width", SVG_WIDTH)
-        .attr("height", SVG_HEIGHT)
-        .attr("fill", "white")
-        .attr("fill-opacity", 0)
-        .on("mousedown", function() {
-            var point = d3.mouse(this);
-            newEvent(point);
-        }); 
-
-    //Redraw the cursor
-    timeline_svg.append("line")
-        .attr("y1", 0)
-        .attr("y2", SVG_HEIGHT-50)
-        .attr("x1", 0)
-        .attr("x2", 0)
-        .attr("class", "cursor")
-        .style("stroke", "red")
-        .style("stroke-width", "2")
-
-    //Get the latest time and team status, update x position of cursor
-    cursor = timeline_svg.select(".cursor");
-    var latest_time;
-    if (in_progress){
-        latest_time = (new Date).getTime();
-    } else {
-        latest_time = loadedStatus.latest_time;
-    }
-    
-    //Next line is commented out after disabling the ticker
-    //cursor_details = positionCursor(flashTeamsJSON, latest_time);
-
-    //move all existing events back on top of timeline
-    $(timeline_svg.selectAll('g')).each(function() {
-        $('.chart').append(this);
-    });
-}
-
-//VCom Calculates how many hours to add when user expands timeline manually 
-//Increases by 1/3 each time (130% original length)
-function calcAddHours(currentHours) {
-    TIMELINE_HOURS = currentHours + Math.floor(currentHours/3);
-    TOTAL_HOUR_PIXELS = TIMELINE_HOURS * HOUR_WIDTH;
-    SVG_WIDTH = TIMELINE_HOURS * HOUR_WIDTH + 50;
-    XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH;
-}
+redrawTimeline();
