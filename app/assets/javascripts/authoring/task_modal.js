@@ -262,7 +262,7 @@ function saveTaskOverview(groupNum){
     if (newHours == "") newHours = parseInt($("#hours")[0].placeholder);
     if (newMin == "") newMin = parseInt($("#minutes" )[0].placeholder);
     newMin = Math.round(parseInt(newMin)/15) * 15;
-    
+
     //cannot have events shorter than 30 minutes
     if (newHours == 0 && newMin == 15){
         newMin = 30;
