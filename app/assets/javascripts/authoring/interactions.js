@@ -44,13 +44,12 @@ function eventMousedown(task2idNum) {
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
-       var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="DRFunction('+task2idNum+')">Hire</button>' +
+       var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        '<button class="btn " id="start-task" style="float :left " onclick="startTask('+task2idNum+')">Start</button>'+
        '<button class="btn " id="end-task" style="float :left " onclick="confirmCompleteTask('+task2idNum+')">Complete</button>' +
        '<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>' +
        '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
-       '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>' 
-        ;
+       '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
      
        $('#task_modal').modal('show'); 
        $('.task-modal-footer').html(modal_footer);

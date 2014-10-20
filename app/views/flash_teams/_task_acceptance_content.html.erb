@@ -1,0 +1,74 @@
+<div class="row"><h2>Task Acceptance Email</h2></div>
+
+<br />
+
+<div class="row">
+	<div class="col-lg-12">
+	
+		<%= form_tag({action: "send_task_acceptance", method: "post", name: "taskOverviewForm"},{:style => "display:inline"}) do %>
+		<p><%= label_tag(:sender_email, "Your Email:", :class => 'span2', :style => "display:inline") %>
+		<%= text_field_tag(:sender_email, "", :class => 'span5') %> </p>
+		
+		<p><%= label_tag(:recipient_email, "Recipient Email:", :class => 'span2', :style => "display:inline") %>
+		<%= text_field_tag(:recipient_email, "", :class => 'span5') %> </p>
+		
+		<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline") %>
+		<%= text_field_tag(:subject, @task_acceptance_email_subject, :class => 'span8') %></p>
+		
+		<br />
+		
+		<div class="span10">
+		
+			<p>Congratulations!  You have been hired for the 
+			<select name="task_member">
+			<%@task_members.each do |task_member|%>
+				<%=options_for_select([[task_member['role'], task_member['role']]])%>
+			<%end%>
+			</select> 
+			
+			role to work on the
+			<%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task as part of the 
+			<em><%=@flash_team_json['title']%></em> project.  As stated in the job description, 
+			you will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3')%> to complete this task 
+			and must start working within 30 minutes of receiving this email. Please make sure to track your working hours 
+			on oDesk. For your reference, we have included the job description below:</p>
+								
+			<p><%= label_tag(:project_overview, "Project Overview:" , :style => "display:inline; font-weight:bold;") %>
+			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5) %></p>
+			
+			<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
+			<%= text_area_tag(:task_description, @flash_team_event['description'], :class => 'span10', :rows =>5) %></p>
+			
+			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
+			For this task, you will receive the following input(s):
+								<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>, which you can access at the following link:
+								<%= text_field_tag(:input_link, "", :placeholder => "[INSERT LINK TO INPUT]", :class => 'span7') %></p>
+			
+			<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
+			<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>
+			<p><%= label_tag(:output_description, "Deliverable Information:", :style => "display:inline; font-weight:bold;") %>
+			<%= text_area_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :rows =>3, :required => true) %></p>
+			
+			<p><b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your 
+			progress and submit your work.</p>  Click the following URL to sign up for this project on Foundry: 
+			<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span7', :required => true) %></p>
+			
+			<p>After you sign up, you will receive a unique link to the project, which you should use throughout the project. 
+			As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress 
+			and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" 
+			button on the top left of the page.  Feel free to contact us if you have any remaining questions.</p>  
+			
+			<p>Thank you for involvement in this project and we look forward to receiving your work!</p>
+			
+			<p>
+			Best, <br />
+			Stanford HCI Research Team
+			</p>
+		
+			<%= button_tag("Send Task Acceptance Email", :type => 'submit', :class => 'btn btn-primary') %>
+			<!-- <% button_tag("Save Draft", :class => 'btn') %> -->
+			<% end %>
+		</div>
+	</div>
+
+</div>

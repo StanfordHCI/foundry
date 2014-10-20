@@ -420,6 +420,241 @@ end
     render :partial => "event_search_results"
 
    end
+   
+   def task_portal
+   
+   		@id_team = params[:id]
+   		@flash_team = FlashTeam.find(params[:id])
+   		
+   		# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_events = flash_team_status['flash_teams_json']['events']
+   
+   end
+   
+   
+     def hire_form
+	   	@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	    minutes = @flash_team_event['duration']
+		hh, mm = minutes.divmod(60)
+		@task_duration = hh.to_s 
+		
+		if hh==1
+			@task_duration += " hour"
+		else
+			@task_duration += " hours"
+		end
+		
+		if mm>0
+			@task_duration += " and " + mm.to_s + " minutes"
+		end
+	    
+	    #array for all members associated with this event
+	    @task_members = Array.new
+	    
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
+	    
+	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
+  end
+  
+  def send_task_available
+
+ 		@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+   		if !params[:sender_email].empty?
+   			@sender_email = params[:sender_email]
+  		else
+  			@sender_email = "stanfordhci.odesk@gmail.com"
+  		end
+   		
+   		@flash_team_name = @flash_team_json['title']
+   		
+   		@task_member = params[:task_member] #i.e. role of recipient 
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		
+   		@task_name = params[:task_name]
+   		@project_overview = params[:project_overview]
+   		@task_description = params[:task_description]
+   		
+   		
+   		@inputs = params[:inputs]
+   		@input_link = params[:input_link]
+   		
+   		@outputs = params[:outputs]
+   		@output_description = params[:output_description]
+   		
+   		@task_duration = params[:task_duration]
+   		
+   		#@message = params[:message]
+   		
+   		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
+   		
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
+   
+   end
+   
+      
+      def task_acceptance
+	   	@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	    minutes = @flash_team_event['duration']
+		hh, mm = minutes.divmod(60)
+		@task_duration = hh.to_s 
+		
+		if hh==1
+			@task_duration += " hour"
+		else
+			@task_duration += " hours"
+		end
+		
+		if mm>0
+			@task_duration += " and " + mm.to_s + " minutes"
+		end
+ 
+	    #array for all members associated with this event
+	    @task_members = Array.new
+	    
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
+	    	    
+	    #@my_text = "Here is some basic text...\n...with a line break."
+	    @task_acceptance_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Acceptance"
+	    
+  end
+   
+   def send_task_acceptance
+   
+   		@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+   		if !params[:sender_email].empty?
+   			@sender_email = params[:sender_email]
+  		else
+  			@sender_email = "stanfordhci.odesk@gmail.com"
+  		end
+   		
+   		@flash_team_name = @flash_team_json['title']
+   		
+   		@task_member = params[:task_member] #i.e. role of recipient 
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		
+   		@task_name = params[:task_name]
+   		@project_overview = params[:project_overview]
+   		@task_description = params[:task_description]
+   		
+   		
+   		@inputs = params[:inputs]
+   		@input_link = params[:input_link]
+   		
+   		@outputs = params[:outputs]
+   		@output_description = params[:output_description]
+   		
+   		@foundry_url = params[:foundry_url]
+
+   		
+   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
+   
+   end
+   
+   def task_rejection
+   		
+   		@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+	     #array for all members associated with this event
+	    @task_members = Array.new
+	    
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
+	    
+	    @foundry_url = params[:foundry_url]
+	    
+	   @task_rej_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is No Longer Available"
+	   	   	    
+   end
+   
+   def send_task_rejection
+   
+  		@id_team = params[:id]
+	   	@id_task = params[:event_id].to_i
+	   	
+	   	@flash_team = FlashTeam.find(params[:id])
+	   	    
+	   	# Extract data from the JSON
+	    flash_team_status = JSON.parse(@flash_team.status)
+	    @flash_team_json = flash_team_status['flash_teams_json']
+	    @flash_team_event = @flash_team_json['events'][@id_task]
+	    
+   		if !params[:sender_email].empty?
+   			@sender_email = params[:sender_email]
+  		else
+  			@sender_email = "stanfordhci.odesk@gmail.com"
+  		end
+   
+   		@sender_email = params[:sender_email]
+   		@recipient_email = params[:recipient_email]
+   		@subject = params[:subject]
+   		
+   		@flash_team_name = @flash_team_json['title']
+   		
+   		@task_name = params[:task_name]
+   		
+   		@task_member = params[:task_member]
+   		
+   		UserMailer.send_task_rejection_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_name, @task_member).deliver
+   
+   end
 
   def flash_team_params params
     params.permit(:name, :author)

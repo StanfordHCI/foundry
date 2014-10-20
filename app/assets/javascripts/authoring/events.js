@@ -250,7 +250,7 @@ function createEventObj(snapPoint) {
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
-        createNewFolder($("#flash_team_name").val());
+        //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
     return newEvent;
