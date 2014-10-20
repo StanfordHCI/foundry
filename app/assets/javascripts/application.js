@@ -42,4 +42,4 @@
 //= require ./authoring/tour
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
-//= require ./authoring/completeTask
+//= require ./authoring/taskStatus

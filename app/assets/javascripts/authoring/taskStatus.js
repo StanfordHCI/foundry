@@ -1,7 +1,15 @@
-/* completeTask.js
+/* taskStatus.js
  * ---------------------------------------------
- * 
+ * Handles status of the task ("started", "not_started", "delayed", "completed")
+ * Formerly completeTask.js
  */
+
+
+ //TASK STATUS COLORS
+ var TASK_NOT_START_COLOR = "#C9C9C9";
+ var TASK_START_COLOR = "blue";
+ var TASK_DELAY_COLOR = "red";
+ var TASK_COMPLETE_COLOR = "green";
 
 
 //Fires on "Start" button on task modal
@@ -10,14 +18,21 @@
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
 
-    //START HERE
-    //
+    //START TIMER
+    //START HERE ALEXANDRA
+
+    //Close the task modal
+    $("#task_modal").modal('hide');
 
     updateStatus();
+    drawEvent(eventObj); //Will update color
  }
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
+    //Close the first (task) modal
+    $("#task_modal").modal('hide');
+
     //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Have You Completed This Task?";
@@ -78,8 +93,8 @@ function completeTaskModalText(eventToComplete) {
             modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
         }
     }
-    
     modalText += "</form>";
+    
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons."
     return modalText;
 }
