@@ -76,7 +76,7 @@ function confirmCompleteTask(groupNum) {
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<b>Outputs for " + eventToComplete["title"] + ":</b>";
+    var modalText = "<p align='left'><b>Outputs for " + eventToComplete["title"] + ":</b></p>";
 
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
@@ -85,36 +85,32 @@ function completeTaskModalText(eventToComplete) {
     }
 
     //Create Checklist of outputs
-    modalText += "<form id='event_checklist_" + eventToComplete.id + "' >";
+    modalText += "<form id='event_checklist_" + eventToComplete.id + "' align='left' >";
     if (eventOutputs == null || eventOutputs == "") {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
-            modalText += "<input type='checkbox' class='outputCheckbox'>" + eventOutputs[i] + "</input><br>";
-            modalText += "Please write a brief (2 sentence) description of this deliverable</br><input type='textarea' class='docBox' id = 'q0' rows='3'></br>";
-            modalText += "Please explain all decisions made about the deliverable, and the reason they were made</br><input type='textarea' class='docBox' id = 'q1' style='height:50px'></br>";
-            modalText += "If there is anything else about the deliverable you want other team members, the project coordinator, or the client to know, please explain it here/br><input type='textarea' class='docBox' id = 'q1' style='height:50px'></br>";
+            modalText += "<b><input type='checkbox' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += 'Please write a brief (1 sentence) description of this deliverable</br><textarea rows="1"></textarea></br>';
+            modalText += 'Please explain all important decisions made about the deliverable, and the reason they were made</br><textarea rows="3"></textarea></br>';
+            modalText += 'If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here</br><textarea rows="3"></textarea></br>';
         }
     }
-    modalText += "</form>";
+    modalText += "</form><hr/>";
+    modalText += '<p align="left"><b>General Questions:</b></p>';
     questionArray = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
-    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;">' + '<div class="event-table-wrapper">';
+    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;" align="left">' + '<div class="event-table-wrapper">';
     for (i = 0; i < questionArray.length; i++){
-        modalText += questionArray[i] + ": </br><input type='textarea' style='height:50px'></br>";
-      //  modalText += '<br /><b>Notes: </br></b><textarea rows="3" id="notes">' + '</textarea>';
+        modalText += questionArray[i] + ': </br><textarea id="q' + i + '" rows="3"></textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
     return modalText;
 }
 
-function docQuestionForm(groupNum){
-    var task_id = getEventJSONIndex(groupNum);
-    var docForm = '<form name="docQForm" id="docQForm" style="margin-bottom: 5px;">' +   + '<div class="event-table-wrapper">'
-        + 'Please write about any important decisions here: <input type="text" id="q1" style="width:35px">' 
-    return docQuestionForm;
-}
-
+// function saveDocQuestions(groupNum){
+    
+// }
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
     //Update the status of a task
