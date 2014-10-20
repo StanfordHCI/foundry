@@ -312,9 +312,9 @@ function addMember() {
 
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
-    for(var i=0;i<events.length;i++){
+   /* for(var i=0;i<events.length;i++){
        drawPopover(events[i], true, false);
-    }
+    }*/
 
    renderPills(members);
    renderMemberPopovers(members);
@@ -440,7 +440,7 @@ function deleteMember(pillId) {
     }
 
     // update event popovers
-    drawAllPopovers();
+    //drawAllPopovers();
 
     updateStatus(false);
 
@@ -648,7 +648,7 @@ function updateRoleName(id, newValue) {
         if (value['id'] == id) {
             flashTeamsJSON['members'][index]['role'] = newValue;
             updateStatus(false);
-            drawAllPopovers();
+            //drawAllPopovers();
             return false;
         }
     });

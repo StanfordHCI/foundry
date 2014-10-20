@@ -30,7 +30,7 @@ var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
         var ev = getEventFromId(d.groupNum);
-        drawPopover(ev, true, false);
+        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -39,7 +39,7 @@ var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
         var ev = getEventFromId(d.groupNum);
-        drawPopover(ev, true, false);
+        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -51,7 +51,7 @@ var drag = d3.behavior.drag()
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
-            drawPopover(ev, true, false);
+            //drawPopover(ev, true, false);
             updateStatus(false);
         } else {
             // click
@@ -211,7 +211,7 @@ function createEvent(point) {
     drawEvent(eventObj, true);
 
     // render event popover
-    drawPopover(eventObj, true, true);
+    //drawPopover(eventObj, true, true);
 
     // save
     updateStatus(false);
@@ -246,7 +246,7 @@ function createEventObj(snapPoint) {
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
-        "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
+        "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
@@ -823,13 +823,14 @@ function drawHiringEvent() {
     
 }
 
+/*imported popover to modal
 function drawAllPopovers() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
         drawPopover(ev, true, false);
     }
-};
+};*/
 
 
 function removeAllMemberCircles(eventObj){
@@ -890,7 +891,8 @@ function deleteEventMember(eventId, memberNum, memberName) {
 
 //shows an alert asking the user to confirm that they want to delete an event
 function confirmDeleteEvent(eventId) {
-
+    $('#task_modal').modal('hide'); 
+    
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Delete Event?";
 
