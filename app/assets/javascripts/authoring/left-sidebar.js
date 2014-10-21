@@ -27,13 +27,26 @@ $(document).ready(function() {
   
   // click listener
   menuButton.click(function() {
+    var margin = 2 * parseFloat(timelineContainer.css("margin-left"));
     if($(this).hasClass("active")) {
       leftSidebar.css("left", -leftSidebar.width() + "px");
-      timelineContainer.css("left", 0);
+      var width = window.innerWidth
+                - margin;
+      timelineContainer.css({
+          left: 0,
+          width: width + "px",
+      });
       $(this).removeClass("active");
     } else {
       leftSidebar.css("left", 0);
-      timelineContainer.css("left", leftSidebar.width() + "px");
+      var width = window.innerWidth
+                - leftSidebar.width()
+                - margin;
+                
+      timelineContainer.css({
+          left: leftSidebar.width() + "px",
+          width: width + "px",
+      });
       $(this).addClass("active");
     }
   });

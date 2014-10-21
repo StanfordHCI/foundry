@@ -119,7 +119,7 @@
           timelineContainer.css({
               width:  window.innerWidth
                     - leftSidebar.width()
-                    - parseFloat(timelineContainer.css('margin-left'))
+                    - (2*parseFloat(timelineContainer.css('margin-left')))
                     + "px",
           });
       }
