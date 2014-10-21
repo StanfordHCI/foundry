@@ -342,7 +342,13 @@ function drawMainRect(eventObj, firstTime) {
             .attr("groupNum", function(d) {return d.groupNum;})
             .attr("height", RECTANGLE_HEIGHT)
             .attr("width", width)
-            .attr("fill", "#C9C9C9")
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") return TASK_START_COLOR;
+                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else return TASK_COMPLETE_COLOR;
+            })
             .attr("fill-opacity", .6)
             .attr("stroke", "#5F5A5A")
             .attr('pointer-events', 'all')
@@ -351,7 +357,14 @@ function drawMainRect(eventObj, firstTime) {
         task_g.selectAll(".task_rectangle")
             .attr("x", function(d) {return d.x;})
             .attr("y", function(d) {return d.y;})
-            .attr("width", width);
+            .attr("width", width)
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") return TASK_START_COLOR;
+                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else return TASK_COMPLETE_COLOR;
+            });
     }
 };
 
@@ -875,7 +888,7 @@ function deleteEventMember(eventId, memberNum, memberName) {
     //Delete the line
     $("#event_" + eventId + "_eventMemLine_" + memberNum).remove();
     if (memberNum == current){
-         $("#rect_" + eventId).attr("fill", "#C9C9C9")
+         $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
     //Update the JSON
