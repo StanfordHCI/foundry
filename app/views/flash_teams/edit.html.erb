@@ -99,10 +99,31 @@
 <div id="titleLength" style="visibility: hidden; "><span></span></div>
 </div> <!-- end of div class="container-fluid" -->
 
-
 <%= javascript_include_tag "authoring/gdrive" %>
 <%= javascript_include_tag "application" %>
 <%= javascript_include_tag "https://apis.google.com/js/client.js?onload=handleClientLoad" %>
 <%= javascript_include_tag "https://apis.google.com/js/api.js"%>
 
 
+<script>
+  (function() {
+      function setPositions() {
+          document.body.style.backgroundColor = "#101010";
+          document.body.style.overflow = "hidden";
+          var leftSidebar = $("#left-sidebar").css({
+              height: (window.innerHeight - $("#foundry-header").height()) + "px",
+              overflow: "auto",
+          });
+  
+          var timelineContainer = $("#timeline-container");
+          timelineContainer.css({
+              width:  window.innerWidth
+                    - leftSidebar.width()
+                    - parseFloat(timelineContainer.css('margin-left'))
+                    + "px",
+          });
+      }
+      $(window).resize(setPositions);
+      $(document).ready(setPositions);
+  })();
+</script>
