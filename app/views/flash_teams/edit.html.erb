@@ -115,12 +115,17 @@
               overflow: "auto",
           });
   
+          var header = $("#foundry-header");
           var timelineContainer = $("#timeline-container");
           timelineContainer.css({
               width:  window.innerWidth
                     - leftSidebar.width()
-                    - (2*parseFloat(timelineContainer.css('margin-left')))
+                    - (2*parseFloat(timelineContainer.css("margin-left")))
                     + "px",
+              height:  window.innerHeight
+                     - header.height()
+                     - (parseFloat(timelineContainer.css("margin-top")))
+                     + "px",
           });
       }
       $(window).resize(setEditPage);
