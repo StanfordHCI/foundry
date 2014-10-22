@@ -24,6 +24,7 @@ $('input[type=checkbox]').change(function(e){
 		  return value != removeItem;
 	  });
     }
+    console.log(selWorkers);
            
    var request = $.ajax({
 	   url: "/workers/filter_workers_emails",
