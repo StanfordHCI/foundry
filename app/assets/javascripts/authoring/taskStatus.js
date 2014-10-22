@@ -11,6 +11,9 @@
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
 
+//Documentation Questions
+var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
+var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
 
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
@@ -79,7 +82,7 @@ function confirmCompleteTask(groupNum) {
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
     var modalText = "<p align='left'><b>Outputs for " + eventToComplete["title"] + ":</b></p>";
-
+    
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -93,18 +96,17 @@ function completeTaskModalText(eventToComplete) {
     } else {
         for (i=0; i<eventOutputs.length; i++) {
             modalText += "<b><input type='checkbox' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
-            modalText += 'Please write a brief (1 sentence) description of this deliverable</br><textarea id = "output' + i + 'q0" rows="1"></textarea></br>';
-            modalText += 'Please explain all important decisions made about the deliverable, and the reason they were made</br><textarea id = "output' + i + 'q1" rows="3"></textarea></br>';
-            modalText += 'If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here</br><textarea id = "output' + i + 'q2" rows="3"></textarea></br>';
+            for (j = 0; j<outputQuestions.length; j++){
+                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" rows="3"></textarea></br>';
+            }
         }
     }
     //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
     modalText += '<p align="left"><b>General Questions:</b></p>';
-    questionArray = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
     modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;" align="left">' + '<div class="event-table-wrapper">';
-    for (i = 0; i < questionArray.length; i++){
-        modalText += questionArray[i] + ': </br><textarea id="q' + i + '" rows="3"></textarea></br>';
+    for (i = 0; i < generalQuestions.length; i++){
+        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '" rows="3"></textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
@@ -115,19 +117,20 @@ function completeTaskModalText(eventToComplete) {
 function saveDocQuestions(groupNum){
     var task_id = getEventJSONIndex(groupNum); 
     var ev = flashTeamsJSON["events"][task_id];
-    var docQuestions = [];
-    var totalCheckboxes = $(".outputCheckbox").length;
-    for (i = 0; i < totalCheckboxes; i++){
-        outputQ = [];
-        outputQ.push(ev["outputs"].split(",")[i]);
-        for (j = 0; j < 3; j++){
-            outputQ.push($("#output" + i + "q" + j).val());
+    var outputList = ev["outputs"].split(",");
+    var outputQMap = {};
+    for (i = 0; i < outputList.length; i++){
+         outputQ = []
+         for (j = 0; j < outputQuestions.length; j++){
+             outputQ.push([outputQuestions[j], $("#output" + i + "q" + j).val()]);
         }
-        docQuestions.push(outputQ);
+        outputQMap[outputList[i]] = outputQ;
     }
-    for (i = 0; i < 2; i++){
-        docQuestions.push($("#q" + i).val());
-    }
+    ev["outputQs"] = outputQMap;
+    var docQuestions = [];
+    for (i = 0; i < generalQuestions.length; i++){
+        docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
+    }    
     ev["docQs"] = docQuestions;
 }
 //Called when user confirms event completion alert
@@ -137,7 +140,7 @@ var completeTask = function(groupNum){
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     eventToComplete.status = "completed";
     saveDocQuestions(groupNum);
-    console.log(eventToComplete["docQs"]);
+    console.log(eventToComplete["outputQs"]);
 
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
