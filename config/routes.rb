@@ -1,4 +1,8 @@
 Foundry::Application.routes.draw do
+  get "workers/index"
+  get "workers/new"
+  get "workers/create"
+  get "workers/show"
   get "welcome/index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -115,5 +119,16 @@ Foundry::Application.routes.draw do
       post :create
     end
   end
+  
+  #resources :workers
+  get '/workers' => 'workers#index' 
+  get '/workers/filter_workers' => 'workers#filter_workers'
+  get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
+  get '/workers/new' => 'workers#new'
+  get '/workers/:id' => 'workers#show'
+  post '/workers' => 'workers#create'
+  
+  
+  
 
 end

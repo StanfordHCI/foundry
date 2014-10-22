@@ -1,0 +1,46 @@
+<p id="panel_results">
+	<b><em>Emails for all workers this panel:</em></b>
+
+	<br />
+
+	<%= @fw.to_s.gsub('"', '')%>
+	
+	<br />
+
+</p>
+
+<div>
+	<table class="table table-bordered">
+	    <thead>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Skype Username</th>
+			<th>oDesk Profile URL</th>
+			<th>Timezone in UTC</th>
+			<th>Additional Info</th>
+			<th>Panel</th>
+			<th>Select</th>
+	    </thead>
+	    <tbody>
+			<% @workers.each do |worker| %>
+			    <tr>
+			        <td><%= worker.name %></td>
+			        <td><%= worker.email %></td>
+			        <td><%= worker.skype_username %></td>
+			        <td><%= worker.odesk_url %></td>
+			        <td><%= worker.timezone_utc %></td>
+			        <td><%= worker.additional_info %></td>
+			        <td><%= worker.panel %></td>
+			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+			    </tr>
+			<% end %>
+	    </tbody>
+	</table>
+</div>
+
+<p id="worker_results">
+
+<%= render :partial => "filter_workers_emails"%>
+
+</p>
+

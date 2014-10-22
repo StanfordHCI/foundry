@@ -1,0 +1,33 @@
+<%= render "panel_reg_sidebar" %>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+
+<div class="row span12">
+<h1>Workers#index</h1>
+<p>Find me in app/views/workers/index.html.erb</p>
+</div>
+
+<p class="row span12">
+
+<b>Select a Panel:</b> <br />
+</p>
+<p class="row span12">
+<%= select_tag "panels", options_for_select(@panels), {:prompt => "All Panels"}%>
+
+</p>
+
+
+<div id="filter_results" class="row span12">
+
+	<%= render :partial => "filter_workers" %>
+
+</div>
+
+ </div><!-- /#container-fluid -->
+        </div><!-- /#page-content-wrapper -->
+
+    </div><!-- /#wrapper -->
+
+<%= render "panel_reg_sidebar_footer" %>
