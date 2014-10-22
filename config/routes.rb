@@ -1,9 +1,5 @@
 Foundry::Application.routes.draw do
-  get "workers/index"
-  get "workers/new"
-  get "workers/create"
-  get "workers/show"
-  get "welcome/index"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -60,6 +56,8 @@ Foundry::Application.routes.draw do
   #   end
 
  
+  get "welcome/index"
+  
   root 'welcome#index'
 
   get 'oauth2callback' => 'welcome#index'
@@ -94,6 +92,7 @@ Foundry::Application.routes.draw do
   post '/flash_teams/:id/:event_id/hire_form/send_task_rejection' => 'flash_teams#send_task_rejection'
   post '/flash_teams/:id/:event_id/hire_form/send_task_available' => 'flash_teams#send_task_available'
   
+  get '/flash_teams/:id/:event_id/panels' => 'flash_teams#panels'
   
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'
@@ -121,7 +120,7 @@ Foundry::Application.routes.draw do
   end
   
   #resources :workers
-  get '/workers' => 'workers#index' 
+  get '/workers/index' => 'workers#index' 
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
   get '/workers/new' => 'workers#new'

@@ -1,0 +1,22 @@
+<div class="row">
+<h1>Panels</h1>
+<p>To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
+</div>
+
+<p class="row">
+
+<b>Select a Panel:</b> <br />
+</p>
+<p class="row">
+<%= select_tag "panels", options_for_select(@panels), {:prompt => "All Panels"}%>
+
+</p>
+
+
+<div id="filter_results" class="row">
+
+	<%= render :partial => "workers/filter_workers" %>
+
+</div>
+
+<%= javascript_include_tag "/assets/authoring/panels" %>

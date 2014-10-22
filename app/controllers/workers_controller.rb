@@ -2,19 +2,12 @@ class WorkersController < ApplicationController
  
   def index
   	
-  	if params[:panels] && params[:panels] != ""
-  		@workers = Worker.where(:panel => params[:panels])
-	else
-     	@workers = Worker.all
-
-	end
+    @workers = Worker.all
     	
   	@panels = Worker.distinct.pluck(:panel)
   	
   	@fw = Worker.all.pluck(:email)
-  	  	  	
-  	#@abc = Worker.where(:id => params[:workers]).pluck(:email)
-  	  	
+  	  	  	  	  	
   end
   
     def filter_workers
