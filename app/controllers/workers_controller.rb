@@ -67,11 +67,21 @@ class WorkersController < ApplicationController
     
     if worker.save
         #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
-        redirect_to :action => 'index', alert: "Worker created successfully."
+        redirect_to :action => 'index', alert: "Worker update successfully."
     else
         redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
     end
   end
+  
+   def destroy
+  	worker = Worker.find(params[:id])
+  	
+  	worker.destroy
+    
+  	redirect_to workers_index_path, alert: "Worker destroyed successfully."
+
+  end
+  
   
   private
 

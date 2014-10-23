@@ -20,7 +20,7 @@
 			<th>Additional Info</th>
 			<th>Panel</th>
 			<th>Select</th>
-			<th>Edit</th>
+			<th>Edit/Delete</th>
 	    </thead>
 	    <tbody>
 			<% @workers.each do |worker| %>
@@ -33,7 +33,8 @@
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        <td><%= link_to "Edit", controller: "workers", action: "edit", id: worker.id %></td> 
+			        <td><%= link_to "Edit", controller: "workers", action: "edit", id: worker.id %> 
+			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
 			    </tr>
 			<% end %>
 	    </tbody>
