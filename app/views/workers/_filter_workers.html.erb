@@ -33,7 +33,7 @@
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        <td><%= link_to "Edit", controller: "workers", action: "edit", id: worker.id %> 
+			        <td><%= link_to "Edit", edit_worker_path(worker) %> 
 			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
 			    </tr>
 			<% end %>
