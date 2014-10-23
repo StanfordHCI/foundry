@@ -46,7 +46,6 @@ class WorkersController < ApplicationController
   def create
   	@worker = Worker.new(worker_params)
     if @worker.save
-        #redirect_to workers_index_path, alert: "Worker created successfully."
         redirect_to :action => 'show', :id => @worker.id
     else
         redirect_to worker_new_path, alert: "Error creating worker."
@@ -57,6 +56,22 @@ class WorkersController < ApplicationController
   	@worker = Worker.find(params[:id])
   end
   
+  def edit
+  	@worker = Worker.find(params[:id])
+  end
+  
+  def update
+  	worker = Worker.find(params[:id])
+  	
+  	worker.update(worker_params)
+    
+    if worker.save
+        #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
+        redirect_to :action => 'index', alert: "Worker created successfully."
+    else
+        redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
+    end
+  end
   
   private
 

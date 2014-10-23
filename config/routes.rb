@@ -123,9 +123,17 @@ Foundry::Application.routes.draw do
   get '/workers/index' => 'workers#index' 
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
-  get '/workers/new' => 'workers#new'
-  get '/workers/:id' => 'workers#show'
-  post '/workers' => 'workers#create'
+  #get '/workers/new' => 'workers#new'
+  #get '/workers/:id' => 'workers#show'
+  #get '/workers/:id/edit' => 'workers#edit'
+  #post '/workers' => 'workers#create'
+  
+  resources :workers do
+    member do
+      post :create
+    end
+  end
+  
   
   
   
