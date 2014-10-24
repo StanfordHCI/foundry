@@ -8,8 +8,7 @@
         </div>
         <div class="modal-body">
                   
-			<% session.delete(:return_to) %>
-			<% session[:return_to] ||= request.original_url%>
+			
 			
 			<div class="row span10">
 			<%= form_for(worker) do |f| %>

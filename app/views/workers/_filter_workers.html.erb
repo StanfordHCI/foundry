@@ -9,6 +9,9 @@
 	<br />
 </p>
 
+<% session.delete(:return_to) %>
+<% session[:return_to] ||= request.original_url%>
+
 <div>
 	<table class="table table-bordered table-striped">
 	    <thead>
