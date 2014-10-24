@@ -2,14 +2,12 @@
 	<b><em>Emails for all workers this panel:</em></b>
 
 	<br />
-
+	
 	<%= @fw.to_s.gsub('"', '')%>
 	
 	<br />
-
+	<br />
 </p>
-
-
 
 <div>
 	<table class="table table-bordered">
@@ -38,7 +36,6 @@
 			        <!-- <td><% link_to "Edit", edit_worker_path(worker) %> </td> -->
 			        <td><%= link_to "Edit", '', :data => {:toggle => "modal", :target => "#worker-#{worker.id}-notes" } %>
 			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
-<!-- 					<td> <% link_to "Test", '', :onclick => "test('#{worker.name}')" %> </td> -->
 			    </tr>
 				
 				<!--Render the edit modal --> 
