@@ -1,29 +1,31 @@
-
-
-<div class="row span12">
+<div class="row" id="modalform" style="margin: 0px;">
 <%= form_for(@worker) do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.label :name, "Name: ", :style =>"display: inline; font-weight: bold; padding-right: 5px;" %>
+	<%= f.text_field :name %> 
+			    
+	<%= f.label :panel, "Panel Password: ", :style =>"display: inline; font-weight: bold; padding-right: 5px; margin-left: 30px;" %>
+	<%= f.text_field :panel %><br />
 
-    <%= f.label :email %>
-    <%= f.text_field :email %>
     
-    <%= f.label :skype_username, "Skype Username" %>
-    <%= f.text_field :skype_username %>
-    
-    <%= f.label :odesk_url, "oDesk Profile URL" %>
-    <%= f.text_field :odesk_url %>
-    
-    <%= f.label :timezone_utc, "Your Timezone (in UTC)" %>
-    <%= f.text_field :timezone_utc %>
+    <%= f.label :email, "Email: ", :style =>"display: inline; font-weight: bold; padding-right: 5px;" %>
+	<%= f.text_field :email %>
+			    
+	<%= f.label :odesk_url, "oDesk Profile URL: ", :style =>"display: inline; font-weight: bold; padding-right: 5px; margin-left: 30px;" %>
+	<%= f.text_field :odesk_url %> <br />
 
-	<%= f.label :additional_info, "Anything else you want us to know?" %>
-    <%= f.text_area :additional_info %>
-
-    <%= f.label :panel, "Panel Password" %>
-    <%= f.text_field :panel %>
-        
+	<%= f.label :skype_username, "Skype: ", :style =>"display: inline; font-weight: bold; padding-right: 5px;" %>
+	<%= f.text_field :skype_username %>
+			      
+	<%= f.label :timezone_utc, "Timezone (UTC): ", :style =>"display: inline; font-weight: bold; padding-right: 5px; margin-left: 30px;" %>
+	<%= f.text_field :timezone_utc %> <br />
+	
+	<br />
+			
+	<%= f.label :additional_info, "Anything else you want us to know? ", :style =>"font-weight: bold; padding-right: 5px;" %>
+	<%= f.text_area :additional_info, :style => "width: 95%;" %><br />        
+    
     <br />
-    <%= f.submit "Update" %>
+     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <%= f.submit "Update", :class => "btn btn-success" %>
 <% end %>
 </div>

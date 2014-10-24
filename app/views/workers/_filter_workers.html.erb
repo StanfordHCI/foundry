@@ -36,22 +36,28 @@
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        <!-- <td><% link_to "Edit", edit_worker_path(worker) %> </td> -->
-			        <td><%= link_to "Edit", '', :data => {:toggle => "modal", :target => "#worker-#{worker.id}-notes" } %>
+					<td><a data-toggle="modal" data-target="#modal-window" data-remote="<%= edit_worker_path(worker) %> #modalform">Edit</a>
 			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
 			    </tr>
-				
-				<!--Render the edit modal --> 
-				<%=render :partial => "workers/edit_content_modal", locals: {worker: worker}%>
-			    
 			<% end %>
 	    </tbody>
 	</table>
 </div>
 
+			<div class="modal hide fade" id="modal-window" style="width: 750px; margin-left: -375px;">
+				  <div class="modal-header">
+				    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				    <h3>Edit Worker</h3>
+				  </div>
+				  <div class="modal-body">
+				      <p> Loading... </p>
+				  </div>
+				</div>
+
 <p id="worker_results">
 	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
+
 
 <%= javascript_include_tag "/assets/authoring/panels" %>
 
