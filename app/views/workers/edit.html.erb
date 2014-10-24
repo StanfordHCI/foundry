@@ -1,33 +1,6 @@
-
 <div class="row span12">
 <h1>Workers#edit</h1>
 <p>Find me in app/views/workers/edit.html.erb</p>
 </div>
 
-<div class="row span12">
-<%= form_for(@worker) do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-
-    <%= f.label :email %>
-    <%= f.text_field :email %>
-    
-    <%= f.label :skype_username, "Skype Username" %>
-    <%= f.text_field :skype_username %>
-    
-    <%= f.label :odesk_url, "oDesk Profile URL" %>
-    <%= f.text_field :odesk_url %>
-    
-    <%= f.label :timezone_utc, "Your Timezone (in UTC)" %>
-    <%= f.text_field :timezone_utc %>
-
-	<%= f.label :additional_info, "Anything else you want us to know?" %>
-    <%= f.text_area :additional_info %>
-
-    <%= f.label :panel, "Panel Password" %>
-    <%= f.text_field :panel %>
-        
-    <br />
-    <%= f.submit "Update" %>
-<% end %>
-</div>
+<%= render partial: "edit_content", layout: "panel_template" %>

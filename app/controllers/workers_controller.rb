@@ -67,7 +67,9 @@ class WorkersController < ApplicationController
     
     if worker.save
         #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
-        redirect_to :action => 'index', alert: "Worker update successfully."
+        #redirect_to :action => 'index', alert: "Worker update successfully."
+        #redirect_to :controller => 'flash_teams', :action => 'panels', :id => 1, :event_id => 1
+        redirect_to session.delete(:return_to)
     else
         redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
     end

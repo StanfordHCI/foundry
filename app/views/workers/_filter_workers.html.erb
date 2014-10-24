@@ -9,6 +9,8 @@
 
 </p>
 
+
+
 <div>
 	<table class="table table-bordered">
 	    <thead>
@@ -33,19 +35,27 @@
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        <td><%= link_to "Edit", edit_worker_path(worker) %> 
+			        <!-- <td><% link_to "Edit", edit_worker_path(worker) %> </td> -->
+			        <td><%= link_to "Edit", '', :data => {:toggle => "modal", :target => "#worker-#{worker.id}-notes" } %>
 			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
+<!-- 					<td> <% link_to "Test", '', :onclick => "test('#{worker.name}')" %> </td> -->
 			    </tr>
+				
+				<!--Render the edit modal --> 
+				<%=render :partial => "workers/edit_content_modal", locals: {worker: worker}%>
+			    
 			<% end %>
 	    </tbody>
 	</table>
 </div>
 
 <p id="worker_results">
-
-<%=render :partial => "workers/filter_workers_emails"%>
-
+	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
 
 <%= javascript_include_tag "/assets/authoring/panels" %>
+
+
+
+
 

@@ -1,0 +1,46 @@
+  <!-- Modal -->
+  <div class="modal fade" id="worker-<%= worker.id %>-notes" tabindex="-1" role="dialog" aria-labelledby="worker-<%= worker.id %>-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="worker-<%= worker.id %>-label">Edit</h4>
+        </div>
+        <div class="modal-body">
+                  
+			<% session.delete(:return_to) %>
+			<% session[:return_to] ||= request.original_url%>
+			
+			<div class="row span12">
+			<%= form_for(worker) do |f| %>
+			    <%= f.label :name %>
+			    <%= f.text_field :name %>
+			
+			    <%= f.label :email %>
+			    <%= f.text_field :email %>
+			    
+			    <%= f.label :skype_username, "Skype Username" %>
+			    <%= f.text_field :skype_username %>
+			    
+			    <%= f.label :odesk_url, "oDesk Profile URL" %>
+			    <%= f.text_field :odesk_url %>
+			    
+			    <%= f.label :timezone_utc, "Your Timezone (in UTC)" %>
+			    <%= f.text_field :timezone_utc %>
+			
+				<%= f.label :additional_info, "Anything else you want us to know?" %>
+			    <%= f.text_area :additional_info %>
+			
+			    <%= f.label :panel, "Panel Password" %>
+			    <%= f.text_field :panel %>
+			
+			</div>
+
+        </div>
+        <div class="modal-footer">
+            <%= f.submit "Update", :class => "btn btn-success" %>
+			<% end %>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>  

@@ -651,12 +651,10 @@ end
    		
    		@task_member = params[:task_member]
    		
-   		UserMailer.send_task_rejection_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_name, @task_member).deliver
-   
+   		UserMailer.send_task_rejection_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_name, @task_member).deliver   
    end
    
    def panels
-   
    	@id_team = params[:id]
    	@id_task = params[:event_id].to_i
    	
@@ -671,8 +669,7 @@ end
     	
   	@panels = Worker.distinct.pluck(:panel)
   	
-  	@fw = Worker.all.pluck(:email)
-   
+  	@fw = Worker.all.pluck(:email)   
    end
 
   def flash_team_params params
