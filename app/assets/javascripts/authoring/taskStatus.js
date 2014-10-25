@@ -89,6 +89,9 @@ function completeTaskModalText(eventToComplete) {
         eventOutputs = eventToComplete.outputs.split(",");
     }
 
+    var outputFilledQ = eventToComplete["outputQs"];
+    var generalFilledQ = eventToComplete["docQs"];
+
     //Create Checklist of outputs with the relevant documentation questions for each output
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' align='left' >";
     if (eventOutputs == null || eventOutputs == "") {
@@ -97,7 +100,12 @@ function completeTaskModalText(eventToComplete) {
         for (i=0; i<eventOutputs.length; i++) {
             modalText += "<b><input type='checkbox' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
             for (j = 0; j<outputQuestions.length; j++){
-                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" rows="3"></textarea></br>';
+                if (!outputFilledQ)
+                    var placeholderVal = "";
+                else{
+                    var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
+                }
+                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" placeholder="' + placeholderVal + '" rows="3"></textarea></br>';
             }
         }
     }
@@ -106,7 +114,12 @@ function completeTaskModalText(eventToComplete) {
     modalText += '<p align="left"><b>General Questions:</b></p>';
     modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;" align="left">' + '<div class="event-table-wrapper">';
     for (i = 0; i < generalQuestions.length; i++){
-        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '" rows="3"></textarea></br>';
+        if (!generalFilledQ)
+            var placeholderVal = "";
+        else{
+            var placeholderVal = generalFilledQ[i][1]; 
+        }
+        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '" placeholder="' + placeholderVal + '"rows="3"></textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";

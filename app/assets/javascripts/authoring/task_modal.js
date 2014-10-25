@@ -209,6 +209,10 @@ function getTaskOverviewContent(groupNum){
         content += '<br>';
     }
 
+    if (ev.outputQ){
+        content += "<b>Hello</b>"
+    }
+
    
     return content;
 }
