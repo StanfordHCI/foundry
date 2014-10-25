@@ -219,9 +219,17 @@ function getTaskOverviewContent(groupNum){
         }
         for (i = 0; i < eventOutputs.length; i++){
             content += "<b>" + eventOutputs[i] + "</b>";
-            for (j = 0; j < 3; j++){
+            for (j = 0; j < outputQs[eventOutputs[i]].length; j++){
                 content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
             }
+        }
+    }
+
+    if (ev.docQs){
+        docQs = ev.docQs;
+        for (i = 0; i < docQs.length; i++){
+            content += "<b>" + docQs[i][0] + ": </b>";
+            content += "<p>" + docQs[i][1] + "</p>";
         }
     }
 
