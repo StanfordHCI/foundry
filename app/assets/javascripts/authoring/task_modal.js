@@ -209,8 +209,20 @@ function getTaskOverviewContent(groupNum){
         content += '<br>';
     }
 
-    if (ev.outputQ){
-        content += "<b>Hello</b>"
+    if (ev.outputQs){
+        outputQs = ev.outputQs;
+        content += "<hr/>"
+        content += "<b>Documentation Questions</b><hr/>";
+        var eventOutputs = ev.outputs;
+        if (eventOutputs != null && eventOutputs != "") {
+            eventOutputs = ev.outputs.split(",");
+        }
+        for (i = 0; i < eventOutputs.length; i++){
+            content += "<b>" + eventOutputs[i] + "</b>";
+            for (j = 0; j < 3; j++){
+                content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
+            }
+        }
     }
 
    
