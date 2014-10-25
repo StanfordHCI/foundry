@@ -27,13 +27,6 @@ var STROKE_COLOR = "rgba(233,233,233,0.2)";
 var MARKER_COLOR = "#28282b";
 var ALT_MARKER_COLOR = "#2c2c2f";
 
-var x = d3.scale.linear()
-    .domain([0, TOTAL_HOUR_PIXELS])
-
-var y = d3.scale.linear() 
-    .domain([17, 550])
-    .range([17, 550]);
-
 var current = undefined;
 var currentUserEvents = [];
 var currentUserIds = [];
@@ -43,6 +36,18 @@ var overlayIsOn = false;
 
 //Remove existing X-axis labels
 var numMins = -60;
+
+// attach foundry object to the window
+window._foundry = {
+  timeline: {
+    stepWidth: STEP_WIDTH,
+    stepInterval: STEP_INTERVAL,
+    rowHeight: ROW_HEIGHT,
+    svgHeight: SVG_HEIGHT,
+    svgWidth: SVG_WIDTH,
+    strokeColor: STROKE_COLOR,
+  }
+};
 
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
@@ -132,10 +137,6 @@ function redrawTimeline() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
-  console.log(SVG_HEIGHT);
-  console.log(YTicks);
-  console.log(ROW_HEIGHT);
-
   //Reset overlay and svg width
   document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
   timeline_svg.attr("width", SVG_WIDTH);
@@ -197,21 +198,18 @@ function redrawTimeline() {
       .attr("y1", 0)
       .attr("y2", SVG_HEIGHT-65)
       .style("stroke", STROKE_COLOR);
-  
-  //Draw y axis grid lines
+
+  // draw y grid lines to timeline svg
+  var numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
   timeline_svg.selectAll("line.y")
-      .data(intervals.slice(0, YTicks-1)) 
+      .data(intervals.slice(0, numRows))
       .enter().append("line")
-      .attr("class", "y")
-      .attr("x1", 0)
-      .attr("x2", "100%")
-      // TODO: same hack carried over, adds height to first row
-      //       will adjust blocks on that row to stay at the same
-      //       height as blocks on lower rows
-      .attr("y1", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
-      .attr("y2", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
-      .style("stroke", STROKE_COLOR);
-      
+        .attr("class", "y")
+        .attr("x1", 0)
+        .attr("x2", "100%")
+        .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
+        .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
+        .style("stroke", _foundry.timeline.strokeColor);
     
   //Redraw Add Time Button
   document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";

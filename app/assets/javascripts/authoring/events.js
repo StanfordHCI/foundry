@@ -247,7 +247,8 @@ function createEventObj(snapPoint) {
     var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
+        "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
         //createNewFolder($("#flash_team_name").val());
@@ -304,18 +305,27 @@ function getMemberIndexFromName(name) {
 }
 
 function drawG(eventObj, firstTime) {
-    var x = eventObj["x"];
-    var y = eventObj["y"];
+
+    var x = _foundry.timeline.stepWidth *
+            (eventObj.startTime/_foundry.timeline.stepInterval);
+    var x_offset = -4;
+    
+    var y = _foundry.timeline.rowHeight * eventObj.row;
+    var y_offset = (_foundry.timeline.rowHeight - RECTANGLE_HEIGHT)/2;
+    
     var groupNum = eventObj["id"];
-    var y_offset = 17;
 
     var idx = getDataIndexFromGroupNum(groupNum);
     if(idx == null) {
-        var new_data = {id: "task_g_" + groupNum, class: "task_g", groupNum: groupNum, x: x, y: y+y_offset};
+        var new_data = {
+          id: "task_g_" + groupNum, class: "task_g",
+          groupNum: groupNum, x: x + x_offset, y: y + y_offset
+        };
+          
         task_groups.push(new_data);
     } else {
-        task_groups[idx].x = x;
-        task_groups[idx].y = y+y_offset;
+        task_groups[idx].x = x + x_offset;
+        task_groups[idx].y = y + y_offset;
     }
 
     // add group to timeline, based on the data object
