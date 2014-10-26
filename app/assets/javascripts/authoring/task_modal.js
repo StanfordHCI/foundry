@@ -19,20 +19,24 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
-	
+	if(in_progress != true){
+        $("#start-task").css('display', 'none');
+        $("#end-task").css('display', 'none');        
+    }
+    else{
+        $("#start-task").css('display', '');
+        $("#end-task").css('display', '');        
+    }
+
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '');
 		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
-
 	}
 	else{
 		$("#edit-save-task").css('display', 'none');
-		$("#hire-task").css('display','none');
 		$("#delete").css('display','none');
 	}
-
-
 }
 
 function editTaskOverview(popover,groupNum){
