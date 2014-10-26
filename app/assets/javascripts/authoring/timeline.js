@@ -186,7 +186,7 @@ function redrawTimeline() {
           .attr("x", function(d) {return d * STEP_WIDTH * 4})
           .attr("width", STEP_WIDTH * 4)
           .attr("y", 0)
-          .attr("height", SVG_HEIGHT-65)
+          .attr("height", SVG_HEIGHT)
 
   // draw x grid lines to timeline svg
   timeline_svg.selectAll("line.x")
@@ -196,7 +196,7 @@ function redrawTimeline() {
       .attr("x1", function(d) {return d * STEP_WIDTH})
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT-65)
+      .attr("y2", SVG_HEIGHT)
       .style("stroke", STROKE_COLOR);
 
   // draw y grid lines to timeline svg
@@ -233,7 +233,7 @@ function redrawTimeline() {
   //Redraw the cursor
   timeline_svg.append("line")
       .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT-50)
+      .attr("y2", SVG_HEIGHT)
       .attr("x1", 0)
       .attr("x2", 0)
       .attr("class", "cursor")
