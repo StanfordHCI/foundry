@@ -21,9 +21,7 @@ class WorkersController < ApplicationController
 	end
     	
   	@panels = Worker.distinct.pluck(:panel)
-  	  	
-  	#@fw = Worker.where(:panel => params[:panels]).pluck(:email)
-  
+  	  	  
   	@abc = Worker.where(:id => params[:workers]).pluck(:email)
   	
   	render :partial => "filter_workers"
@@ -31,8 +29,6 @@ class WorkersController < ApplicationController
   end
   
   def filter_workers_emails
-
-  	  	
   	@abc = Worker.where(:id => params[:workers]).pluck(:email)
   	
   	render :partial => "filter_workers_emails"
@@ -48,7 +44,7 @@ class WorkersController < ApplicationController
     if @worker.save
         redirect_to :action => 'show', :id => @worker.id
     else
-        redirect_to worker_new_path, alert: "Error creating worker."
+        redirect_to new_worker_path, alert: "Error creating worker."
     end
   end
 
@@ -67,8 +63,6 @@ class WorkersController < ApplicationController
     
     if worker.save
         #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
-        #redirect_to :action => 'index', alert: "Worker update successfully."
-        #redirect_to :controller => 'flash_teams', :action => 'panels', :id => 1, :event_id => 1
         redirect_to session.delete(:return_to)
     else
         redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 

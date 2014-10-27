@@ -1,33 +1,38 @@
+<%=render "panel_reg_sidebar" %>
 
-<div class="row span12">
-<h1>Workers#new</h1>
-<p>Find me in app/views/workers/new.html.erb</p>
+<%=stylesheet_link_tag "custom"%>
+
+<div class="row span12" id="signupform">
+<h1>Panel Registration</h1>
+<p>Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 </div>
 
 <div class="row span12">
 <%= form_for(@worker) do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.label :name, "Name*" %>
+    <%= f.text_field :name, :required => :true %>
 
-    <%= f.label :email %>
-    <%= f.text_field :email %>
+    <%= f.label :email, "Email*" %>
+    <%= f.text_field :email, :required => :true %>
     
-    <%= f.label :skype_username, "Skype Username" %>
-    <%= f.text_field :skype_username %>
+    <%= f.label :skype_username, "Skype Username*" %>
+    <%= f.text_field :skype_username, :required => :true %>
     
-    <%= f.label :odesk_url, "oDesk Profile URL" %>
-    <%= f.text_field :odesk_url %>
+    <%= f.label :odesk_url, "oDesk Profile URL*" %>
+    <%= f.text_field :odesk_url, :required => :true %>
     
-    <%= f.label :timezone_utc, "Your Timezone (in UTC)" %>
-    <%= f.text_field :timezone_utc %>
+    <%= f.label :timezone_utc, "Your Timezone (in UTC)*" %>
+    <%= f.text_field :timezone_utc, :required => :true %>
 
 	<%= f.label :additional_info, "Anything else you want us to know?" %>
     <%= f.text_area :additional_info %>
 
-    <%= f.label :panel, "Panel Password" %>
-    <%= f.text_field :panel %>
+    <%= f.label :panel, "Panel Password*" %>
+    <%= f.text_field :panel, :required => :true %>
         
     <br />
     <%= f.submit "Register" %>
 <% end %>
 </div>
+
+<%= render "panel_reg_sidebar_footer" %>
