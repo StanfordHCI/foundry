@@ -238,12 +238,15 @@ window._foundry = {
         ];
         console.log(point);
         
-        var length = timeline.getRangeDuration(
+        var duration = timeline.getRangeDuration(
             timeline.rangeStartMarker,
             timeline.rangeEndMarker
         );
         
-        newEvent(point, length);
+        // TODO: give some sort of response
+        if(duration < 30) return;
+        
+        newEvent(point, duration);
         timeline.clearSelection();
       }
     }
