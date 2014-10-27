@@ -79,6 +79,8 @@ window._foundry = {
     rangeStartMarker: undefined,
     rangeEndMarker: undefined,
     
+    selection: undefined,
+    
     stepInterval: STEP_INTERVAL,
     
     stepWidth: STEP_WIDTH,
@@ -104,12 +106,19 @@ window._foundry = {
                   + parseInt(m2.getAttribute("width"))
                   - left;
       
-      if(!timeline.highlightSvg) {
-        timeline.highlightSvg = timelineSvg.insert("rect", ":first-child")
+      if(!timeline.selection) {
+        timeline.selection = {};
+      }
+      
+      timeline.selection.startMarker = m1;
+      timeline.selection.endMarker = m2;
+      
+      if(!timeline.selection.svg) {
+        timeline.selection.svg = timelineSvg.insert("rect", ":first-child")
           .attr("class", "selection");
       }
       
-      timeline.highlightSvg
+      timeline.selection.svg
         .attr("x", left)
         .attr("y", row * timeline.rowHeight)
         .attr("width", width)
@@ -117,21 +126,14 @@ window._foundry = {
         .style("fill", "rgba(75, 158, 214, 0.52)");
     },
     
-    /* removeHighlights
-     * ----------------
-     * removes all the highlights from the timeline
-     */
-    removeHighlights: function() {
-      var timeline = _foundry.timeline;
-      timeline.timelineSvg.select("rect.selection").remove();
-      timeline.highlightSvg = undefined;
-    },
-    
     clearSelection: function() {
       var timeline = _foundry.timeline;
-      timeline.removeHighlights();
+      
+      timeline.timelineSvg.select("rect.selection").remove();
+      
       timeline.rangeStartMarker = undefined;
       timeline.rangeEndMarker = undefined;
+      timeline.selection = undefined;
     },
     
     getRangeDuration: function(m1, m2) {
@@ -231,10 +233,10 @@ window._foundry = {
       
       // ctrl-n or enter key
       var newEventKey = (e.ctrlKey && e.keyCode === 78) || (e.keyCode === 13);
-      if(newEventKey && timeline.rangeStartMarker && timeline.rangeEndMarker) {
+      if(newEventKey && timeline.selection !== undefined) {
         var point = [
-          timeline.rangeStartMarker.getAttribute("x"),
-          timeline.rangeStartMarker.getAttribute("y")
+          timeline.selection.svg.attr("x"),
+          timeline.selection.svg.attr("y")
         ];
         console.log(point);
         
