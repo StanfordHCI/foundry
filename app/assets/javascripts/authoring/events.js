@@ -167,9 +167,11 @@ function dragEventBlock(d) {
 
 //VCom Calculates where to snap event block to when created
 function calcSnap(mouseX, mouseY) {
-    var snapX = Math.floor(mouseX - (mouseX%50) - DRAGBAR_WIDTH/2),
-        snapY = Math.floor(mouseY/ROW_HEIGHT) * ROW_HEIGHT + 5;
+    var timeline = window._foundry.timeline;
+    var snapX = timeline.stepWidth * Math.floor(mouseX/timeline.stepWidth);
+    var snapY = 5 + timeline.rowHeight * Math.floor(mouseY/timeline.rowHeight);
     return [snapX, snapY];
+    
 }
 
 // mousedown on timeline => creates new event and draws it
