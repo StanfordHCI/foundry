@@ -1,36 +1,46 @@
 <%=render "panel_reg_sidebar" %>
 
-<div class="row span12">
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid"  id="signupform">
+<div class="span12">
+<div class="row span8">
 <h1>Panel Registration</h1>
-<p>Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 </div>
+<p class="row span7">Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 
-<div class="row span12">
+
+<div class="row span8">
 <%= form_for(@worker) do |f| %>
-    <%= f.label :name, "Name*" %>
-    <%= f.text_field :name, :required => :true %>
+    <%= f.label :name, "Name*: " %>
+    <%= f.text_field :name, :required => :true %> <br />
 
-    <%= f.label :email, "Email*" %>
-    <%= f.text_field :email, :required => :true %>
+    <%= f.label :email, "Email*: " %>
+    <%= f.text_field :email, :required => :true %> <br />
     
-    <%= f.label :skype_username, "Skype Username*" %>
-    <%= f.text_field :skype_username, :required => :true %>
+    <%= f.label :skype_username, "Skype Username*: " %>
+    <%= f.text_field :skype_username, :required => :true %> <br />
     
-    <%= f.label :odesk_url, "oDesk Profile URL*" %>
-    <%= f.text_field :odesk_url, :required => :true %>
+    <%= f.label :odesk_url, "oDesk Profile URL*: " %>
+    <%= f.text_field :odesk_url, :required => :true %> <br />
     
-    <%= f.label :timezone_utc, "Your Timezone (in UTC)*" %>
-    <%= f.text_field :timezone_utc, :required => :true %>
+    <%= f.label :timezone_utc, "Your Timezone (in UTC)*: " %>
+    <%= f.text_field :timezone_utc, :required => :true %> <br />
 
-	<%= f.label :additional_info, "Anything else you want us to know?" %>
-    <%= f.text_area :additional_info %>
+    <%= f.label :panel, "Panel Password*: " %>
+    <%= f.text_field :panel, :required => :true %> <br />
+    
+    <%= f.label :additional_info, "Anything else you want us to know?" %> <br />
+    <%= f.text_area :additional_info, :rows =>2 %> <br />
 
-    <%= f.label :panel, "Panel Password*" %>
-    <%= f.text_field :panel, :required => :true %>
-        
-    <br />
-    <%= f.submit "Register" %>
+    <%= f.submit "Register", :class => "btn btn-success" %>
 <% end %>
 </div>
+</div>
+
+ </div><!-- /#container-fluid -->
+        </div><!-- /#page-content-wrapper -->
+
+    </div><!-- /#wrapper -->
 
 <%= render "panel_reg_sidebar_footer" %>

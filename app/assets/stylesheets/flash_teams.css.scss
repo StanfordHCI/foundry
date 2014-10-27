@@ -135,6 +135,30 @@
     margin-right: -250px;
 }
 
+/* Panel Registration Form Styles */
+#signupform{
+	/* width: 700px;
+	margin:0px auto;
+	text-align: center; */
+}
+
+#signupform input{
+	width: 300px;
+}
+
+#signupform textarea{
+	width: 500px;
+}
+
+#signupform input.btn.btn-success{
+	width: 514px;
+	margin-top: 2px;
+}
+
+#signupform label{
+	display: inline; font-weight: bold; padding-right: 5px; 
+}
+
 /* Sidebar Styles */
 
 .sidebar-nav {
