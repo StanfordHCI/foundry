@@ -10,7 +10,7 @@ var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
 
-$(document).ready(function(){
+/*$(document).ready(function(){
     timeline_svg.append("rect")
     .attr("class", "background")
     .attr("width", SVG_WIDTH)
@@ -21,7 +21,7 @@ $(document).ready(function(){
         var point = d3.mouse(this);
         newEvent(point);
     });
-});
+});*/
 
 var dragged = false;
 
@@ -167,13 +167,15 @@ function dragEventBlock(d) {
 
 //VCom Calculates where to snap event block to when created
 function calcSnap(mouseX, mouseY) {
-    var snapX = Math.floor(mouseX - (mouseX%50) - DRAGBAR_WIDTH/2),
-        snapY = Math.floor(mouseY/ROW_HEIGHT) * ROW_HEIGHT + 5;
+    var timeline = window._foundry.timeline;
+    var snapX = timeline.stepWidth * Math.floor(mouseX/timeline.stepWidth);
+    var snapY = 5 + timeline.rowHeight * Math.floor(mouseY/timeline.rowHeight);
     return [snapX, snapY];
+    
 }
 
 // mousedown on timeline => creates new event and draws it
-function newEvent(point) {
+function newEvent(point, duration) {
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
@@ -195,17 +197,17 @@ function newEvent(point) {
         return;
     }
     
-    createEvent(point);
+    createEvent(point, duration);
 };
 
-function createEvent(point) {
+function createEvent(point, duration) {
     // get coords where event should snap to
     var snapPoint = calcSnap(point[0], point[1]);
   
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(snapPoint);
+    var eventObj = createEventObj(snapPoint, duration);
     
     // render event on timeline
     drawEvent(eventObj, true);
@@ -241,13 +243,18 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
-function createEventObj(snapPoint) {
+function createEventObj(snapPoint, duration) {
     event_counter++;
+    
+    duration = duration || 60;
+    
     var startTimeObj = getStartTime(snapPoint[0]);
-    var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
+    var newEvent = {
+        "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], 
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
+        "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
         //createNewFolder($("#flash_team_name").val());
@@ -304,18 +311,27 @@ function getMemberIndexFromName(name) {
 }
 
 function drawG(eventObj, firstTime) {
-    var x = eventObj["x"];
-    var y = eventObj["y"];
+
+    var x = _foundry.timeline.stepWidth *
+            (eventObj.startTime/_foundry.timeline.stepInterval);
+    var x_offset = -4;
+    
+    var y = _foundry.timeline.rowHeight * eventObj.row;
+    var y_offset = (_foundry.timeline.rowHeight - RECTANGLE_HEIGHT)/2;
+    
     var groupNum = eventObj["id"];
-    var y_offset = 17;
 
     var idx = getDataIndexFromGroupNum(groupNum);
     if(idx == null) {
-        var new_data = {id: "task_g_" + groupNum, class: "task_g", groupNum: groupNum, x: x, y: y+y_offset};
+        var new_data = {
+          id: "task_g_" + groupNum, class: "task_g",
+          groupNum: groupNum, x: x + x_offset, y: y + y_offset
+        };
+          
         task_groups.push(new_data);
     } else {
-        task_groups[idx].x = x;
-        task_groups[idx].y = y+y_offset;
+        task_groups[idx].x = x + x_offset;
+        task_groups[idx].y = y + y_offset;
     }
 
     // add group to timeline, based on the data object
@@ -342,7 +358,13 @@ function drawMainRect(eventObj, firstTime) {
             .attr("groupNum", function(d) {return d.groupNum;})
             .attr("height", RECTANGLE_HEIGHT)
             .attr("width", width)
-            .attr("fill", "#C9C9C9")
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") return TASK_START_COLOR;
+                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else return TASK_COMPLETE_COLOR;
+            })
             .attr("fill-opacity", .6)
             .attr("stroke", "#5F5A5A")
             .attr('pointer-events', 'all')
@@ -351,7 +373,14 @@ function drawMainRect(eventObj, firstTime) {
         task_g.selectAll(".task_rectangle")
             .attr("x", function(d) {return d.x;})
             .attr("y", function(d) {return d.y;})
-            .attr("width", width);
+            .attr("width", width)
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") return TASK_START_COLOR;
+                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else return TASK_COMPLETE_COLOR;
+            });
     }
 };
 
@@ -875,7 +904,7 @@ function deleteEventMember(eventId, memberNum, memberName) {
     //Delete the line
     $("#event_" + eventId + "_eventMemLine_" + memberNum).remove();
     if (memberNum == current){
-         $("#rect_" + eventId).attr("fill", "#C9C9C9")
+         $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
     //Update the JSON

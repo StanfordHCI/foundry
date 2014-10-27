@@ -38,7 +38,7 @@
 			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5) %></p>
 			
 			<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
-			<%= text_area_tag(:task_description, @flash_team_event['description'], :class => 'span10', :rows =>5) %></p>
+			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5) %></p>
 			
 			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
 			For this task, you will receive the following input(s):
