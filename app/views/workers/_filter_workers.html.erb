@@ -37,7 +37,8 @@
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 					<td><a data-toggle="modal" data-target="#modal-window" data-remote="<%= edit_worker_path(worker) %> #modalform">Edit</a>
-			        | <%= link_to "Delete", controller: "workers", action: "destroy", id: worker.id %> </td> <!--TODO: Add delete confirm alert -->
+			        | <%= link_to "Delete", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?' %> </td> 
+			        
 			    </tr>
 			<% end %>
 	    </tbody>
