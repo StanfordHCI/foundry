@@ -40,14 +40,23 @@ function showTaskOverview(groupNum){
             $("#start-end-task").css('display', 'none');   
     }
 
+    if(uniq_u == "" || memberType == "pc" || memberType == "client"){
+        $("#hire-task").css('display','');
+    }
+    else{
+        $("#hire-task").css('display','none');
+    }
+    
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '');
-		$("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+		
+        $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
+        
 	}
 }
 
@@ -75,7 +84,7 @@ function editTaskOverview(popover,groupNum){
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
         
-        $("#inputs").tagsinput();
+        $("#inputs").tagsinput(); 
         $("#outputs").tagsinput();
 	}
 
@@ -108,33 +117,45 @@ var task_id = getEventJSONIndex(groupNum);
 
 var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
         + '<div class="event-table-wrapper">'
-        + '<b>Event Start:</b> <br>' 
-        + 'Hours: <input type="number" id="startHr" placeholder="' + startHr 
-            + '" min="0" style="width:35px">         ' 
-        + 'Minutes: <input type="number" id="startMin" placeholder="' + startMin 
-            + '" min="0" step="15" max="45" style="width:35px"><br />'
-        + '<b>Total Runtime: </b> <br />' 
-        + 'Hours: <input type = "number" id="hours" placeholder="'
-            +numHours+'" min="0" style="width:35px"/>         ' 
-        + 'Minutes: <input type = "number" id = "minutes" placeholder="'+minutesLeft
-            +'" style="width:35px" min="0" step="15" max="45"/> <br />'
-        + '<b>Members</b><br /> <div id="eventMemberList">'
-            + writeEventMembers(eventObj)  +'</div>'
+        + '<div class="row-fluid">' 
+        + '<div class="span6">'
+        + '<b>Event Start</b> <br>' 
+        + 'Hours : <input type="number" id="startHr" placeholder="' + startHr 
+            + '" min="0" style="width:36px">         ' 
+        + 'Minutes : <input type="number" id="startMin" placeholder="' + startMin 
+            + '" min="0" step="15" max="45" style="width:36px"><br />'
 
-        + '<br><b>Project Coordinator</b><br><select class="pcInput"' 
+        + '<b>Project Coordinator</b><br><select class="pcInput"' 
             +' name="pcName" id="pcEvent"' 
-			+ 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
-
-
-        + '<br><b>Directly-Responsible Individual</b><br><select class="driInput"' 
+            + 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
+    
+        + '</div> <div class="span6">'
+        + '<b>Total Runtime </b> <br />' 
+        + 'Hours : <input type = "number" id="hours" placeholder="'
+            +numHours+'" min="0" style="width:36px"/>         ' 
+        + 'Minutes : <input type = "number" id = "minutes" placeholder="'+minutesLeft
+            +'" style="width:36px" min="0" step="15" max="45"/> <br />'     
+        + '<b>Directly-Responsible Individual</b><br><select class="driInput"' 
             +' name="driName" id="driEvent"' 
 			+ 'onchange="getDRI('+groupNum + ')">'+ writeDRIMembers(groupNum,dri_id) +'</select>'
-        
+        + '</div>'
+        + '</div>'
 
-        + '<br /><b>Notes: </br></b><textarea rows="3" id="notes">' + notes + '</textarea>'
-        + '<div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
-        + '<div><input type="text" value="' + outputs + '" placeholder="Add output" id="outputs" /></div></div>'
-        + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
+        + '<div class="row-fluid">' 
+        + '<div class="span12">'
+        + '<b>Members</b><br/> <div id="eventMemberList">'
+        + writeEventMembers(eventObj)  +'</div>'
+
+        + '<br/><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea>'
+        + '<b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
+        + '<b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
+      
+        + '<br/><a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
+        
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        
         + '</form>';
 
         return form;
@@ -148,41 +169,19 @@ function getTaskOverviewContent(groupNum){
     var hrs = Math.floor(ev.duration/60);
     var mins = ev.duration % 60;
 
-    var content = '<b>Event Start:</b><br>'
+    var content = '<div class="row-fluid" >' 
+        + '<div class="span6">'
+        + '<b>Event Start:  </b>'
         + ev.startHr + ':'
         + ev.startMin.toFixed(0) + '<br>'
-        +'<b>Total Runtime: </b><br>' 
-        + hrs + ' hrs ' + mins + ' mins<br>';
+        + '</div>'
+        + '<div class="span6">'
+        +'<b>Total Runtime:  </b>' 
+        + hrs+':'+mins
+        + '</div>';
+        + '</div>';
 
-    if(ev.inputs) {
-        content += '<b>Inputs:</b><br>';
-        var inputs = ev.inputs.split(",");
-        for(var i=0;i<inputs.length;i++){
-            content += inputs[i];
-            content += "<br>";
-        }
-    }
-    
-    if(ev.outputs) {
-        content += '<b>Outputs:</b><br>';
-        var outputs = ev.outputs.split(",");
-        for(var i=0;i<outputs.length;i++){
-            content += outputs[i];
-            content += "<br>";
-        }
-    }
-
-    var num_members = ev.members.length;
-    if(num_members > 0){
-        content += '<b>Members:</b><br>';
-        for (var j=0;j<num_members;j++){
-            var member = getMemberById(ev.members[j]);
-            content += member.role;
-            content += '<br>';
-        }
-    }
-
-    if (ev.pc != "" && ev.pc != undefined){
+            if (ev.pc != "" && ev.pc != undefined){
         var pc_id = parseInt (ev.pc);
         var mem = null;
 
@@ -194,10 +193,15 @@ function getTaskOverviewContent(groupNum){
             }
         }
           if(mem && mem != undefined){
+            content += '<div class=row-fluid> <div class="span6">'
             content += '<b>Project Coordinator:</b><br>';
             content += mem;
-            content += '<br>';
+            content += "</div>"
+            
         }
+    }
+    else{
+
     }
 
      if (ev.dri != "" && ev.dri != undefined){
@@ -213,18 +217,55 @@ function getTaskOverviewContent(groupNum){
         }
 
         if(mem && mem != undefined){
+            content += '<div class="span6">';
             content += '<b>Directly-Responsible Individual:</b><br>';
             content += mem;
-            content += '<br>';
+            content += '</div> </div>'
+        }
+    }
+    else{
+
+    }
+
+    if(ev.inputs) {
+        content += '<b>Inputs:</b><br>';
+        var inputs = ev.inputs.split(",");
+        for(var i=0;i<inputs.length;i++){
+            content += inputs[i];
+            content += "<br>";
         }
     }
     
-    if (ev.content != ""){
-        content += '<b>Notes:</b><br>';
-        content += ev.notes;
+    if(ev.outputs) {
+        content += '<b>Deliverables:</b><br>';
+        var outputs = ev.outputs.split(",");
+        for(var i=0;i<outputs.length;i++){
+            content += outputs[i];
+            content += "<br>";
+        }
+    }
+
+    var num_members = ev.members.length;
+    if(num_members > 0){
+        content += '<b>Members:</b><br>';
+        for (var j=0;j<num_members-1;j++){
+            var member = getMemberById(ev.members[j]);
+            content += member.role;
+            content += ', ';
+        }
+        var member = getMemberById(ev.members[num_members-1]);
+        content += member.role;
         content += '<br>';
     }
 
+
+    
+    if (ev.notes != ""){
+        content += '<b>Description:</b><br>';
+        content += ev.notes;
+        content += '<br>';
+    }
+ 
    
     return content;
 }
