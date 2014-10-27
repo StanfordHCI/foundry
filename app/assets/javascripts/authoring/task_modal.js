@@ -19,13 +19,25 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
-	if(in_progress != true){
-        $("#start-task").css('display', 'none');
-        $("#end-task").css('display', 'none');        
+	if(in_progress == true){
+        if(eventObj.status == "started"){
+            $("#start-end-task").css('display', '');
+            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+            $("#start-end-task").html('Complete');
+        }  
+        else if(eventObj.status == "completed"){
+             $("#start-end-task").css('display', '');
+              $("#start-end-task").html('Complete');
+              $("#start-end-task").prop('disabled', true)
+        }
+        else{
+           $("#start-end-task").css('display', '');
+            $("#start-end-task").attr('onclick', 'startTask('+groupNum+')');
+            $("#start-end-task").html('Start'); 
+        }
     }
     else{
-        $("#start-task").css('display', '');
-        $("#end-task").css('display', '');        
+            $("#start-end-task").css('display', 'none');   
     }
 
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
