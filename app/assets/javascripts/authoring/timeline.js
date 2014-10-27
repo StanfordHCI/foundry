@@ -79,6 +79,9 @@ window._foundry = {
     rangeStartMarker: undefined,
     rangeEndMarker: undefined,
     
+    stepInterval: STEP_INTERVAL,
+    
+    stepWidth: STEP_WIDTH,
     
     timelineSvg: timeline_svg,
     
@@ -129,6 +132,15 @@ window._foundry = {
       timeline.removeHighlights();
       timeline.rangeStartMarker = undefined;
       timeline.rangeEndMarker = undefined;
+    },
+    
+    getRangeDuration: function(m1, m2) {
+      var timeline = window._foundry.timeline;
+      var left = parseInt(m1.getAttribute("x"));
+      var width =   parseInt(m2.getAttribute("x"))
+                  + parseInt(m2.getAttribute("width"))
+                  - left;
+      return (width / timeline.stepWidth) * timeline.stepInterval;
     },
     
     /* timelineMousedownFn
@@ -225,7 +237,13 @@ window._foundry = {
           timeline.rangeStartMarker.getAttribute("y")
         ];
         console.log(point);
-        newEvent(point);
+        
+        var length = timeline.getRangeDuration(
+            timeline.rangeStartMarker,
+            timeline.rangeEndMarker
+        );
+        
+        newEvent(point, length);
         timeline.clearSelection();
       }
     }
