@@ -24,8 +24,8 @@ var ROW_HEIGHT = ROW_HEIGHT || 80;
 
 var BKG_COLOR = "#202020";
 var STROKE_COLOR = "rgba(233,233,233,0.2)";
-var MARKER_COLOR = "#28282b";
-var ALT_MARKER_COLOR = "#2c2c2f";
+var MARKER_COLOR = 'rgba(108,108,111,0.08)';
+var ALT_MARKER_COLOR = 'rgba(136, 136, 139, 0.08)';
 
 var x = d3.scale.linear()
     .domain([0, TOTAL_HOUR_PIXELS])
@@ -102,8 +102,8 @@ window._foundry = {
                   - left;
       
       if(!timeline.highlightSvg) {
-        timeline.highlightSvg = timelineSvg.append("rect")
-          .attr("class", "highlight")
+        timeline.highlightSvg = timelineSvg.insert("rect", ":first-child")
+          .attr("class", "selection");
       }
       
       timeline.highlightSvg
@@ -120,7 +120,7 @@ window._foundry = {
      */
     removeHighlights: function() {
       var timeline = _foundry.timeline;
-      timeline.timelineSvg.select("rect.highlight").remove();
+      timeline.timelineSvg.select("rect.selection").remove();
       timeline.highlightSvg = undefined;
     },
     
@@ -169,7 +169,7 @@ window._foundry = {
       }
     },
     
-    timelineMousemoveFn: function(e) {
+    timelineMouseoverFn: function(e) {
       var timeline = window._foundry.timeline;
       
       // if the mouse wasn't pushed down on a marker,
@@ -396,7 +396,7 @@ function redrawTimeline() {
   //Add ability to draw rectangles on extended timeline
   timeline_svg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
-      .on("mousemove", _foundry.timeline.timelineMousemoveFn);
+      .on("mouseover", _foundry.timeline.timelineMouseoverFn);
 
   //Redraw the cursor
   timeline_svg.append("line")
