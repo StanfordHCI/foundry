@@ -237,7 +237,7 @@ window._foundry = {
           timeline.selection.svg.attr("x"),
           timeline.selection.svg.attr("y")
         ];
-        console.log(point);
+        //console.log(point);
         
         var duration = timeline.getRangeDuration(
             timeline.rangeStartMarker,
