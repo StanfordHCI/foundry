@@ -24,23 +24,12 @@ timeline_svg.append("defs").append("marker")
 //Determines if the user is trying to draw an interaction and if so, what type
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
-    //Close all open popovers
-   /*imported popover to modal
-   for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
-        var idNum = flashTeamsJSON["events"][i].id;
-        if (idNum != task1idNum && idNum != task2idNum) {
-            hidePopover(idNum);
-        }   
-    }*/
 
     if (DRAWING_HANDOFF == true) $("#handoff_btn_" + task1idNum).popover("hide");
     if (DRAWING_COLLAB == true) $("#collab_btn_" + task1idNum).popover("hide");
  
    //show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
-        
-     
-  
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
@@ -146,10 +135,6 @@ function eventMousedown(task2idNum) {
         }
     //There is no interation being drawn
     } else {
-        /*imported popover to modal
-        var data = getPopoverDataFromGroupNum(task2idNum);
-        togglePopover(task2idNum);
-        */
         return;
     }
 }
@@ -317,16 +302,15 @@ function drawCollaboration(collabData, overlap) {
 
     var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2Id)];
     var x2 = ev2.x + 3;
-    console.log("NEW X OF COLLAB: " + x2);
     var y2 = ev2.y + 17;
 
     var firstTaskY = 0;
     var taskDistance = 0;
     if (y1 < y2) {
-        firstTaskY = y1 + 90;
+        firstTaskY = y1 + RECTANGLE_HEIGHT;
         taskDistance = y2 - firstTaskY;
     } else {
-        firstTaskY = y2 + 90;
+        firstTaskY = y2 + RECTANGLE_HEIGHT;
         taskDistance = y1 - firstTaskY;
     }
     collabLine = timeline_svg.append("rect")

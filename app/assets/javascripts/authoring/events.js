@@ -794,10 +794,10 @@ function drawEachCollabForEvent(eventObj){
                     var taskDistance = 0;
                     var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
                     if (y1 < y2) {
-                        firstTaskY = y1 + 90;
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
                         taskDistance = y2 - firstTaskY;
                     } else {
-                        firstTaskY = y2 + 90;
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
                         taskDistance = y1 - firstTaskY;
                     }
                     if (x1 <= x2) var startX = x2;
