@@ -24,8 +24,8 @@ var ROW_HEIGHT = ROW_HEIGHT || 80;
 
 var BKG_COLOR = "#202020";
 var STROKE_COLOR = "rgba(233,233,233,0.2)";
-var MARKER_COLOR = "#28282b";
-var ALT_MARKER_COLOR = "#2c2c2f";
+var MARKER_COLOR = 'rgba(108,108,111,0.08)';
+var ALT_MARKER_COLOR = 'rgba(136, 136, 139, 0.08)';
 
 var x = d3.scale.linear()
     .domain([0, TOTAL_HOUR_PIXELS])
@@ -52,15 +52,211 @@ $("#timeline-container").css({
 var header_svg = d3.select("#timeline-container").append("svg")
     .attr("width", SVG_WIDTH)
     .attr("height", HEADER_HEIGHT)
+    .attr("class", "header-svg")
     .style({"display": "block",
             "border-bottom": "solid 1px " + STROKE_COLOR});
 
 var timeline_svg = d3.select("#timeline-container").append("svg")
+    .attr("class", "timeline-svg chart")
     .attr("width", SVG_WIDTH)
     .attr("height", SVG_HEIGHT)
-    .attr("class", "chart");
 
 //console.log("APPENDED TIMELINE TO DOM!");
+
+window._foundry = {
+  timeline: {
+    // marker that triggers a mousedown event
+    mousedownMarker: undefined,
+    
+    // row of the marker that last triggered a mousedown event
+    mousedownMarkerRow: undefined,
+    
+    // true if the mouse is currently held down over the timeline, false
+    // otherwise
+    mousedownOnMarker: false,
+    
+    // first and last markers of the current selection
+    rangeStartMarker: undefined,
+    rangeEndMarker: undefined,
+    
+    selection: undefined,
+    
+    stepInterval: STEP_INTERVAL,
+    
+    stepWidth: STEP_WIDTH,
+    
+    timelineSvg: timeline_svg,
+    
+    headerSvg: header_svg,
+    
+    rowHeight: ROW_HEIGHT,
+    
+    highlightSvg: undefined,
+    
+    /* highlightMarkerRange
+     * --------------------
+     * highlights a range given two markers and a row
+     */
+    highlightMarkerRange: function(m1, m2, row) {
+      var timeline = _foundry.timeline;
+      var timelineSvg = _foundry.timeline.timelineSvg;
+      
+      var left = parseInt(m1.getAttribute("x"));
+      var width =   parseInt(m2.getAttribute("x"))
+                  + parseInt(m2.getAttribute("width"))
+                  - left;
+      
+      if(!timeline.selection) {
+        timeline.selection = {};
+      }
+      
+      timeline.selection.startMarker = m1;
+      timeline.selection.endMarker = m2;
+      
+      if(!timeline.selection.svg) {
+        timeline.selection.svg = timelineSvg.insert("rect", ":first-child")
+          .attr("class", "selection");
+      }
+      
+      timeline.selection.svg
+        .attr("x", left)
+        .attr("y", row * timeline.rowHeight)
+        .attr("width", width)
+        .attr("height", timeline.rowHeight)
+        .style("fill", "rgba(75, 158, 214, 0.52)");
+    },
+    
+    clearSelection: function() {
+      var timeline = _foundry.timeline;
+      
+      timeline.timelineSvg.select("rect.selection").remove();
+      
+      timeline.rangeStartMarker = undefined;
+      timeline.rangeEndMarker = undefined;
+      timeline.selection = undefined;
+    },
+    
+    getRangeDuration: function(m1, m2) {
+      var timeline = window._foundry.timeline;
+      var left = parseInt(m1.getAttribute("x"));
+      var width =   parseInt(m2.getAttribute("x"))
+                  + parseInt(m2.getAttribute("width"))
+                  - left;
+      return (width / timeline.stepWidth) * timeline.stepInterval;
+    },
+    
+    /* timelineMousedownFn
+     * -------------------
+     * mousedown function for the timeline svg, kept here
+     * for maintenance purposes.
+     *
+     * Enables drag selection
+     */
+    timelineMousedownFn: function(e) {
+      e = e || window.event;
+      e = $.event.fix(e);
+      
+      // event delegation
+      var target = e.target || e.srcElement;
+      var targetClassName = target.className.baseVal;
+      if(targetClassName.indexOf("marker") === -1) {return;}
+      
+      var timeline = window._foundry.timeline;
+      timeline.mousedownMarker = target;
+      
+      // remove all old highlights
+      timeline.clearSelection();
+      
+      // determine which row was clicked
+      var offset = e.pageY - $('.timeline-svg').offset().top;
+      timeline.mousedownMarkerRow = Math.floor(offset/timeline.rowHeight);
+      
+      // Indicate the start of a range and that the
+      // mouse is currently down on the timeline. This
+      // should be reset on mouseup
+      timeline.mousedownOnMarker = true;
+      timeline.rangeStartMarker = target;
+      
+      // add the selected class to the marker
+      if(targetClassName.indexOf("selected") === -1) {
+        target.className.baseVal += " selected";
+      }
+    },
+    
+    timelineMouseoverFn: function(e) {
+      var timeline = window._foundry.timeline;
+      
+      // if the mouse wasn't pushed down on a marker,
+      // cut out early
+      if(!timeline.mousedownOnMarker) {return;}
+      
+      e = e || window.event;
+      
+      // event delegation
+      var target = e.target || e.srcElement;
+      var targetClassName = target.className.baseVal;
+      if(targetClassName.indexOf("marker") === -1) {return;}
+      
+      
+      if(timeline.mousedownMarker !== undefined) {
+        var targetLeft = parseInt(target.getAttribute("x"));
+        var startLeft = parseInt(timeline.mousedownMarker.getAttribute("x"));
+        
+        if(targetLeft > startLeft) {
+          // dragging forward
+          timeline.rangeStartMarker = timeline.mousedownMarker;
+          timeline.rangeEndMarker = target;
+        } else {
+          // dragging backward
+          timeline.rangeStartMarker = target;
+          timeline.rangeEndMarker = timeline.mousedownMarker;
+        }
+        
+        timeline.highlightMarkerRange(
+          timeline.rangeStartMarker,
+          timeline.rangeEndMarker,
+          timeline.mousedownMarkerRow
+        );
+      }
+    },
+    
+    // should be attached to the window mouseup event
+    timelineMouseupFn: function(e) {
+      var timeline = window._foundry.timeline;
+      
+      timeline.mousedownMarker = undefined;
+      timeline.mousedownOnMarker = false;
+    },
+    
+    timelineKeyupFn: function(e) {
+      var timeline = _foundry.timeline;
+      
+      // ctrl-n or enter key
+      var newEventKey = (e.ctrlKey && e.keyCode === 78) || (e.keyCode === 13);
+      if(newEventKey && timeline.selection !== undefined) {
+        var point = [
+          timeline.selection.svg.attr("x"),
+          timeline.selection.svg.attr("y")
+        ];
+        console.log(point);
+        
+        var duration = timeline.getRangeDuration(
+            timeline.rangeStartMarker,
+            timeline.rangeEndMarker
+        );
+        
+        // TODO: give some sort of response
+        if(duration < 30) return;
+        
+        newEvent(point, duration);
+        timeline.clearSelection();
+      }
+    }
+  },
+};
+
+window.addEventListener("mouseup", _foundry.timeline.timelineMouseupFn);
+window.addEventListener("keyup", _foundry.timeline.timelineKeyupFn);
 
 //Extend the timeline the necessary amount for the project
 function initializeTimelineDuration() {
@@ -142,7 +338,7 @@ function redrawTimeline() {
   
   //Remove all existing grid lines & background
   timeline_svg.selectAll("line").remove();
-  timeline_svg.selectAll("rect.background").remove();
+  timeline_svg.selectAll("rect.marker").remove();
 
   // reset header svg width
   header_svg.attr("width", TOTAL_HOUR_PIXELS)
@@ -177,15 +373,15 @@ function redrawTimeline() {
   timeline_svg.attr("width", TOTAL_HOUR_PIXELS);
   
   // draw alternating markers to timeline svg
-  timeline_svg.selectAll("rect.background")
-      .data(intervals.slice(0, intervals.length/4)) // hour intervals
+  timeline_svg.selectAll("rect.marker")
+      .data(intervals) // hour intervals
       .enter().append("rect")
-          .attr("class", "background")
-          .style("fill", function(d) {return d % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
-          .attr("x", function(d) {return d * STEP_WIDTH * 4})
-          .attr("width", STEP_WIDTH * 4)
+          .attr("class", "marker")
+          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
+          .attr("x", function(d) {return d * STEP_WIDTH})
+          .attr("width", STEP_WIDTH)
           .attr("y", 0)
-          .attr("height", SVG_HEIGHT-65)
+          .attr("height", SVG_HEIGHT);
 
   // draw x grid lines to timeline svg
   timeline_svg.selectAll("line.x")
@@ -195,7 +391,7 @@ function redrawTimeline() {
       .attr("x1", function(d) {return d * STEP_WIDTH})
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT-65)
+      .attr("y2", SVG_HEIGHT)
       .style("stroke", STROKE_COLOR);
   
   //Draw y axis grid lines
@@ -221,16 +417,9 @@ function redrawTimeline() {
   numMins = -60;
   
   //Add ability to draw rectangles on extended timeline
-  timeline_svg.append("rect")
-      .attr("class", "background")
-      .attr("width", SVG_WIDTH)
-      .attr("height", SVG_HEIGHT)
-      .attr("fill", "white")
-      .attr("fill-opacity", 0)
-      .on("mousedown", function() {
-          var point = d3.mouse(this);
-          newEvent(point);
-      }); 
+  timeline_svg
+      .on("mousedown", _foundry.timeline.timelineMousedownFn)
+      .on("mouseover", _foundry.timeline.timelineMouseoverFn);
 
   //Redraw the cursor
   timeline_svg.append("line")

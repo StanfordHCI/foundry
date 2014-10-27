@@ -10,7 +10,7 @@ var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
 
-$(document).ready(function(){
+/*$(document).ready(function(){
     timeline_svg.append("rect")
     .attr("class", "background")
     .attr("width", SVG_WIDTH)
@@ -21,7 +21,7 @@ $(document).ready(function(){
         var point = d3.mouse(this);
         newEvent(point);
     });
-});
+});*/
 
 var dragged = false;
 
@@ -173,7 +173,7 @@ function calcSnap(mouseX, mouseY) {
 }
 
 // mousedown on timeline => creates new event and draws it
-function newEvent(point) {
+function newEvent(point, length) {
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
@@ -195,17 +195,17 @@ function newEvent(point) {
         return;
     }
     
-    createEvent(point);
+    createEvent(point, length);
 };
 
-function createEvent(point) {
+function createEvent(point, length) {
     // get coords where event should snap to
     var snapPoint = calcSnap(point[0], point[1]);
   
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(snapPoint);
+    var eventObj = createEventObj(snapPoint, length);
     
     // render event on timeline
     drawEvent(eventObj, true);
@@ -241,13 +241,18 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
-function createEventObj(snapPoint) {
+function createEventObj(snapPoint, duration) {
     event_counter++;
+    
+    duration = duration || 60;
+    
     var startTimeObj = getStartTime(snapPoint[0]);
-    var newEvent = {"title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":60, "members":[], 
+    var newEvent = {
+        "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], 
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null
+    };
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
         //createNewFolder($("#flash_team_name").val());
