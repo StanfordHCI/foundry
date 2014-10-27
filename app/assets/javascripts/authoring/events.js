@@ -10,7 +10,7 @@ var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
 
-$(document).ready(function(){
+/*$(document).ready(function(){
     timeline_svg.append("rect")
     .attr("class", "background")
     .attr("width", SVG_WIDTH)
@@ -21,7 +21,7 @@ $(document).ready(function(){
         var point = d3.mouse(this);
         newEvent(point);
     });
-});
+});*/
 
 var dragged = false;
 
