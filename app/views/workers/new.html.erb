@@ -10,7 +10,7 @@
 <p class="row span7">Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 
 
-<div class="row span8">
+<div class="row span8" id="panelregform">
 <%= form_for(@worker) do |f| %>
     <%= f.label :name, "Name*: " %>
     <%= f.text_field :name, :required => :true %> <br />
