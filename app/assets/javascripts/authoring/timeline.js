@@ -145,7 +145,7 @@ window._foundry = {
       // event delegation
       var target = e.target || e.srcElement;
       var targetClassName = target.className.baseVal;
-      if(targetClassName.indexOf("background") === -1) {return;}
+      if(targetClassName.indexOf("marker") === -1) {return;}
       
       var timeline = window._foundry.timeline;
       timeline.mousedownMarker = target;
@@ -181,7 +181,7 @@ window._foundry = {
       // event delegation
       var target = e.target || e.srcElement;
       var targetClassName = target.className.baseVal;
-      if(targetClassName.indexOf("background") === -1) {return;}
+      if(targetClassName.indexOf("marker") === -1) {return;}
       
       
       if(timeline.mousedownMarker !== undefined) {
@@ -315,7 +315,7 @@ function redrawTimeline() {
   
   //Remove all existing grid lines & background
   timeline_svg.selectAll("line").remove();
-  timeline_svg.selectAll("rect.background").remove();
+  timeline_svg.selectAll("rect.marker").remove();
 
   // reset header svg width
   header_svg.attr("width", TOTAL_HOUR_PIXELS)
@@ -350,10 +350,10 @@ function redrawTimeline() {
   timeline_svg.attr("width", TOTAL_HOUR_PIXELS);
   
   // draw alternating markers to timeline svg
-  timeline_svg.selectAll("rect.background")
+  timeline_svg.selectAll("rect.marker")
       .data(intervals) // hour intervals
       .enter().append("rect")
-          .attr("class", "background")
+          .attr("class", "marker")
           .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
           .attr("x", function(d) {return d * STEP_WIDTH})
           .attr("width", STEP_WIDTH)
@@ -397,10 +397,6 @@ function redrawTimeline() {
   timeline_svg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
       .on("mousemove", _foundry.timeline.timelineMousemoveFn);
-      //.on("mousedown", function() {
-      //    var point = d3.mouse(this);
-      //    newEvent(point);
-      //}); 
 
   //Redraw the cursor
   timeline_svg.append("line")
