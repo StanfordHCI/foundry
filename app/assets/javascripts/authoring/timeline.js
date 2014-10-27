@@ -329,19 +329,80 @@ function redrawTimeline() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
+  var timelineSvg = timeline.timelineSvg;
   //Reset overlay and svg width
   document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
-  timeline.timelineSvg.attr("width", SVG_WIDTH);
+  timelineSvg.attr("width", SVG_WIDTH);
   
   //Remove all existing grid lines & background
-  timeline.timelineSvg.selectAll("line").remove();
-  timeline.timelineSvg.selectAll("rect.marker").remove();
+  timelineSvg.selectAll("line").remove();
+  timelineSvg.selectAll("rect.marker").remove();
 
+  // reset timeline svg width
+  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
+  
+  // draw alternating markers to timeline svg
+  timelineSvg.selectAll("rect.marker")
+      .data(intervals) // hour intervals
+      .enter().append("rect")
+          .attr("class", "marker")
+          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
+          .attr("x", function(d) {return d * STEP_WIDTH})
+          .attr("width", STEP_WIDTH)
+          .attr("y", 0)
+          .attr("height", SVG_HEIGHT)
+
+  // draw x grid lines to timeline svg
+  timelineSvg.selectAll("line.x")
+      .data(intervals)
+      .enter().append("line")
+      .attr("class", "x")
+      .attr("x1", function(d) {return d * STEP_WIDTH})
+      .attr("x2", function(d) {return d * STEP_WIDTH})
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT)
+      .style("stroke", STROKE_COLOR);
+
+  // draw y grid lines to timeline svg
+  var numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  timelineSvg.selectAll("line.y")
+      .data(intervals.slice(0, numRows))
+      .enter().append("line")
+        .attr("class", "y")
+        .attr("x1", 0)
+        .attr("x2", "100%")
+        .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
+        .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
+        .style("stroke", _foundry.timeline.strokeColor);
+    
+  //Redraw Add Time Button
+  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
+  
+  //Remove existing X-axis labels
+  timelineSvg.selectAll("text.timelabel").remove();
+  numMins = -60;
+  
+  //Add ability to draw rectangles on extended timeline
+  timelineSvg
+      .on("mousedown", _foundry.timeline.timelineMousedownFn)
+      .on("mouseover", _foundry.timeline.timelineMouseoverFn);
+
+  //Redraw the cursor
+  timelineSvg.append("line")
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT)
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("class", "cursor")
+      .style("stroke", "red")
+      .style("stroke-width", "2")
+
+    var headerSvg = timeline.headerSvg;
   // reset header svg width
-  timeline.headerSvg.attr("width", TOTAL_HOUR_PIXELS)
+  headerSvg.attr("width", TOTAL_HOUR_PIXELS)
   
   // draw lines to header svg
-  timeline.headerSvg.selectAll("line")
+  headerSvg.selectAll("line")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("line")
       .attr("x1", function(d) {return d * (timeline.stepWidth * 4)})
@@ -351,7 +412,7 @@ function redrawTimeline() {
       .style("stroke", timeline.strokeColor);
   
   // draw timeline time intervals to header svg
-  timeline.headerSvg.selectAll("text.time-marker")
+  headerSvg.selectAll("text.time-marker")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("text")
           .attr("class", "time-marker")
@@ -366,65 +427,6 @@ function redrawTimeline() {
               "fill": "#777",
           });
 
-  // reset timeline svg width
-  timeline_svg.attr("width", TOTAL_HOUR_PIXELS);
-  
-  // draw alternating markers to timeline svg
-  timeline_svg.selectAll("rect.marker")
-      .data(intervals) // hour intervals
-      .enter().append("rect")
-          .attr("class", "marker")
-          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
-          .attr("x", function(d) {return d * STEP_WIDTH})
-          .attr("width", STEP_WIDTH)
-          .attr("y", 0)
-          .attr("height", SVG_HEIGHT)
-
-  // draw x grid lines to timeline svg
-  timeline_svg.selectAll("line.x")
-      .data(intervals)
-      .enter().append("line")
-      .attr("class", "x")
-      .attr("x1", function(d) {return d * STEP_WIDTH})
-      .attr("x2", function(d) {return d * STEP_WIDTH})
-      .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT)
-      .style("stroke", STROKE_COLOR);
-
-  // draw y grid lines to timeline svg
-  var numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
-  timeline_svg.selectAll("line.y")
-      .data(intervals.slice(0, numRows))
-      .enter().append("line")
-        .attr("class", "y")
-        .attr("x1", 0)
-        .attr("x2", "100%")
-        .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
-        .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
-        .style("stroke", _foundry.timeline.strokeColor);
-    
-  //Redraw Add Time Button
-  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
-  
-  //Remove existing X-axis labels
-  timeline_svg.selectAll("text.timelabel").remove();
-  numMins = -60;
-  
-  //Add ability to draw rectangles on extended timeline
-  timeline_svg
-      .on("mousedown", _foundry.timeline.timelineMousedownFn)
-      .on("mouseover", _foundry.timeline.timelineMouseoverFn);
-
-  //Redraw the cursor
-  timeline_svg.append("line")
-      .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT)
-      .attr("x1", 0)
-      .attr("x2", 0)
-      .attr("class", "cursor")
-      .style("stroke", "red")
-      .style("stroke-width", "2")
-
   //Get the latest time and team status, update x position of cursor
   cursor = timeline_svg.select(".cursor");
   var latest_time;
@@ -438,7 +440,7 @@ function redrawTimeline() {
   //cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
   //move all existing events back on top of timeline
-  $(timeline_svg.selectAll('g')).each(function() {
+  $(timelineSvg.selectAll('g')).each(function() {
       $('.chart').append(this);
   });
 }

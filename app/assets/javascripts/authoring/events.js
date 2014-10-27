@@ -175,7 +175,7 @@ function calcSnap(mouseX, mouseY) {
 }
 
 // mousedown on timeline => creates new event and draws it
-function newEvent(point, length) {
+function newEvent(point, duration) {
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
@@ -197,17 +197,17 @@ function newEvent(point, length) {
         return;
     }
     
-    createEvent(point, length);
+    createEvent(point, duration);
 };
 
-function createEvent(point, length) {
+function createEvent(point, duration) {
     // get coords where event should snap to
     var snapPoint = calcSnap(point[0], point[1]);
   
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(snapPoint, length);
+    var eventObj = createEventObj(snapPoint, duration);
     
     // render event on timeline
     drawEvent(eventObj, true);
