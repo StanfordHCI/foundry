@@ -146,11 +146,11 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<b>Members</b><br/> <div id="eventMemberList">'
         + writeEventMembers(eventObj)  +'</div>'
 
-        + '<br/><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea>'
-        + '<b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
-        + '<b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
+        + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
+        + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
+        + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
       
-        + '<br/><a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
+        + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
         
         + '</div>'
         + '</div>'
