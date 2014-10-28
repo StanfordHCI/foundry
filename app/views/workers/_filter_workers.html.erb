@@ -1,13 +1,16 @@
+
 <p id="panel_results">
 	<b><em>Emails for all workers this panel:</em></b>
 
 	<br />
+	<!-- <% @fw.to_s.gsub('"', '')%> -->
 	
-	<%= @fw.to_s.gsub('"', '')%>
+	<%= @fw.join(", ")%>
 	
 	<br />
 	<br />
 </p>
+
 
 <% session.delete(:return_to) %>
 <% session[:return_to] ||= request.original_url%>
@@ -36,8 +39,8 @@
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-					<td><a data-toggle="modal" data-target="#modal-window" data-remote="<%= edit_worker_path(worker) %> #modalform">Edit</a>
-			        | <%= link_to "Delete", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?' %> </td> 
+					<td><a class="icon-edit" data-toggle="modal" data-target="#modal-window" data-remote="<%= edit_worker_path(worker) %> #modalform"></a>
+			        | <%= link_to "", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %> </td> 
 			        
 			    </tr>
 			<% end %>

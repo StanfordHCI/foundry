@@ -1,9 +1,9 @@
-<div class="row">
+<div class="row span12">
 <h1>Panels</h1>
 <p>To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
 </div>
 
-<div class="row">
+<div class="row span12">
 <a data-toggle="modal" data-target="#modal-new-worker" data-remote="<%= new_worker_path %> #panelregform">Add New Worker</a>
 </div>
 
@@ -18,18 +18,18 @@
 </div>
 
 
-<p class="row">
+<p class="row span12">
 <br />
 
 <b>Select a Panel:</b> <br />
 </p>
-<p class="row">
+<p class="row span12">
 <%= select_tag "panels", options_for_select(@panels), {:prompt => "All Panels"}%>
 
 </p>
 
 
-<div id="filter_results" class="row">
+<div id="filter_results" class="row span12">
 
 	<%= render :partial => "workers/filter_workers" %>
 

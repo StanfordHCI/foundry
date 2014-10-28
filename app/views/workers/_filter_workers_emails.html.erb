@@ -4,7 +4,12 @@
 
 	<br />
 
-	<%= @abc.to_s.gsub('"', '')%>
+	<!-- <% @abc.to_s.gsub('"', '')%> -->
+	
+	<%if !@abc.nil? %>
+		<%= @abc.join(", ") %>
+	<%end%>
+
 	
 	<br />
 
