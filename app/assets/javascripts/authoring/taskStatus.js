@@ -28,6 +28,10 @@
     drawEvent(eventObj); //Will update color
 
     console.log("redraw event after start");
+
+    //chaning start button to complete button on the task modal
+    $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+    $("#start-end-task").html('Complete');         
  }
 
 //Alert firing on event complete buttons
