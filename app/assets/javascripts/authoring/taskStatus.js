@@ -6,10 +6,10 @@
 
 
  //TASK STATUS COLORS
- var TASK_NOT_START_COLOR = "#C9C9C9";
- var TASK_START_COLOR = "blue";
- var TASK_DELAY_COLOR = "red";
- var TASK_COMPLETE_COLOR = "green";
+ var TASK_NOT_START_COLOR = "#F5F5F5"; //gray
+ var TASK_START_COLOR = "#1E90FF"; //blue
+ var TASK_DELAY_COLOR = "#DC143C"; //red
+ var TASK_COMPLETE_COLOR = "#00FF7F"; //green
 
 
 //Fires on "Start" button on task modal
@@ -26,6 +26,12 @@
 
     updateStatus();
     drawEvent(eventObj); //Will update color
+
+    console.log("redraw event after start");
+
+    //chaning start button to complete button on the task modal
+    $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+    $("#start-end-task").html('Complete');         
  }
 
 //Alert firing on event complete buttons
