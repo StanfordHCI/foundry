@@ -797,10 +797,10 @@ function drawEachCollabForEvent(eventObj){
                     drawHandoff(handoffData);
                 } else {*/
                     //Reposition existing collaboration
-                    var y1 = ev1.y + 17;
+                    var y1 = ev1.y;
                     var x1 = ev1.x + 3;
                     var x2 = ev2.x + 3;
-                    var y2 = ev2.y + 17;
+                    var y2 = ev2.y;
                     var firstTaskY = 0;
                     var taskDistance = 0;
                     var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
