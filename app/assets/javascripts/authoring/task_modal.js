@@ -175,7 +175,7 @@ function getTaskOverviewContent(groupNum){
         + ev.startHr + ':'
         + ev.startMin.toFixed(0) + '<br>'
         + '</div>'
-        + '<div class="span6">'
+        + '<div class="span6" style="margin-left:0px">'
         +'<b>Total Runtime:  </b>' 
         + hrs+':'+mins
         + '</div>';
