@@ -655,6 +655,10 @@ end
    end
    
    def panels
+   
+   session.delete(:ref_page)
+   session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+
    	@id_team = params[:id]
    	@id_task = params[:event_id].to_i
    	

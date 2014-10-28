@@ -1,7 +1,9 @@
 class WorkersController < ApplicationController
  
   def index
-  	
+  	session.delete(:ref_page)
+  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+
     @workers = Worker.all
     	
   	@panels = Worker.distinct.pluck(:panel)
@@ -11,7 +13,7 @@ class WorkersController < ApplicationController
   end
   
     def filter_workers
-
+    
   	if params[:panels] && params[:panels] != ""
   		@workers = Worker.where(:panel => params[:panels])
   		@fw = Worker.where(:panel => params[:panels]).pluck(:email)
@@ -43,6 +45,7 @@ class WorkersController < ApplicationController
   	@worker = Worker.new(worker_params)
     if @worker.save
         redirect_to :action => 'show', :id => @worker.id
+        #redirect_to session.delete(:return_to), :id => @worker.id, alert: "Success!"
     else
         redirect_to new_worker_path, alert: "Error creating worker."
     end
@@ -50,6 +53,28 @@ class WorkersController < ApplicationController
 
   def show
   	@worker = Worker.find(params[:id])
+  	
+  	if session[:ref_page][:controller] == "workers" && session[:ref_page][:action] == "register"
+  		#redirect_to :action => 'confirmation', :id => @worker.id
+  		redirect_to :action => 'confirmation'
+  	end
+  	
+  	if session[:ref_page][:controller] == "flash_teams" && session[:ref_page][:action] == "panels"
+  		redirect_to session.delete(:return_to)
+  	end
+  	
+  	if session[:ref_page][:controller] == "workers" && session[:ref_page][:action] == "index"
+  		redirect_to session.delete(:return_to)
+  	end
+
+  end
+  
+  def register
+  	session.delete(:return_to)
+  	session.delete(:ref_page)
+  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+  	
+  	@worker = Worker.new
   end
   
   def edit

@@ -121,13 +121,11 @@ Foundry::Application.routes.draw do
   
   #resources :workers
   get '/workers/index' => 'workers#index' 
+  get '/workers/register' => 'workers#register' 
+  get '/workers/confirmation' => 'workers#confirmation'
   get '/workers/:id/destroy' => 'workers#destroy' 
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
-  #get '/workers/new' => 'workers#new'
-  #get '/workers/:id' => 'workers#show'
-  #get '/workers/:id/edit' => 'workers#edit'
-  #post '/workers' => 'workers#create'
   
   resources :workers do
     member do
