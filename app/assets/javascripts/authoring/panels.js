@@ -39,12 +39,6 @@ $('input[type=checkbox]').change(function(e){
 
  });
 
-function test(name){
-
-	alert("hi " + name);
-
-}
-
 
 
 
