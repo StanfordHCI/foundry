@@ -92,7 +92,8 @@ class WorkersController < ApplicationController
         #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
         redirect_to session.delete(:return_to)
     else
-        redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
+        #redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
+        redirect_to edit_worker_path(worker), alert: "Error updating worker."
     end
   end
   
