@@ -364,7 +364,8 @@ function redrawTimeline() {
       .style("stroke", STROKE_COLOR);
 
   // draw y grid lines to timeline svg
-  var numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  _foundry.timeline.numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  var numRows = _foundry.timeline.numRows;
   timelineSvg.selectAll("line.y")
       .data(intervals.slice(0, numRows))
       .enter().append("line")
