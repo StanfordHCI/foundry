@@ -6,7 +6,7 @@ class WorkersController < ApplicationController
   	session.delete(:ref_page)
   	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
 
-    @workers = Worker.all
+    @workers = Worker.all.order(name: :asc)
     	
   	@panels = Worker.distinct.pluck(:panel)
   	
@@ -17,10 +17,10 @@ class WorkersController < ApplicationController
     def filter_workers
     
   	if params[:panels] && params[:panels] != ""
-  		@workers = Worker.where(:panel => params[:panels])
+  		@workers = Worker.where(:panel => params[:panels]).order(name: :asc)
   		@fw = Worker.where(:panel => params[:panels]).pluck(:email)
 	else
-    	@workers = Worker.all
+    	@workers = Worker.all.order(name: :asc)
 		@fw = Worker.all.pluck(:email)
 	end
     	

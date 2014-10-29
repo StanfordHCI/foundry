@@ -656,11 +656,11 @@ end
    
    def panels
    
-   session.delete(:return_to)
-   session[:return_to] ||= request.original_url
+   	session.delete(:return_to)
+   	session[:return_to] ||= request.original_url
   	
-   session.delete(:ref_page)
-   session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+   	session.delete(:ref_page)
+   	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
 
    	@id_team = params[:id]
    	@id_task = params[:event_id].to_i
@@ -672,7 +672,7 @@ end
     @flash_team_json = flash_team_status['flash_teams_json']
     @flash_team_event = @flash_team_json['events'][@id_task]
 	    
-   	@workers = Worker.all
+   	@workers = Worker.all.order(name: :asc)
     	
   	@panels = Worker.distinct.pluck(:panel)
   	
