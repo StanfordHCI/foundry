@@ -163,8 +163,10 @@ function dragEventBlock(d) {
       return;
     }
     ev.row = newRow;
-
+    ev.y = currentY+5;
+    updateStatus();
     drawEvent(ev, false);
+    
 }
 
 //VCom Calculates where to snap event block to when created
