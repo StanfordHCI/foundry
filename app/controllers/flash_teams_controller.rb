@@ -656,6 +656,9 @@ end
    
    def panels
    
+   session.delete(:return_to)
+   session[:return_to] ||= request.original_url
+  	
    session.delete(:ref_page)
    session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
 
