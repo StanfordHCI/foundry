@@ -1,0 +1,26 @@
+<div class="row span7" id="panelregform">
+<%= form_for(@worker) do |f| %>
+    <%= f.label :name, "Name*: " %>
+    <%= f.text_field :name, :required => :true %> <br />
+
+    <%= f.label :email, "Email*: " %>
+    <%= f.text_field :email, :required => :true %> <br />
+    
+    <%= f.label :skype_username, "Skype Username*: " %>
+    <%= f.text_field :skype_username, :required => :true %> <br />
+    
+    <%= f.label :odesk_url, "oDesk Profile URL*: " %>
+    <%= f.text_field :odesk_url, :required => :true %> <br />
+    
+    <%= f.label :timezone_utc, "Your Timezone (in UTC)*: " %>
+    <%= f.text_field :timezone_utc, :required => :true %> <br />
+
+    <%= f.label :panel, "Panel Password*: " %>
+    <%= f.text_field :panel, :required => :true %> <br />
+    
+    <%= f.label :additional_info, "Anything else you want us to know?" %> <br />
+    <%= f.text_area :additional_info, :rows =>2 %> <br />
+
+    <%= f.submit "Update", :class => "btn btn-success" %>
+<% end %>
+</div>

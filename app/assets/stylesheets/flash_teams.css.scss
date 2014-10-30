@@ -135,6 +135,29 @@
     margin-right: -250px;
 }
 
+/* Panel Registration Form/Worker Edit Form Styles */
+
+#panelregform{
+	margin-left: 5px;
+}
+
+#panelregform input{
+	width: 300px;
+}
+
+#panelregform textarea{
+	width: 500px;
+}
+
+#panelregform input.btn.btn-success{
+	width: 514px;
+	margin-top: 2px;
+}
+
+#panelregform label{
+	display: inline; font-weight: bold; padding-right: 5px; 
+}
+
 /* Sidebar Styles */
 
 .sidebar-nav {
