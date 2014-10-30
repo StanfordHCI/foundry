@@ -102,7 +102,7 @@ class WorkersController < ApplicationController
   	
   	worker.destroy
     
-  	redirect_to workers_index_path, alert: "Worker destroyed successfully."
+  	redirect_to session.delete(:return_to)
 
   end
   
