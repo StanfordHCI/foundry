@@ -231,16 +231,6 @@ window._foundry = {
       }
     },
     
-    timelineKeyupFn: function(e) {
-      var timeline = _foundry.timeline;
-      
-      // ctrl-n or enter key
-      var newEventKey = (e.ctrlKey && e.keyCode === 78) || (e.keyCode === 13);
-      if(newEventKey && timeline.selection !== undefined) {
-        timeline.createEventFromSelection();
-      }
-    },
-    
     createEventFromSelection: function() {
       var timeline = window._foundry.timeline;
       if(!timeline.selection) return;
