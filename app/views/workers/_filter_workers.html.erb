@@ -5,7 +5,13 @@
 	<br />
 	<!-- <% @fw.to_s.gsub('"', '')%> -->
 	
-	<%= @fw.join(", ")%>
+	<% @emails = @fw.join(", ")%>
+	
+	<%= @emails %>
+	
+	<!-- <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button> -->
+	<button id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy me.">Copy to Clipboard</button>
+    <%= javascript_include_tag "ZeroClipboard" %>
 	
 	<br />
 	<br />
