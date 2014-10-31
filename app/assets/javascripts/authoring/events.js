@@ -163,8 +163,10 @@ function dragEventBlock(d) {
       return;
     }
     ev.row = newRow;
-
+    ev.y = currentY+5;
+    updateStatus();
     drawEvent(ev, false);
+    
 }
 
 //VCom Calculates where to snap event block to when created
@@ -799,18 +801,18 @@ function drawEachCollabForEvent(eventObj){
                     drawHandoff(handoffData);
                 } else {*/
                     //Reposition existing collaboration
-                    var y1 = ev1.y + 17;
+                    var y1 = ev1.y;
                     var x1 = ev1.x + 3;
                     var x2 = ev2.x + 3;
-                    var y2 = ev2.y + 17;
+                    var y2 = ev2.y;
                     var firstTaskY = 0;
                     var taskDistance = 0;
                     var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
                     if (y1 < y2) {
-                        firstTaskY = y1 + 90;
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
                         taskDistance = y2 - firstTaskY;
                     } else {
-                        firstTaskY = y2 + 90;
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
                         taskDistance = y1 - firstTaskY;
                     }
                     if (x1 <= x2) var startX = x2;
