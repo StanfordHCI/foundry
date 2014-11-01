@@ -430,12 +430,16 @@ function redrawTimeline() {
 
   //Get the latest time and team status, update x position of cursor
   cursor = timeline_svg.select(".cursor");
-  var latest_time;
+  
+  //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
+  //and the same exact code is included in awareness.js
+  
+  /* var latest_time;
   if (in_progress){
       latest_time = (new Date).getTime();
   } else {
       latest_time = loadedStatus.latest_time;
-  }
+  }*/
   
   //Next line is commented out after disabling the ticker
   //cursor_details = positionCursor(flashTeamsJSON, latest_time);
