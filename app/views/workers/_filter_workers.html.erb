@@ -11,7 +11,9 @@
 	
 	<!-- <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button> -->
 	<button id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy me.">Copy to Clipboard</button>
-    <%= javascript_include_tag "ZeroClipboard" %>
+	
+	
+    
 	
 	<br />
 	<br />
@@ -66,8 +68,10 @@
 	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
 
-
+<%= javascript_include_tag "ZeroClipboard" %>
+<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
 <%= javascript_include_tag "/assets/authoring/panels" %>
+
 
 
 
