@@ -225,32 +225,32 @@ window._foundry = {
       
       timeline.mousedownMarker = undefined;
       timeline.mousedownOnMarker = false;
+      
+      if(timeline.selection) {
+        timeline.createEventFromSelection();
+      }
     },
     
-    timelineKeyupFn: function(e) {
-      var timeline = _foundry.timeline;
+    createEventFromSelection: function() {
+      var timeline = window._foundry.timeline;
+      if(!timeline.selection) return;
+      var point = [
+        timeline.selection.svg.attr("x"),
+        timeline.selection.svg.attr("y")
+      ];
+      //console.log(point);
       
-      // ctrl-n or enter key
-      var newEventKey = (e.ctrlKey && e.keyCode === 78) || (e.keyCode === 13);
-      if(newEventKey && timeline.selection !== undefined) {
-        var point = [
-          timeline.selection.svg.attr("x"),
-          timeline.selection.svg.attr("y")
-        ];
-        //console.log(point);
-        
-        var duration = timeline.getRangeDuration(
-            timeline.rangeStartMarker,
-            timeline.rangeEndMarker
-        );
-        
-        // TODO: give some sort of response
-        if(duration < 30) return;
-        
-        newEvent(point, duration);
-        timeline.clearSelection();
-      }
-    }
+      var duration = timeline.getRangeDuration(
+          timeline.rangeStartMarker,
+          timeline.rangeEndMarker
+      );
+      
+      // TODO: give some sort of response
+      if(duration < 30) return;
+      
+      newEvent(point, duration);
+      timeline.clearSelection();
+    },
   },
 };
 
