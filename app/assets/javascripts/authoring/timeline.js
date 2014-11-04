@@ -225,32 +225,32 @@ window._foundry = {
       
       timeline.mousedownMarker = undefined;
       timeline.mousedownOnMarker = false;
+      
+      if(timeline.selection) {
+        timeline.createEventFromSelection();
+      }
     },
     
-    timelineKeyupFn: function(e) {
-      var timeline = _foundry.timeline;
+    createEventFromSelection: function() {
+      var timeline = window._foundry.timeline;
+      if(!timeline.selection) return;
+      var point = [
+        timeline.selection.svg.attr("x"),
+        timeline.selection.svg.attr("y")
+      ];
+      //console.log(point);
       
-      // ctrl-n or enter key
-      var newEventKey = (e.ctrlKey && e.keyCode === 78) || (e.keyCode === 13);
-      if(newEventKey && timeline.selection !== undefined) {
-        var point = [
-          timeline.selection.svg.attr("x"),
-          timeline.selection.svg.attr("y")
-        ];
-        //console.log(point);
-        
-        var duration = timeline.getRangeDuration(
-            timeline.rangeStartMarker,
-            timeline.rangeEndMarker
-        );
-        
-        // TODO: give some sort of response
-        if(duration < 30) return;
-        
-        newEvent(point, duration);
-        timeline.clearSelection();
-      }
-    }
+      var duration = timeline.getRangeDuration(
+          timeline.rangeStartMarker,
+          timeline.rangeEndMarker
+      );
+      
+      // TODO: give some sort of response
+      if(duration < 30) return;
+      
+      newEvent(point, duration);
+      timeline.clearSelection();
+    },
   },
 };
 
@@ -364,9 +364,10 @@ function redrawTimeline() {
       .style("stroke", STROKE_COLOR);
 
   // draw y grid lines to timeline svg
-  var numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  _foundry.timeline.numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  var numRows = _foundry.timeline.numRows;
   timelineSvg.selectAll("line.y")
-      .data(intervals.slice(0, numRows))
+      .data(intervals.slice(1, numRows+1))
       .enter().append("line")
         .attr("class", "y")
         .attr("x1", 0)
@@ -429,12 +430,16 @@ function redrawTimeline() {
 
   //Get the latest time and team status, update x position of cursor
   cursor = timeline_svg.select(".cursor");
-  var latest_time;
+  
+  //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
+  //and the same exact code is included in awareness.js
+  
+  /* var latest_time;
   if (in_progress){
       latest_time = (new Date).getTime();
   } else {
       latest_time = loadedStatus.latest_time;
-  }
+  }*/
   
   //Next line is commented out after disabling the ticker
   //cursor_details = positionCursor(flashTeamsJSON, latest_time);
