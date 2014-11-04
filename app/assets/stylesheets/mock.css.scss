@@ -1,5 +1,10 @@
 @import url(http://fonts.googleapis.com/css?family=Quicksand:300);
 
+html {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 200;
+}
+
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -113,7 +118,7 @@ $left-sidebar-width: 251px;
   box-sizing: border-box;
   width: $left-sidebar-width;
   color: #858585;
-  overflow: auto;
+  overflow: visible!important;
   border-right: $primary-border;
   background-color: #1e2324;
   
@@ -152,4 +157,110 @@ $left-sidebar-width: 251px;
 
 .info-sign::after {
   content: "i";
+}
+
+
+/* left-sidebar roles */
+
+.role{
+  padding: 2px 0 2px 8px;
+  cursor: pointer;
+  margin-top: 2px;
+  
+  font-size: 13px;
+  
+  transition: background-color 0.2s, border 0.2s;
+}
+
+.role:hover {
+  color: white;
+}
+.role:hover .indicator.plus {
+  border-color: white;
+  transition: background 0.5s;
+}
+
+.role.valid .indicator.plus {
+  color: rgba(0,0,0,0);
+  border-color: white;
+  border-size: 11px;
+  
+  background-size: cover;
+  background-image: url('../assets/icons/check/check.svg');
+}
+
+.role .indicator {
+  display: inline-block;
+  border-radius: 40px;
+  float: right;
+  margin-top: 4px;
+  height: 16px;
+  width: 16px;
+  
+  border: solid 2px rgba(0,0,0,0);
+  transition: border-color 0.2s;
+}
+
+.role .indicator:hover {
+  border-color: white;
+}
+
+.role .indicator.plus {
+  /* background-color: rgba(233,233,233,0.18); */
+  text-align: center;
+  line-height: 14px;
+  font-weight: bold;
+  border: solid 2px;
+}
+
+.role .name {
+  font-size: 13px;
+  line-height: 30px;
+  float: left;
+  
+  transition: margin-left 0.4s;
+}
+
+.role.add-role input[type="text"],
+.role.add-role textarea {
+  float: left;
+  background: none;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: white;
+  font: inherit;
+  border: none;
+  border-bottom: solid 1px rgba(255, 255, 255, 0.38);
+  height: 30px;
+  width: 80%;
+}
+
+.role.add-role input[type="text"]:focus,
+.role.add-role textarea:focus {
+  box-shadow: none;
+}
+
+/* animations */
+@-webkit-keyframes spin {
+  18% {
+    -webkit-transform: rotate(-40deg);
+  }
+  60% {
+    -webkit-transform: rotate(180deg);
+  }
+  85% {
+    -webkit-transform: rotate(370deg);
+  }
+  95% {
+    -webkit-transform: rotate(350deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.spin-anim {
+  -webkit-animation: spin 1s;
 }

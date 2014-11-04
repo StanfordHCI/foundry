@@ -1,12 +1,31 @@
-<h5>TEAM ROLES</h5>
+<style></style>
+
+<div class="header">
+  <h5 class="main-header">Team roles (<span class="num-roles"></span>)</h5>
+  
+  <div class="clear"></div>
+</div>
 
 <form name='newMemberForm' autocomplete="on" id="newMemberForm">
-    <div class="input-append" style="width:275px;">
-        <input class="span9" style="width:120px" id="addMemberInput" type="text" placeholder="New Member Role" autocomplete="on">
-        <button class="btn" type="button" onclick="addMember()" id="addMemberButton">+Add</button>
+    <!--<div class="input-append">-->
+        <!--<input class="span9" style="width:120px" id="addMemberInput" type="text" placeholder="New Member Role" autocomplete="on">-->
+        <!--<button class="btn" type="button" onclick="addMember()" id="addMemberButton">+Add</button>-->
+    <!--
         <input type="submit" style="display:none">
     </div>
+    
+    -->
     <input type="text" name="enterAndReloadBugFix" style="display: none;"> 
+    
+    <div class="membersWrap">
+    </div>
+    
+    <div class="add-role role">
+      <div class="indicator plus">+</div>
+      <span class="name">Add new role</span>
+      <div class="clear"></div>
+    </div>
+    
 </form>
 
 <ul class = "nav nav-pills customPill" id="memberPills">
