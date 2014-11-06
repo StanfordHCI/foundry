@@ -29,130 +29,133 @@
 
 <div id="left-sidebar">
  
- <% if in_author_view %>
+ <div class="inner" style="height:100%;overflow-y:scroll;">
+     <% if in_author_view %>
  
- <h4>
-     	<span id="ft-name"><%= flash_team.name.upcase%></span>
-     	
-     	<!-- Button to trigger modal -->
-	 	<a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;"><i class="info-sign" style="vertical-align: middle;"></i></a>
-	 </h4>
-	 	
-	 	<%= render :partial => "project_overview_modal" %>
- 
-	         <% if author_runtime %>
-	            
-	            <div id="project-status-container" class="well">
-	            	<!-- Render project status container --> 
-					<%= render :partial => "project_status" %>                 
-	            </div> 
-
-	            <div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	            </div>
-	
-	           <!--Add a file picker for the user to start the upload process -->
-	           <!--
-				   <input type="file" id="filePicker" />
-	            <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
-				-->				
-								
-	           <div id="member-container" class="well" style="overflow-y:scroll;">
-	            	<!-- Render member roles container --> 
-					<%= render :partial => "roles" %>    
-	           </div>
-	           
-	           <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-				</div>
-
-            
-			<% else %>
+     <h4>
+          <span id="ft-name"><%= flash_team.name.upcase%></span>
       
-            	<div id="project-status-container" class="well" style="display: none;">
-             		<!-- Render project status container --> 
-					<%= render :partial => "project_status" %>               
-				</div>
+          <!-- Button to trigger modal -->
+        <a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;"><i class="info-sign" style="vertical-align: middle;"></i></a>
+       </h4>
+    
+        <%= render :partial => "project_overview_modal" %>
+ 
+               <% if author_runtime %>
+              
+                  <div id="project-status-container" class="well">
+                    <!-- Render project status container --> 
+              <%= render :partial => "project_status" %>                 
+                  </div> 
 
-				<div id="member-container" class="sidebar-item">
-					<!-- Render member roles container --> 
-					<%= render :partial => "roles" %> 
-				</div>
-            
-				<div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	            </div>
-	            
-	            <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-				</div>      
-            
-				<div id="search-events-container" class="well" style="overflow-y:scroll;">
-					<!-- render partial with event library --> 
-					<%= render :partial => "event_library" %>
-				</div>
-
-			<% end %> <!-- end if in author runtime conditional --> 
-            
-            <div id="diagram-container" class="well" style="display:none;" >
-                	<!-- render partial with team diagram --> 
-					<%= render :partial => "teamdiagram" %>
+                  <div id="chat-box-container" class="well" >
+                    <!-- render partial with chat box --> 
+              <%= render :partial => "chatbox" %>
+                  </div>
+  
+                 <!--Add a file picker for the user to start the upload process -->
+                 <!--
+               <input type="file" id="filePicker" />
+                  <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
+            -->				
+                
+                 <div id="member-container" class="well" style="overflow-y:scroll;">
+                    <!-- Render member roles container --> 
+              <%= render :partial => "roles" %>    
+                 </div>
+             
+                 <div id="project-overview-container" class="well" style="overflow-y:scroll;">
+              <!-- Render project overview container --> 
+              <%= render :partial => "project_overview" %> 
             </div>
-		
-		<% end %>
-		
-		
-		<% if in_expert_view %>
-		
-		<div class="span3"> <!--Sidebar content-->
-				<!-- <div id = "title-container" class="well">
-					<form name="titleForm" id="title_form">
-						<input type = "text" id="flashTeamTitle" placeholder="New Flash Team" style="font-size:25px; height:40px">
-					</form>
-				</div> -->	
+
             
-            <div id="project-status-container" class="well">
-             	<!-- Render project status container --> 
-				<%= render :partial => "project_status" %>               
-                
-				<div><h4>Welcome <%= @user_name %>!</h4></div>
-                
-	            <!--<h4> Your Task Starts In 1:20 </h4> -->
-				<!-- <button class="btn" type="button" onclick="searchEvents()" id="projectDetailsButton">Project Details</button>
-	                 <svg width="2450" height="570">
-	                        <rect width="200" height="40" x="0" y="0" fill="white" style="stroke: #000000;"></rect>
-	                        <rect width="10" height="40" x="0" y="0" fill="green" class="project_status"></rect>
-	                    </svg>-->             
-                
-                <div id="status-bar-container" >
-                   <!-- <h4> Your Task Is </h4> -->
-                </div>
-               
-            </div> <!-- end of project-status-container div -->
-                   
+          <% else %>
+      
+                  <div id="project-status-container" class="well" style="display: none;">
+                    <!-- Render project status container --> 
+              <%= render :partial => "project_status" %>               
+            </div>
+
+            <div id="member-container" class="sidebar-item">
+              <!-- Render member roles container --> 
+              <%= render :partial => "roles" %> 
+            </div>
+            
             <div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	        </div>
-	        
-	        <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-			</div>
-			
-			<% if @member_type == "pc" || @member_type == "client" %>
-				<div id="member-container" class="well" style="overflow-y:scroll;">
-					<!-- Render member roles container --> 
-					<%= render :partial => "roles" %> 
-				</div>
-			<% end %>
-			
-        </div> <!-- end of sidebar (e.g., class="span3") -->
-		
-		<% end %>
-		
+                    <!-- render partial with chat box --> 
+              <%= render :partial => "chatbox" %>
+                  </div>
+              
+                  <div id="project-overview-container" class="well" style="overflow-y:scroll;">
+              <!-- Render project overview container --> 
+              <%= render :partial => "project_overview" %> 
+            </div>      
+            
+            <div id="search-events-container" class="well" style="overflow-y:scroll;">
+              <!-- render partial with event library --> 
+              <%= render :partial => "event_library" %>
+            </div>
+
+          <% end %> <!-- end if in author runtime conditional --> 
+            
+                <div id="diagram-container" class="well" style="display:none;" >
+                      <!-- render partial with team diagram --> 
+              <%= render :partial => "teamdiagram" %>
+                </div>
+    
+        <% end %>
+    
+    
+        <% if in_expert_view %>
+    
+        <div class="span3"> <!--Sidebar content-->
+            <!-- <div id = "title-container" class="well">
+              <form name="titleForm" id="title_form">
+                <input type = "text" id="flashTeamTitle" placeholder="New Flash Team" style="font-size:25px; height:40px">
+              </form>
+            </div> -->	
+            
+                <div id="project-status-container" class="well">
+                  <!-- Render project status container --> 
+            <%= render :partial => "project_status" %>               
+                
+            <div><h4>Welcome <%= @user_name %>!</h4></div>
+                
+                  <!--<h4> Your Task Starts In 1:20 </h4> -->
+            <!-- <button class="btn" type="button" onclick="searchEvents()" id="projectDetailsButton">Project Details</button>
+                       <svg width="2450" height="570">
+                              <rect width="200" height="40" x="0" y="0" fill="white" style="stroke: #000000;"></rect>
+                              <rect width="10" height="40" x="0" y="0" fill="green" class="project_status"></rect>
+                          </svg>-->             
+                
+                    <div id="status-bar-container" >
+                       <!-- <h4> Your Task Is </h4> -->
+                    </div>
+               
+                </div> <!-- end of project-status-container div -->
+                   
+                <div id="chat-box-container" class="well" >
+                    <!-- render partial with chat box --> 
+              <%= render :partial => "chatbox" %>
+              </div>
+          
+              <div id="project-overview-container" class="well" style="overflow-y:scroll;">
+              <!-- Render project overview container --> 
+              <%= render :partial => "project_overview" %> 
+          </div>
+      
+          <% if @member_type == "pc" || @member_type == "client" %>
+            <div id="member-container" class="well" style="overflow-y:scroll;">
+              <!-- Render member roles container --> 
+              <%= render :partial => "roles" %> 
+            </div>
+          <% end %>
+      
+            </div> <!-- end of sidebar (e.g., class="span3") -->
+    
+        <% end %>
+    
+    
+		</div>
 </div>
