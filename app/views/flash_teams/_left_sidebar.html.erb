@@ -24,6 +24,7 @@
               <%= render :partial => "project_status" %>                 
                   </div> 
 
+
                   <div id="chat-box-container" class="well" >
                     <!-- render partial with chat box --> 
               <%= render :partial => "chatbox" %>
@@ -47,26 +48,27 @@
 
             
           <% else %>
-      
-                  <div id="project-status-container" class="well" style="display: none;">
-                    <!-- Render project status container --> 
-              <%= render :partial => "project_status" %>               
-            </div>
+<div id="project-overview-container" class="sidebar-item">
+  <!-- Render project overview container --> 
+  <%= render :partial => "project_overview" %> 
+</div>
 
-            <div id="member-container" class="sidebar-item">
-              <!-- Render member roles container --> 
-              <%= render :partial => "roles" %> 
-            </div>
+<div id="member-container" class="sidebar-item">
+  <!-- Render member roles container --> 
+  <%= render :partial => "roles" %> 
+</div>
+            
+<div id="project-status-container" class="well" style="display: none;">
+  <!-- Render project status container --> 
+  <%= render :partial => "project_status" %>               
+</div>
             
             <div id="chat-box-container" class="well" >
                     <!-- render partial with chat box --> 
               <%= render :partial => "chatbox" %>
                   </div>
               
-                  <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-              <!-- Render project overview container --> 
-              <%= render :partial => "project_overview" %> 
-            </div>      
+    
             
             <div id="search-events-container" class="well" style="overflow-y:scroll;">
               <!-- render partial with event library --> 
