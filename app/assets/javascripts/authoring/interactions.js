@@ -15,7 +15,7 @@ timeline_svg.append("defs").append("marker")
     .attr("refY", 2)
     .attr("markerWidth", 3) 
     .attr("markerHeight", 2)
-    .attr("stroke", "gray")
+    .attr("stroke", "pink")
     .attr("fill", "gray")
     .append("path")
         .attr("d", "M 0,0 V 2 L2,2 Z");
@@ -216,15 +216,19 @@ function drawHandoff(handoffData) {
         .attr("x2", x2)
         .attr("y2", y2)
         .attr("d", function(d) {
-             var dx = x1 - x2,
+            return routeHandoffPath(ev1, ev2, x1, x2, y1, y2);
+
+            //OLD CURVE CODE
+            /*var dx = x1 - x2,
                 dy = y1 - y2,
                 dr = Math.sqrt(dx * dx + dy * dy);
             //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
             return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
-                + " 0 0,0 " + x2 + "," + (y2+15); 
+                + " 0 0,0 " + x2 + "," + (y2+15);*/
         })
-        .attr("stroke", "gray")
+        .attr("stroke", "pink")
         .attr("stroke-width", 3)
+        .attr("stroke-opacity", ".6")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
 
@@ -242,6 +246,22 @@ function drawHandoff(handoffData) {
             +' onclick="deleteInteraction(' + handoffId +');">Delete</button>',
         container: $("#timeline-container")
     });
+}
+
+function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
+    var pathStr = "M " + x1 + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
+
+    if (y1 <= y2) { //Event 1 is higher
+        pathStr += "L " + x1 + ", " + (y1+25) + "\n";
+        pathStr += "L " + x2 + ", " + (y1+25) + "\n"; 
+    } else { //Event 2 is higher
+        pathStr += "L " + x1 + ", " + (y1-55) + "\n";
+        pathStr += "L " + x2 + ", " + (y1-55) + "\n";
+    }
+    pathStr += "L " + x2 + ", " + (y2) + "\n";
+    
+
+    return pathStr;
 }
 
 //Save handoff notes and update popover
