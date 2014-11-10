@@ -267,7 +267,7 @@ function getTaskOverviewContent(groupNum){
             eventOutputs = ev.outputs.split(",");
         }
         for (i = 0; i < eventOutputs.length; i++){
-            content += "<b>" + eventOutputs[i] + "</b>";
+            content += "<b>" + eventOutputs[i] + "</b></br>";
             for (j = 0; j < outputQs[eventOutputs[i]].length; j++){
                 if (outputQs[eventOutputs[i]][j][1] != ""){
                     content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
@@ -279,7 +279,7 @@ function getTaskOverviewContent(groupNum){
     if (ev.docQs){
         docQs = ev.docQs;
         for (i = 0; i < docQs.length; i++){
-            if (docQs[i][1] != ""){
+            if (docQs[i][1] != "" && docQs[i][1] != null){
                 content += "<b>" + docQs[i][0] + ": </b>";
                 content += "<p>" + docQs[i][1] + "</p>";
             }

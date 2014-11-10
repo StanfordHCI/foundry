@@ -63,12 +63,27 @@ function confirmCompleteTask(groupNum) {
         $("#confirmButton").prop('disabled', true); //Defaults to disabled
     }
     $('#confirmAction').modal('show');
+
+    var saveButton = document.getElementById("saveButton");
+    saveButton.innerHTML = "Save Questions";
+    $("#saveButton").attr("class","btn btn-default");
+    $("#saveButton").attr("style", "display:inline;");
+    $('#confirmAction').modal('show');
     
     //Set change function on checkboxes, enable button if all checkboxes are checked
     $(".outputCheckbox").change(function() {
         var totalCheckboxes = $(".outputCheckbox").length;
         var checkedCheckboxes = $(".outputCheckbox:checked").length;
+        var splitOutputs = eventToComplete.outputs.split(",");
+        for (j = 0; j < checkedCheckboxes; j++){
+            for (i = 0; i < totalCheckboxes; i++){
+                if ($(".outputCheckbox:checked")[j].contains($(".outputCheckbox")[i])){
+                    $("#output" + splitOutputs[i]).attr("style", "display:block;");
+                }
+            }
+        }
         if (totalCheckboxes == checkedCheckboxes) {
+            // console.log("TOTAL CHECKBOXES: " + $(".outputCheckbox") + "CHECKED " + $(".outputCheckbox:checked"));
             $("#confirmButton").prop('disabled', false);
         } else {
             $("#confirmButton").prop('disabled', true);
@@ -81,11 +96,17 @@ function confirmCompleteTask(groupNum) {
     	completeTask(groupNum);
     };
     //hidePopover(groupNum); 
+
+    //calls saveQuestions functions if user chooses to save questions
+    document.getElementById("saveButton").onclick=function(){
+        $('#confirmAction').modal('hide');
+        saveQuestions(groupNum);
+    };
 }
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Outputs for " + eventToComplete["title"] + ":</b></p>";
+    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href='http://www.google.com'>google drive</a></p>";
     
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
@@ -102,15 +123,17 @@ function completeTaskModalText(eventToComplete) {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
-            modalText += "<b><input type='checkbox' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += '<div id="output' + eventOutputs[i] + '" style = "display:none;">';
             for (j = 0; j<outputQuestions.length; j++){
                 if (!outputFilledQ)
                     var placeholderVal = "";
                 else{
                     var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
                 }
-                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" placeholder="' + placeholderVal + '" rows="3"></textarea></br>';
+                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" rows="3">' + placeholderVal + '</textarea></br>';
             }
+            modalText += "</div>";
         }
     }
     //Creating a form for the general documentation questions for a particular task
@@ -123,7 +146,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '" placeholder="' + placeholderVal + '"rows="3"></textarea></br>';
+        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '"rows="3">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
@@ -134,22 +157,32 @@ function completeTaskModalText(eventToComplete) {
 function saveDocQuestions(groupNum){
     var task_id = getEventJSONIndex(groupNum); 
     var ev = flashTeamsJSON["events"][task_id];
-    var outputList = ev["outputs"].split(",");
-    var outputQMap = {};
-    for (i = 0; i < outputList.length; i++){
-         outputQ = []
-         for (j = 0; j < outputQuestions.length; j++){
-             outputQ.push([outputQuestions[j], $("#output" + i + "q" + j).val()]);
+    if (ev["outputs"]){
+        var outputList = ev["outputs"].split(",");
+        var outputQMap = {};
+        for (i = 0; i < outputList.length; i++){
+             outputQ = []
+             for (j = 0; j < outputQuestions.length; j++){
+                 outputQ.push([outputQuestions[j], $("#output" + i + "q" + j).val()]);
+            }
+            outputQMap[outputList[i]] = outputQ;
         }
-        outputQMap[outputList[i]] = outputQ;
+        ev["outputQs"] = outputQMap;
     }
-    ev["outputQs"] = outputQMap;
     var docQuestions = [];
     for (i = 0; i < generalQuestions.length; i++){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
     ev["docQs"] = docQuestions;
 }
+
+//Called when user presses "Save" button
+var saveQuestions = function(groupNum){
+    saveDocQuestions(groupNum);
+    updateStatus(true);
+}
+
+
 //Called when user confirms event completion alert
 var completeTask = function(groupNum){
     //Update the status of a task
@@ -157,7 +190,6 @@ var completeTask = function(groupNum){
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     eventToComplete.status = "completed";
     saveDocQuestions(groupNum);
-    console.log(eventToComplete["outputQs"]);
 
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
