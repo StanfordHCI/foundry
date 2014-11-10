@@ -1,0 +1,26 @@
+
+
+	<b><em>Emails for selected workers:</em></b>
+
+	<br />
+
+	<!-- <% @abc.to_s.gsub('"', '')%> -->
+	
+	<%if !@abc.nil? %>
+		<%= @abc.join(", ") %>
+	<%end%>
+
+	
+	<br />
+
+
+
+
+<%= javascript_include_tag "/assets/jquery" %>
+<%= javascript_include_tag "/assets/jquery_ujs" %>
+<%= javascript_include_tag "bootstrap/bootstrap.min" %>
+<%= javascript_include_tag "bootstrap-editable.min" %>
+<%= javascript_include_tag "bootstrap-tour.min" %>
+<!-- <% javascript_include_tag "bootstrap-table" %> -->
+
+<!-- <% javascript_include_tag "/assets/authoring/panels" %> -->

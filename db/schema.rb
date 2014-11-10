@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729170357) do
+ActiveRecord::Schema.define(version: 20141021055050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20140729170357) do
 
   create_table "flash_teams", force: true do |t|
     t.string   "name"
+    t.string   "author"
     t.text     "json"
     t.text     "status"
     t.text     "notification_email_status"
@@ -93,6 +94,18 @@ ActiveRecord::Schema.define(version: 20140729170357) do
 
   create_table "users", force: true do |t|
     t.string   "username"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workers", force: true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "panel"
+    t.string   "skype_username"
+    t.string   "odesk_url"
+    t.string   "timezone_utc"
+    t.text     "additional_info"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

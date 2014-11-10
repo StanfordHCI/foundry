@@ -24,15 +24,8 @@ var ROW_HEIGHT = ROW_HEIGHT || 80;
 
 var BKG_COLOR = "#202020";
 var STROKE_COLOR = "rgba(233,233,233,0.2)";
-var MARKER_COLOR = "#28282b";
-var ALT_MARKER_COLOR = "#2c2c2f";
-
-var x = d3.scale.linear()
-    .domain([0, TOTAL_HOUR_PIXELS])
-
-var y = d3.scale.linear() 
-    .domain([17, 550])
-    .range([17, 550]);
+var MARKER_COLOR = 'rgba(108,108,111,0.08)';
+var ALT_MARKER_COLOR = 'rgba(136, 136, 139, 0.08)';
 
 var current = undefined;
 var currentUserEvents = [];
@@ -52,15 +45,217 @@ $("#timeline-container").css({
 var header_svg = d3.select("#timeline-container").append("svg")
     .attr("width", SVG_WIDTH)
     .attr("height", HEADER_HEIGHT)
+    .attr("class", "header-svg")
     .style({"display": "block",
             "border-bottom": "solid 1px " + STROKE_COLOR});
 
 var timeline_svg = d3.select("#timeline-container").append("svg")
+    .attr("class", "timeline-svg chart")
     .attr("width", SVG_WIDTH)
     .attr("height", SVG_HEIGHT)
-    .attr("class", "chart");
 
 //console.log("APPENDED TIMELINE TO DOM!");
+
+window._foundry = {
+  timeline: {
+    // marker that triggers a mousedown event
+    mousedownMarker: undefined,
+    
+    // row of the marker that last triggered a mousedown event
+    mousedownMarkerRow: undefined,
+    
+    // true if the mouse is currently held down over the timeline, false
+    // otherwise
+    mousedownOnMarker: false,
+    
+    // first and last markers of the current selection
+    rangeStartMarker: undefined,
+    rangeEndMarker: undefined,
+    
+    selection: undefined,
+    
+    stepInterval: STEP_INTERVAL,
+    
+    stepWidth: STEP_WIDTH,
+    
+    timelineSvg: timeline_svg,
+    
+    svgHeight: SVG_HEIGHT,
+    
+    svgWidth: SVG_WIDTH,
+    
+    headerSvg: header_svg,
+    
+    rowHeight: ROW_HEIGHT,
+    
+    highlightSvg: undefined,
+    
+    strokeColor: STROKE_COLOR,
+    
+    /* highlightMarkerRange
+     * --------------------
+     * highlights a range given two markers and a row
+     */
+    highlightMarkerRange: function(m1, m2, row) {
+      var timeline = _foundry.timeline;
+      var timelineSvg = _foundry.timeline.timelineSvg;
+      
+      var left = parseInt(m1.getAttribute("x"));
+      var width =   parseInt(m2.getAttribute("x"))
+                  + parseInt(m2.getAttribute("width"))
+                  - left;
+      
+      if(!timeline.selection) {
+        timeline.selection = {};
+      }
+      
+      timeline.selection.startMarker = m1;
+      timeline.selection.endMarker = m2;
+      
+      if(!timeline.selection.svg) {
+        timeline.selection.svg = timelineSvg.insert("rect", ":first-child")
+          .attr("class", "selection");
+      }
+      
+      timeline.selection.svg
+        .attr("x", left)
+        .attr("y", row * timeline.rowHeight)
+        .attr("width", width)
+        .attr("height", timeline.rowHeight)
+        .style("fill", "rgba(75, 158, 214, 0.52)");
+    },
+    
+    clearSelection: function() {
+      var timeline = _foundry.timeline;
+      
+      timeline.timelineSvg.select("rect.selection").remove();
+      
+      timeline.rangeStartMarker = undefined;
+      timeline.rangeEndMarker = undefined;
+      timeline.selection = undefined;
+    },
+    
+    getRangeDuration: function(m1, m2) {
+      var timeline = window._foundry.timeline;
+      var left = parseInt(m1.getAttribute("x"));
+      var width =   parseInt(m2.getAttribute("x"))
+                  + parseInt(m2.getAttribute("width"))
+                  - left;
+      return (width / timeline.stepWidth) * timeline.stepInterval;
+    },
+    
+    /* timelineMousedownFn
+     * -------------------
+     * mousedown function for the timeline svg, kept here
+     * for maintenance purposes.
+     *
+     * Enables drag selection
+     */
+    timelineMousedownFn: function(e) {
+      e = e || window.event;
+      e = $.event.fix(e);
+      
+      // event delegation
+      var target = e.target || e.srcElement;
+      var targetClassName = target.className.baseVal;
+      if(targetClassName.indexOf("marker") === -1) {return;}
+      
+      var timeline = window._foundry.timeline;
+      timeline.mousedownMarker = target;
+      
+      // remove all old highlights
+      timeline.clearSelection();
+      
+      // determine which row was clicked
+      var offset = e.pageY - $('.timeline-svg').offset().top;
+      timeline.mousedownMarkerRow = Math.floor(offset/timeline.rowHeight);
+      
+      // Indicate the start of a range and that the
+      // mouse is currently down on the timeline. This
+      // should be reset on mouseup
+      timeline.mousedownOnMarker = true;
+      timeline.rangeStartMarker = target;
+      
+      // add the selected class to the marker
+      if(targetClassName.indexOf("selected") === -1) {
+        target.className.baseVal += " selected";
+      }
+    },
+    
+    timelineMouseoverFn: function(e) {
+      var timeline = window._foundry.timeline;
+      
+      // if the mouse wasn't pushed down on a marker,
+      // cut out early
+      if(!timeline.mousedownOnMarker) {return;}
+      
+      e = e || window.event;
+      
+      // event delegation
+      var target = e.target || e.srcElement;
+      var targetClassName = target.className.baseVal;
+      if(targetClassName.indexOf("marker") === -1) {return;}
+      
+      
+      if(timeline.mousedownMarker !== undefined) {
+        var targetLeft = parseInt(target.getAttribute("x"));
+        var startLeft = parseInt(timeline.mousedownMarker.getAttribute("x"));
+        
+        if(targetLeft > startLeft) {
+          // dragging forward
+          timeline.rangeStartMarker = timeline.mousedownMarker;
+          timeline.rangeEndMarker = target;
+        } else {
+          // dragging backward
+          timeline.rangeStartMarker = target;
+          timeline.rangeEndMarker = timeline.mousedownMarker;
+        }
+        
+        timeline.highlightMarkerRange(
+          timeline.rangeStartMarker,
+          timeline.rangeEndMarker,
+          timeline.mousedownMarkerRow
+        );
+      }
+    },
+    
+    // should be attached to the window mouseup event
+    timelineMouseupFn: function(e) {
+      var timeline = window._foundry.timeline;
+      
+      timeline.mousedownMarker = undefined;
+      timeline.mousedownOnMarker = false;
+      
+      if(timeline.selection) {
+        timeline.createEventFromSelection();
+      }
+    },
+    
+    createEventFromSelection: function() {
+      var timeline = window._foundry.timeline;
+      if(!timeline.selection) return;
+      var point = [
+        timeline.selection.svg.attr("x"),
+        timeline.selection.svg.attr("y")
+      ];
+      //console.log(point);
+      
+      var duration = timeline.getRangeDuration(
+          timeline.rangeStartMarker,
+          timeline.rangeEndMarker
+      );
+      
+      // TODO: give some sort of response
+      if(duration < 30) return;
+      
+      newEvent(point, duration);
+      timeline.clearSelection();
+    },
+  },
+};
+
+window.addEventListener("mouseup", _foundry.timeline.timelineMouseupFn);
+window.addEventListener("keyup", _foundry.timeline.timelineKeyupFn);
 
 //Extend the timeline the necessary amount for the project
 function initializeTimelineDuration() {
@@ -122,6 +317,8 @@ function calcAddHours(currentHours) {
 //Should have updated the variables: TIMELINE_HOURS, TOTAL_HOUR_PIXELS, SVG_WIDTH, XTicks
 //Redraws timeline based on those numbers
 function redrawTimeline() {
+  var timeline = window._foundry.timeline;
+  
   // an array of the numbers [0, 1, 2, ..., numSteps-1]
   var intervals = (
       function (steps){
@@ -132,39 +329,97 @@ function redrawTimeline() {
           return a;
       })(TOTAL_HOUR_PIXELS / STEP_WIDTH);
 
-  console.log(SVG_HEIGHT);
-  console.log(YTicks);
-  console.log(ROW_HEIGHT);
-
+  var timelineSvg = timeline.timelineSvg;
   //Reset overlay and svg width
   document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
-  timeline_svg.attr("width", SVG_WIDTH);
+  timelineSvg.attr("width", SVG_WIDTH);
   
   //Remove all existing grid lines & background
-  timeline_svg.selectAll("line").remove();
-  timeline_svg.selectAll("rect.background").remove();
+  timelineSvg.selectAll("line").remove();
+  timelineSvg.selectAll("rect.marker").remove();
 
+  // reset timeline svg width
+  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
+  
+  // draw alternating markers to timeline svg
+  timelineSvg.selectAll("rect.marker")
+      .data(intervals) // hour intervals
+      .enter().append("rect")
+          .attr("class", "marker")
+          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
+          .attr("x", function(d) {return d * STEP_WIDTH})
+          .attr("width", STEP_WIDTH)
+          .attr("y", 0)
+          .attr("height", SVG_HEIGHT)
+
+  // draw x grid lines to timeline svg
+  timelineSvg.selectAll("line.x")
+      .data(intervals)
+      .enter().append("line")
+      .attr("class", "x")
+      .attr("x1", function(d) {return d * STEP_WIDTH})
+      .attr("x2", function(d) {return d * STEP_WIDTH})
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT)
+      .style("stroke", STROKE_COLOR);
+
+  // draw y grid lines to timeline svg
+  _foundry.timeline.numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
+  var numRows = _foundry.timeline.numRows;
+  timelineSvg.selectAll("line.y")
+      .data(intervals.slice(1, numRows+1))
+      .enter().append("line")
+        .attr("class", "y")
+        .attr("x1", 0)
+        .attr("x2", "100%")
+        .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
+        .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
+        .style("stroke", _foundry.timeline.strokeColor);
+    
+  //Redraw Add Time Button
+  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
+  
+  //Remove existing X-axis labels
+  timelineSvg.selectAll("text.timelabel").remove();
+  numMins = -60;
+  
+  //Add ability to draw rectangles on extended timeline
+  timelineSvg
+      .on("mousedown", _foundry.timeline.timelineMousedownFn)
+      .on("mouseover", _foundry.timeline.timelineMouseoverFn);
+
+  //Redraw the cursor
+  timelineSvg.append("line")
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT)
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("class", "cursor")
+      .style("stroke", "red")
+      .style("stroke-width", "2")
+
+    var headerSvg = timeline.headerSvg;
   // reset header svg width
-  header_svg.attr("width", TOTAL_HOUR_PIXELS)
+  headerSvg.attr("width", TOTAL_HOUR_PIXELS)
   
   // draw lines to header svg
-  header_svg.selectAll("line")
+  headerSvg.selectAll("line")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("line")
-      .attr("x1", function(d) {return d * (STEP_WIDTH * 4)})
-      .attr("x2", function(d) {return d * (STEP_WIDTH * 4)})
+      .attr("x1", function(d) {return d * (timeline.stepWidth * 4)})
+      .attr("x2", function(d) {return d * (timeline.stepWidth * 4)})
       .attr("y1", HEADER_HEIGHT - 12)
       .attr("y2", HEADER_HEIGHT)
-      .style("stroke", STROKE_COLOR);
+      .style("stroke", timeline.strokeColor);
   
   // draw timeline time intervals to header svg
-  header_svg.selectAll("text.time-marker")
+  headerSvg.selectAll("text.time-marker")
       .data(intervals.slice(0, intervals.length/4))
       .enter().append("text")
           .attr("class", "time-marker")
           .style("width", STEP_WIDTH * 4)
           .text(function(d) {return d + ':00';})
-          .attr("x", function(d) {return d * (STEP_WIDTH * 4) + 4})
+          .attr("x", function(d) {return d * (timeline.stepWidth * 4) + 4})
           .attr("y", HEADER_HEIGHT - 2)
           .style({
               "font-family": "Helvetica Neue",
@@ -173,89 +428,24 @@ function redrawTimeline() {
               "fill": "#777",
           });
 
-  // reset timeline svg width
-  timeline_svg.attr("width", TOTAL_HOUR_PIXELS);
-  
-  // draw alternating markers to timeline svg
-  timeline_svg.selectAll("rect.background")
-      .data(intervals.slice(0, intervals.length/4)) // hour intervals
-      .enter().append("rect")
-          .attr("class", "background")
-          .style("fill", function(d) {return d % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
-          .attr("x", function(d) {return d * STEP_WIDTH * 4})
-          .attr("width", STEP_WIDTH * 4)
-          .attr("y", 0)
-          .attr("height", SVG_HEIGHT-65)
-
-  // draw x grid lines to timeline svg
-  timeline_svg.selectAll("line.x")
-      .data(intervals)
-      .enter().append("line")
-      .attr("class", "x")
-      .attr("x1", function(d) {return d * STEP_WIDTH})
-      .attr("x2", function(d) {return d * STEP_WIDTH})
-      .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT-65)
-      .style("stroke", STROKE_COLOR);
-  
-  //Draw y axis grid lines
-  timeline_svg.selectAll("line.y")
-      .data(intervals.slice(0, YTicks-1)) 
-      .enter().append("line")
-      .attr("class", "y")
-      .attr("x1", 0)
-      .attr("x2", "100%")
-      // TODO: same hack carried over, adds height to first row
-      //       will adjust blocks on that row to stay at the same
-      //       height as blocks on lower rows
-      .attr("y1", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
-      .attr("y2", function(d) {return 20 + (d+1) * ROW_HEIGHT - 3})
-      .style("stroke", STROKE_COLOR);
-      
-    
-  //Redraw Add Time Button
-  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
-  
-  //Remove existing X-axis labels
-  timeline_svg.selectAll("text.timelabel").remove();
-  numMins = -60;
-  
-  //Add ability to draw rectangles on extended timeline
-  timeline_svg.append("rect")
-      .attr("class", "background")
-      .attr("width", SVG_WIDTH)
-      .attr("height", SVG_HEIGHT)
-      .attr("fill", "white")
-      .attr("fill-opacity", 0)
-      .on("mousedown", function() {
-          var point = d3.mouse(this);
-          newEvent(point);
-      }); 
-
-  //Redraw the cursor
-  timeline_svg.append("line")
-      .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT-50)
-      .attr("x1", 0)
-      .attr("x2", 0)
-      .attr("class", "cursor")
-      .style("stroke", "red")
-      .style("stroke-width", "2")
-
   //Get the latest time and team status, update x position of cursor
   cursor = timeline_svg.select(".cursor");
-  var latest_time;
+  
+  //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
+  //and the same exact code is included in awareness.js
+  
+  /* var latest_time;
   if (in_progress){
       latest_time = (new Date).getTime();
   } else {
       latest_time = loadedStatus.latest_time;
-  }
+  }*/
   
   //Next line is commented out after disabling the ticker
   //cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
   //move all existing events back on top of timeline
-  $(timeline_svg.selectAll('g')).each(function() {
+  $(timelineSvg.selectAll('g')).each(function() {
       $('.chart').append(this);
   });
 }

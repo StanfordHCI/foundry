@@ -31,6 +31,10 @@ var generalQuestions = ["Please explain all other design or execution decisions 
     drawEvent(eventObj); //Will update color
 
     console.log("redraw event after start");
+
+    //chaning start button to complete button on the task modal
+    $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+    $("#start-end-task").html('Complete');         
  }
 
 //Alert firing on event complete buttons
@@ -158,7 +162,11 @@ var completeTask = function(groupNum){
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
     //Update database, must be false b/c we are not using the old ticker
-    updateStatus(false);
+    //updateStatus(false);
+    
+    /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
+    I think updateStatus needs to be true since the team is still in progress when you complete a task */
+    updateStatus(true);
     drawEvent(eventToComplete);
 
     //Message the PC that the task has been completed

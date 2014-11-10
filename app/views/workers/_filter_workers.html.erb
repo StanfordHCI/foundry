@@ -1,0 +1,69 @@
+
+<p id="panel_results">
+	<b><em>Emails for all workers this panel:</em></b>
+
+	<br />
+	<!-- <% @fw.to_s.gsub('"', '')%> -->
+	
+	<%= @fw.join(", ")%>
+	
+	<br />
+	<br />
+</p>
+
+
+<div>
+	<table class="table table-bordered table-striped">
+	    <thead>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Skype Username</th>
+			<th>oDesk Profile URL</th>
+			<th>Timezone in UTC</th>
+			<th>Additional Info</th>
+			<th>Panel</th>
+			<th>Select</th>
+			<th>Edit/Delete</th>
+	    </thead>
+	    <tbody>
+			<% @workers.each do |worker| %>
+			    <tr>
+			        <td><%= worker.name %></td>
+			        <td><%= worker.email %></td>
+			        <td><%= worker.skype_username %></td>
+			        <td><%= worker.odesk_url %></td>
+			        <td><%= worker.timezone_utc %></td>
+			        <td><%= worker.additional_info %></td>
+			        <td><%= worker.panel %></td>
+			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+					<td><a class="icon-edit" data-toggle="modal" href="#modal-window" data-remote-target="#modal-window .modal-body" data-load-remote="<%= edit_worker_path(worker) %> #panelregform"></a>
+			        | <%= link_to "", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %> </td> 
+			        
+			    </tr>
+			<% end %>
+	    </tbody>
+	</table>
+</div>
+
+			<div class="modal hide fade" id="modal-window" style="width: 560px; margin-left: -230px;">
+				  <div class="modal-header">
+				    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				    <h3>Edit Worker</h3>
+				  </div>
+				  <div class="modal-body">
+				      <p> Loading... </p>
+				  </div>
+				</div>
+				
+				
+<p id="worker_results">
+	<%=render :partial => "workers/filter_workers_emails"%>
+</p>
+
+
+<%= javascript_include_tag "/assets/authoring/panels" %>
+
+
+
+
+

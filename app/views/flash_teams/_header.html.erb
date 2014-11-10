@@ -1,0 +1,19 @@
+<header id="foundry-header">
+  <div class="menu-button icon active"></div>
+  <div class="logo small">
+    <span>Fo.</span>
+  </div>
+  
+  
+  <div class="span3 ft-buttons" id="ft-buttons-left" style="position:absolute;left:100px;top:12px;">
+    <input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
+    <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Tour"/>
+  </div>
+   
+   <% if in_author_view %>
+     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
+       <input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
+       <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
+     </div> 
+   <% end %>
+</header>

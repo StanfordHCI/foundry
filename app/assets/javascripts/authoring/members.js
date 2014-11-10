@@ -74,18 +74,38 @@ function setCurrentMember() {
 };
 
 
-function renderPills(members) {
-    $("#memberPills").html("");
-    for (var i=0;i<members.length;i++){
-        var member = members[i];
-        var member_id = member.id;
-        var member_name = member.role;
-        var member_color = member.color;
-        $("#memberPills").append('<li class="active pill' + member_id + '" id="mPill_' + member_id + '""><a>' + member_name 
-            + '<div class="close" onclick="confirmDeleteMember(' + member_id + '); updateStatus(false);">  X</div></a></li>');
+function createRoleHtml(member) {
+  return '' +
+  '<div class="role" id="mPill_' + member.id + '">' + 
+    '<div class="indicator" style="background-color:' + member.color + '"></div>' +
+    '<span class="name">' + member.role + '</span>' +
+    '<div class="clear"></div>' +
+  '</div>';
+}
 
-        renderMemberPillColor(member_id);
+/*
+ * Updates the text for any display of the number of roles
+ * (e.g. a span with the class "num-roles") with the value
+ * passed as num
+ */
+function updateNumRolesDisplay(num) {
+  // Update the number of roles display
+  var numRolesDisplays = $('.num-roles');
+  for(var i = 0; i < numRolesDisplays.length; i++) {
+    numRolesDisplays[i].innerHTML = num;
+  }
+}
+
+function renderPills(members) {
+    var membersWrap = $(".membersWrap");
+    membersWrap.html("");
+    
+    for (var i=members.length-1;i>=0;i--){
+        var html = createRoleHtml(members[i]);
+        membersWrap.prepend(html);
     }
+    
+    updateNumRolesDisplay(members.length);
 };
 
 
