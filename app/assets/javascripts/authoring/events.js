@@ -279,7 +279,7 @@ function getEventFromId(id) {
 };
 
 function checkEventsCompleted(events) {
-    for (int i=0; i<events.length; i++){
+    for (var i=0; i<events.length; i++){
         var event_obj = getEventFromId(events[i]);
         if (event_obj.completed_x == null){
             return false;
