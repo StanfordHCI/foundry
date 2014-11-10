@@ -1,5 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Quicksand:300);
 
+html {
+  font-weight: 200;
+}
+
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -51,7 +55,7 @@ $primary-border: solid 1px rgba(255,255,255,0.08);
   top: 12px;
   left: 12px;
 
-  background-image: url('../assets/icons/menu/menu.svg');
+  background-image: url("../assets/icons/menu/menu.svg");
   background-size: 24px 24px;
   width: 40px;
   height: 40px;
@@ -113,12 +117,48 @@ $left-sidebar-width: 251px;
   box-sizing: border-box;
   width: $left-sidebar-width;
   color: #858585;
-  overflow: auto;
+  overflow: visible!important;
   border-right: $primary-border;
   background-color: #1e2324;
   
   @include box-shadow( 2px 0 4px rgba(0,0,0,0.18) );
   @include transition( (margin-left 0.2s, left 0.2s) );
+}
+
+#left-sidebar .sidebar-item {
+  min-height: 140px;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+#left-sidebar .sidebar-item .header {
+  border-bottom: solid 1px rgba(233,233,233,0.08);
+  padding: 11px 0;
+}
+
+#left-sidebar .sidebar-item .header .main-header {
+  font-family: 'Helvetica Neue', sans-serif;
+  color: white;
+  font-weight: 200;
+  font-size: 20px;
+  line-height: 15px;
+  display: inline-block;
+  margin: 0 0 0 11px;
+}
+
+#left-sidebar .sidebar-item .header .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.clear {
+  clear: both;
+}
+
+#left-sidebar .sidebar-item #projectOverview {
+  color: white;
+  text-align: center;
+  margin-top: 24px;
 }
 
 /* timeline styles */
@@ -129,11 +169,12 @@ $left-sidebar-width: 251px;
   height: 100%;
   background: #202020;
   overflow: hidden;
-  border-radius: 4px 0 0 0;
   margin: 11px 0 0 11px;
   padding: 11px;
   box-sizing: border-box;
-  transition: left 0.2s;
+  
+  @include border-radius ( 4px 0 0 0 );
+  @include transition( (left 0.2s) );
 }
 
 /* to be deleted */
@@ -147,9 +188,131 @@ $left-sidebar-width: 251px;
   font-size: 11px;
   line-height: 14px;
   text-align: center;
-  border-radius: 14px;
+  
+  @include border-radius( 14px );
 }
 
 .info-sign::after {
   content: "i";
+}
+
+
+/* left-sidebar roles */
+
+.role {
+  padding: 2px 0 2px 8px;
+  cursor: pointer;
+  margin-top: 2px;
+  
+  font-size: 13px;
+  
+  @include transition( (background-color 0.2s, border 0.2s) );
+}
+
+.role:hover {
+  color: white;
+}
+.role:hover .indicator.plus {
+  border-color: white;
+  transition: background 0.5s;
+}
+
+.role.valid .indicator.plus {
+  color: rgba(0,0,0,0);
+  border-color: white;
+  border-size: 11px;
+  
+  background-size: cover;
+  background-image: url('../assets/icons/check/check.svg');
+}
+
+.role .indicator {
+  display: inline-block;
+  border-radius: 40px;
+  float: right;
+  margin-top: 4px;
+  height: 16px;
+  width: 16px;
+  
+  border: solid 2px rgba(0,0,0,0);
+  @include transition( (border-color 0.2s) );
+}
+
+.role .indicator:hover {
+  border-color: white;
+}
+
+.role .indicator.plus {
+  /* background-color: rgba(233,233,233,0.18); */
+  text-align: center;
+  line-height: 14px;
+  font-weight: bold;
+  border: solid 2px;
+}
+
+.role .name {
+  font-size: 13px;
+  line-height: 30px;
+  float: left;
+  
+  @include transition( (margin-left 0.4s) );
+}
+
+.role.add-role input[type="text"],
+.role.add-role textarea {
+  float: left;
+  background: none;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  color: white;
+  font: inherit;
+  border: none;
+  border-bottom: solid 1px rgba(255, 255, 255, 0.38);
+  height: 30px;
+  width: 80%;
+}
+
+.role.add-role input[type="text"]:focus,
+.role.add-role textarea:focus {
+  box-shadow: none;
+}
+
+/* icons */
+.icon {
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.check.icon {
+  background-image: url("../assets/icons/check/check.svg");
+}
+
+.group.icon {
+  background-image: url("../assets/icons/group/group.svg");
+}
+
+/* animations */
+@-webkit-keyframes spin {
+  18% {
+    -webkit-transform: rotate(-40deg);
+  }
+  60% {
+    -webkit-transform: rotate(180deg);
+  }
+  85% {
+    -webkit-transform: rotate(370deg);
+  }
+  95% {
+    -webkit-transform: rotate(350deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.spin-anim {
+  -webkit-animation: spin 1s;
 }
