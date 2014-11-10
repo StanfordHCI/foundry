@@ -220,7 +220,9 @@ function getTaskOverviewContent(groupNum){
         for (i = 0; i < eventOutputs.length; i++){
             content += "<b>" + eventOutputs[i] + "</b>";
             for (j = 0; j < outputQs[eventOutputs[i]].length; j++){
-                content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
+                if (outputQs[eventOutputs[i]][j][1] != ""){
+                    content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
+                }
             }
         }
     }
@@ -228,8 +230,10 @@ function getTaskOverviewContent(groupNum){
     if (ev.docQs){
         docQs = ev.docQs;
         for (i = 0; i < docQs.length; i++){
-            content += "<b>" + docQs[i][0] + ": </b>";
-            content += "<p>" + docQs[i][1] + "</p>";
+            if (docQs[i][1] != ""){
+                content += "<b>" + docQs[i][0] + ": </b>";
+                content += "<p>" + docQs[i][1] + "</p>";
+            }
         }
     }
 
