@@ -9,6 +9,7 @@ var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
+var GUTTER = 20;
 
 /*$(document).ready(function(){
     timeline_svg.append("rect")
@@ -355,13 +356,13 @@ function drawMainRect(eventObj, firstTime) {
     if(existingMainRect[0].length == 0){ // first time
         task_g.append("rect")
             .attr("class", "task_rectangle")
-            .attr("x", function(d) {return d.x;})
+            .attr("x", function(d) {return (d.x+(GUTTER/2));})
             .attr("y", function(d) {return d.y;})
             .attr("id", function(d) {
                 return "rect_" + d.groupNum; })
             .attr("groupNum", function(d) {return d.groupNum;})
             .attr("height", RECTANGLE_HEIGHT)
-            .attr("width", width)
+            .attr("width", width-(GUTTER/2))
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
@@ -375,9 +376,9 @@ function drawMainRect(eventObj, firstTime) {
             .call(drag);
     } else {
         task_g.selectAll(".task_rectangle")
-            .attr("x", function(d) {return d.x;})
+            .attr("x", function(d) {return d.x +(GUTTER/2);})
             .attr("y", function(d) {return d.y;})
-            .attr("width", width)
+            .attr("width", width-(GUTTER/2))
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
@@ -398,7 +399,7 @@ function drawRightDragBar(eventObj, firstTime) {
         task_g.append("rect")
             .attr("class", "rt_rect")
             .attr("x", function(d) { 
-                return d.x + width; })
+                return d.x + width - (GUTTER/4); })
             .attr("y", function(d) {return d.y})
             .attr("id", function(d) {
                 return "rt_rect_" + d.groupNum; })
@@ -411,7 +412,7 @@ function drawRightDragBar(eventObj, firstTime) {
             .call(drag_right);
     } else {
         task_g.selectAll(".rt_rect")
-            .attr("x", function(d) {return d.x + width})
+            .attr("x", function(d) {return d.x + width - (GUTTER/4);})
             .attr("y", function(d) {return d.y});
     }
 }
@@ -424,7 +425,7 @@ function drawLeftDragBar(eventObj, firstTime) {
     if(existingLeftDragBar[0].length == 0){ // first time
         task_g.append("rect")
             .attr("class", "lt_rect")
-            .attr("x", function(d) { return d.x})
+            .attr("x", function(d) { return (d.x + (GUTTER/4));})
             .attr("y", function(d) {return d.y})
             .attr("id", function(d) {
                 return "lt_rect_" + d.groupNum; })
@@ -437,7 +438,7 @@ function drawLeftDragBar(eventObj, firstTime) {
             .call(drag_left);
     } else {
         task_g.selectAll(".lt_rect")
-            .attr("x", function(d) {return d.x}) 
+            .attr("x", function(d) {return d.x + (GUTTER/4);}) 
             .attr("y", function(d) {return d.y});
     }
 }

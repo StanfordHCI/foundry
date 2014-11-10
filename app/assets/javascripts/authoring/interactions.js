@@ -11,14 +11,14 @@ var interaction_counter = undefined;
 //For Interactions
 timeline_svg.append("defs").append("marker")
     .attr("id", "arrowhead")
-    .attr("refX", 0)
+    .attr("refX", 1)
     .attr("refY", 2)
-    .attr("markerWidth", 5)
-    .attr("markerHeight", 4)
+    .attr("markerWidth", 3) 
+    .attr("markerHeight", 2)
     .attr("stroke", "gray")
     .attr("fill", "gray")
     .append("path")
-        .attr("d", "M 0,0 V 4 L2,2 Z");
+        .attr("d", "M 0,0 V 2 L2,2 Z");
 
 //Called when a user clicks a task rectangle (aka event)
 //Determines if the user is trying to draw an interaction and if so, what type
@@ -224,7 +224,7 @@ function drawHandoff(handoffData) {
                 + " 0 0,0 " + x2 + "," + (y2+15); 
         })
         .attr("stroke", "gray")
-        .attr("stroke-width", 7)
+        .attr("stroke-width", 3)
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
 
