@@ -753,6 +753,7 @@ function drawEachHandoffForEvent(eventObj){
                 var ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
                 var ev2 = eventObj;
             }  
+            
             if (draw){
                 //Reposition an existing handoff
                 var x1 = handoffStart(ev1);
@@ -760,17 +761,8 @@ function drawEachHandoffForEvent(eventObj){
                 var x2 = ev2.x + 3;
                 var y2 = ev2.y + 50;
                 $("#interaction_" + inter["id"])
-                    .attr("x1", x1)
-                    .attr("y1", y1)
-                    .attr("x2", x2)
-                    .attr("y2", y2)
                     .attr("d", function(d) {
-                        var dx = x1 - x2,
-                        dy = y1 - y2,
-                        dr = Math.sqrt(dx * dx + dy * dy);
-                        //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
-                        return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
-                        + " 0 0,0 " + x2 + "," + (y2+15); 
+                        return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
                     });
             }
         }

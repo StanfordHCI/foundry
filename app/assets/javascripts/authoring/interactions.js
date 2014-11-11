@@ -183,7 +183,7 @@ function handoffStart(firstEvent){
 }
 
 // Draw a handoff for the first time
-// Don't call this directly. Call 'drawEachHandoff' in events.js instead.
+// Don't call this directly. Call 'drawEachHandoffForEvent' in events.js instead.
 function drawHandoff(handoffData) {
     var task1Id = handoffData["event1"];
     var task2Id = handoffData["event2"];
@@ -226,9 +226,9 @@ function drawHandoff(handoffData) {
             return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
                 + " 0 0,0 " + x2 + "," + (y2+15);*/
         })
-        .attr("stroke", "pink")
+        .attr("stroke", function(d) { return colorBox.grabColor();})
         .attr("stroke-width", 3)
-        .attr("stroke-opacity", ".6")
+        .attr("stroke-opacity", ".7")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
 
@@ -249,7 +249,8 @@ function drawHandoff(handoffData) {
 }
 
 function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
-    var pathStr = "M " + x1 + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
+    var pathStr = "M " + (x1-10) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
+    pathStr += "L " + x1 + ", " + y1 + "\n";
 
     if (y1 <= y2) { //Event 1 is higher
         pathStr += "L " + x1 + ", " + (y1+25) + "\n";
