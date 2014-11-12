@@ -13,13 +13,17 @@
 	
 	<!-- render header -->
 	<%= render :partial => "header", :locals => {:in_author_view => @in_author_view} %>
-	<!-- begin sidebar -->
+	<!-- begin left sidebar -->
     <%= render :partial => "left_sidebar",
                :locals => {:author_runtime => @author_runtime,
                            :in_author_view => @in_author_view,
                            :in_expert_view => @in_expert_view,
                            :flash_team => @flash_team} %>
-  <!-- end of sidebar -->
+  <!-- end of left sidebar -->
+  
+  <!-- begin right sidebar -->
+    <%= render :partial => "right_sidebar" %>
+  <!-- end of right sidebar -->
 	
 	<% if @in_author_view %>
 
@@ -110,12 +114,16 @@
       function setEditPage() {
           document.body.style.backgroundColor = "#101010";
           document.body.style.overflow = "hidden";
+          
+          var header = $("#foundry-header");
           var leftSidebar = $("#left-sidebar").css({
-              height: (window.innerHeight - $("#foundry-header").height()) + "px",
-              overflow: "auto",
+              height: (window.innerHeight - header.outerHeight()) + "px",
+          });
+          
+          var rightSidebar = $("#right-sidebar").css({
+              height: (window.innerHeight - header.outerHeight()) + "px",
           });
   
-          var header = $("#foundry-header");
           var timelineContainer = $("#timeline-container");
           timelineContainer.css({
               width:  window.innerWidth
@@ -123,7 +131,7 @@
                     - (2*parseFloat(timelineContainer.css("margin-left")))
                     + "px",
               height:  window.innerHeight
-                     - header.height()
+                     - header.outerHeight()
                      - (parseFloat(timelineContainer.css("margin-top")))
                      + "px",
           });
