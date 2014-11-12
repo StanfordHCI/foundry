@@ -107,21 +107,25 @@ var currentdate = new Date();
 
 var name;
 
+function sendChatMessage() {
+  var text = $('#messageInput').val();
+  var uniq_u=getParameterByName('uniq');
+  
+  if(uniq_u == undefined || uniq_u == ""){
+    uniq_u = 'Author';
+  }
+  
+  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
+  $('#messageInput').attr("placeholder", "Type your message here...").val('').blur();
+}
 
 $('#messageInput').keydown(function(e){
     if (e.keyCode == 13) {
-        //console.log("PRESSED RETURN KEY!");
-        var text = $('#messageInput').val();
-        var uniq_u=getParameterByName('uniq');
-        
-        if(uniq_u == undefined || uniq_u == ""){
-	        uniq_u = 'Author';
-        }
-        
-        myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
-        $('#messageInput').attr("placeholder", "Type your message here...").val('').blur();
+        sendChatMessage();
     }
 });
+
+$('#sendChatButton').click(sendChatMessage);
 
 //load all chats that were sent before page was reloaded
 /*myDataRef.once('value', function(snapshot) {

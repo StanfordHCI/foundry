@@ -51,20 +51,23 @@
     border-color: rgba(0, 136, 204, 0.7);
   }
   
-  .post-comment-button {
+  #sendChatButton {
     color: white;
     display: inline-block;
-    padding: 8px 11px;
+    padding: 8px 18px;
     border-radius: 2px;
     background: #3498db;
     margin-top: 8px;
     float: right;
     margin-right: 6px;
     font-weight: 400;
+    
+    transition: background-color 0.4s;
+    cursor: pointer;
   }
   
-  #messageInput:focus + .post-comment-button {
-  
+  #sendChatButton:hover {
+    background-color: #51B4F5;
   }
 </style>
 
@@ -82,7 +85,7 @@
 <div class="entry">
   <textarea type="text" id="messageInput" placeholder="Type your message here..."></textarea>
   <div style="width: 100%;">
-    <div class="post-comment-button">Post comment</div>
+    <div id="sendChatButton">Send</div>
     <div class="clear"></div>
   </div>
 </div>
