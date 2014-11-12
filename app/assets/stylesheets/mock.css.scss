@@ -162,19 +162,28 @@ $left-sidebar-width: 251px;
 }
 
 /* timeline styles */
-#timeline-container {
+#timeline-wrapper {
   position: absolute;
   left: $left-sidebar-width;
   
   height: 100%;
-  background: #202020;
   overflow: hidden;
+}
+
+#timeline-container {
+  height: 100%;
+  background: #202020;
+  
   margin: 11px 0 0 11px;
   padding: 11px;
   box-sizing: border-box;
   
   @include border-radius ( 4px 0 0 0 );
-  @include transition( (left 0.2s) );
+  @include transition( (left 0.2s, width 0.2s) );
+}
+
+#timeline-container .timeline-svg {
+  margin-right: 11px; /* hack: exposes part of right edge of timeline */
 }
 
 /* to be deleted */

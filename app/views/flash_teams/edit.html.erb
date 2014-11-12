@@ -34,10 +34,13 @@
 	    <div class="row-fluid" style="margin-top:64px">
 
 		<div style="margin-left:250px;" class="span9"> <!--Body Content-->
-	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll; height:575px">
-	            	<!-- render partial with timeline --> 
-					<%= render :partial => "timeline" %>
-	        </div>
+		
+		  <div id="timeline-wrapper">
+	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
+	        <!-- render partial with timeline --> 
+				  <%= render :partial => "timeline" %>
+	      </div>
+	    </div>
 		</div> <!-- end of body (e.g., class="span9") -->
 	
 	</div> <!-- end of div class="row-fluid" -->
@@ -124,15 +127,17 @@
               height: (window.innerHeight - header.outerHeight()) + "px",
           });
   
-          var timelineContainer = $("#timeline-container");
-          timelineContainer.css({
+          var timelineWrapper = $("#timeline-wrapper");
+          timelineWrapper.css({
               width:  window.innerWidth
                     - leftSidebar.width()
-                    - (2*parseFloat(timelineContainer.css("margin-left")))
+                    - rightSidebar.width()
+                    // subtract both margins
+                    - ( 2 * parseFloat(timelineWrapper.css("margin-left")))
                     + "px",
               height:  window.innerHeight
                      - header.outerHeight()
-                     - (parseFloat(timelineContainer.css("margin-top")))
+                     - (parseFloat(timelineWrapper.css("margin-top")))
                      + "px",
           });
       }
