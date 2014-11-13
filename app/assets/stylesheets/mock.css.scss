@@ -119,7 +119,7 @@ $left-sidebar-width: 251px;
   color: #858585;
   overflow: visible!important;
   border-right: $primary-border;
-  background-color: #1e2324;
+  /* background-color: #1e2324; */
   
   @include box-shadow( 2px 0 4px rgba(0,0,0,0.18) );
   @include transition( (margin-left 0.2s, left 0.2s) );
@@ -131,12 +131,12 @@ $left-sidebar-width: 251px;
   padding: 0 24px;
 }
 
-#left-sidebar .sidebar-item .header {
+.sidebar .header {
   border-bottom: solid 1px rgba(233,233,233,0.08);
   padding: 11px 0;
 }
 
-#left-sidebar .sidebar-item .header .main-header {
+.sidebar .header .main-header {
   font-family: 'Helvetica Neue', sans-serif;
   color: white;
   font-weight: 200;
@@ -146,7 +146,7 @@ $left-sidebar-width: 251px;
   margin: 0 0 0 11px;
 }
 
-#left-sidebar .sidebar-item .header .icon {
+.sidebar .header .icon {
   width: 15px;
   height: 15px;
 }
@@ -286,6 +286,20 @@ $left-sidebar-width: 251px;
 .role.add-role input[type="text"]:focus,
 .role.add-role textarea:focus {
   box-shadow: none;
+}
+
+/* right sidebar */
+#right-sidebar {
+  position: absolute;
+  right: 0px;
+  width: 300px;
+  top: 64px;
+  z-index: 2;
+  background: black;
+  border-left: solid 1px rgba(233,233,233,0.18);
+  height: 100%;
+  /*padding: 11px;
+  box-sizing: border-box;*/
 }
 
 /* icons */

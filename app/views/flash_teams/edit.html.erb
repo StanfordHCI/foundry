@@ -117,16 +117,16 @@
       function setEditPage() {
           document.body.style.backgroundColor = "#101010";
           document.body.style.overflow = "hidden";
-          
+
           var header = $("#foundry-header");
           var leftSidebar = $("#left-sidebar").css({
               height: (window.innerHeight - header.outerHeight()) + "px",
           });
-          
+
           var rightSidebar = $("#right-sidebar").css({
               height: (window.innerHeight - header.outerHeight()) + "px",
           });
-  
+
           var timelineWrapper = $("#timeline-wrapper");
           timelineWrapper.css({
               width:  window.innerWidth
@@ -140,6 +140,9 @@
                      - (parseFloat(timelineWrapper.css("margin-top")))
                      + "px",
           });
+
+          // resize chat in right sidebar
+          chatResize();
       }
       $(window).resize(setEditPage);
       $(document).ready(setEditPage);

@@ -193,15 +193,21 @@ function displayChatMessage(name, uniq, role, date, text) {
 	//revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
     if(lastWriter!=name){
         lastMessage=(lastMessage+1)%2;
-        var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text).prepend($('<strong/>').text(name+ ' (' + role + ')' + ': ' )).prepend('<br>').prepend($('<em/>').text(dateform));
+        // var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text).prepend($('<strong/>').text(name+ ' (' + role + ')' + ': ' )).prepend('<br>').prepend($('<em/>').text(dateform));
 
-        div1.css('padding-left','5%');
-        div1.appendTo($('#messageList'));
+        //div1.css('padding-left','5%');
+      
+        var dateDiv = $('<div/>').addClass("date").text(dateform);
+        var authorDiv = $('<div/>').addClass("author").text(name + ' (' + role + ')');
+        var textDiv = $('<div/>', {"id": "m"+lastMessage}).addClass("text").text(text);
+      
+        dateDiv.appendTo($('#messageList'));
+        authorDiv.appendTo($('#messageList'));
+        textDiv.appendTo($('#messageList'));
         
-    }else{
-        var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text);
-        div1.css('padding-left','5%');
-        div1.appendTo($('#messageList'));
+    } else{
+        var textDiv = $('<div/>',{"id":"m"+lastMessage}).addClass("text").text(text);
+        textDiv.appendTo($('#messageList'));
     }
     lastWriter=name;
     lastDate = message_date;
@@ -274,6 +280,16 @@ userListRef.on("child_added", function(snapshot) {
 	  .attr("id", getMessageId(snapshot))
 	  .text(user.name + " is " + user.status)
 	  .appendTo("#presenceDiv");
+  
+    // update display for num people online
+    var numOnlineElem = $(".num-online");
+    var numOnline = parseInt(numOnlineElem.text());
+    if(user.status.toLowerCase === "online") {
+      numOnline++;
+    } else if(user.status.toLowerCase === "offline") {
+      numOnline--;
+    }
+    numOnlineElem.text(numOnline);
 });
 
 // Update our GUI to remove the status of a user who has left.
