@@ -217,7 +217,6 @@ function drawHandoff(handoffData) {
         .attr("y2", y2)
         .attr("d", function(d) {
             return routeHandoffPath(ev1, ev2, x1, x2, y1, y2);
-
             //OLD CURVE CODE
             /*var dx = x1 - x2,
                 dy = y1 - y2,
@@ -248,6 +247,8 @@ function drawHandoff(handoffData) {
     });
 }
 
+//Route circuit-like paths for the handoffs
+//Use d3 path to route from event 1 end to event 2 beginning
 function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     var pathStr = "M " + (x1-10) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
     pathStr += "L " + x1 + ", " + y1 + "\n";
@@ -259,9 +260,9 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
         pathStr += "L " + x1 + ", " + (y1-55) + "\n";
         pathStr += "L " + x2 + ", " + (y1-55) + "\n";
     }
-    pathStr += "L " + x2 + ", " + (y2) + "\n";
+    pathStr += "L " + x2 + ", " + y2 + "\n";
+    pathStr += "L " + (x2+10) + ", " + y2 + "\n";
     
-
     return pathStr;
 }
 
