@@ -1,3 +1,8 @@
+// buildDependencyMap -> getDependencyMap, rebuilds every time, dirty bit in future
+// on startTeam, on each client interface, whenever it calls getDependencyMaps first, it can just build it lazily from the
+// current interactions array, and use it
+// so just need to store the interactions in the statusObj, which it already does
+
 window.dependencyAPI = {
 	forward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY AFTER
 	backward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY BEFORE
@@ -5,8 +10,15 @@ window.dependencyAPI = {
 	cache_events_after: {}, // cache of event_id -> array of all event_ids after it
 	/*
 	 * Populates the forward and backward dependency maps by iterating over the interactions just once.
+	 * Usage:
+	 * var dependency_maps = getDependencyMaps(flashTeamsJSON.interactions);
+	 * dependency_maps["forward"] gives you the forward map.
+	 * dependency_maps["backward"] gives you the backward map.
 	 */
-	buildDependencyHashmap: function(interactions){
+	getDependencyMaps: function(interactions){
+		this.forward_dependency_map = {};
+		this.backward_dependency_map = {};
+
 		var num_interactions = interactions.length;
 		for (var i=0; i<num_interactions; i++){
 			var interaction = interactions[i];
@@ -26,6 +38,8 @@ window.dependencyAPI = {
 				}
 			}
 		}
+
+		return {"forward": this.forward_dependency_map, "backward": this.backward_dependency_map};
 	},
 	/*
 	 * Checks whether adding a handoff from event_1_id to event_2_id will lead to the creation of a
@@ -34,19 +48,21 @@ window.dependencyAPI = {
 	checkCycle: function(event_1_id, event_2_id){
 		// check if there is already handoff link from event2 to event1
 		// if so, adding a handoff link from event1 to event2 will create a cycle
-		return checkCycleHelper(this.forward_dependency_map[event_2_id], event_1_id);
+
+		var dependency_maps = getDependencyMaps(flashTeamsJSON.interactions);
+		return checkCycleHelper(dependency_maps["forward"], dependency_maps["forward"][event_2_id], event_1_id);
 	},
 	/*
 	 * Helper recursive function to check cycles in the handoffs
 	 */
-	checkCycleHelper: function(next, target){
+	checkCycleHelper: function(forward_map, next, target){
 		for(var i=0; i<next.length; i++){
 			var event_id = next[i];
 			if (event_id == target){
 				return true;
 			}
-			if (this.forward_dependency_map.hasOwnProperty(event_id)){
-				var events_after = this.forward_dependency_map[event_id];
+			if (forward_map.hasOwnProperty(event_id)){
+				var events_after = forward_map[event_id];
 				var found = checkCycleHelper(events_after);
 				if(found){
 					return true;
@@ -60,16 +76,18 @@ window.dependencyAPI = {
 	 * Caches the results, so it does not need to re-compute them for the same event_id.
 	 */
 	getEventsBefore : function(event_id){
+		var dependency_maps = getDependencyMaps(flashTeamsJSON.interactions);
+
 		if (this.cache_events_before.hasOwnProperty(event_id)){
 			return this.cache_events_before[event_id];
 		}
 
-		if (!this.backward_dependency_map.hasOwnProperty(event_id)){
+		if (!dependency_maps["backward"].hasOwnProperty(event_id)){
 			return null;
 		}
 
 		var all_events = {};
-		this.getEventsHelper(this.backward_dependency_map, this.backward_dependency_map[event_id], all_events);
+		this.getEventsHelper(dependency_maps["backward"], dependency_maps["backward"][event_id], all_events);
 		var ids = [];
 		for (var id in all_events) ids.push(parseInt(id));
 		this.cache_events_before[event_id] = ids;
@@ -80,16 +98,18 @@ window.dependencyAPI = {
 	 * Caches the results, so it does not need to re-compute them for the same event_id.
 	 */
 	getEventsAfter: function(event_id){
+		var dependency_maps = getDependencyMaps(flashTeamsJSON.interactions);
+
 		if (this.cache_events_after.hasOwnProperty(event_id)){
 			return this.cache_events_after[event_id];
 		}
 
-		if (!this.forward_dependency_map.hasOwnProperty(event_id)){
+		if (!dependency_maps["forward"].hasOwnProperty(event_id)){
 			return null;
 		}
 
 		var all_events = {};
-		this.getEventsHelper(this.forward_dependency_map, this.forward_dependency_map[event_id], all_events);
+		this.getEventsHelper(dependency_maps["forward"], dependency_maps["forward"][event_id], all_events);
 		var ids = [];
 		for (var id in all_events) ids.push(parseInt(id));
 		this.cache_events_after[event_id] = ids;
