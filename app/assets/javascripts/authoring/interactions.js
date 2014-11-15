@@ -9,7 +9,7 @@ var INTERACTION_TASK_ONE_IDNUM = 0;
 var interaction_counter = undefined;
 
 //For Interactions
-timeline_svg.append("defs").append("marker")
+/*timeline_svg.append("defs").append("marker")
     .attr("id", "arrowhead")
     .attr("refX", 1)
     .attr("refY", 2)
@@ -18,7 +18,7 @@ timeline_svg.append("defs").append("marker")
     .attr("stroke", "pink")
     .attr("fill", "gray")
     .append("path")
-        .attr("d", "M 0,0 V 2 L2,2 Z");
+        .attr("d", "M 0,0 V 2 L2,2 Z");*/
 
 //Called when a user clicks a task rectangle (aka event)
 //Determines if the user is trying to draw an interaction and if so, what type
@@ -87,8 +87,9 @@ function eventMousedown(task2idNum) {
         var task2X = ev2.x;
         
         if ((task1X + task1Width) <= task2X) {
+            var color = colorBox.grabColor();
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
-                "type":"handoff", "description":"", "id":interaction_counter};
+                "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
             updateStatus(false);
             drawHandoff(handoffData);
@@ -217,15 +218,12 @@ function drawHandoff(handoffData) {
         .attr("y2", y2)
         .attr("d", function(d) {
             return routeHandoffPath(ev1, ev2, x1, x2, y1, y2);
-            //OLD CURVE CODE
-            /*var dx = x1 - x2,
-                dy = y1 - y2,
-                dr = Math.sqrt(dx * dx + dy * dy);
-            //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
-            return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
-                + " 0 0,0 " + x2 + "," + (y2+15);*/
+
         })
-        .attr("stroke", function(d) { return colorBox.grabColor();})
+        .attr("stroke", function() {
+            if (handoffData["color"] == undefined) return colorBox.grabColor(); 
+            else return handoffData["color"];
+        })
         .attr("stroke-width", 3)
         .attr("stroke-opacity", ".7")
         .attr("fill", "none")
@@ -250,9 +248,20 @@ function drawHandoff(handoffData) {
 //Route circuit-like paths for the handoffs
 //Use d3 path to route from event 1 end to event 2 beginning
 function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
+    //OLD CURVE CODE
+    /*var dx = x1 - x2,
+        dy = y1 - y2,
+        dr = Math.sqrt(dx * dx + dy * dy);
+    //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
+    return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
+        + " 0 0,0 " + x2 + "," + (y2+15);*/
+
+    //Line out from first event to gutter
     var pathStr = "M " + (x1-10) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
     pathStr += "L " + x1 + ", " + y1 + "\n";
 
+    //Route path either to the horizontal gutter above or below
+    //Then route to second event horizontally
     if (y1 <= y2) { //Event 1 is higher
         pathStr += "L " + x1 + ", " + (y1+25) + "\n";
         pathStr += "L " + x2 + ", " + (y1+25) + "\n"; 
@@ -260,8 +269,15 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
         pathStr += "L " + x1 + ", " + (y1-55) + "\n";
         pathStr += "L " + x2 + ", " + (y1-55) + "\n";
     }
+    //Route to second event vertically
     pathStr += "L " + x2 + ", " + y2 + "\n";
+    //Line from gutter to second event
     pathStr += "L " + (x2+10) + ", " + y2 + "\n";
+
+    //Arrowhead
+    pathStr += "L" + (x2+10) + ", " + (y2+1) + "\n";
+    pathStr += "L" + (x2+12) + ", " + (y2) + "\n";
+    pathStr += "L" + (x2+10) + ", " + (y2-1) + "\n";
     
     return pathStr;
 }
