@@ -18,7 +18,8 @@
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
     eventObj.timer = eventObj.duration;
-    
+    eventObj.task_startBtn_time = (new Date).getTime();
+ 
     //START TIMER
     //START HERE ALEXANDRA
 

@@ -247,6 +247,7 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
+//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
     event_counter++;
     
@@ -255,7 +256,7 @@ function createEventObj(snapPoint, duration) {
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0,
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
         "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
@@ -859,8 +860,16 @@ function drawTimer(eventObj){
     var x_offset = 10; // unique for duration
     var y_offset = 50; // unique for handoff btn
 
-    var totalMinutes = eventObj["duration"];
-    eventObj["timer"] = eventObj["duration"];
+    var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+    
+    console.log("inside drawTimer");
+    console.log(time_passed);
+    
+    var duration = eventObj["duration"];
+    var remaining_time = duration - time_passed;
+    console.log(remaining_time);
+
+    var totalMinutes = remaining_time;
     var numHoursInt = Math.floor(totalMinutes/60);
     var minutesLeft = Math.round(totalMinutes%60);
 

@@ -5,6 +5,7 @@
 
 var poll_interval = 5000; // 20 seconds
 var poll_interval_id;
+var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
 var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
 var fire_interval = 180; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
@@ -233,6 +234,7 @@ function renderEverything(firstTime) {
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
+            
             loadData();
             if(!isUser || memberType == "pc" || memberType == "client")
                 renderMembersRequester();
@@ -430,9 +432,11 @@ var poll = function(){
                 console.log("FLASH TEAM UPDATED..CALLING renderEverything(FALSE)");
                 renderEverything(false);
             } else {
+                console.log("before drawStartedevents");
+                drawStartedEvents();
                 //console.log("Flash team not updated and not ended");
             }
-        });
+      });
     }, poll_interval); // every 5 seconds currently
 };
 
@@ -555,6 +559,16 @@ var drawEvents = function(editable){
         var ev = flashTeamsJSON.events[i];
         console.log("DRAWING EVENT " + i + ", with editable: " + editable);
         drawEvent(ev);
+        //drawPopover(ev, editable, false);
+    }
+};
+
+var drawStartedEvents = function(){
+    for(var i=0;i<flashTeamsJSON.events.length;i++){
+        var ev = flashTeamsJSON.events[i];
+        if(ev.status == "started" || ev.status == "started" ){
+            drawEvent(ev);
+        }
         //drawPopover(ev, editable, false);
     }
 };
