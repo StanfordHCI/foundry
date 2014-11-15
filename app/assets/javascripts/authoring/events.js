@@ -255,7 +255,7 @@ function createEventObj(snapPoint, duration) {
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
         "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
@@ -839,14 +839,63 @@ function drawEvent(eventObj) {
     drawTitleText(eventObj);
     drawDurationText(eventObj);
     drawGdriveLink(eventObj);
-    drawHandoffBtn(eventObj);
-    drawCollabBtn(eventObj);
+    if(in_progress && eventObj.status == "started"){
+        drawTimer(eventObj);
+    }
+    else{
+        drawHandoffBtn(eventObj);
+        drawCollabBtn(eventObj);
+    }
     drawMemberCircles(eventObj);
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
 };
 
+
+
+function drawTimer(eventObj){
+   
+    var x_offset = 10; // unique for duration
+    var y_offset = 50; // unique for handoff btn
+
+    var totalMinutes = eventObj["duration"];
+    eventObj["timer"] = eventObj["duration"];
+    var numHoursInt = Math.floor(totalMinutes/60);
+    var minutesLeft = Math.round(totalMinutes%60);
+
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    var existingTimerText = task_g.selectAll("#timer_text_" + groupNum);
+    if(existingTimerText[0].length == 0){ // first time
+        task_g.append("text")
+            .text(function (d) {
+                if (numHoursInt == 0){
+                    return minutesLeft+"min";
+                }
+                else
+                    return numHoursInt+"hrs "+minutesLeft+"min";
+            })
+            .attr("class", "timer_text")
+            .attr("id", function(d) {return "timer_text_" + groupNum;})
+            .attr("groupNum", function(d){return d.groupNum})
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset})
+            .attr("font-size", "12px");
+    } else {
+        task_g.selectAll(".timer_text")
+            .text(function (d) {
+                if (numHoursInt == 0){
+                    return minutesLeft+"min"; 
+                }
+                else
+                    return numHoursInt+"hrs "+minutesLeft+"min";
+            })
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset});
+    }
+}
 
 //Draw a triangular hiring event on the timeline
 function drawHiringEvent() {

@@ -17,7 +17,8 @@
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
-
+    eventObj.timer = eventObj.duration;
+    
     //START TIMER
     //START HERE ALEXANDRA
 
