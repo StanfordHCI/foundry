@@ -236,9 +236,10 @@ function drawHandoff(handoffData) {
         trigger: "click",
         title: "Handoff",
         content: 'Description of Handoff Materials: '
-        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '"></textarea>'
+        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '"></textarea><br>'
         + '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
-            +' onclick="saveHandoff(' + handoffId +');">Save</button>          '
+            +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
+        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + handoffId + '"'
             +' onclick="deleteInteraction(' + handoffId +');">Delete</button>',
         container: $("#timeline-container")
@@ -280,6 +281,11 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     pathStr += "L" + (x2+10) + ", " + (y2-1) + "\n";
     
     return pathStr;
+}
+
+//Close the popover on a member to "cancel" the edit
+function hideHandoffPopover(handoffId) {
+    $('#interaction_' + handoffId).popover("hide");
 }
 
 //Save handoff notes and update popover
