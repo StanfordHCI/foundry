@@ -366,8 +366,8 @@ function drawMainRect(eventObj, firstTime) {
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") return TASK_START_COLOR;
-                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
                 else return TASK_COMPLETE_COLOR;
             })
             .attr("fill-opacity", .6)
@@ -382,8 +382,8 @@ function drawMainRect(eventObj, firstTime) {
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") return TASK_START_COLOR;
-                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
                 else return TASK_COMPLETE_COLOR;
             });
     }
@@ -861,7 +861,7 @@ function drawTimer(eventObj){
     var x_offset = 10; // unique for duration
     var y_offset = 50; // unique for handoff btn
 
-    if( eventObj.status == "started" || eventObj.status == "delayed"){
+    if( eventObj.status == "started" ){
     
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
         var duration = eventObj["duration"];
@@ -869,16 +869,35 @@ function drawTimer(eventObj){
 
         if(remaining_time < 0){
             eventObj.status = "delayed";
-            console.log("here!!!", remaining_time);
+             
+             drawEvent(eventObj);
+            console.log("in drawTimer: ", remaining_time);
         }
 
         eventObj["timer"] = remaining_time;
+        updateStatus(true);
+    }
+    else if( eventObj.status == "delayed" ){
+    
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
+
+        eventObj["timer"] = remaining_time;
+        updateStatus(true);
     }
 
+   
     var totalMinutes = eventObj["timer"];
-    var numHoursInt = Math.floor(totalMinutes/60);
-    var minutesLeft = Math.round(totalMinutes%60);
-
+    
+    if(totalMinutes < 0){
+        var numHoursInt = Math.floor(totalMinutes/60);
+        var minutesLeft = Math.abs(Math.round(totalMinutes%60));
+    }
+    else{
+        var numHoursInt = Math.floor(totalMinutes/60);
+        var minutesLeft = Math.round(totalMinutes%60);
+    }
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
@@ -887,10 +906,10 @@ function drawTimer(eventObj){
         task_g.append("text")
             .text(function (d) {
                 if (numHoursInt == 0){
-                    return minutesLeft+"min";
+                    return "0 :"+ minutesLeft;
                 }
                 else
-                    return numHoursInt+"hrs "+minutesLeft+"min";
+                    return numHoursInt+" : "+minutesLeft;
             })
             .attr("class", "timer_text")
             .attr("id", function(d) {return "timer_text_" + groupNum;})
@@ -902,10 +921,10 @@ function drawTimer(eventObj){
         task_g.selectAll(".timer_text")
             .text(function (d) {
                 if (numHoursInt == 0){
-                    return minutesLeft+"min"; 
+                    return "0 :"+minutesLeft; 
                 }
                 else
-                    return numHoursInt+"hrs "+minutesLeft+"min";
+                    return numHoursInt+" : "+minutesLeft;
             })
             .attr("x", function(d) {return d.x + x_offset})
             .attr("y", function(d) {return d.y + y_offset});

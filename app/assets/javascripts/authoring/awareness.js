@@ -432,7 +432,6 @@ var poll = function(){
                 console.log("FLASH TEAM UPDATED..CALLING renderEverything(FALSE)");
                 renderEverything(false);
             } else {
-                console.log("before drawStartedevents");
                 drawStartedEvents();
                 //console.log("Flash team not updated and not ended");
             }
@@ -566,7 +565,7 @@ var drawEvents = function(editable){
 var drawStartedEvents = function(){
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
-        if(ev.status == "started" || ev.status == "started" ){
+        if(ev.status == "started" || ev.status == "delayed" ){
             drawEvent(ev);
         }
         //drawPopover(ev, editable, false);
