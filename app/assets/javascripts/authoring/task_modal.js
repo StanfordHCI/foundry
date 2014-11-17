@@ -80,6 +80,7 @@ function editTaskOverview(popover,groupNum){
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
 					+'</form>';*/
 		$('#task-text').html(taskOverviewForm);
+        $(".add_field_button").attr('onclick', 'addField()');
 		
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
@@ -91,11 +92,35 @@ function editTaskOverview(popover,groupNum){
 				
 }
 
+// function addField(){
+//     var wrapper = $(".input_fields_wrap");
+//     $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+//     $('#task_modal').modal('show'); 
+// }
+
+// $(document).ready(function() {
+//     var max_fields      = 10; //maximum input boxes allowed
+//     var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+//     var add_button      = $(".add_field_button"); //Add button ID
+    
+//     var x = 1; //initlal text box count
+//     $(add_button).click(function(e){ //on add input button click
+//         e.preventDefault();
+//         if(x < max_fields){ //max input box allowed
+//             x++; //text box increment
+//             $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+//         }
+//     });
+    
+//     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+//         e.preventDefault(); $(this).parent('div').remove(); x--;
+//     })
+// });
+
 function getTaskOverviewForm(groupNum){
 
 var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
-	
 	 var totalMinutes = eventObj["duration"];
     var groupNum = eventObj["id"];
     var title = eventObj["title"];
@@ -110,6 +135,10 @@ var task_id = getEventJSONIndex(groupNum);
     var minutesLeft = totalMinutes%60;
     var dri_id = eventObj.dri;
     var PC_id = eventObj.pc;
+    var questions = "";
+    for (i = 0; i < eventObj["docQs"].length; i++){
+        questions = questions + eventObj["docQs"][i][0] + "\n";
+    }
 /*'<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
@@ -149,7 +178,8 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
-      
+        + '<div><b>Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
+        //+ '<div class="input_fields_wrap"><button class="add_field_button">Add Question</button><div><input type="text" name="mytext[]"></div></div>'      
         + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
         
         + '</div>'
@@ -258,10 +288,12 @@ function getTaskOverviewContent(groupNum){
         content += '<br>';
     }
 
+    content += "<hr/>";
+    content += "<b>Documentation Questions</b><hr/>";
+    
+
     if (ev.outputQs){
         outputQs = ev.outputQs;
-        content += "<hr/>"
-        content += "<b>Documentation Questions</b><hr/>";
         var eventOutputs = ev.outputs;
         if (eventOutputs != null && eventOutputs != "") {
             eventOutputs = ev.outputs.split(",");
@@ -352,6 +384,13 @@ function saveTaskOverview(groupNum){
         newMin = 30;
     }
     var newWidth = (newHours * 100) + (newMin/15*25);
+    var genQs = [];
+    qString = $("#questions").val().split("\n");
+    for (i = 0; i < qString.length; i++){
+        if (qString[i] != ""){
+            genQs.push([qString[i],""]);
+        }
+    }
   
     //Update JSON
     var indexOfJSON = getEventJSONIndex(groupNum);
@@ -366,6 +405,7 @@ function saveTaskOverview(groupNum){
     ev.x = newX;
     ev.inputs = $('#inputs').val();
     ev.outputs = $('#outputs' ).val();
+    ev.docQs = genQs;
 
     drawEvent(ev, 0);
 

@@ -14,7 +14,6 @@
 //Documentation Questions
 var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
 var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
-
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
     var indexOfJSON = getEventJSONIndex(groupNum);
@@ -57,7 +56,7 @@ function confirmCompleteTask(groupNum) {
 
     //Code for the Task Completed Button
     var completeButton = document.getElementById("confirmButton");
-    completeButton.innerHTML = "Task Completed";
+    completeButton.innerHTML = "Answer all questions to submit";
     $("#confirmButton").attr("class","btn btn-success");
     if (eventToComplete.outputs != null && eventToComplete.outputs != "") {
         $("#confirmButton").prop('disabled', true); //Defaults to disabled
@@ -65,13 +64,13 @@ function confirmCompleteTask(groupNum) {
     $('#confirmAction').modal('show');
 
     var saveButton = document.getElementById("saveButton");
-    saveButton.innerHTML = "Save Questions";
+    saveButton.innerHTML = "Save and Close";
     $("#saveButton").attr("class","btn btn-default");
     $("#saveButton").attr("style", "display:inline;");
     $('#confirmAction').modal('show');
     
-    //Set change function on checkboxes, enable button if all checkboxes are checked
-    $(".outputCheckbox").change(function() {
+
+    $(".outputForm").change(function() {
         var totalCheckboxes = $(".outputCheckbox").length;
         var checkedCheckboxes = $(".outputCheckbox:checked").length;
         var splitOutputs = eventToComplete.outputs.split(",");
@@ -82,13 +81,27 @@ function confirmCompleteTask(groupNum) {
                 }
             }
         }
-        if (totalCheckboxes == checkedCheckboxes) {
-            // console.log("TOTAL CHECKBOXES: " + $(".outputCheckbox") + "CHECKED " + $(".outputCheckbox:checked"));
-            $("#confirmButton").prop('disabled', false);
-        } else {
-            $("#confirmButton").prop('disabled', true);
+        var outputFormLength = $(".outputForm").length;
+        var completed = true;
+        for (i = 0; i < outputFormLength; i++){
+            if ($(".outputForm")[i].type != "checkbox"){
+                if ($(".outputForm")[i].value == ""){
+                    completed = false;
+                }
+            }
         }
+        if (totalCheckboxes != checkedCheckboxes) {
+            completed = false;
+        }
+        if (completed){
+            $("#confirmButton").prop('disabled', false);
+            $("#confirmButton")[0].innerHTML = "Submit!";
+        }
+        else 
+            $("#confirmButton").prop('disabled', true);
     });
+
+
 
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
@@ -117,13 +130,18 @@ function completeTaskModalText(eventToComplete) {
     var outputFilledQ = eventToComplete["outputQs"];
     var generalFilledQ = eventToComplete["docQs"];
 
+    generalQuestions = [];
+    for (i = 0; i < eventToComplete.docQs.length; i++){
+        generalQuestions.push(eventToComplete.docQs[i][0]);
+    }
+
     //Create Checklist of outputs with the relevant documentation questions for each output
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' align='left' >";
     if (eventOutputs == null || eventOutputs == "") {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
-            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox'>" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm'>" + " " + eventOutputs[i] + "</input></b><br>";
             modalText += '<div id="output' + eventOutputs[i] + '" style = "display:none;">';
             for (j = 0; j<outputQuestions.length; j++){
                 if (!outputFilledQ)
@@ -131,7 +149,7 @@ function completeTaskModalText(eventToComplete) {
                 else{
                     var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
                 }
-                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" rows="3">' + placeholderVal + '</textarea></br>';
+                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + placeholderVal + '</textarea></br>';
             }
             modalText += "</div>";
         }
@@ -146,7 +164,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '"rows="3">'+ placeholderVal + '</textarea></br>';
+        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '"class="outputForm" rows="3">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
@@ -170,6 +188,10 @@ function saveDocQuestions(groupNum){
         ev["outputQs"] = outputQMap;
     }
     var docQuestions = [];
+    generalQuestions = [];
+    for (i = 0; i < ev.docQs.length; i++){
+        generalQuestions.push(ev.docQs[i][0]);
+    }
     for (i = 0; i < generalQuestions.length; i++){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
