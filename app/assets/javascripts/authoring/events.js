@@ -840,13 +840,11 @@ function drawEvent(eventObj) {
     drawTitleText(eventObj);
     drawDurationText(eventObj);
     drawGdriveLink(eventObj);
-    if(in_progress && eventObj.status == "started"){
-        drawTimer(eventObj);
-    }
-    else{
-        drawHandoffBtn(eventObj);
-        drawCollabBtn(eventObj);
-    }
+
+    drawTimer(eventObj);
+
+    drawHandoffBtn(eventObj);
+    drawCollabBtn(eventObj);
     drawMemberCircles(eventObj);
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
@@ -857,19 +855,27 @@ function drawEvent(eventObj) {
 
 function drawTimer(eventObj){
    
+    if( in_progress != true || eventObj.status == "not_started" )
+        return;
+
     var x_offset = 10; // unique for duration
     var y_offset = 50; // unique for handoff btn
 
-    var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+    if( eventObj.status == "started" || eventObj.status == "delayed"){
     
-    console.log("inside drawTimer");
-    console.log(time_passed);
-    
-    var duration = eventObj["duration"];
-    var remaining_time = duration - time_passed;
-    console.log(remaining_time);
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
 
-    var totalMinutes = remaining_time;
+        if(remaining_time < 0){
+            eventObj.status = "delayed";
+            console.log("here!!!", remaining_time);
+        }
+
+        eventObj["timer"] = remaining_time;
+    }
+
+    var totalMinutes = eventObj["timer"];
     var numHoursInt = Math.floor(totalMinutes/60);
     var minutesLeft = Math.round(totalMinutes%60);
 
