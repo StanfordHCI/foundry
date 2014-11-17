@@ -75,10 +75,6 @@ function editTaskOverview(popover,groupNum){
 
         //content
         var taskOverviewForm = getTaskOverviewForm(groupNum);
-		/*var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
-					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
-					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
-					+'</form>';*/
 
 		$('#task-text').html(taskOverviewForm);
 		
@@ -89,40 +85,34 @@ function editTaskOverview(popover,groupNum){
         $("#outputs").tagsinput();
 
         $("#outputs").change(function() {
-            console.log("HERE ARE THE OUTPUTS", $("#outputs").val());
-
+            tempText = {};
+            for (i = 0; i < $(".oQs").length; i++){
+                val = ($(".oQs")[i].id).substring(3);
+                tempText[val] = ($(".oQs")[i].value).split("\n");
+            }
+            outputArray = ($("#outputs").val()).split(",");
+            htmlString = "";
+            for (i = 0; i < outputArray.length; i++){
+                if (outputArray[i] != ""){
+                    htmlString = htmlString + '<div><b>' + outputArray[i] + ' Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">'; 
+                    if (outputArray[i] in tempText){
+                        for (j = 0; j < tempText[outputArray[i]].length; j++){
+                            htmlString = htmlString + tempText[outputArray[i]][j] + '\n';
+                        }
+                    }
+                    else{
+                        htmlString = htmlString + "Please write a brief (1 sentence) description of this deliverable";
+                    }
+                    htmlString = htmlString + '</textarea></div>';
+                }
+            }
+            document.getElementById("outputQForm").innerHTML = htmlString;
         });
 
 	}
 
 				
 }
-
-
-// function addField(){
-//     var wrapper = $(".input_fields_wrap");
-//     $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-//     $('#task_modal').modal('show'); 
-// }
-
-// $(document).ready(function() {
-//     var max_fields      = 10; //maximum input boxes allowed
-//     var wrapper         = $(".input_fields_wrap"); //Fields wrapper
-//     var add_button      = $(".add_field_button"); //Add button ID
-    
-//     var x = 1; //initlal text box count
-//     $(add_button).click(function(e){ //on add input button click
-//         e.preventDefault();
-//         if(x < max_fields){ //max input box allowed
-//             x++; //text box increment
-//             $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-//         }
-//     });
-    
-//     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
-//         e.preventDefault(); $(this).parent('div').remove(); x--;
-//     })
-// });
 
 function getTaskOverviewForm(groupNum){
 
@@ -186,7 +176,16 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
-        + '<div><b>Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
+        + '<div><b>Overall Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
+        + '<div id="outputQForm">';
+        for (var key in outputQuestions){
+            form = form + '<div><b>' + key + ' Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">'; 
+            for (i = 0; i < outputQuestions[key].length; i++){
+                form = form + outputQuestions[key][i][0] + '\n';
+            }
+            form = form + '</textarea></div>';
+        }
+        form = form + '</div>'
         + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
         
         + '</div>'
@@ -299,7 +298,7 @@ function getTaskOverviewContent(groupNum){
     content += "<b>Documentation Questions</b><hr/>";
 
 
-    if (ev.outputQs){
+    if (ev.outputQs.length > 0){
         outputQs = ev.outputQs;
         var eventOutputs = ev.outputs;
         if (eventOutputs != null && eventOutputs != "") {
@@ -315,7 +314,7 @@ function getTaskOverviewContent(groupNum){
         }
     }
 
-    if (ev.docQs){
+    if (ev.docQs.length > 0){
         docQs = ev.docQs;
         for (i = 0; i < docQs.length; i++){
             if (docQs[i][1] != "" && docQs[i][1] != null){
@@ -398,6 +397,9 @@ function saveTaskOverview(groupNum){
             genQs.push([qString[i],""]);
         }
     }
+
+    var outQs = {};
+
   
     //Update JSON
     var indexOfJSON = getEventJSONIndex(groupNum);
