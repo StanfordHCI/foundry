@@ -279,6 +279,16 @@ function getEventFromId(id) {
     return null;
 };
 
+function checkEventsCompleted(events) {
+    for (var i=0; i<events.length; i++){
+        var event_obj = getEventFromId(events[i]);
+        if (event_obj.completed_x == null){
+            return false;
+        }
+    }
+    return true;
+}
+
 //Return the width in pixels of an event
 function getWidth(ev) {
     var durationInMinutes = ev.duration;
