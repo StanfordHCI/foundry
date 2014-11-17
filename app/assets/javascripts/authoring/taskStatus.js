@@ -63,6 +63,7 @@ function confirmCompleteTask(groupNum) {
     }
     $('#confirmAction').modal('show');
 
+    //Code for Documentation Question Save Button
     var saveButton = document.getElementById("saveButton");
     saveButton.innerHTML = "Save and Close";
     $("#saveButton").attr("class","btn btn-default");

@@ -79,18 +79,25 @@ function editTaskOverview(popover,groupNum){
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
 					+'</form>';*/
+
 		$('#task-text').html(taskOverviewForm);
-        $(".add_field_button").attr('onclick', 'addField()');
 		
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
         
         $("#inputs").tagsinput(); 
         $("#outputs").tagsinput();
+
+        $("#outputs").change(function() {
+            console.log("HERE ARE THE OUTPUTS", $("#outputs").val());
+
+        });
+
 	}
 
 				
 }
+
 
 // function addField(){
 //     var wrapper = $(".input_fields_wrap");
@@ -139,6 +146,7 @@ var task_id = getEventJSONIndex(groupNum);
     for (i = 0; i < eventObj["docQs"].length; i++){
         questions = questions + eventObj["docQs"][i][0] + "\n";
     }
+    var outputQuestions = eventObj["outputQs"];
 /*'<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
 					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
@@ -178,8 +186,7 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
-        + '<div><b>Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
-        //+ '<div class="input_fields_wrap"><button class="add_field_button">Add Question</button><div><input type="text" name="mytext[]"></div></div>'      
+        + '<div><b>Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
         + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
         
         + '</div>'
@@ -290,7 +297,7 @@ function getTaskOverviewContent(groupNum){
 
     content += "<hr/>";
     content += "<b>Documentation Questions</b><hr/>";
-    
+
 
     if (ev.outputQs){
         outputQs = ev.outputQs;
