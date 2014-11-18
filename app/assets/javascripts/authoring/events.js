@@ -853,9 +853,6 @@ function drawEvent(eventObj) {
     // (event.row is 0 indexed)
     if(eventObj.row >= window._foundry.timeline.numRows - 2) {
       window._foundry.timeline.updateNumRows(eventObj.row + 2);
-    } else {
-      console.log(window._foundry.timeline.numRows - 2);
-      console.log(eventObj.row);
     }
 };
 
