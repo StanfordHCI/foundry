@@ -1,9 +1,11 @@
+/*
 var CLIENT_ID = '527471489694-b8dd7qjjc16rn2eks7299el2l5metk8j.apps.googleusercontent.com';
 var SCOPES = [
     'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/drive.install'];
+*/
 folderIds = [];
 // overallFolder = ["0B6l5YPiF_QFBUUNvNWxyZXJaRGM", "https://docs.google.com/a/stanford.edu/folderview?id=0B6l5YPiF_QFBUUNvNWxyZXJaRGM&usp=drivesdk"];
 

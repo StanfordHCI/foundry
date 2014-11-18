@@ -1,0 +1,15 @@
+<script>
+
+//var CLIENT_ID = '527471489694-b8dd7qjjc16rn2eks7299el2l5metk8j.apps.googleusercontent.com';
+var CLIENT_ID = '<%=ENV['GDRIVE_CLIENT_ID']%>';
+var SCOPES = [
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/drive.install'];
+    
+//var firebaseURL = 'https://foundry-ft-dev.firebaseio.com/'; 
+
+var firebaseURL = '<%=ENV['FIREBASE_URL']%>';
+
+</script>
