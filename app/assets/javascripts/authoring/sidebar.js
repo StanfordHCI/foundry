@@ -283,12 +283,9 @@ userListRef.on("child_added", function(snapshot) {
   
     // update display for num people online
     var numOnlineElem = $(".num-online");
-    var numOnline = parseInt(numOnlineElem.text());
-    if(user.status.toLowerCase === "online") {
-      numOnline++;
-    } else if(user.status.toLowerCase === "offline") {
-      numOnline--;
-    }
+    // number of occurrences of the string "is online"
+    // TODO: is there a better way to do this?
+    var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
     numOnlineElem.text(numOnline);
 });
 

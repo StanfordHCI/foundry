@@ -7,8 +7,6 @@
     background: transparent;
     color: white;
     width: 100%;
-    /*padding: 11px;
-    box-sizing: border-box;*/
   }
   
   #messageList .author {
@@ -76,6 +74,7 @@
     padding: 8px;
     color: white;
     position: absolute;
+    z-index: 10;
     top: 0;
     right: 0;
     background: #1c1c1c;
@@ -85,12 +84,13 @@
   .show-online-button {
     color: white;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 14px;
     
+    display: inline-block;
+    
+    margin-bottom: 11px;
+    cursor: pointer;
     transition: color 0.4s;
-  }
-  .show-online-button {
-    color: #0a73ed;
   }
 </style>
 
@@ -104,7 +104,7 @@
 <script> var flash_team_id=<%= @flash_team.id %>; </script>
 
 <div style="position: relative;">
-  <span class="show-online-button">Online(<span class="num-online">0</span>)</span>
+  <div class="show-online-button">Online (<span class="num-online">0</span>)</div>
   <div id="presenceDiv"></div>
 </div>
 
