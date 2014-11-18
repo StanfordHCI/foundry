@@ -99,7 +99,7 @@ function saveProjectOverview(){
 
 /***chat****/
 
-//var firebaseURL = 'https://foundry-ft-dev.firebaseio.com/'; //should be foundry-ft for production and foundry-ft-dev for development
+//var firebaseURL is saved in an ENV var and included in the globals partial
 
 var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 
