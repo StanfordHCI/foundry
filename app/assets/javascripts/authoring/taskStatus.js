@@ -142,8 +142,17 @@ function completeTaskModalText(eventToComplete) {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
-            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm'>" + " " + eventOutputs[i] + "</input></b><br>";
-            modalText += '<div id="output' + eventOutputs[i] + '" style = "display:none;">';
+            if (!eventToComplete.checkboxes){
+                value = ""; styleVal = "display:none;"
+            }
+            else if(eventToComplete.checkboxes[eventOutputs[i]] == true){
+                value = "checked"; styleVal = "display:block;"
+            }
+            else{
+                value = ""; styleVal = "display:none;"
+            }
+            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm' " + value + ">" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += '<div id="output' + eventOutputs[i] + '" style = ' + styleVal + '>';
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
@@ -186,8 +195,22 @@ function saveDocQuestions(groupNum){
             }
         }
     }
-    console.log("AAAAAAHHH", ev["outputQs"]);
 
+    checked = $(".outputCheckbox:checked");
+    total = $(".outputCheckbox");
+    if (total.length > 0){
+        ev["checkboxes"] = {};
+        for (i = 0; i < total.length; i++){
+            value = false;
+            for (j = 0; j < checked.length; j++){
+                if (total[i].contains(checked[j])){
+                    value = true;
+                }
+            }
+            ev["checkboxes"][total[i].id] = value;
+        }   
+    }
+    
     var docQuestions = [];
     generalQuestions = [];
     for (i = 0; i < ev.docQs.length; i++){
