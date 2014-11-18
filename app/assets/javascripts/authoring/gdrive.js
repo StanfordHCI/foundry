@@ -61,7 +61,7 @@ function createPicker(){
   var picker = new google.picker.PickerBuilder()
     .addView(docUpload)
     .setOAuthToken(oauthToken)
-    .setDeveloperKey('AIzaSyAgrd2gp5F3KdfCH_KfN88FLR1sVEfMJfQ')
+    .setDeveloperKey(GDRIVE_DEV_KEY)
     .setCallback(pickerCallback)
     .build()
   picker.setVisible(true);
