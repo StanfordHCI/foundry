@@ -45,3 +45,4 @@
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
+//= require ./authoring/dependencies
