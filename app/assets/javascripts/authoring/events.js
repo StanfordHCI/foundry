@@ -848,6 +848,15 @@ function drawEvent(eventObj) {
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
+    
+    // subtract two so there's always at least one empty row
+    // (event.row is 0 indexed)
+    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+      window._foundry.timeline.updateNumRows(eventObj.row + 2);
+    } else {
+      console.log(window._foundry.timeline.numRows - 2);
+      console.log(eventObj.row);
+    }
 };
 
 

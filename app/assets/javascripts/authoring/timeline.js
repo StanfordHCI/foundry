@@ -12,7 +12,6 @@ var HEADER_HEIGHT = 28;
 var STEP_WIDTH = 25,
     HOUR_WIDTH = 100;
 var STEP_INTERVAL = 15; // minutes per step
-    
 
 var TIMELINE_HOURS = 48;
 var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
@@ -22,10 +21,8 @@ var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
 
 var ROW_HEIGHT = ROW_HEIGHT || 80;
 
-var BKG_COLOR = "#202020";
-var STROKE_COLOR = "rgba(233,233,233,0.2)";
-var MARKER_COLOR = 'rgba(108,108,111,0.08)';
-var ALT_MARKER_COLOR = 'rgba(136, 136, 139, 0.08)';
+var BKG_COLOR = "white";
+var STROKE_COLOR = "rgba(233,233,233,0.7)";
 
 var current = undefined;
 var currentUserEvents = [];
@@ -91,6 +88,10 @@ window._foundry = {
     highlightSvg: undefined,
     
     strokeColor: STROKE_COLOR,
+    
+    numRows: 1,
+    
+    rowCoverSvg: undefined,
     
     /* highlightMarkerRange
      * --------------------
@@ -251,6 +252,15 @@ window._foundry = {
       newEvent(point, duration);
       timeline.clearSelection();
     },
+    
+    /* updates the number of rows on the timeline and moves
+     * overlay accordingly
+     */
+    updateNumRows: function(numRows) {
+      this.numRows = numRows;
+      redrawTimeline();
+      console.log(numRows);
+    },
   },
 };
 
@@ -337,20 +347,20 @@ function redrawTimeline() {
   //Remove all existing grid lines & background
   timelineSvg.selectAll("line").remove();
   timelineSvg.selectAll("rect.marker").remove();
-
-  // reset timeline svg width
-  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
   
-  // draw alternating markers to timeline svg
+  // draw markers to timeline svg
   timelineSvg.selectAll("rect.marker")
       .data(intervals) // hour intervals
       .enter().append("rect")
           .attr("class", "marker")
-          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
+          .style("fill", 'transparent')
           .attr("x", function(d) {return d * STEP_WIDTH})
           .attr("width", STEP_WIDTH)
           .attr("y", 0)
           .attr("height", SVG_HEIGHT)
+
+  // reset timeline svg width
+  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
 
   // draw x grid lines to timeline svg
   timelineSvg.selectAll("line.x")
@@ -364,7 +374,6 @@ function redrawTimeline() {
       .style("stroke", STROKE_COLOR);
 
   // draw y grid lines to timeline svg
-  _foundry.timeline.numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
   var numRows = _foundry.timeline.numRows;
   timelineSvg.selectAll("line.y")
       .data(intervals.slice(1, numRows+1))
@@ -375,7 +384,17 @@ function redrawTimeline() {
         .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
         .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
         .style("stroke", _foundry.timeline.strokeColor);
-    
+  
+  // redraw row cover
+  timelineSvg.selectAll("rect.row-cover").remove();
+  timeline.rowCoverSvg = timelineSvg
+    .append("rect").attr("class", "row-cover")
+    .attr("x", 0)
+    .attr("y", numRows * timeline.rowHeight)
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .style("fill", "rgba(0, 0, 0, 0.04)");
+  
   //Redraw Add Time Button
   document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
   
@@ -387,18 +406,8 @@ function redrawTimeline() {
   timelineSvg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
       .on("mouseover", _foundry.timeline.timelineMouseoverFn);
-
-  //Redraw the cursor
-  timelineSvg.append("line")
-      .attr("y1", 0)
-      .attr("y2", SVG_HEIGHT)
-      .attr("x1", 0)
-      .attr("x2", 0)
-      .attr("class", "cursor")
-      .style("stroke", "red")
-      .style("stroke-width", "2")
-
-    var headerSvg = timeline.headerSvg;
+  
+  var headerSvg = timeline.headerSvg;
   // reset header svg width
   headerSvg.attr("width", TOTAL_HOUR_PIXELS)
   
@@ -429,7 +438,7 @@ function redrawTimeline() {
           });
 
   //Get the latest time and team status, update x position of cursor
-  cursor = timeline_svg.select(".cursor");
+  // cursor = timeline_svg.select(".cursor");
   
   //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
   //and the same exact code is included in awareness.js
