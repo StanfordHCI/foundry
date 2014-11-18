@@ -84,6 +84,7 @@ function editTaskOverview(popover,groupNum){
         $("#inputs").tagsinput(); 
         $("#outputs").tagsinput();
 
+        //Adds the appropraiate documentation question field when 
         $("#outputs").change(function() {
             tempText = {};
             for (i = 0; i < $(".oQs").length; i++){
@@ -94,7 +95,7 @@ function editTaskOverview(popover,groupNum){
             htmlString = "";
             for (i = 0; i < outputArray.length; i++){
                 if (outputArray[i] != ""){
-                    htmlString = htmlString + '<div><b>' + outputArray[i] + ' Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">'; 
+                    htmlString = htmlString + '<div><b>Questions about <i>' + outputArray[i] + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">'; 
                     if (outputArray[i] in tempText){
                         for (j = 0; j < tempText[outputArray[i]].length; j++){
                             htmlString = htmlString + tempText[outputArray[i]][j] + '\n';
@@ -176,10 +177,10 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
-        + '<div><b>Overall Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
+        + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
         + '<div id="outputQForm">';
         for (var key in outputQuestions){
-            form = form + '<div><b>' + key + ' Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">'; 
+            form = form + '<div><b>Questions about <i>' + key + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">'; 
             for (i = 0; i < outputQuestions[key].length; i++){
                 form = form + outputQuestions[key][i][0] + '\n';
             }
@@ -297,28 +298,24 @@ function getTaskOverviewContent(groupNum){
     content += "<hr/>";
     content += "<b>Documentation Questions</b><hr/>";
 
-
-    if (ev.outputQs.length > 0){
-        outputQs = ev.outputQs;
-        var eventOutputs = ev.outputs;
-        if (eventOutputs != null && eventOutputs != "") {
-            eventOutputs = ev.outputs.split(",");
-        }
-        for (i = 0; i < eventOutputs.length; i++){
-            content += "<b>" + eventOutputs[i] + "</b></br>";
-            for (j = 0; j < outputQs[eventOutputs[i]].length; j++){
-                if (outputQs[eventOutputs[i]][j][1] != ""){
-                    content += "<p><i>" + outputQs[eventOutputs[i]][j][0] + ":</i></br> " + outputQs[eventOutputs[i]][j][1] + "</p>";
-                }
+    //Add output documentation questions to task modal    
+    for (var key in ev.outputQs){
+        if (key != ""){
+            content += "<b>" + key + "</b></br>";
+            keyArray = ev.outputQs[key];
+            for (i = 0; i < keyArray.length; i++){
+                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
             }
         }
     }
+    content += "<hr/>";
 
+    //Add general documentation questions to task modal
     if (ev.docQs.length > 0){
         docQs = ev.docQs;
         for (i = 0; i < docQs.length; i++){
-            if (docQs[i][1] != "" && docQs[i][1] != null){
-                content += "<b>" + docQs[i][0] + ": </b>";
+            if (docQs[i][1] != null){
+                content += "<b>" + docQs[i][0] + " </b>";
                 content += "<p>" + docQs[i][1] + "</p>";
             }
         }
@@ -390,6 +387,8 @@ function saveTaskOverview(groupNum){
         newMin = 30;
     }
     var newWidth = (newHours * 100) + (newMin/15*25);
+    
+    //Save documentation questions
     var genQs = [];
     qString = $("#questions").val().split("\n");
     for (i = 0; i < qString.length; i++){
@@ -398,7 +397,19 @@ function saveTaskOverview(groupNum){
         }
     }
 
+    //Save output questions
     var outQs = {};
+    outputVals = ($("#outputs").val()).split(",");
+    for (i = 0; i < outputVals.length; i++){
+        output = outputVals[i];
+        outQs[output] = [];
+        questionArray = ($("#num" + outputVals[i]).val()).split("\n");
+        for (j = 0; j < questionArray.length; j++){
+            if (questionArray[j] != ""){
+                outQs[output].push([questionArray[j],""]);
+            }
+        } 
+    }
 
   
     //Update JSON
@@ -415,6 +426,7 @@ function saveTaskOverview(groupNum){
     ev.inputs = $('#inputs').val();
     ev.outputs = $('#outputs' ).val();
     ev.docQs = genQs;
+    ev.outputQs = outQs;
 
     drawEvent(ev, 0);
 

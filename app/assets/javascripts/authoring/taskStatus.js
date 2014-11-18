@@ -144,17 +144,16 @@ function completeTaskModalText(eventToComplete) {
         for (i=0; i<eventOutputs.length; i++) {
             modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm'>" + " " + eventOutputs[i] + "</input></b><br>";
             modalText += '<div id="output' + eventOutputs[i] + '" style = "display:none;">';
-            for (j = 0; j<outputQuestions.length; j++){
-                if (!outputFilledQ)
-                    var placeholderVal = "";
-                else{
-                    var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
+            questions = outputFilledQ[eventOutputs[i]];
+            for (j = 0; j < questions.length; j++){
+                if (questions[j] != ""){
+                    modalText += questions[j][0] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + questions[j][1] + '</textarea></br>';
                 }
-                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + placeholderVal + '</textarea></br>';
             }
-            modalText += "</div>";
+            modalText += "</div>"
         }
     }
+
     //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
     modalText += '<p align="left"><b>General Questions:</b></p>';
@@ -176,18 +175,19 @@ function completeTaskModalText(eventToComplete) {
 function saveDocQuestions(groupNum){
     var task_id = getEventJSONIndex(groupNum); 
     var ev = flashTeamsJSON["events"][task_id];
-    if (ev["outputs"]){
-        var outputList = ev["outputs"].split(",");
-        var outputQMap = {};
-        for (i = 0; i < outputList.length; i++){
-             outputQ = []
-             for (j = 0; j < outputQuestions.length; j++){
-                 outputQ.push([outputQuestions[j], $("#output" + i + "q" + j).val()]);
+
+    var eventOutputs = ev["outputs"];
+    if (eventOutputs != null && eventOutputs != "") {
+        eventOutputs = ev["outputs"].split(",");
+        for (i=0; i<eventOutputs.length; i++) {
+            questions = ev["outputQs"][eventOutputs[i]];
+            for (j = 0; j < questions.length; j++){
+                ev["outputQs"][eventOutputs[i]][j][1] = $("#output" + i + "q" + j).val();
             }
-            outputQMap[outputList[i]] = outputQ;
         }
-        ev["outputQs"] = outputQMap;
     }
+    console.log("AAAAAAHHH", ev["outputQs"]);
+
     var docQuestions = [];
     generalQuestions = [];
     for (i = 0; i < ev.docQs.length; i++){
