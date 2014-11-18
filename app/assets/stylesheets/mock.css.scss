@@ -86,7 +86,8 @@ $header-height: 64px;
 
 #foundry-header > .logo {
   position: absolute;
-  left: 80px;
+  left: 70px;
+  top: 2px;
 }
 
 #foundry-header > .logo .text {
@@ -194,11 +195,23 @@ $left-sidebar-width: 251px;
   border: $secondary-border;
   overflow: hidden;
   margin: 11px 0 0 11px;
-  padding: 11px;
-  box-sizing: border-box;
   
   @include border-radius ( 4px 0 0 0 );
   @include transition( (left 0.2s) );
+}
+
+#timeline-container #timeline-header {
+  padding: 11px 11px 0 11px;
+}
+
+#timeline-container #timeline-header #addTimeBtn {
+  float: right;
+  cursor: pointer;
+}
+
+#timeline-container .timeline {
+  overflow: scroll;
+  margin: 0 11px;
 }
 
 /* to be deleted */
@@ -239,6 +252,7 @@ $left-sidebar-width: 251px;
 
 .role.valid .indicator.plus {
   color: rgba(0,0,0,0);
+  border-color: black;
   border-size: 11px;
   
   background-size: cover;

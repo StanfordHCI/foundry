@@ -9,7 +9,7 @@ var SVG_WIDTH = 4850,
 
 var HEADER_HEIGHT = 28;
 
-var STEP_WIDTH = 25,
+var STEP_WIDTH = 20,
     HOUR_WIDTH = 100;
 var STEP_INTERVAL = 15; // minutes per step
 
@@ -34,19 +34,22 @@ var overlayIsOn = false;
 //Remove existing X-axis labels
 var numMins = -60;
 
+var timelineDiv = $('<div class="timeline"></div>');
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
-});
+}).append(timelineDiv);
 
 
-var header_svg = d3.select("#timeline-container").append("svg")
+var d3TimelineElem = d3.select("#timeline-container .timeline");
+
+var header_svg = d3TimelineElem.append("svg")
     .attr("width", SVG_WIDTH)
     .attr("height", HEADER_HEIGHT)
     .attr("class", "header-svg")
     .style({"display": "block",
             "border-bottom": "solid 1px " + STROKE_COLOR});
 
-var timeline_svg = d3.select("#timeline-container").append("svg")
+var timeline_svg = d3TimelineElem.append("svg")
     .attr("class", "timeline-svg chart")
     .attr("width", SVG_WIDTH)
     .attr("height", SVG_HEIGHT)
@@ -282,9 +285,6 @@ function initializeTimelineDuration() {
 
 var task_g = timeline_svg.selectAll(".task_g");
 
-//Set the width of the timeline header row so add time button is all the way to the right
-document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
-
 //Turn on the overlay so a user cannot continue to draw events when focus is on a popover
 function overlayOn() {
     console.log("overlay on");
@@ -394,9 +394,6 @@ function redrawTimeline() {
     .attr("width", "100%")
     .attr("height", "100%")
     .style("fill", "rgba(0, 0, 0, 0.04)");
-  
-  //Redraw Add Time Button
-  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
   
   //Remove existing X-axis labels
   timelineSvg.selectAll("text.timelabel").remove();
