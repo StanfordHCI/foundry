@@ -404,7 +404,7 @@ function saveTaskOverview(groupNum){
         output = outputVals[i];
         if (output != ""){
             outQs[output] = [];
-            questionArray = ($("#num" + outputVals[i]).val()).split("\n");
+            questionArray = (document.getElementById("num" + outputVals[i]).value).split("\n");
             for (j = 0; j < questionArray.length; j++){
                 if (questionArray[j] != ""){
                     outQs[output].push([questionArray[j],""]);
