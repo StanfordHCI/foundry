@@ -9,4 +9,5 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-Foundry::Application.config.secret_key_base = '1a0c1867e13043ac6404ba8a96197c45cee564bde7f2e2b002c171ea342ef003fec278906bb44fa0652075944fb1cb07fbb1fea3ab77a19cb4d5f2145e6be6da'
+
+Foundry::Application.config.secret_key_base =  ENV['SECRET_TOKEN']
