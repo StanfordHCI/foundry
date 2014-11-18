@@ -402,13 +402,15 @@ function saveTaskOverview(groupNum){
     outputVals = ($("#outputs").val()).split(",");
     for (i = 0; i < outputVals.length; i++){
         output = outputVals[i];
-        outQs[output] = [];
-        questionArray = ($("#num" + outputVals[i]).val()).split("\n");
-        for (j = 0; j < questionArray.length; j++){
-            if (questionArray[j] != ""){
-                outQs[output].push([questionArray[j],""]);
-            }
-        } 
+        if (output != ""){
+            outQs[output] = [];
+            questionArray = ($("#num" + outputVals[i]).val()).split("\n");
+            for (j = 0; j < questionArray.length; j++){
+                if (questionArray[j] != ""){
+                    outQs[output].push([questionArray[j],""]);
+                }
+            } 
+        }
     }
 
   

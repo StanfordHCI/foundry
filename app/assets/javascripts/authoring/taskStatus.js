@@ -11,9 +11,6 @@
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
 
-//Documentation Questions
-var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
-var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
     var indexOfJSON = getEventJSONIndex(groupNum);
