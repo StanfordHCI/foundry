@@ -3,7 +3,7 @@
 
 </style>
 
-<div id="left-sidebar">
+<div id="left-sidebar" class="sidebar">
  
  <div class="inner" style="height:100%;overflow-y:scroll;">
      <% if in_author_view %>
@@ -22,12 +22,6 @@
                   <div id="project-status-container" class="well">
                     <!-- Render project status container --> 
               <%= render :partial => "project_status" %>                 
-                  </div> 
-
-
-                  <div id="chat-box-container" class="well" >
-                    <!-- render partial with chat box --> 
-              <%= render :partial => "chatbox" %>
                   </div>
   
                  <!--Add a file picker for the user to start the upload process -->
@@ -48,28 +42,21 @@
 
             
           <% else %>
-<div id="project-overview-container" class="sidebar-item">
-  <!-- Render project overview container --> 
-  <%= render :partial => "project_overview" %> 
-</div>
+            <div id="project-overview-container" class="sidebar-item">
+              <!-- Render project overview container --> 
+              <%= render :partial => "project_overview" %> 
+            </div>
 
-<div id="member-container" class="sidebar-item">
-  <!-- Render member roles container --> 
-  <%= render :partial => "roles" %> 
-</div>
-            
-<div id="project-status-container" class="well" style="display: none;">
-  <!-- Render project status container --> 
-  <%= render :partial => "project_status" %>               
-</div>
-            
-            <div id="chat-box-container" class="well" >
-                    <!-- render partial with chat box --> 
-              <%= render :partial => "chatbox" %>
-                  </div>
-              
-    
-            
+            <div id="member-container" class="sidebar-item">
+              <!-- Render member roles container --> 
+              <%= render :partial => "roles" %> 
+            </div>
+
+            <div id="project-status-container" class="well" style="display: none;">
+              <!-- Render project status container --> 
+              <%= render :partial => "project_status" %>               
+            </div>
+   
             <div id="search-events-container" class="well" style="overflow-y:scroll;">
               <!-- render partial with event library --> 
               <%= render :partial => "event_library" %>
@@ -96,9 +83,10 @@
             
                 <div id="project-status-container" class="well">
                   <!-- Render project status container --> 
-            <%= render :partial => "project_status" %>               
-                
-            <div><h4>Welcome <%= @user_name %>!</h4></div>
+                  <%= render :partial => "project_status" %>
+                <div>
+              
+              <h4>Welcome <%= @user_name %>!</h4></div>
                 
                   <!--<h4> Your Task Starts In 1:20 </h4> -->
             <!-- <button class="btn" type="button" onclick="searchEvents()" id="projectDetailsButton">Project Details</button>
@@ -112,16 +100,11 @@
                     </div>
                
                 </div> <!-- end of project-status-container div -->
-                   
-                <div id="chat-box-container" class="well" >
-                    <!-- render partial with chat box --> 
-              <%= render :partial => "chatbox" %>
-              </div>
           
-              <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-              <!-- Render project overview container --> 
-              <%= render :partial => "project_overview" %> 
-          </div>
+              <div id="project-overview-container" class="sidebar-item">
+                <!-- Render project overview container --> 
+                <%= render :partial => "project_overview" %> 
+              </div>
       
           <% if @member_type == "pc" || @member_type == "client" %>
             <div id="member-container" class="well" style="overflow-y:scroll;">

@@ -17,18 +17,27 @@
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
+    eventObj.timer = eventObj.duration;
+    eventObj.task_startBtn_time = (new Date).getTime();
+    
+    //remove task from remaining and add to live task array
+    var idx = remaining_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        remaining_tasks.splice(idx, 1);
+    }
+    live_tasks.push(groupNum);
 
     //START TIMER
     //START HERE ALEXANDRA
-
-    //Close the task modal
-    $("#task_modal").modal('hide');
-
-    updateStatus();
+    updateStatus(true);
     drawEvent(eventObj); //Will update color
 
     console.log("redraw event after start");
 
+    //Close the task modal
+    $("#task_modal").modal('hide');
+
+    
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
@@ -48,6 +57,7 @@ function confirmCompleteTask(groupNum) {
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
+    
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
     alertText.innerHTML = completeTaskModalText(eventToComplete);
@@ -139,10 +149,51 @@ var completeTask = function(groupNum){
     //Update the status of a task
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
-    eventToComplete.status = "completed";
     saveDocQuestions(groupNum);
     console.log(eventToComplete["docQs"]);
+    
+    if(eventToComplete.status == "delayed"){
+        
+        var idx = delayed_tasks.indexOf(groupNum);
+        if (idx != -1) { // delayed task
+            delayed_tasks.splice(idx, 1);
+            console.log("removed task from delayed and added to completed_red");
+            
+        }
+        completed_red_tasks.push(groupNum);
+        //sendEmailOnCompletionOfDelayedTask(groupNum);
+    }
+    else if (eventToComplete.status == "started"){
+       
+        var idx = live_tasks.indexOf(groupNum);
+        if (idx != -1){ // live task
+            live_tasks.splice(idx, 1);
+        }
+         drawn_blue_tasks.push(groupNum);
+    }
 
+    // remove from either live or delayed tasks. Add to completed_red_tasks or drawn_blue_tasks
+    var idx = delayed_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        delayed_tasks.splice(idx, 1);
+        completed_red_tasks.push(groupNum);
+        //updateStatus(true);
+        console.log("removed task from delayed and added to completed_red");
+        sendEmailOnCompletionOfDelayedTask(groupNum);
+    } else {
+        idx = live_tasks.indexOf(groupNum);
+        if (idx != -1){ // live task
+            //var task_g = getTaskGFromGroupNum (groupNum);
+            //var blue_width = drawBlueBox(ev, task_g);
+            drawn_blue_tasks.push(groupNum);
+            
+            //sendEmailOnEarlyCompletion(blue_width);
+            live_tasks.splice(idx, 1);
+        }
+    }
+
+    eventToComplete.status = "completed";
+   
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
     //Update database, must be false b/c we are not using the old ticker
