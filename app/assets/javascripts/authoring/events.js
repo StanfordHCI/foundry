@@ -3,7 +3,7 @@
  * 
  */
 
-var RECTANGLE_WIDTH = 100;
+var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
@@ -115,9 +115,9 @@ function rightResize(d) {
         newX = SVG_WIDTH;
     }
     var newWidth = newX - ev.x;
-    if (newWidth < 30)
+    if (newWidth < 30) {
         return;
-
+    }
     ev.duration = durationForWidth(newWidth);
 
     drawEvent(ev, false);

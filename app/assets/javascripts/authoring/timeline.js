@@ -10,7 +10,11 @@ var SVG_WIDTH = 4850,
 var HEADER_HEIGHT = 28;
 
 var STEP_WIDTH = 20,
-    HOUR_WIDTH = 100;
+    HOUR_WIDTH = 4 * STEP_WIDTH;
+
+// declared in events.js
+var RECTANGLE_WIDTH = HOUR_WIDTH;
+
 var STEP_INTERVAL = 15; // minutes per step
 
 var TIMELINE_HOURS = 48;
@@ -77,6 +81,8 @@ window._foundry = {
     stepInterval: STEP_INTERVAL,
     
     stepWidth: STEP_WIDTH,
+    
+    hourWidth: HOUR_WIDTH,
     
     timelineSvg: timeline_svg,
     
