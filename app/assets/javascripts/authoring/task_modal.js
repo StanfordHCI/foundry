@@ -292,8 +292,15 @@ function getTaskOverviewContent(groupNum){
         }
         var member = getMemberById(ev.members[num_members-1]);
         content += member.role;
+        content += '<br/>';
+    }
+
+    if (ev.notes != ""){
+        content += '</br><b>Description:</b><br>';
+        content += ev.notes;
         content += '<br>';
     }
+
 
     content += "<hr/>";
     content += "<b>Documentation Questions</b><hr/>";
@@ -320,14 +327,6 @@ function getTaskOverviewContent(groupNum){
             }
         }
     }
-
-    
-    if (ev.notes != ""){
-        content += '<b>Description:</b><br>';
-        content += ev.notes;
-        content += '<br>';
-    }
- 
    
     return content;
 }
