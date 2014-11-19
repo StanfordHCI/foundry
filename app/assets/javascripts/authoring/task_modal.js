@@ -20,7 +20,7 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        if(eventObj.status == "started"){
+        if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
             $("#start-end-task").html('Complete');
