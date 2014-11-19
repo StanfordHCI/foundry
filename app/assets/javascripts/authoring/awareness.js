@@ -210,10 +210,10 @@ function renderEverything(firstTime) {
             // will only be run way at the beginning before any members or events are added
             // will only run in requester's page, because on members' pages, members array
             // length will be greater than zero
-            if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
-                console.log("CREATED A FOLDER!!!!!!!!");
-                createNewFolder(flashTeamsJSON["title"]); // gdrive
-            }
+            // if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
+            //     console.log("CREATED A FOLDER!!!!!!!!");
+            //     createNewFolder(flashTeamsJSON["title"]); // gdrive
+            // }
             return; // status not set yet
         }
 
@@ -263,10 +263,10 @@ function renderEverything(firstTime) {
 				updateOriginalStatus();
             }
 
-            if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
-                console.log("CREATED A FOLDER!!!!!!!!");
-                createNewFolder(flashTeamsJSON["title"]); // gdrive
-            }
+            // if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
+            //     console.log("CREATED A FOLDER!!!!!!!!");
+            //     createNewFolder(flashTeamsJSON["title"]); // gdrive
+            // }
             
             if(!flashTeamsJSON)
                 return;
