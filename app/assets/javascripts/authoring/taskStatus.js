@@ -119,6 +119,9 @@ var allCompleted = function(groupNum){
     var eventToComplete = events[indexOfJSON];
     var totalCheckboxes = $(".outputCheckbox").length;
     var checkedCheckboxes = $(".outputCheckbox:checked").length;
+    if (eventToComplete.outputs == null){
+        return;
+    }
     var splitOutputs = eventToComplete.outputs.split(",");
     for (i = 0; i < totalCheckboxes; i++){
         value = false;
