@@ -153,12 +153,23 @@ var completeTask = function(groupNum){
     console.log(eventToComplete["docQs"]);
     
     if(eventToComplete.status == "delayed"){
-       alert("hereD");
+        
+        var idx = delayed_tasks.indexOf(groupNum);
+        if (idx != -1) { // delayed task
+            delayed_tasks.splice(idx, 1);
+            console.log("removed task from delayed and added to completed_red");
+            
+        }
         completed_red_tasks.push(groupNum);
+        //sendEmailOnCompletionOfDelayedTask(groupNum);
     }
     else if (eventToComplete.status == "started"){
-        alert("here!!");
-        drawn_blue_tasks.push(groupNum);
+       
+        var idx = live_tasks.indexOf(groupNum);
+        if (idx != -1){ // live task
+            live_tasks.splice(idx, 1);
+        }
+         drawn_blue_tasks.push(groupNum);
     }
 
     // remove from either live or delayed tasks. Add to completed_red_tasks or drawn_blue_tasks
