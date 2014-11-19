@@ -5,8 +5,9 @@
   }
 
   $('.add-role').click(addRoleClickFunction);
+
   function addRoleClickFunction(e) {
-    if($(this).hasClass('active')) return;
+    if($(this).hasClass('active')) {return};
     
     e.preventDefault();
     
@@ -23,7 +24,7 @@
     
     var that = $(this);
     var indicator = $(this).find('.indicator');
-  
+
     // focus on the input
     input.focus()
       .keypress(function() {
@@ -33,7 +34,6 @@
         }
       })
       .keypress(function(e) {
-        
         if(e.keyCode != 13 /* enter */) return;
         
         // not valid
@@ -75,4 +75,7 @@
         '</div>');
     }
   }
+  
+  $('.add-role').click(addRoleClickFunction);
+  
 })();

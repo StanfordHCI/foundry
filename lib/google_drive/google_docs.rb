@@ -5,9 +5,12 @@ module GoogleDrive
     attr_writer :client_id, :client_secret, :redirect_uri
 
     def initialize(client_id, client_secret, redirect_uri)
-      @client_id = client_id
-      @client_secret = client_secret
-      @redirect_uri =   redirect_uri
+      @client_id = ENV['GDRIVE_CLIENT_ID']
+      @client_secret = ENV['GDRIVE_CLIENT_SECRET']
+      @redirect_uri =   ENV['GDRIVE_REDIRECT_URIS']      
+      #@client_id = client_id
+      #@client_secret = client_secret
+      #@redirect_uri =   redirect_uri
     end
 
     def create_google_client
