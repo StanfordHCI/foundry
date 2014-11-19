@@ -113,7 +113,7 @@ var allCompleted = function(groupNum){
                 value = true;
             }
         } 
-        if (value){ 
+            if (value){ 
             console.log(splitOutputs[i]);
             document.getElementById("output" + splitOutputs[i]).style.display = "block";
         }else{ 
