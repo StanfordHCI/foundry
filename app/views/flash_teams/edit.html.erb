@@ -131,8 +131,8 @@
           var timelineWrapper = $("#timeline-wrapper");
           timelineWrapper.css({
               width:  window.innerWidth
-                    - leftSidebar.width()
-                    - rightSidebar.width()
+                    - leftSidebar.outerWidth()
+                    - rightSidebar.outerWidth()
                     // subtract both margins
                     - ( 2 * parseFloat(timelineWrapper.css("margin-left")))
                     + "px",
