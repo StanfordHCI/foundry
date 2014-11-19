@@ -861,7 +861,7 @@ function drawTimer(eventObj){
     if( in_progress != true || eventObj.status == "not_started" )
         return;
 
-    var x_offset = 10; // unique for duration
+    var x_offset = 15; // unique for timer (NOTE FROM DR: this used to be 10)
     var y_offset = 50; // unique for handoff btn
 
     if( eventObj.status == "started" ){
