@@ -39,9 +39,9 @@
 	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
 	        <!-- render partial with timeline --> 
 				  <%= render :partial => "timeline" %>
+	        </div>
 	      </div>
-	    </div>
-		</div> <!-- end of body (e.g., class="span9") -->
+        </div> <!-- end of body (e.g., class="span9") -->
 	
 	</div> <!-- end of div class="row-fluid" -->
    
@@ -91,11 +91,13 @@
 		<!--sidebar-->
 
         <div class="span9"> <!--Body Content-->
-           <div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
-	            <!-- render partial with timeline --> 
-				<%= render :partial => "timeline" %>
-				<%= render :partial => "confirm_action" %>
-	        </div>
+          <div id="timeline-wrapper">
+            <div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
+              <!-- render partial with timeline --> 
+              <%= render :partial => "timeline" %>
+              <%= render :partial => "confirm_action" %>
+            </div>
+          </div>
 		</div> <!-- end of body (e.g., class="span9") -->    
 		
 	</div><!-- end of div class="row-fluid" -->
