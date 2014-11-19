@@ -46,4 +46,4 @@
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
 //= require ./authoring/chat_styling.js
-
+//= require ./authoring/dependencies
