@@ -3,10 +3,17 @@
 <p><b>Project overview:</b> <%=@project_overview%></p>
 <p><b>Task description:</b> <%=@task_description%></p>
 
-<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>, which you can access at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+
+<%if !@input_link.empty?%>
+You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<%end%>
 
 <p><b>Deliverable(s):</b> <%=@outputs%></p>
+
+<%if !@output_description.empty?%>
 <p><b>Deliverable information:</b> <%=@output_description%></p>
+<%end%>
 
 <p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
 
