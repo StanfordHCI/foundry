@@ -259,10 +259,10 @@ function createEventObj(snapPoint, duration) {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
-        "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"","docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],"outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
+        createNewFolder(document.getElementById("ft-name").innerHTML);
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
