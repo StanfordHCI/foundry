@@ -55,9 +55,13 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Answer all questions to submit";
     $("#confirmButton").attr("class","btn btn-success");
-    if (eventToComplete.outputs != null && eventToComplete.outputs != "") {
-        $("#confirmButton").prop('disabled', true); //Defaults to disabled
-    }
+    completed = allCompleted(groupNum);
+    if (completed){
+            $("#confirmButton").prop('disabled', false);
+            $("#confirmButton")[0].innerHTML = "Submit!";
+        }
+        else 
+            $("#confirmButton").prop('disabled', true);
     $('#confirmAction').modal('show');
 
     //Code for Documentation Question Save Button
@@ -69,28 +73,8 @@ function confirmCompleteTask(groupNum) {
     
 
     $(".outputForm").change(function() {
-        var totalCheckboxes = $(".outputCheckbox").length;
-        var checkedCheckboxes = $(".outputCheckbox:checked").length;
-        var splitOutputs = eventToComplete.outputs.split(",");
-        for (j = 0; j < checkedCheckboxes; j++){
-            for (i = 0; i < totalCheckboxes; i++){
-                if ($(".outputCheckbox:checked")[j].contains($(".outputCheckbox")[i])){
-                    $("#output" + splitOutputs[i]).attr("style", "display:block;");
-                }
-            }
-        }
-        var outputFormLength = $(".outputForm").length;
-        var completed = true;
-        for (i = 0; i < outputFormLength; i++){
-            if ($(".outputForm")[i].type != "checkbox"){
-                if ($(".outputForm")[i].value == ""){
-                    completed = false;
-                }
-            }
-        }
-        if (totalCheckboxes != checkedCheckboxes) {
-            completed = false;
-        }
+        completed = allCompleted(groupNum);
+        console.log(completed);
         if (completed){
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
@@ -113,6 +97,43 @@ function confirmCompleteTask(groupNum) {
         $('#confirmAction').modal('hide');
         saveQuestions(groupNum);
     };
+}
+
+var allCompleted = function(groupNum){
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var events = flashTeamsJSON["events"];
+    var eventToComplete = events[indexOfJSON];
+    var totalCheckboxes = $(".outputCheckbox").length;
+    var checkedCheckboxes = $(".outputCheckbox:checked").length;
+    var splitOutputs = eventToComplete.outputs.split(",");
+    for (i = 0; i < totalCheckboxes; i++){
+        value = false;
+        for (j = 0; j < checkedCheckboxes; j++){
+            if ($(".outputCheckbox")[i].contains($(".outputCheckbox:checked")[j])){
+                value = true;
+            }
+        } 
+        if (value){ 
+            console.log(splitOutputs[i]);
+            document.getElementById("output" + splitOutputs[i]).style.display = "block";
+        }else{ 
+            document.getElementById("output" + splitOutputs[i]).style.display = "none";
+        }
+    }
+
+    var outputFormLength = $(".outputForm").length;
+    var completed = true;
+    for (i = 0; i < outputFormLength; i++){
+        if ($(".outputForm")[i].type != "checkbox"){
+            if ($(".outputForm")[i].value == ""){
+                completed = false;
+            }
+        }
+    }
+    if (totalCheckboxes != checkedCheckboxes) {
+        completed = false;
+    }
+    return completed
 }
 
 //Return text to fill complete task modal
