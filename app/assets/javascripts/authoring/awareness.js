@@ -35,6 +35,7 @@ var window_visibility_change = null;
 $(document).ready(function(){
     addCursor();
     cursor = timeline_svg.select(".cursor");
+    console.log("THIS FUNCTION HITS");
     renderEverything(true);
 });
 
@@ -197,10 +198,18 @@ function renderEverything(firstTime) {
         }
 
         console.log("inside render everything"); 
+        console.log("THIS IS THE DATA", data);
             
         //get user name and user role for the chat
         if(data == null){
             console.log("RETURNING BEFORE LOAD"); 
+            // will only be run way at the beginning before any members or events are added
+            // will only run in requester's page, because on members' pages, members array
+            // length will be greater than zero
+            if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
+                console.log("CREATED A FOLDER!!!!!!!!");
+                createNewFolder(flashTeamsJSON["title"]); // gdrive
+            }
             return; // status not set yet
         }
 
@@ -227,6 +236,7 @@ function renderEverything(firstTime) {
                 user_loaded_before_team_start = true;
         }
 
+
         if(in_progress){
             colorBox();
             console.log("flash team in progress");
@@ -251,12 +261,7 @@ function renderEverything(firstTime) {
             if(!flashTeamsJSON)
                 return;
             
-            // will only be run way at the beginning before any members or events are added
-            // will only run in requester's page, because on members' pages, members array
-            // length will be greater than zero
-            if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
-                createNewFolder(flashTeamsJSON["title"]); // gdrive
-            }
+           
             loadData();
             
             if(!isUser || memberType == "pc" || memberType == "client") {
