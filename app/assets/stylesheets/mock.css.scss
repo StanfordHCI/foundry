@@ -34,6 +34,7 @@ $primary-border: solid 1px rgba(255,255,255,0.08);
   background-position: center;
 }
 
+$header-height: 64px;
 /* header styles */
 #foundry-header {
   position: fixed;
@@ -41,7 +42,7 @@ $primary-border: solid 1px rgba(255,255,255,0.08);
   left: 0;
   
   width: 100%;
-  height: 64px;
+  height: $header-height;
 
   box-sizing: border-box;
   padding: 8px;
@@ -112,7 +113,7 @@ $left-sidebar-width: 251px;
 #left-sidebar {
   position: absolute;
   left: 0;
-  top: 64px;
+  top: $header-height;
   
   box-sizing: border-box;
   width: $left-sidebar-width;
@@ -165,6 +166,7 @@ $left-sidebar-width: 251px;
 #timeline-wrapper {
   position: absolute;
   left: $left-sidebar-width;
+  top: $header-height;
   
   height: 100%;
   overflow: hidden;
