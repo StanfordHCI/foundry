@@ -190,6 +190,8 @@ $left-sidebar-width: 251px;
   position: absolute;
   left: $left-sidebar-width;
   top: $header-height;
+  
+  @include transition( (left 0.2s, width 0.2s) );
 }
 
 #timeline-container {
@@ -201,7 +203,6 @@ $left-sidebar-width: 251px;
   overflow: hidden;
   
   @include border-radius ( 4px 0 0 0 );
-  @include transition( (left 0.2s, width 0.2s) );
 }
 
 #timeline-container #timeline-header {
