@@ -5,7 +5,7 @@
 	<br />
 	<!-- <% @fw.to_s.gsub('"', '')%> -->
 	
-	<%= @fw.join(", ")%>
+	<%= @fw.uniq.join(", ")%>
 	
 	<br />
 	<br />

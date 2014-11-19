@@ -14,7 +14,7 @@
 		<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %></p>
 		
 		<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline; font-weight:bold;") %>
-		<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span7') %> </p>
+		<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span7', :required => true) %> </p>
 		
 		<br />
 		
@@ -33,23 +33,23 @@
 			<br />
 			
 			<p><%= label_tag(:project_overview, "Project Overview:" , :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5) %></p>
+			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
-			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5) %></p>
+			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
 			For this task, you will receive the following input(s):
-					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>, which you can access at the following link:
-					<%= text_field_tag(:input_link, "", :placeholder => "[INSERT LINK TO INPUT]", :class => 'span7') %></p>
+					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>. You can access the input(s) at the following link (optional):
+					<%= text_field_tag(:input_link, "", :placeholder => "[INSERT LINK TO INPUT]", :class => 'span6') %></p>
 			
 			<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
 			<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>
-			<p><%= label_tag(:output_description, "Deliverable Information:", :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :rows =>3, :required => true) %></p>
+			<p><%=label_tag(:output_description, "Deliverable Information (optional):", :style => "display:inline; font-weight:bold;") %>
+			<%= text_area_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :rows =>3) %></p>
 			
 			<p><%= label_tag(:task_duration, "Task Duration:", :style => "display:inline; font-weight: bold;") %>
-			You will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3')%> to finish this task.</p>
+			You will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3', :required => true)%> to finish this task.</p>
 			
 			<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  
 			If you have not already done so, please familiarize yourself with Foundry by visiting 

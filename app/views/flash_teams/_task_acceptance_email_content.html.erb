@@ -1,12 +1,20 @@
 <p>Congratulations!  You have been hired for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. As stated in the job description, you will have <b><em><%=@task_duration%></em></b> to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:</p>
 
-<p><b>Project overview:</b> <%=@project_overview%></p>
-<p><b>Task description:</b> <%=@task_description%></p>
+<p><b>Project overview:</b> <%=@project_overview.html_safe%></p>
+<p><b>Task description:</b> <%=@task_description.html_safe%></p>
 
-<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>, which you can access at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+
+<%if !@input_link.empty?%>
+You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<%end%>
 
 <p><b>Deliverable(s):</b> <%=@outputs%></p>
+
+<%if !@output_description.empty?%>
 <p><b>Deliverable information:</b> <%=@output_description%></p>
+<%end%>
+
 
 <p><b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your 
 progress and submit your work.</p>  Click the following URL to sign up for this project on Foundry: 
