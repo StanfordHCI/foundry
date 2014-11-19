@@ -6,7 +6,7 @@
 $(document).ready(function() {
   var menuButton = $("#foundry-header .menu-button");
   var leftSidebar = $("#left-sidebar");
-  var timelineContainer = $("#timeline-container");
+  var timelineWrapper = $("#timeline-wrapper");
   
   // hover listeners
   menuButton.mouseenter(function() {
@@ -14,7 +14,7 @@ $(document).ready(function() {
     if($(this).hasClass("active")) return;
     
     leftSidebar.css("left", -(leftSidebar.width() - 20) + "px");
-    timelineContainer.css("left", "20px");
+    timelineWrapper.css("left", "20px");
   });
   
   menuButton.mouseleave(function() {
@@ -22,28 +22,29 @@ $(document).ready(function() {
     if($(this).hasClass("active")) return;
     
     leftSidebar.css("left", -leftSidebar.width() + "px");
-    timelineContainer.css("left", 0);
+    timelineWrapper.css("left", 0);
   });
   
   // click listener
   menuButton.click(function() {
-    var margin = 2 * parseFloat(timelineContainer.css("margin-left"));
+    // var margin = 2 * parseFloat(timelineWrapper.css("margin-left"));
+    var sidebarWidth = leftSidebar.width();
     if($(this).hasClass("active")) {
+    
       leftSidebar.css("left", -leftSidebar.width() + "px");
-      var width = window.innerWidth
-                - margin;
-      timelineContainer.css({
+      var width = timelineWrapper.width() + sidebarWidth;
+      timelineWrapper.css({
           left: 0,
           width: width + "px",
       });
       $(this).removeClass("active");
     } else {
       leftSidebar.css("left", 0);
-      var width = window.innerWidth
-                - leftSidebar.width()
-                - margin;
-                
-      timelineContainer.css({
+      var width = timelineWrapper.width()
+                - leftSidebar.width();
+                // - margin;
+      
+      timelineWrapper.css({
           left: leftSidebar.width() + "px",
           width: width + "px",
       });
