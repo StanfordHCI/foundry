@@ -262,6 +262,11 @@ function renderEverything(firstTime) {
 	            //console.log("NO START TIME!");
 				updateOriginalStatus();
             }
+
+            if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
+                console.log("CREATED A FOLDER!!!!!!!!");
+                createNewFolder(flashTeamsJSON["title"]); // gdrive
+            }
             
             if(!flashTeamsJSON)
                 return;
