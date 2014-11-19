@@ -60,8 +60,10 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        else 
+        else{ 
             $("#confirmButton").prop('disabled', true);
+            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+        }
     $('#confirmAction').modal('show');
 
     //Code for Documentation Question Save Button
@@ -79,8 +81,10 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        else 
+        else{ 
             $("#confirmButton").prop('disabled', true);
+            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+        }
     });
 
 
