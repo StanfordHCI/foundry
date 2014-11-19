@@ -455,7 +455,7 @@ function drawLeftDragBar(eventObj, firstTime) {
 }
 
 function drawTitleText(eventObj, firstTime) {
-    var x_offset = 10; // unique for title
+    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
     var y_offset = 14; // unique for title
 
     var groupNum = eventObj["id"];
@@ -502,7 +502,7 @@ function drawTitleText(eventObj, firstTime) {
 }
 
 function drawDurationText(eventObj, firstTime) {
-    var x_offset = 10; // unique for duration
+    var x_offset = 15; // unique for duration (NOTE FROM DR: Used to be 10)
     var y_offset = 26; // unique for duration
 
     var totalMinutes = eventObj["duration"];
@@ -543,7 +543,7 @@ function drawDurationText(eventObj, firstTime) {
 }
 
 function drawGdriveLink(eventObj, firstTime) {
-    var x_offset = 10; // unique for gdrive link
+    var x_offset = 15; // unique for gdrive link (NOTE FROM DR: Used to be 10)
     var y_offset = 38; // unique for gdrive link
 
     var groupNum = eventObj["id"];
@@ -585,7 +585,7 @@ function drawHandoffBtn(eventObj, firstTime) {
         return;
     }
 
-    var x_offset = getWidth(eventObj)-18; // unique for handoff btn
+    var x_offset = getWidth(eventObj)-24; // unique for handoff btn (NOTE FROM DR: Used to be -18)
     var y_offset = 40; // unique for handoff btn
 
     var groupNum = eventObj["id"];
@@ -627,7 +627,7 @@ function drawHandoffBtn(eventObj, firstTime) {
 function drawCollabBtn(eventObj, firstTime) {
     if(isUser || in_progress){ return; }
 
-    var x_offset = getWidth(eventObj)-38; // unique for collab btn
+    var x_offset = getWidth(eventObj)-44; // unique for collab btn (NOTE FROM DR: Used to be -38)
     var y_offset = 40; // unique for collab btn
 
     var groupNum = eventObj["id"];
@@ -674,7 +674,7 @@ function drawMemberCircles(eventObj) {
     //Find out if first draw or redrawing
     for (var i=0; i<members.length; i++) {
         var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
-        var x_offset = 16 + (i*14); //unique for each member line
+        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
         var y_offset = 60;
         var member = getMemberById(members[i]);
         var color = member.color;
