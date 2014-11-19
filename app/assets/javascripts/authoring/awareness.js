@@ -11,10 +11,13 @@ var fire_interval = 180; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
-var live_tasks = [];
 var remaining_tasks = [];
+
+var live_tasks = [];
 var delayed_tasks = [];
+//tasks that are completed before being delayed
 var drawn_blue_tasks = [];
+//tasks that are completed after being delayed
 var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
@@ -371,6 +374,7 @@ var flashTeamEndedorStarted = function(){
 var flashTeamUpdated = function(){
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
+    var updated_live_tasks = loadedStatus.live_tasks
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         console.log("drawn_blue_tasks not same length");
@@ -398,6 +402,16 @@ var flashTeamUpdated = function(){
         console.log("completed_red_tasks not same content");
         console.log(completed_red_tasks);
         console.log(updated_completed_red_tasks);
+        return true;
+    }
+
+     if (updated_live_tasks.length != live_tasks.length) {
+        console.log("live_tasks not same length")
+        return true;
+    }
+
+    if(updated_live_tasks.sort().join(',') !== live_tasks.sort().join(',')){
+        console.log("live_tasks not same content");
         return true;
     }
     return false;

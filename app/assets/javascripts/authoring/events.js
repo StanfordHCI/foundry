@@ -873,7 +873,16 @@ function drawTimer(eventObj){
         if(remaining_time < 0){
             eventObj.status = "delayed";
              
-             drawEvent(eventObj);
+            
+            var groupNum = parseInt(eventObj["id"]);
+            
+            var idx = live_tasks.indexOf(groupNum);
+            if (idx != -1) { // delayed task
+                live_tasks.splice(idx, 1);
+            }
+            delayed_tasks.push(groupNum);
+    
+            drawEvent(eventObj);
             console.log("in drawTimer: ", remaining_time);
         }
 
