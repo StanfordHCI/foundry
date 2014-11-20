@@ -178,10 +178,15 @@ $left-sidebar-width: 251px;
 }
 
 #left-sidebar .sidebar-item #projectOverview {
-  text-align: center;
+  text-align: left;
 }
 
-#left-sidebar .sidebar-item #projectOverview #projectOverviewEditLink {
+#left-sidebar .sidebar-item #projectOverview p {
+  margin-bottom: 11px;
+}
+
+#left-sidebar .sidebar-item #projectOverviewEditLink {
+  margin: 0;
   cursor: pointer;
 }
 
