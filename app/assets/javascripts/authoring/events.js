@@ -3,7 +3,7 @@
  * 
  */
 
-var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
+var RECTANGLE_WIDTH = 100;
 var RECTANGLE_HEIGHT = 70;
 var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
@@ -90,7 +90,6 @@ function leftResize(d) {
     
     var startHr = startHrForX(newX);
     var startMin = startMinForX(newX);
-  
     ev.startHr = startHr;
     ev.startMin = startMin;
     ev.startTime = startHr * 60 + startMin;
@@ -116,9 +115,9 @@ function rightResize(d) {
         newX = SVG_WIDTH;
     }
     var newWidth = newX - ev.x;
-    if (newWidth < 30) {
+    if (newWidth < 30)
         return;
-    }
+
     ev.duration = durationForWidth(newWidth);
 
     drawEvent(ev, false);
@@ -230,10 +229,14 @@ function checkWithinTimelineBounds(snapPoint) {
 };
 
 function getStartTime(mouseX) {
-    var startHr = startHrForX(mouseX);
-    var startMin = startMinForX(mouseX);
-    
+    var startHr = (mouseX-(mouseX%100))/100;
+    var startMin = (mouseX%100)/25*15;
+    if(startMin == 57.599999999999994) {
+        startHr++;
+        startMin = 0;
+    } else startMin += 2.4
     var startTimeinMinutes = parseInt((startHr*60)) + parseInt(startMin);
+
     return {"startHr":startHr, "startMin":startMin, "startTimeinMinutes":startTimeinMinutes};
 };
 
@@ -252,7 +255,6 @@ function createEventObj(snapPoint, duration) {
     duration = duration || 60;
     
     var startTimeObj = getStartTime(snapPoint[0]);
-  
     var newEvent = {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
@@ -328,7 +330,7 @@ function drawG(eventObj, firstTime) {
 
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
-    var x_offset = -6;
+    var x_offset = -4;
     
     var y = _foundry.timeline.rowHeight * eventObj.row;
     var y_offset = (_foundry.timeline.rowHeight - RECTANGLE_HEIGHT)/2;
@@ -850,12 +852,6 @@ function drawEvent(eventObj) {
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
-    
-    // subtract two so there's always at least one empty row
-    // (event.row is 0 indexed)
-    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
-      window._foundry.timeline.updateNumRows(eventObj.row + 2);
-    }
 };
 
 

@@ -34,10 +34,11 @@
 	    <div class="row-fluid" style="margin-top:64px">
 
 		<div style="margin-left:250px;" class="span9"> <!--Body Content-->
+		
 		  <div id="timeline-wrapper">
 	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
-	          <!-- render partial with timeline --> 
-		      <%= render :partial => "timeline" %>
+	        <!-- render partial with timeline --> 
+				  <%= render :partial => "timeline" %>
 	        </div>
 	      </div>
         </div> <!-- end of body (e.g., class="span9") -->
@@ -68,7 +69,21 @@
 	     <% end %>
 		
      </div>
-
+     
+     <div class="row-fluid" style="margin-top: 40px; margin-bottom: 5px;">
+     
+     <h4>
+     	<span id="ft-name"><%= @flash_team.name.upcase%></span>
+     	
+     	<!-- Button to trigger modal -->
+	 	<a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;"><i class="icon-info-sign" style="vertical-align: middle;"></i></a>
+	 </h4>
+	 
+	 	<%= render :partial => "project_overview_modal" %>
+     
+     </div>
+     
+    	<!-- <h3> <% @flash_team.name %> </h3> -->
 		<script> var flash_team_name="<%= @flash_team.name %>";</script>
     
 		<div class="row-fluid">
@@ -102,7 +117,7 @@
 <script>
   (function() {
       function setEditPage() {
-          document.body.style.backgroundColor = "#f7f7f7";
+          document.body.style.backgroundColor = "#101010";
           document.body.style.overflow = "hidden";
 
           var header = $("#foundry-header");
@@ -117,8 +132,8 @@
           var timelineWrapper = $("#timeline-wrapper");
           timelineWrapper.css({
               width:  window.innerWidth
-                    - leftSidebar.outerWidth()
-                    - rightSidebar.outerWidth()
+                    - leftSidebar.width()
+                    - rightSidebar.width()
                     // subtract both margins
                     - ( 2 * parseFloat(timelineWrapper.css("margin-left")))
                     + "px",
