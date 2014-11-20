@@ -5,18 +5,17 @@
 
 <div id="left-sidebar" class="sidebar">
  
- <div class="inner" style="height:100%;overflow-y:scroll;">
+  <div class="inner" style="height:100%;overflow-y:scroll;">
+    <h4 class="project-name">
+      <span id="ft-name" class="text"><%= flash_team.name %></span>
+        <!-- Button to trigger modal -->
+        <a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;">
+          <i class="info-sign" style="vertical-align: middle;"></i>
+        </a>
+    </h4>
+    <%= render :partial => "project_overview_modal" %>
+ 
      <% if in_author_view %>
- 
-     <h4>
-          <span id="ft-name"><%= flash_team.name.upcase%></span>
-      
-          <!-- Button to trigger modal -->
-        <a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;"><i class="info-sign" style="vertical-align: middle;"></i></a>
-       </h4>
-    
-        <%= render :partial => "project_overview_modal" %>
- 
                <% if author_runtime %>
               
                   <div id="project-status-container" class="well">
@@ -75,11 +74,7 @@
         <% if in_expert_view %>
     
         <div class="span3"> <!--Sidebar content-->
-            <!-- <div id = "title-container" class="well">
-              <form name="titleForm" id="title_form">
-                <input type = "text" id="flashTeamTitle" placeholder="New Flash Team" style="font-size:25px; height:40px">
-              </form>
-            </div> -->	
+
             
                 <div id="project-status-container" class="well">
                   <!-- Render project status container --> 
@@ -87,13 +82,7 @@
                 <div>
               
               <h4>Welcome <%= @user_name %>!</h4></div>
-                
-                  <!--<h4> Your Task Starts In 1:20 </h4> -->
-            <!-- <button class="btn" type="button" onclick="searchEvents()" id="projectDetailsButton">Project Details</button>
-                       <svg width="2450" height="570">
-                              <rect width="200" height="40" x="0" y="0" fill="white" style="stroke: #000000;"></rect>
-                              <rect width="10" height="40" x="0" y="0" fill="green" class="project_status"></rect>
-                          </svg>-->             
+           
                 
                     <div id="status-bar-container" >
                        <!-- <h4> Your Task Is </h4> -->
