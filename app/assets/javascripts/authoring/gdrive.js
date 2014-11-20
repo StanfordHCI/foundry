@@ -77,7 +77,7 @@ function createNewFolder(eventName, JSONId){
   //console.log(eventName);
   //console.log(folderIds);
    
-  //console.log("CREATING NEW FOLDER!");
+  console.log("CREATING NEW FOLDER!");
 
   gapi.client.load('drive', 'v2', function() {
     var req;
@@ -93,7 +93,7 @@ function createNewFolder(eventName, JSONId){
          }
       });
     } else {
-      //console.log("Nope, this one");
+      console.log("Nope, this one");
       req = gapi.client.request({
         'path': '/drive/v2/files',
         'method': 'POST',

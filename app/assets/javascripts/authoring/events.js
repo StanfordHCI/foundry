@@ -257,10 +257,10 @@ function createEventObj(snapPoint, duration) {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
-        "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"","docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],"outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
+        createNewFolder(document.getElementById("ft-name").innerHTML);
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
@@ -453,7 +453,7 @@ function drawLeftDragBar(eventObj, firstTime) {
 }
 
 function drawTitleText(eventObj, firstTime) {
-    var x_offset = 10; // unique for title
+    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
     var y_offset = 14; // unique for title
 
     var groupNum = eventObj["id"];
@@ -500,7 +500,7 @@ function drawTitleText(eventObj, firstTime) {
 }
 
 function drawDurationText(eventObj, firstTime) {
-    var x_offset = 10; // unique for duration
+    var x_offset = 15; // unique for duration (NOTE FROM DR: Used to be 10)
     var y_offset = 26; // unique for duration
 
     var totalMinutes = eventObj["duration"];
@@ -541,7 +541,7 @@ function drawDurationText(eventObj, firstTime) {
 }
 
 function drawGdriveLink(eventObj, firstTime) {
-    var x_offset = 10; // unique for gdrive link
+    var x_offset = 15; // unique for gdrive link (NOTE FROM DR: Used to be 10)
     var y_offset = 38; // unique for gdrive link
 
     var groupNum = eventObj["id"];
@@ -583,7 +583,7 @@ function drawHandoffBtn(eventObj, firstTime) {
         return;
     }
 
-    var x_offset = getWidth(eventObj)-18; // unique for handoff btn
+    var x_offset = getWidth(eventObj)-24; // unique for handoff btn (NOTE FROM DR: Used to be -18)
     var y_offset = 40; // unique for handoff btn
 
     var groupNum = eventObj["id"];
@@ -625,7 +625,7 @@ function drawHandoffBtn(eventObj, firstTime) {
 function drawCollabBtn(eventObj, firstTime) {
     if(isUser || in_progress){ return; }
 
-    var x_offset = getWidth(eventObj)-38; // unique for collab btn
+    var x_offset = getWidth(eventObj)-44; // unique for collab btn (NOTE FROM DR: Used to be -38)
     var y_offset = 40; // unique for collab btn
 
     var groupNum = eventObj["id"];
@@ -672,7 +672,7 @@ function drawMemberCircles(eventObj) {
     //Find out if first draw or redrawing
     for (var i=0; i<members.length; i++) {
         var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
-        var x_offset = 16 + (i*14); //unique for each member line
+        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
         var y_offset = 60;
         var member = getMemberById(members[i]);
         var color = member.color;
@@ -865,7 +865,7 @@ function drawTimer(eventObj){
     if( in_progress != true || eventObj.status == "not_started" )
         return;
 
-    var x_offset = 10; // unique for duration
+    var x_offset = 15; // unique for timer (NOTE FROM DR: this used to be 10)
     var y_offset = 50; // unique for handoff btn
 
     if( eventObj.status == "started" ){
