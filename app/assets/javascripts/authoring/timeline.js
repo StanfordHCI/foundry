@@ -26,7 +26,10 @@ var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
 var ROW_HEIGHT = ROW_HEIGHT || 80;
 
 var BKG_COLOR = "white";
-var STROKE_COLOR = "rgba(233,233,233,0.7)";
+var STROKE_COLOR = "rgba(233,233,233,0.4)";
+var STRONG_STROKE_COLOR = "rgba(227, 227, 227, 0.8)";
+var MARKER_COLOR = "#fff";
+var ALT_MARKER_COLOR = "#fff";
 
 var current = undefined;
 var currentUserEvents = [];
@@ -97,6 +100,12 @@ window._foundry = {
     highlightSvg: undefined,
     
     strokeColor: STROKE_COLOR,
+    
+    strongStrokeColor: STRONG_STROKE_COLOR,
+    
+    markerColor: MARKER_COLOR,
+    
+    altMarkerColor: ALT_MARKER_COLOR,
     
     numRows: 1,
     
@@ -359,7 +368,12 @@ function redrawTimeline() {
       .data(intervals) // hour intervals
       .enter().append("rect")
           .attr("class", "marker")
-          .style("fill", 'transparent')
+          .style("fill",
+                 function(d) {
+                   var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
+                   return Math.floor(d/stepsPerHour) % 2 == 0 ? 
+                     timeline.markerColor : timeline.altMarkerColor;
+                 })
           .attr("x", function(d) {return d * STEP_WIDTH})
           .attr("width", STEP_WIDTH)
           .attr("y", 0)
@@ -377,7 +391,12 @@ function redrawTimeline() {
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
       .attr("y2", SVG_HEIGHT)
-      .style("stroke", STROKE_COLOR);
+      .style("stroke",
+        function(d) {
+          var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
+          return d % stepsPerHour == 0 ? 
+            timeline.strongStrokeColor : timeline.strokeColor;
+      });
 
   // draw y grid lines to timeline svg
   var numRows = _foundry.timeline.numRows;
