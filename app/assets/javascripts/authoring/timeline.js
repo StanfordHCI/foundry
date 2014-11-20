@@ -28,8 +28,8 @@ var ROW_HEIGHT = ROW_HEIGHT || 80;
 var BKG_COLOR = "white";
 var STROKE_COLOR = "rgba(233,233,233,0.4)";
 var STRONG_STROKE_COLOR = "rgba(227, 227, 227, 0.8)";
-var MARKER_COLOR = "#fff";
-var ALT_MARKER_COLOR = "#fff";
+var MARKER_COLOR = "transparent";
+var ALT_MARKER_COLOR = "transparent";
 
 var current = undefined;
 var currentUserEvents = [];
