@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Quicksand:300);
 
-html {
-  font-weight: 200;
+h1,h2,h3,h4,h5,p,form {
+  margin: 0;
 }
 
 @mixin border-radius($radius) {
@@ -25,7 +25,8 @@ html {
      -moz-box-shadow: $s;
 }
 
-$primary-border: solid 1px rgba(255,255,255,0.08);
+$primary-border: solid 1px rgba(232, 232, 232, 0.79);
+$secondary-border: solid 1px rgba(239, 237, 237, 0.81);
 
 .icon {
   display: inline-block;
@@ -43,69 +44,61 @@ $header-height: 64px;
   
   width: 100%;
   height: $header-height;
-
-  box-sizing: border-box;
-  padding: 8px;
   
-  background-color: #121314;
+  background-color: #fcfcfc;
   border-bottom: $primary-border;
 }
 
 #foundry-header > .menu-button {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-
-  background-image: url("../assets/icons/menu/menu.svg");
-  background-size: 24px 24px;
   width: 40px;
   height: 40px;
   cursor: pointer;
+
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
   
-  box-sizing: border-box;
-  
-  @include border-radius(4px);
-  @include transition( (background 0.2s, border 0.2s) );
+  @include border-radius(40px);
+  @include transition( (background 0.2s, border 0.2s, left 0.2s) );
 }
 
-#foundry-header > .menu-button:hover {
-  background-color: rgba(0,0,0,0.8);
-  border-right: solid 1px rgb(73, 73, 73);
-  border-bottom: solid 1px rgb(73, 73, 73);
+#foundry-header > .menu-button:after {
+  content: '';
+  background-image: url('../assets/icons/menu/menus.svg');
+  background-size: 24px 48px;
+  background-position: 0 24px;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin: 8px 0 0 8px;
 }
 
+#foundry-header > .menu-button:hover,
 #foundry-header > .menu-button.active {
-  background-color: rgba(0,0,0,0.8);
-  border-right: solid 1px rgb(73, 73, 73);
-  border-bottom: solid 1px rgb(73, 73, 73);
+  background-color: rgb(125, 194, 229);
+}
+
+#foundry-header > .menu-button:hover:after,
+#foundry-header > .menu-button.active:after {
+  background-position: 0px 0px;
 }
 
 #foundry-header > .logo {
-  position: fixed;
-  top: 8px;
-  left: 80px;
-  
-  display: inline-block;
-  text-align: center;
-   
-  width: 48px;
-  height: 48px;
-  line-height: 48px;
-  
-  box-sizing: border-box;
-  
-  color: white;
-  cursor: pointer;
-  
-  font-size: 24px;
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 200;
-  
-  @include transition( (border 0.4s, color 0.4s) );
+  position: absolute;
+  left: 70px;
+  top: 2px;
 }
 
-#foundry-header > .logo:hover {
-  color: #fc7373;
+#foundry-header > .logo .text {
+  position: absolute;
+  font-family: "Helvetica Neue", "Arial";
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #4b4b4b;
+  line-height: $header-height;
 }
 
 /* left-sidebar styles */
@@ -114,42 +107,70 @@ $left-sidebar-width: 251px;
   position: absolute;
   left: 0;
   top: $header-height;
+  margin-top: 11px;
   
   box-sizing: border-box;
   width: $left-sidebar-width;
-  color: #858585;
+  color: #494949;
+  font-weight: 200;
   overflow: visible!important;
-  border-right: $primary-border;
-  /* background-color: #1e2324; */
+  border-top: $secondary-border;
+  border-right: $secondary-border;
+  background-color: white;
   
-  @include box-shadow( 2px 0 4px rgba(0,0,0,0.18) );
+  @include border-radius( 4px );
   @include transition( (margin-left 0.2s, left 0.2s) );
 }
 
-#left-sidebar .sidebar-item {
-  min-height: 140px;
-  margin-bottom: 24px;
-  padding: 0 24px;
+#left-sidebar .project-name {
+  margin: 48px 0 24px 11px;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.sidebar .header {
-  border-bottom: solid 1px rgba(233,233,233,0.08);
+#left-sidebar .sidebar-item {
+  border-bottom: $primary-border;
+  transition: height 0.8s;
+}
+
+#left-sidebar .sidebar-item .header {
   padding: 11px 0;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  
+  @include transition( color 0.4s );
+}
+
+#left-sidebar .sidebar-item .header:hover,
+#left-sidebar .sidebar-item.active .header {
+  color: #4697e5;
 }
 
 .sidebar .header .main-header {
   font-family: 'Helvetica Neue', sans-serif;
-  color: white;
-  font-weight: 200;
-  font-size: 20px;
+  font-weight: 400;
+  font-size: 14px;
   line-height: 15px;
   display: inline-block;
-  margin: 0 0 0 11px;
+  margin-left: 11px;
 }
 
-.sidebar .header .icon {
-  width: 15px;
-  height: 15px;
+#left-sidebar .sidebar-item .inner {
+  padding: 8px 18px 32px 18px;
+  box-sizing: border-box;
+  display: none;
+}
+
+#left-sidebar .sidebar-item .inner .content {
+  opacity: 0;
+  @include transition( opacity 0.8s );
+}
+
+#left-sidebar .active.sidebar-item .inner .content {
+  opacity: 1;
 }
 
 .clear {
@@ -157,9 +178,11 @@ $left-sidebar-width: 251px;
 }
 
 #left-sidebar .sidebar-item #projectOverview {
-  color: white;
   text-align: center;
-  margin-top: 24px;
+}
+
+#left-sidebar .sidebar-item #projectOverview #projectOverviewEditLink {
+  cursor: pointer;
 }
 
 /* timeline styles */
@@ -168,38 +191,46 @@ $left-sidebar-width: 251px;
   left: $left-sidebar-width;
   top: $header-height;
   
-  height: 100%;
-  overflow: hidden;
+  @include transition( (left 0.2s, width 0.2s) );
 }
 
 #timeline-container {
   height: 100%;
-  background: #202020;
   
   margin: 11px 0 0 11px;
-  padding: 11px;
-  box-sizing: border-box;
+  background-color: white;
+  border: $secondary-border;
+  overflow: hidden;
   
   @include border-radius ( 4px 0 0 0 );
-  @include transition( (left 0.2s, width 0.2s) );
 }
 
-#timeline-container .timeline-svg {
-  margin-right: 11px; /* hack: exposes part of right edge of timeline */
+#timeline-container #timeline-header {
+  padding: 11px 11px 0 11px;
+}
+
+#timeline-container #timeline-header #addTimeBtn {
+  float: right;
+  cursor: pointer;
+}
+
+#timeline-container .timeline {
+  overflow: scroll;
+  margin: 0 11px;
 }
 
 /* to be deleted */
 
 .info-sign {
   color: black;
-  background: #999;
+  background: #dedede;
   width: 14px;
   height: 14px;
   display: inline-block;
   font-size: 11px;
   line-height: 14px;
   text-align: center;
-  
+  text-transform: lowercase;
   @include border-radius( 14px );
 }
 
@@ -220,21 +251,18 @@ $left-sidebar-width: 251px;
   @include transition( (background-color 0.2s, border 0.2s) );
 }
 
-.role:hover {
-  color: white;
-}
 .role:hover .indicator.plus {
-  border-color: white;
   transition: background 0.5s;
 }
 
 .role.valid .indicator.plus {
   color: rgba(0,0,0,0);
-  border-color: white;
+  border-color: black;
   border-size: 11px;
   
   background-size: cover;
-  background-image: url('../assets/icons/check/check.svg');
+  background-repeat: no-repeat;
+  background-image: url('../assets/icons/check/check_black.svg');
 }
 
 .role .indicator {
@@ -247,10 +275,6 @@ $left-sidebar-width: 251px;
   
   border: solid 2px rgba(0,0,0,0);
   @include transition( (border-color 0.2s) );
-}
-
-.role .indicator:hover {
-  border-color: white;
 }
 
 .role .indicator.plus {
@@ -277,7 +301,6 @@ $left-sidebar-width: 251px;
   border: 0;
   outline: 0;
   padding: 0;
-  color: white;
   font: inherit;
   border: none;
   border-bottom: solid 1px rgba(255, 255, 255, 0.38);
@@ -312,7 +335,7 @@ $left-sidebar-width: 251px;
 }
 
 .check.icon {
-  background-image: url("../assets/icons/check/check.svg");
+  background-image: url("../assets/icons/check/check_black.svg");
 }
 
 .group.icon {
