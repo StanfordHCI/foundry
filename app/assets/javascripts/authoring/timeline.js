@@ -9,13 +9,10 @@ var SVG_WIDTH = 4850,
 
 var HEADER_HEIGHT = 28;
 
-var STEP_WIDTH = 20,
-    HOUR_WIDTH = 4 * STEP_WIDTH;
-
-// declared in events.js
-var RECTANGLE_WIDTH = HOUR_WIDTH;
-
+var STEP_WIDTH = 25,
+    HOUR_WIDTH = 100;
 var STEP_INTERVAL = 15; // minutes per step
+    
 
 var TIMELINE_HOURS = 48;
 var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
@@ -25,11 +22,10 @@ var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
 
 var ROW_HEIGHT = ROW_HEIGHT || 80;
 
-var BKG_COLOR = "white";
-var STROKE_COLOR = "rgba(233,233,233,0.4)";
-var STRONG_STROKE_COLOR = "rgba(227, 227, 227, 0.8)";
-var MARKER_COLOR = "#fff";
-var ALT_MARKER_COLOR = "#fff";
+var BKG_COLOR = "#202020";
+var STROKE_COLOR = "rgba(233,233,233,0.2)";
+var MARKER_COLOR = 'rgba(108,108,111,0.08)';
+var ALT_MARKER_COLOR = 'rgba(136, 136, 139, 0.08)';
 
 var current = undefined;
 var currentUserEvents = [];
@@ -41,22 +37,19 @@ var overlayIsOn = false;
 //Remove existing X-axis labels
 var numMins = -60;
 
-var timelineDiv = $('<div class="timeline"></div>');
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
-}).append(timelineDiv);
+});
 
 
-var d3TimelineElem = d3.select("#timeline-container .timeline");
-
-var header_svg = d3TimelineElem.append("svg")
+var header_svg = d3.select("#timeline-container").append("svg")
     .attr("width", SVG_WIDTH)
     .attr("height", HEADER_HEIGHT)
     .attr("class", "header-svg")
     .style({"display": "block",
             "border-bottom": "solid 1px " + STROKE_COLOR});
 
-var timeline_svg = d3TimelineElem.append("svg")
+var timeline_svg = d3.select("#timeline-container").append("svg")
     .attr("class", "timeline-svg chart")
     .attr("width", SVG_WIDTH)
     .attr("height", SVG_HEIGHT)
@@ -85,8 +78,6 @@ window._foundry = {
     
     stepWidth: STEP_WIDTH,
     
-    hourWidth: HOUR_WIDTH,
-    
     timelineSvg: timeline_svg,
     
     svgHeight: SVG_HEIGHT,
@@ -100,16 +91,6 @@ window._foundry = {
     highlightSvg: undefined,
     
     strokeColor: STROKE_COLOR,
-    
-    strongStrokeColor: STRONG_STROKE_COLOR,
-    
-    markerColor: MARKER_COLOR,
-    
-    altMarkerColor: ALT_MARKER_COLOR,
-    
-    numRows: 1,
-    
-    rowCoverSvg: undefined,
     
     /* highlightMarkerRange
      * --------------------
@@ -270,15 +251,6 @@ window._foundry = {
       newEvent(point, duration);
       timeline.clearSelection();
     },
-    
-    /* updates the number of rows on the timeline and moves
-     * overlay accordingly
-     */
-    updateNumRows: function(numRows) {
-      this.numRows = numRows;
-      redrawTimeline();
-      console.log(numRows);
-    },
   },
 };
 
@@ -299,6 +271,9 @@ function initializeTimelineDuration() {
 
 
 var task_g = timeline_svg.selectAll(".task_g");
+
+//Set the width of the timeline header row so add time button is all the way to the right
+document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
 
 //Turn on the overlay so a user cannot continue to draw events when focus is on a popover
 function overlayOn() {
@@ -362,25 +337,20 @@ function redrawTimeline() {
   //Remove all existing grid lines & background
   timelineSvg.selectAll("line").remove();
   timelineSvg.selectAll("rect.marker").remove();
+
+  // reset timeline svg width
+  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
   
-  // draw markers to timeline svg
+  // draw alternating markers to timeline svg
   timelineSvg.selectAll("rect.marker")
       .data(intervals) // hour intervals
       .enter().append("rect")
           .attr("class", "marker")
-          .style("fill",
-                 function(d) {
-                   var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
-                   return Math.floor(d/stepsPerHour) % 2 == 0 ? 
-                     timeline.markerColor : timeline.altMarkerColor;
-                 })
+          .style("fill", function(d) {return Math.floor(d/4) % 2 === 0 ? MARKER_COLOR : ALT_MARKER_COLOR;})
           .attr("x", function(d) {return d * STEP_WIDTH})
           .attr("width", STEP_WIDTH)
           .attr("y", 0)
           .attr("height", SVG_HEIGHT)
-
-  // reset timeline svg width
-  timelineSvg.attr("width", TOTAL_HOUR_PIXELS);
 
   // draw x grid lines to timeline svg
   timelineSvg.selectAll("line.x")
@@ -391,14 +361,10 @@ function redrawTimeline() {
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
       .attr("y2", SVG_HEIGHT)
-      .style("stroke",
-        function(d) {
-          var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
-          return d % stepsPerHour == 0 ? 
-            timeline.strongStrokeColor : timeline.strokeColor;
-      });
+      .style("stroke", STROKE_COLOR);
 
   // draw y grid lines to timeline svg
+  _foundry.timeline.numRows = Math.floor(_foundry.timeline.svgHeight / _foundry.timeline.rowHeight);
   var numRows = _foundry.timeline.numRows;
   timelineSvg.selectAll("line.y")
       .data(intervals.slice(1, numRows+1))
@@ -409,16 +375,9 @@ function redrawTimeline() {
         .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
         .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
         .style("stroke", _foundry.timeline.strokeColor);
-  
-  // redraw row cover
-  timelineSvg.selectAll("rect.row-cover").remove();
-  timeline.rowCoverSvg = timelineSvg
-    .append("rect").attr("class", "row-cover")
-    .attr("x", 0)
-    .attr("y", numRows * timeline.rowHeight)
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .style("fill", "rgba(0, 0, 0, 0.04)");
+    
+  //Redraw Add Time Button
+  document.getElementById("timeline-header").style.width = SVG_WIDTH - 50 + "px";
   
   //Remove existing X-axis labels
   timelineSvg.selectAll("text.timelabel").remove();
@@ -428,8 +387,18 @@ function redrawTimeline() {
   timelineSvg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
       .on("mouseover", _foundry.timeline.timelineMouseoverFn);
-  
-  var headerSvg = timeline.headerSvg;
+
+  //Redraw the cursor
+  timelineSvg.append("line")
+      .attr("y1", 0)
+      .attr("y2", SVG_HEIGHT)
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("class", "cursor")
+      .style("stroke", "red")
+      .style("stroke-width", "2")
+
+    var headerSvg = timeline.headerSvg;
   // reset header svg width
   headerSvg.attr("width", TOTAL_HOUR_PIXELS)
   
@@ -460,7 +429,7 @@ function redrawTimeline() {
           });
 
   //Get the latest time and team status, update x position of cursor
-  // cursor = timeline_svg.select(".cursor");
+  cursor = timeline_svg.select(".cursor");
   
   //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
   //and the same exact code is included in awareness.js

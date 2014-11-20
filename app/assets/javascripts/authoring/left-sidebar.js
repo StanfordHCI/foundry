@@ -25,7 +25,7 @@ $(document).ready(function() {
     timelineWrapper.css("left", 0);
   });
   
-  // click listener for menu button
+  // click listener
   menuButton.click(function() {
     // var margin = 2 * parseFloat(timelineWrapper.css("margin-left"));
     var sidebarWidth = leftSidebar.width();
@@ -50,12 +50,5 @@ $(document).ready(function() {
       });
       $(this).addClass("active");
     }
-  });
-  
-  // click listener for sidebar menu items
-  $("#left-sidebar .sidebar-item .header").click(function(e) {
-    $(this).parent().find('.inner').slideToggle(function() {
-      $(this).parent().toggleClass('active');
-    });
   });
 });

@@ -1,20 +1,30 @@
 <div class="header">
+  <div class="group icon"></div>
   <h5 class="main-header">Team roles (<span class="num-roles">0</span>)</h5>
 </div>
-<div class="inner">
-  <div class="content">
-    <form name='newMemberForm' autocomplete="on" id="newMemberForm">
-        <input type="text" name="enterAndReloadBugFix" style="display: none;"> 
 
-        <div class="membersWrap">
-        </div>
+<form name='newMemberForm' autocomplete="on" id="newMemberForm">
+    <!--<div class="input-append">-->
+        <!--<input class="span9" style="width:120px" id="addMemberInput" type="text" placeholder="New Member Role" autocomplete="on">-->
+        <!--<button class="btn" type="button" onclick="addMember()" id="addMemberButton">+Add</button>-->
+    <!--
+        <input type="submit" style="display:none">
+    </div>
+    
+    -->
+    <input type="text" name="enterAndReloadBugFix" style="display: none;"> 
+    
+    <div class="membersWrap">
+    </div>
+    
+    <div class="add-role role">
+      <div class="indicator plus">+</div>
+      <span class="name">Add new role</span>
+      <div class="clear"></div>
+    </div>
+    
+</form>
 
-        <div class="add-role role">
-          <div class="indicator plus">+</div>
-          <span class="name">Add new role</span>
-          <div class="clear"></div>
-        </div>
-
-    </form>
-  </div>
-</div>
+<ul class = "nav nav-pills customPill" id="memberPills">
+    <!--Member Pills Appended Here in JS-->
+</ul>
