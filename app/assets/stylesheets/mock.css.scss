@@ -4,6 +4,10 @@ h1,h2,h3,h4,h5,p,form {
   margin: 0;
 }
 
+a {
+  cursor: pointer;
+}
+
 @mixin border-radius($radius) {
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
@@ -120,6 +124,14 @@ $left-sidebar-width: 251px;
   
   @include border-radius( 4px );
   @include transition( (margin-left 0.2s, left 0.2s) );
+}
+
+#left-sidebar .welcome {
+  padding: 11px;
+}
+
+#left-sidebar .welcome h4 {
+  font-weight: 400;
 }
 
 #left-sidebar .project-name {
@@ -340,6 +352,67 @@ $left-sidebar-width: 251px;
 
 .group.icon {
   background-image: url("../assets/icons/group/group.svg");
+}
+
+/* buttons */
+a.button {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.google-drive-button {
+  background-color: #d73d32;
+  color: white;
+  font-weight: 200;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 11px 0 0;
+  
+  display: inline-flex;
+  flex-wrap: nowrap;
+  
+  overflow: hidden;
+  
+  border-bottom: solid 3px rgb(174, 23, 23);
+  
+  @include transition( (background-color 0.2s, box-shadow 0.2s) );
+  @include border-radius( 2px );
+}
+
+.google-drive-button:hover,
+.google-drive-button:active {
+  background-color: rgba(215, 61, 50, 0.93);
+  @include box-shadow ( 0 2px 4px rgba(0, 0, 0, 0.14) );
+}
+
+
+.google-drive-button::before {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  background-image: url("../assets/icons/google/white128.png");
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  float: left;
+  background-color: #ae1717;
+  margin-right: 11px;
+  
+  @include border-radius( 2px 0 0 0 );
+}
+
+.google-drive-button .text {
+  text-decoration: none;
+  float: left;
+  text-shadow: -1px 2px 1px rgba(115, 115, 115, 0.19);
+  white-space: nowrap;
+}
+
+.google-drive-button::after {
+  content: '';
+  clear: both;
 }
 
 /* animations */
