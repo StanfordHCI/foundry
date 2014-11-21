@@ -360,6 +360,17 @@ a.button {
   display: inline-block;
 }
 
+#gFolder {
+  margin-top: 4px;
+}
+#gFolder:active {
+  margin-top: 5px;
+}
+
+#gFolder:active .google-drive-button {
+  border-bottom-width: 2px;
+}
+
 .google-drive-button {
   background-color: #d73d32;
   color: white;
