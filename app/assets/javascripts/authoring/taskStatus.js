@@ -7,6 +7,7 @@
 
  //TASK STATUS COLORS
  var TASK_NOT_START_COLOR = "#F5F5F5"; //gray
+ var WORKER_TASK_NOT_START_COLOR = "#FFFF33"; //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
  var TASK_START_COLOR = "#1E90FF"; //blue
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
