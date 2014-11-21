@@ -193,23 +193,41 @@ function displayChatMessage(name, uniq, role, date, text) {
 	//revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
     if(lastWriter!=name){
         lastMessage=(lastMessage+1)%2;
-        // var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text).prepend($('<strong/>').text(name+ ' (' + role + ')' + ': ' )).prepend('<br>').prepend($('<em/>').text(dateform));
-
-        //div1.css('padding-left','5%');
       
         var dateDiv = $('<div/>').addClass("date").text(dateform);
-        var authorDiv = $('<div/>').addClass("author").text(name + ' (' + role + ')');
+        var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
         var textDiv = $('<div/>', {"id": "m"+lastMessage}).addClass("text").text(text);
+
+        var wrapperDiv = $('<div/>');
       
-        dateDiv.appendTo($('#messageList'));
-        authorDiv.appendTo($('#messageList'));
-        textDiv.appendTo($('#messageList'));
+        // TODO: I'm not totally sure which this is supposed to equal,
+        // so I'm checking both for now
+        if(current_user === role || current_user === name) {
+          wrapperDiv.addClass('by-user');
+          dateDiv.addClass('m'+lastMessage);
+        }
+      
+        wrapperDiv
+          .append(authorDiv)
+          .append(textDiv);
+      
+        var messageFooterDiv = $('<div/>').addClass('message-footer');
+        authorDiv.clone().addClass('author')
+            .removeClass('author-header')
+            .appendTo(messageFooterDiv);
+        dateDiv.appendTo(messageFooterDiv);
+        
+        messageFooterDiv.appendTo(wrapperDiv);
+      
+        wrapperDiv.appendTo($('#messageList'));
         
     } else{
-        var textDiv = $('<div/>',{"id":"m"+lastMessage}).addClass("text").text(text);
-        textDiv.appendTo($('#messageList'));
+        var textP = $('<p/>').text(text);
+        textP.appendTo($('#messageList #m' + lastMessage));
+        $('.date.m' + lastMessage).text(date);  // this date isn't updated
     }
-    lastWriter=name;
+  
+    lastWriter = name;
     lastDate = message_date;
     $('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
 };
