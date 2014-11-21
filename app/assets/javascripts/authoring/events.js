@@ -745,7 +745,8 @@ function drawShade(eventObj, firstTime) {
         }
     }
 
-    if (currentUserEvents.length > 0){
+    /*
+if (currentUserEvents.length > 0){
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
          
 	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
@@ -754,9 +755,11 @@ function drawShade(eventObj, firstTime) {
             //.attr("fill", WORKER_TASK_NOT_START_COLOR)
             .attr("fill-opacity", .9);  
     }
+*/
 }
     
 
+/*
 function findCurrentUserNextEvent(currentUserEvents){
 	console.log("calling findCurrentUserNextEvent");
 	//console.log("currentUserEvents: " + currentUserEvents);
@@ -766,6 +769,7 @@ function findCurrentUserNextEvent(currentUserEvents){
 		}
 	}
 }
+*/
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
