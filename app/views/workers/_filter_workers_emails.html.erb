@@ -7,7 +7,7 @@
 	<!-- <% @abc.to_s.gsub('"', '')%> -->
 	
 	<%if !@abc.nil? %>
-		<%= @abc.join(", ") %>
+		<%= @abc.uniq.join(", ") %>
 	<%end%>
 
 	

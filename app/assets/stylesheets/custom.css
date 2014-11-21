@@ -85,6 +85,7 @@
 	border: 1px solid white;
 }
 
+/*
 #foundry-header{
 	background-color: #434343;
 	color: white;
@@ -93,6 +94,7 @@
 	top: 0;
 	left: 0;
 }
+*/
 
 .ft-buttons{
 	margin-top: 5px;
@@ -112,13 +114,11 @@
 	padding-left: 19px;
 }
 
-#member-container {
-	height: 200px;
-}
-
 #newMemberForm{
+  /*
 	margin-bottom: 5px;
 	margin-top: 15px;
+	*/
 }
 
 #search-events-container {
@@ -128,7 +128,6 @@
 
 #project-overview-container{
 	padding-bottom: 10px;
-	max-height: 250px;
 }
 
 /* #project-overview-text span{ */

@@ -9,38 +9,27 @@ var INTERACTION_TASK_ONE_IDNUM = 0;
 var interaction_counter = undefined;
 
 //For Interactions
-timeline_svg.append("defs").append("marker")
+/*timeline_svg.append("defs").append("marker")
     .attr("id", "arrowhead")
-    .attr("refX", 0)
+    .attr("refX", 1)
     .attr("refY", 2)
-    .attr("markerWidth", 5)
-    .attr("markerHeight", 4)
-    .attr("stroke", "gray")
+    .attr("markerWidth", 3) 
+    .attr("markerHeight", 2)
+    .attr("stroke", "pink")
     .attr("fill", "gray")
     .append("path")
-        .attr("d", "M 0,0 V 4 L2,2 Z");
+        .attr("d", "M 0,0 V 2 L2,2 Z");*/
 
 //Called when a user clicks a task rectangle (aka event)
 //Determines if the user is trying to draw an interaction and if so, what type
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
-    //Close all open popovers
-   /*imported popover to modal
-   for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
-        var idNum = flashTeamsJSON["events"][i].id;
-        if (idNum != task1idNum && idNum != task2idNum) {
-            hidePopover(idNum);
-        }   
-    }*/
 
     if (DRAWING_HANDOFF == true) $("#handoff_btn_" + task1idNum).popover("hide");
     if (DRAWING_COLLAB == true) $("#collab_btn_" + task1idNum).popover("hide");
  
    //show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
-        
-     
-  
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
@@ -98,8 +87,9 @@ function eventMousedown(task2idNum) {
         var task2X = ev2.x;
         
         if ((task1X + task1Width) <= task2X) {
+            var color = colorBox.grabColor();
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
-                "type":"handoff", "description":"", "id":interaction_counter};
+                "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
             updateStatus(false);
             drawHandoff(handoffData);
@@ -144,10 +134,6 @@ function eventMousedown(task2idNum) {
         }
     //There is no interation being drawn
     } else {
-        /*imported popover to modal
-        var data = getPopoverDataFromGroupNum(task2idNum);
-        togglePopover(task2idNum);
-        */
         return;
     }
 }
@@ -198,7 +184,7 @@ function handoffStart(firstEvent){
 }
 
 // Draw a handoff for the first time
-// Don't call this directly. Call 'drawEachHandoff' in events.js instead.
+// Don't call this directly. Call 'drawEachHandoffForEvent' in events.js instead.
 function drawHandoff(handoffData) {
     var task1Id = handoffData["event1"];
     var task2Id = handoffData["event2"];
@@ -231,15 +217,15 @@ function drawHandoff(handoffData) {
         .attr("x2", x2)
         .attr("y2", y2)
         .attr("d", function(d) {
-             var dx = x1 - x2,
-                dy = y1 - y2,
-                dr = Math.sqrt(dx * dx + dy * dy);
-            //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
-            return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
-                + " 0 0,0 " + x2 + "," + (y2+15); 
+            return routeHandoffPath(ev1, ev2, x1, x2, y1, y2);
+
         })
-        .attr("stroke", "gray")
-        .attr("stroke-width", 7)
+        .attr("stroke", function() {
+            if (handoffData["color"] == undefined) return colorBox.grabColor(); 
+            else return handoffData["color"];
+        })
+        .attr("stroke-width", 3)
+        .attr("stroke-opacity", ".7")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
 
@@ -250,13 +236,56 @@ function drawHandoff(handoffData) {
         trigger: "click",
         title: "Handoff",
         content: 'Description of Handoff Materials: '
-        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '"></textarea>'
+        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '"></textarea><br>'
         + '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
-            +' onclick="saveHandoff(' + handoffId +');">Save</button>          '
+            +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
+        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + handoffId + '"'
             +' onclick="deleteInteraction(' + handoffId +');">Delete</button>',
         container: $("#timeline-container")
     });
+}
+
+//Route circuit-like paths for the handoffs
+//Use d3 path to route from event 1 end to event 2 beginning
+function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
+    //OLD CURVE CODE
+    /*var dx = x1 - x2,
+        dy = y1 - y2,
+        dr = Math.sqrt(dx * dx + dy * dy);
+    //For ref: http://stackoverflow.com/questions/13455510/curved-line-on-d3-force-directed-tree
+    return "M " + x1 + "," + y1 + "\n A " + dr + ", " + dr 
+        + " 0 0,0 " + x2 + "," + (y2+15);*/
+
+    //Line out from first event to gutter
+    var pathStr = "M " + (x1-10) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
+    pathStr += "L " + x1 + ", " + y1 + "\n";
+
+    //Route path either to the horizontal gutter above or below
+    //Then route to second event horizontally
+    if (y1 <= y2) { //Event 1 is higher
+        pathStr += "L " + x1 + ", " + (y1+25) + "\n";
+        pathStr += "L " + x2 + ", " + (y1+25) + "\n"; 
+    } else { //Event 2 is higher
+        pathStr += "L " + x1 + ", " + (y1-55) + "\n";
+        pathStr += "L " + x2 + ", " + (y1-55) + "\n";
+    }
+    //Route to second event vertically
+    pathStr += "L " + x2 + ", " + y2 + "\n";
+    //Line from gutter to second event
+    pathStr += "L " + (x2+10) + ", " + y2 + "\n";
+
+    //Arrowhead
+    pathStr += "L" + (x2+10) + ", " + (y2+1) + "\n";
+    pathStr += "L" + (x2+12) + ", " + (y2) + "\n";
+    pathStr += "L" + (x2+10) + ", " + (y2-1) + "\n";
+    
+    return pathStr;
+}
+
+//Close the popover on a member to "cancel" the edit
+function hideHandoffPopover(handoffId) {
+    $('#interaction_' + handoffId).popover("hide");
 }
 
 //Save handoff notes and update popover
@@ -311,20 +340,20 @@ function drawCollaboration(collabData, overlap) {
     var collabId = collabData["id"];
 
     var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1Id)];
-    var y1 = ev1.y + 17; // padding on the top and bottom of timeline rows + height of x-axis labels
+    var y1 = ev1.y; // padding on the top and bottom of timeline rows + height of x-axis labels
+    
 
     var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2Id)];
     var x2 = ev2.x + 3;
-    console.log("NEW X OF COLLAB: " + x2);
-    var y2 = ev2.y + 17;
+    var y2 = ev2.y;
 
     var firstTaskY = 0;
     var taskDistance = 0;
     if (y1 < y2) {
-        firstTaskY = y1 + 90;
+        firstTaskY = y1 + RECTANGLE_HEIGHT;
         taskDistance = y2 - firstTaskY;
     } else {
-        firstTaskY = y2 + 90;
+        firstTaskY = y2 + RECTANGLE_HEIGHT;
         taskDistance = y1 - firstTaskY;
     }
     collabLine = timeline_svg.append("rect")

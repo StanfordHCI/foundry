@@ -6,129 +6,48 @@
 <%= tag :meta, :name=> 'events_json', :content=> @events_json %>
 
 	<!--Main Layout-->
-	<div class="container-fluid" style="min-width: 1300px; background: #e3e3e3;">
+	<div class="container-fluid" style="min-width: 1300px;">
        
     <!-- task modal shows up after clicking on a task -->
     <%= render :partial => "task_modal" %>
 	
-	<% if @in_author_view %>
+	<!-- render header -->
+	<%= render :partial => "header", :locals => {:in_author_view => @in_author_view} %>
+	<!-- begin left sidebar -->
+    <%= render :partial => "left_sidebar",
+               :locals => {:author_runtime => @author_runtime,
+                           :in_author_view => @in_author_view,
+                           :in_expert_view => @in_expert_view,
+                           :flash_team => @flash_team} %>
+  <!-- end of left sidebar -->
+  
+  <!-- begin right sidebar -->
+    <%= render :partial => "right_sidebar" %>
+  <!-- end of right sidebar -->
 	
-     <div class="row-fluid" id="foundry-header">
-	     <div class="span3 ft-buttons" id="ft-buttons-left">
-			 	<input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
-			 	<input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Tour"/>
-		  </div>
-	     
-	     <div class="span7">
-			 <h4 class="text-center">FOUNDRY</h4>
-	     </div>
-	     
-	     <div class="span2 ft-buttons" id="ft-buttons-right">
-				<input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
-		        <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
-	     </div> 
-     </div>
+	<% if @in_author_view %>
 
-     	<!-- render partial with confirm action alert --> 
+    <!-- render partial with confirm action alert --> 
 		<%= render :partial => "confirm_action" %>
      
-     <div class="row-fluid" style="margin-top: 40px; margin-bottom: 5px;">
-     
-     <h4>
-     	<span id="ft-name"><%= @flash_team.name.upcase%></span>
-     	
-     	<!-- Button to trigger modal -->
-	 	<a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;"><i class="icon-info-sign" style="vertical-align: middle;"></i></a>
-	 </h4>
-	 	
-	 	<%= render :partial => "project_overview_modal" %>
-     
-     </div>
 	    
-	    <div class="row-fluid">
-	        <div class="span3">
-	         <% if @author_runtime %>
-	            
-	            <div id="project-status-container" class="well">
-	            	<!-- Render project status container --> 
-					<%= render :partial => "project_status" %>                 
-	            </div> 
+	    <div class="row-fluid" style="margin-top:64px">
 
-	            <div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	            </div>
-	
-	           <!--Add a file picker for the user to start the upload process -->
-	           <!--
-				   <input type="file" id="filePicker" />
-	            <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
-				-->				
-								
-	           <div id="member-container" class="well" style="overflow-y:scroll;">
-	            	<!-- Render member roles container --> 
-					<%= render :partial => "roles" %>    
-	           </div>
-	           
-	           <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-				</div>
-
-            
-			<% else %>
-      
-            	<div id="project-status-container" class="well" style="display: none;">
-             		<!-- Render project status container --> 
-					<%= render :partial => "project_status" %>               
-				</div>   
-
-				<div id="member-container" class="well" style="overflow-y:scroll;">
-					<!-- Render member roles container --> 
-					<%= render :partial => "roles" %> 
-				</div>
-            
-				<div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	            </div>
-	            
-	            <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-				</div>      
-            
-				<div id="search-events-container" class="well" style="overflow-y:scroll;">
-					<!-- render partial with event library --> 
-					<%= render :partial => "event_library" %>
-				</div>
-
-			<% end %> <!-- end if in author runtime conditional --> 
-            
-            <div id="diagram-container" class="well" style="display:none;" >
-                	<!-- render partial with team diagram --> 
-					<%= render :partial => "teamdiagram" %>
-            </div>
-		</div> <!-- end of sidebar (e.g., class="span3") -->
-
-		<div class="span9"> <!--Body Content-->
-	    	<div id="timeline-container" class="well" style="overflow-x:scroll; overflow-y:scroll; height:575px">
-	            	<!-- render partial with timeline --> 
-					<%= render :partial => "timeline" %>
+		<div style="margin-left:250px;" class="span9"> <!--Body Content-->
+		
+		  <div id="timeline-wrapper">
+	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
+	        <!-- render partial with timeline --> 
+				  <%= render :partial => "timeline" %>
 	        </div>
-		</div> <!-- end of body (e.g., class="span9") -->
+	      </div>
+        </div> <!-- end of body (e.g., class="span9") -->
 	
 	</div> <!-- end of div class="row-fluid" -->
    
 <% end %> <!--end if in author view conditional--> 
        
 <% if  @in_expert_view %>
-
-     <div class="row-fluid" id="foundry-header"> 
-     	<div class="span2 ft-buttons" id="ft-buttons-left">
-		 	<input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Tour"/>
-	  	</div>  	 
-		 
 	     
 	     <!--Add the start/end button if in project coordinator view-->
 	     <% if @member_type == "pc" %>
@@ -168,57 +87,17 @@
 		<script> var flash_team_name="<%= @flash_team.name %>";</script>
     
 		<div class="row-fluid">
-        	<div class="span3"> <!--Sidebar content-->
-				<!-- <div id = "title-container" class="well">
-					<form name="titleForm" id="title_form">
-						<input type = "text" id="flashTeamTitle" placeholder="New Flash Team" style="font-size:25px; height:40px">
-					</form>
-				</div> -->	
-            
-            <div id="project-status-container" class="well">
-             	<!-- Render project status container --> 
-				<%= render :partial => "project_status" %>               
-                
-				<div><h4>Welcome <%= @user_name %>!</h4></div>
-                
-	            <!--<h4> Your Task Starts In 1:20 </h4> -->
-				<!-- <button class="btn" type="button" onclick="searchEvents()" id="projectDetailsButton">Project Details</button>
-	                 <svg width="2450" height="570">
-	                        <rect width="200" height="40" x="0" y="0" fill="white" style="stroke: #000000;"></rect>
-	                        <rect width="10" height="40" x="0" y="0" fill="green" class="project_status"></rect>
-	                    </svg>-->             
-                
-                <div id="status-bar-container" >
-                   <!-- <h4> Your Task Is </h4> -->
-                </div>
-               
-            </div> <!-- end of project-status-container div -->
-                   
-            <div id="chat-box-container" class="well" >
-	            	<!-- render partial with chat box --> 
-					<%= render :partial => "chatbox" %>
-	        </div>
-	        
-	        <div id="project-overview-container" class="well" style="overflow-y:scroll;">
-					<!-- Render project overview container --> 
-					<%= render :partial => "project_overview" %> 
-			</div>
-			
-			<% if @member_type == "pc" || @member_type == "client" %>
-				<div id="member-container" class="well" style="overflow-y:scroll;">
-					<!-- Render member roles container --> 
-					<%= render :partial => "roles" %> 
-				</div>
-			<% end %>
-			
-        </div> <!-- end of sidebar (e.g., class="span3") -->
+		
+		<!--sidebar-->
 
         <div class="span9"> <!--Body Content-->
-           <div id="timeline-container" class="well" style="overflow-x:scroll; overflow-y:scroll;">
-	            <!-- render partial with timeline --> 
-				<%= render :partial => "timeline" %>
-				<%= render :partial => "confirm_action" %>
-	        </div>
+          <div id="timeline-wrapper">
+            <div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
+              <!-- render partial with timeline --> 
+              <%= render :partial => "timeline" %>
+              <%= render :partial => "confirm_action" %>
+            </div>
+          </div>
 		</div> <!-- end of body (e.g., class="span9") -->    
 		
 	</div><!-- end of div class="row-fluid" -->
@@ -229,10 +108,45 @@
 <div id="titleLength" style="visibility: hidden; "><span></span></div>
 </div> <!-- end of div class="container-fluid" -->
 
-
 <%= javascript_include_tag "authoring/gdrive" %>
 <%= javascript_include_tag "application" %>
 <%= javascript_include_tag "https://apis.google.com/js/client.js?onload=handleClientLoad" %>
 <%= javascript_include_tag "https://apis.google.com/js/api.js"%>
 
 
+<script>
+  (function() {
+      function setEditPage() {
+          document.body.style.backgroundColor = "#101010";
+          document.body.style.overflow = "hidden";
+
+          var header = $("#foundry-header");
+          var leftSidebar = $("#left-sidebar").css({
+              height: (window.innerHeight - header.outerHeight()) + "px",
+          });
+
+          var rightSidebar = $("#right-sidebar").css({
+              height: (window.innerHeight - header.outerHeight()) + "px",
+          });
+
+          var timelineWrapper = $("#timeline-wrapper");
+          timelineWrapper.css({
+              width:  window.innerWidth
+                    - leftSidebar.width()
+                    - rightSidebar.width()
+                    // subtract both margins
+                    - ( 2 * parseFloat(timelineWrapper.css("margin-left")))
+                    + "px",
+              height:  window.innerHeight
+                     - header.outerHeight()
+                     - (parseFloat(timelineWrapper.css("margin-top")))
+                     + "px",
+          });
+
+          // resize chat in right sidebar
+          chatResize();
+      }
+      $(window).resize(setEditPage);
+      $(document).ready(setEditPage);
+  })();
+</script>

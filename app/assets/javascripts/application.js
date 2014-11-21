@@ -28,6 +28,8 @@
 //= require ./authoring/idle
 //= require ./authoring/awareness
 //= require ./authoring/interactions
+//= require ./authoring/left-sidebar
+//= require ./authoring/addRole.js
 //= require ./authoring/sidebar
 //= require ./authoring/odeskArrays
 //= require ./authoring/spectrum
@@ -43,3 +45,5 @@
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
+//= require ./authoring/chat_styling.js
+//= require ./authoring/dependencies

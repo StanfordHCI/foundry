@@ -14,7 +14,7 @@
 		<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %></p>
 		
 		<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline; font-weight:bold;") %>		
-		<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span7') %> </p>
+		<%= text_field_tag(:subject, @task_rej_email_subject, :class => 'span7', :required => true) %> </p>
 		
 		<br />
 		
@@ -27,7 +27,7 @@
 						<%end%>
 				</select> 
 			
-			role to work on the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task as part of the 
+			role to work on the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4', :required => true) %> task as part of the 
 			<em><%=@flash_team_json['title']%></em> project.
 			
 			Unfortunately, the job is no longer available. As you know, we use an on-demand 
