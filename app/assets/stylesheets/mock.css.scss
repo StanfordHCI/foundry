@@ -118,7 +118,7 @@ $left-sidebar-width: 251px;
   border-right: $secondary-border;
   background-color: white;
   
-  @include border-radius( 4px );
+  @include border-radius( 0 4px 0 0 );
   @include transition( (margin-left 0.2s, left 0.2s) );
 }
 
