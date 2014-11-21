@@ -55,7 +55,7 @@ $('[data-load-remote]').on('click',function(e) {
 });
 
 
-/*Zero Clipboard*/ 
+/*Zero Clipboard All Emails Copy Button */ 
 
 var client = new ZeroClipboard( document.getElementById("copy-button") );
 
@@ -66,9 +66,7 @@ client.on( "ready", function( readyEvent ) {
     // `this` === `client`
     // `event.target` === the element that was clicked
     //event.target.style.display = "none";
-    alert("Copied text to clipboard: " + event.data["text/plain"] );
+    alert("Copied emails to clipboard: " + event.data["text/plain"] );
   } );
 } );
-
-
 

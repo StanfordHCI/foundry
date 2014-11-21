@@ -8,15 +8,17 @@
 	<% @emails = @fw.uniq.join(", ")%>
 	
 	<%= @emails %>
-	
-	<!-- <button id="copy-button" data-clipboard-text="Copy Me!" title="Click to copy me.">Copy to Clipboard</button> -->
-	<button id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy me.">Copy to Clipboard</button>
+	<br />
+	<button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
+
+	<%= javascript_include_tag "ZeroClipboard" %>
+	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
 
 	<br />
 	<br />
 </p>
 
-
+<div><b>Or Select Specific Workers:</b></div>
 <div>
 	<table class="table table-bordered table-striped">
 	    <thead>
@@ -65,9 +67,6 @@
 	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
 
-
-<%= javascript_include_tag "ZeroClipboard" %>
-<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
 
 <%= javascript_include_tag "/assets/authoring/panels" %>
 
