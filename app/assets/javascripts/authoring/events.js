@@ -30,8 +30,6 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -39,8 +37,6 @@ var drag_right = d3.behavior.drag()
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -103,7 +99,6 @@ function rightResize(d) {
     if(isUser || in_progress) { // user page
         return;
     }
-
 
     // get event id
     var groupNum = d.groupNum;
