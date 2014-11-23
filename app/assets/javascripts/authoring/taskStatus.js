@@ -27,12 +27,8 @@
     }
     live_tasks.push(groupNum);
 
-    //START TIMER
-    //START HERE ALEXANDRA
     updateStatus(true);
     drawEvent(eventObj); //Will update color
-
-    console.log("redraw event after start");
 
     //Close the task modal
     $("#task_modal").modal('hide');
@@ -87,7 +83,7 @@ function confirmCompleteTask(groupNum) {
 
     $(".outputForm").change(function() {
         completed = allCompleted(groupNum);
-        console.log(completed);
+        //console.log(completed);
         if (completed){
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
@@ -132,7 +128,7 @@ var allCompleted = function(groupNum){
             }
         } 
             if (value){ 
-            console.log(splitOutputs[i]);
+            //console.log(splitOutputs[i]);
             document.getElementById("output" + splitOutputs[i]).style.display = "block";
         }else{ 
             document.getElementById("output" + splitOutputs[i]).style.display = "none";
@@ -271,14 +267,14 @@ var completeTask = function(groupNum){
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     saveDocQuestions(groupNum);
-    console.log(eventToComplete["docQs"]);
+    //console.log(eventToComplete["docQs"]);
     
     if(eventToComplete.status == "delayed"){
         
         var idx = delayed_tasks.indexOf(groupNum);
         if (idx != -1) { // delayed task
             delayed_tasks.splice(idx, 1);
-            console.log("removed task from delayed and added to completed_red");
+            //console.log("removed task from delayed and added to completed_red");
             
         }
         completed_red_tasks.push(groupNum);
@@ -299,7 +295,7 @@ var completeTask = function(groupNum){
         delayed_tasks.splice(idx, 1);
         completed_red_tasks.push(groupNum);
         //updateStatus(true);
-        console.log("removed task from delayed and added to completed_red");
+        //console.log("removed task from delayed and added to completed_red");
         sendEmailOnCompletionOfDelayedTask(groupNum);
     } else {
         idx = live_tasks.indexOf(groupNum);

@@ -30,8 +30,6 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -39,8 +37,6 @@ var drag_right = d3.behavior.drag()
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -103,7 +99,6 @@ function rightResize(d) {
     if(isUser || in_progress) { // user page
         return;
     }
-
 
     // get event id
     var groupNum = d.groupNum;
@@ -218,9 +213,6 @@ function createEvent(point, duration) {
     // render event on timeline
     drawEvent(eventObj, true);
 
-    // render event popover
-    //drawPopover(eventObj, true, true);
-
     // save
     updateStatus(false);
 };
@@ -257,7 +249,10 @@ function createEventObj(snapPoint, duration) {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"","docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],"outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
+        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
+        ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
+        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
         createNewFolder(document.getElementById("ft-name").innerHTML);
@@ -468,16 +463,15 @@ function drawTitleText(eventObj, firstTime) {
     var width = (spn.offsetWidth );
     var event_width = getWidth(eventObj);
         
-  while (width > event_width - 15){ 
+    while (width > event_width - 15){ 
         shortened_title = shortened_title.substring(0,shortened_title.length - 4);
         shortened_title = shortened_title + "...";
         spn.innerHTML = shortened_title;
         width = spn.offsetWidth;
-  }
+    }
 
     title = shortened_title;
    
-
     var existingTitleText = task_g.selectAll("#title_text_" + groupNum);
     if(existingTitleText[0].length == 0){ // first time
         task_g.append("text")
@@ -910,7 +904,7 @@ function drawTimer(eventObj){
             delayed_tasks.push(groupNum);
     
             drawEvent(eventObj);
-            console.log("in drawTimer: ", remaining_time);
+            //console.log("in drawTimer: ", remaining_time);
         }
 
         eventObj["timer"] = remaining_time;

@@ -277,7 +277,7 @@ window._foundry = {
     updateNumRows: function(numRows) {
       this.numRows = numRows;
       redrawTimeline();
-      console.log(numRows);
+      //console.log(numRows);
     },
   },
 };
@@ -302,13 +302,13 @@ var task_g = timeline_svg.selectAll(".task_g");
 
 //Turn on the overlay so a user cannot continue to draw events when focus is on a popover
 function overlayOn() {
-    console.log("overlay on");
+    //console.log("overlay on");
     //$("#overlay").css("display", "block");
 };
 
 //Remove the overlay so a user can draw events again
 function overlayOff() {
-    console.log("overlay off");
+    //console.log("overlay off");
     $(".task_rectangle").popover("hide");
     //$("#overlay").css("display", "none");
 };
