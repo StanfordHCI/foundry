@@ -21,7 +21,7 @@
                 </li>
                 
                 <li class="sidebar-brand" >
-                	<%= link_to "Panels", controller: "flash_teams", action: "panels"%>
+                	<%= link_to "View Panels", controller: "flash_teams", action: "panels"%>
                 		
                 </li>
 
@@ -41,7 +41,7 @@
                 </li>
                 
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#tasks"><i class="fa fa-fw fa-arrows-v"></i> All Tasks <i class="fa fa-fw fa-caret-down"></i></a>
+                    <a href="#" data-toggle="collapse" data-target="#tasks"><i class="fa fa-fw fa-arrows-v"></i> View Other Tasks <i class="fa fa-fw fa-caret-down"></i></a>
                     <ul id="tasks" class="collapse in" style="">
                         <%i = 0%>
 						<%@flash_team_json['events'].each do |event|%>

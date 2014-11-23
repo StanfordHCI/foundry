@@ -28,8 +28,8 @@ var ROW_HEIGHT = ROW_HEIGHT || 80;
 var BKG_COLOR = "white";
 var STROKE_COLOR = "rgba(233,233,233,0.4)";
 var STRONG_STROKE_COLOR = "rgba(227, 227, 227, 0.8)";
-var MARKER_COLOR = "#fff";
-var ALT_MARKER_COLOR = "#fff";
+var MARKER_COLOR = "transparent";
+var ALT_MARKER_COLOR = "transparent";
 
 var current = undefined;
 var currentUserEvents = [];
@@ -277,7 +277,7 @@ window._foundry = {
     updateNumRows: function(numRows) {
       this.numRows = numRows;
       redrawTimeline();
-      console.log(numRows);
+      //console.log(numRows);
     },
   },
 };
@@ -302,13 +302,13 @@ var task_g = timeline_svg.selectAll(".task_g");
 
 //Turn on the overlay so a user cannot continue to draw events when focus is on a popover
 function overlayOn() {
-    console.log("overlay on");
+    //console.log("overlay on");
     //$("#overlay").css("display", "block");
 };
 
 //Remove the overlay so a user can draw events again
 function overlayOff() {
-    console.log("overlay off");
+    //console.log("overlay off");
     $(".task_rectangle").popover("hide");
     //$("#overlay").css("display", "none");
 };
