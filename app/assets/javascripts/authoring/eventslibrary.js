@@ -31,115 +31,11 @@ function callajaxreq(inputid, type, url, resultsid){
 
 callajaxreq("searchEventsInput", "GET", "/flash_teams/event_search", "search-results");
 
-
-/*
-//Array of sample Event JSONs used for testing
-var EventJSONArray= [
-{
-"title":"Low-fi prototype v1",
-"id":1,
-"startTime":null,
-"duration":2.5*60,
-"notes":"Use balsamiq to construct mockups",
-"members":["UX Researcher", "Developer"],
-"dri":"UI Designer",
-"yPosition":null,
-"inputs":[],
-"outputs":["low-fidelity prototype v1"]
-},
-
-{
-"title":"Low-fi prototype v2",
-"id":2,
-"startTime":null,
-"duration":4*60,
-"notes":"Use Axure to construct prototype",
-"members":["UX Researcher", "Developer"],
-"dri":"UI Designer",
-"yPosition":null,
-"inputs":["low-fidelity prototype v1", "first HE violation from shared document"],
-"outputs":["low-fidelity prototype v2"]
-},
-
-{
-"title":"Heuristic Evaluation",
-"id":3,
-"startTime":null,
-"duration":2*60,
-"notes":"Refer to Nielsen's heuristics",
-"members":["UI Designer", "Developer"],
-"dri":"UX Researcher",
-"yPosition":null,
-"inputs":["low-fidelity prototype v1"],
-"outputs":["final HE report"]
-}
-];
-
-//Array of sample Member JSONs used for testing
-var MembersJSONArray= [
-{
-"id":1,
-"role":"UI Designer",
-"skills":["skill1", "skill2"],
-"color":null,
-"category1":"Web Development",
-"category2":"Web Design"
-},
-
-{
-"id":2,
-"role":"UX Researcher 1",
-"skills":["skill3", "skill4"],
-"color":null,
-"category1":"cat2a",
-"category2":"cat2"
-},
-
-{
-"id":3,
-"role":"Developer",
-"skills":["skill2", "skill3"],
-"color":null,
-"category1":"cat3a",
-"category2":"cat3"
-},
-
-{
-"id":4,
-"role":"UI Researcher 2",
-"skills":["skill1", "skill3"],
-"color":null,
-"category1":"cat4a",
-"category2":"cat4"
-}
-]
-*/
-
 //DR: I have no idea what the following three lines do
 /* Dialog prompt code. Prevents dialogs from automatically opening upon initialization */
 //$( "#teamRolesPrompt" ).dialog({ autoOpen: false });
 //$( "#teamRolesPrompt" ).dialog({ height: "auto" },{ width: "450px" });
 //$( "#teamRolesPrompt" ).dialog({ modal: true }); //creates overlay between dialog and rest of the web page in order to disables interactions with other page elements
-
-// DR: I got commented out the search button since I use live search instead
-/* Called when user clicks on 'Go' button next to search bar in the 'Add Events' container in side menu and returns search results.
-Currently is a dummy function that each Event JSON in EventJSONArray into an Event div and displays them as search results. */
-/*
-function searchEvents() {
-alert($('meta[name=events_json]').attr('content'));
-for (var i = 0; i < EventJSONArray.length; i++) {
-var str = "<div class=\"event-block\" id=\"searchEventBlock_"+i+"\"" //assigns each Event div a unique id
-str += "draggable=\"true\" ondragstart=\"dragEvent(event)\" style=\"cursor:move\">"; //makes Event div draggable
-str += "<div class=\"row-fluid\">";
-str += "<div class=\"span9\"><b>"+EventJSONArray[i]["title"]+"</b></div>"; //Event Title
-str += "<div class=\"span3\">"+EventJSONArray[i]["duration"]/60+" hrs</div></div>"; //Event duration
-str += "<b>DRI: </b>"+EventJSONArray[i]["dri"]+"<br />"; //Event DRI
-str += "<b>Input: </b>"+listInputs(EventJSONArray[i])+"<br />"; //Event inputs
-str += "<b>Output: </b>"+listOutputs(EventJSONArray[i])+"</div>"; //Event outputs
-$("#search-results").append(str); //appends each Event div to search results container
-}
-}
-*/
 
 /* Called when a user drags an event over the overlay div covering the timeline svg element, allowing overlay to catch and handle the drop */
 function allowDrop(ev) {
@@ -252,103 +148,104 @@ function newEventFromLib(snapPoint, eventTitle, duration, inputs, outputs) {
 
 /* Compares the skills and second level category of two members. Depending on the comparison, may pop up dialog. Depending on dialog button chosen, may draw Event block onto timeline*/
 function compMember(member1, member2, mouseCoords, eventJSONId) {
-var promptText;
-if (compMemberCats(member1, member2) || compMemberSkills(member1, member2)) { //if skills or second level category matches
-promptText = "This event requires a <b>"+member1["role"]+"</b> with skills overlapping those of your existing team member, <b>"+member2["role"]+"</b>. What would you like to do?";
-$( "#teamRolesPrompt" ).dialog({
-buttons: [ //3 options:
-{
-text: "Add this event but use an existing team member",
-click: function() {
-$( this ).dialog( "close" );
-createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
-}
-},
-{
-text: "Add this event and "+member1["role"]+" to my team",
-click: function() {
-$( this ).dialog( "close" );
-addMemberFromEvent(member1);
-createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
-}
-},
-{
-text: "Do not add this event and keep my team as is",
-click: function() {
-$( this ).dialog( "close" );
-}
-}
-]
-});
-document.getElementById("teamRolesPrompt").innerHTML=promptText;
-$( "#teamRolesPrompt" ).dialog( "open" );
-} else { //else no matches, add Event block and its listed team members automatically
-addMemberFromEvent(member1);
-createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
-addMemberFromEvent(member1);
-}
+  var promptText;
+  if (compMemberCats(member1, member2) || compMemberSkills(member1, member2)) { //if skills or second level category matches
+    promptText = "This event requires a <b>"+member1["role"]+"</b> with skills overlapping those of your existing team member, <b>"
+      +member2["role"]+"</b>. What would you like to do?";
+    $( "#teamRolesPrompt" ).dialog({
+      buttons: [ //3 options:
+        {
+          text: "Add this event but use an existing team member",
+          click: function() {
+            $( this ).dialog( "close" );
+            createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
+          }
+        },
+        {
+          text: "Add this event and "+member1["role"]+" to my team",
+          click: function() {
+            $( this ).dialog( "close" );
+            addMemberFromEvent(member1);
+            createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
+          }
+        },
+        {
+          text: "Do not add this event and keep my team as is",
+          click: function() {
+            $( this ).dialog( "close" );
+          }
+        }
+      ]
+    });
+    document.getElementById("teamRolesPrompt").innerHTML=promptText;
+    $( "#teamRolesPrompt" ).dialog( "open" );
+  } else { //else no matches, add Event block and its listed team members automatically
+    addMemberFromEvent(member1);
+    createDragEvent(mouseCoords[0],mouseCoords[1],eventJSONId);
+    addMemberFromEvent(member1);
+  }
 }
 
 /* Returns the 'inputs' of an Event JSON*/
 function listInputs(event) {
-var inputs="";
-for (var i = 0; i < event["inputs"].length; i++) {
-inputs += event["inputs"][i];
-if (i < event["inputs"].length-1) {
-inputs += ", ";
-}
-}
-return inputs;
+  var inputs="";
+  for (var i = 0; i < event["inputs"].length; i++) {
+    inputs += event["inputs"][i];
+    if (i < event["inputs"].length-1) {
+      inputs += ", ";
+    }
+  }
+  return inputs;
 }
 
 /* Returns the 'outputs' of an Event JSON*/
 function listOutputs(event) {
-var outputs="";
-for (var i = 0; i < event["outputs"].length; i++) {
-outputs += event["outputs"][i];
-if (i < event["outputs"].length-1) {
-outputs += ", ";
-}
-}
-return outputs;
+  var outputs="";
+  for (var i = 0; i < event["outputs"].length; i++) {
+    outputs += event["outputs"][i];
+    if (i < event["outputs"].length-1) {
+      outputs += ", ";
+    }
+  }
+  return outputs;
 }
 
 /* Returns the 'skills' of a Member JSON*/
 function listSkills(member) {
-var skills="";
-for (var i = 0; i < member["skills"].length; i++) {
-skills += member["skills"][i];
-skills += "<br />";
-}
-return skills;
+  var skills="";
+  for (var i = 0; i < member["skills"].length; i++) {
+    skills += member["skills"][i];
+    skills += "<br />";
+  }
+  return skills;
 }
 
 /* Compares second level category, or 'category2' of two members*/
 function compMemberCats(member1, member2) {
-if (member1["category2"] == member2["category2"]) {
-return true;
-}
-return false;
+  if (member1["category2"] == member2["category2"]) {
+    return true;
+  }
+  return false;
 }
 
 /* Compares skills of two members*/
 function compMemberSkills(member1, member2) {
-for (var i = 0; i < member1["skills"].length; i++) {
-for (var j=0; j < member2["skills"].length; j++) {
-if (member1["skills"][i] == member2["skills"][j]) {
-return true;
-}
-}
-}
-return false;
+  for (var i = 0; i < member1["skills"].length; i++) {
+    for (var j=0; j < member2["skills"].length; j++) {
+      if (member1["skills"][i] == member2["skills"][j]) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 /* Called when a user chooses from the dialog to add a team member included in a dragged Event into the flash-team. Appends a pill under 'Team Roles' container and a popover to that pill populated with that member's data*/
 function addMemberFromEvent(member) {
    memberCounter++;
-var memberName = member["role"];
+  var memberName = member["role"];
    
-//Appends a list item pill to the memberPills ul
+  //Appends a list item pill to the memberPills ul
    $("#memberPills").append('<li class="active pill' + memberCounter + '" id="mPill_' + memberCounter + '""><a>' + memberName
        + '<div class="close" onclick="deleteMember(' + memberCounter + '); updateStatus(false);">  X</div>' + '</a></li>');
 
