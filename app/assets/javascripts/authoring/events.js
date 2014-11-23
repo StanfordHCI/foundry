@@ -904,7 +904,7 @@ function drawTimer(eventObj){
             delayed_tasks.push(groupNum);
     
             drawEvent(eventObj);
-            console.log("in drawTimer: ", remaining_time);
+            //console.log("in drawTimer: ", remaining_time);
         }
 
         eventObj["timer"] = remaining_time;
