@@ -332,38 +332,63 @@ function getTaskOverviewContent(groupNum){
 }
 
 function saveTaskOverview(groupNum){
-	var task_id = getEventJSONIndex(groupNum); 
-	var ev = flashTeamsJSON["events"][task_id];
+	var task_index = getEventJSONIndex(groupNum); 
+	var ev = flashTeamsJSON["events"][task_index];
 	 
-    if($("#eventName").val() !="")
+
+/*var newEvent = {
+        "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
+        "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
+        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
+        ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
+        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};*/
+
+    //Update title
+    if($("#eventName").val() != "")
         ev.title = $("#eventName").val();
-	
-	
 
-    
-    //Get Start Time
+    //Update start time if changed
     var startHour = $("#startHr").val();    
-    if (startHour == "") startHour = parseInt($("#startHr").attr("placeholder"));
+    if (startHour != "") startHour = parseInt($("#startHr").val());
+    else startHour = parseInt($("#startHr").attr("placeholder"));
+
     var startMin = $("#startMin").val();
+    if (startMin != "") startMin = parseInt($("#startMin").val());
+    else startMin = parseInt($("#startMin").attr("placeholder"));
 
-    if (startMin == "") startMin = parseInt($("#startMin").attr("placeholder"));
-    //newX
-    startHour = parseInt(startHour);
-    startMin = parseInt(startMin);
-    var newX = (startHour * 100) + (startMin/15*25);
-    newX = newX - (newX%(STEP_WIDTH)) - DRAGBAR_WIDTH/2;
+    var totalStartMin = (startHour*60) + startMin;
+    ev.startTime = totalStartMin;
+    ev.startHr = startHour;
+    ev.startMin = startMin;
+    //SHOULD WE BE UPDATING EV.X HERE??
 
-    var eventNotes = $("#notes").val();
-    var driId = getDRI(groupNum);
+    //Update duration if changed
+    var newHours = $("#hours").val();
+    if (newHours != "") newHours = parseInt($("#hours").val());
+    else newHours = parseInt($("#hours").attr("placeholder"));
+
+    var newMin = $("#minutes").val();
+    if (newMin != "") newMin = parseInt($("#minutes").val());
+    else newMin = parseInt($("#minutes").attr("placeholder"));
+    newMin = Math.round(parseInt(newMin)/15) * 15;
+
+    if (newHours == 0 && newMin == 15){    //cannot have events shorter than 30 minutes
+        newMin = 30;
+    }
+    ev.duration = (newHours * 60) + newMin;
+
+    //Update PC if changed
     var pcId = getPC(groupNum);
+    ev.pc = pcId;
 
-    var indexOfJSON = getEventJSONIndex(groupNum);
-    var ev = flashTeamsJSON["events"][indexOfJSON];
+    //Update DRI if changed
+    var driId = getDRI(groupNum);
+        ev.dri = driId;
 
-    removeAllMemberCircles(ev);
-    
-    //Update members of event
-    flashTeamsJSON["events"][indexOfJSON].members = [];
+    //Update Members if changed
+    ev.members = [];
     for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
         var member = flashTeamsJSON["members"][i];
         var memberId = member.id;
@@ -374,27 +399,24 @@ function saveTaskOverview(groupNum){
         } 
     }
 
-    //Update width
-    var newHours = $("#hours").val();
-    var newMin = $("#minutes").val();
-    if (newHours == "") newHours = parseInt($("#hours")[0].placeholder);
-    if (newMin == "") newMin = parseInt($("#minutes" )[0].placeholder);
-    newMin = Math.round(parseInt(newMin)/15) * 15;
+    //Update description if changed
+    var eventNotes = $("#notes").val();
+    ev.notes = eventNotes;
 
-    //cannot have events shorter than 30 minutes
-    if (newHours == 0 && newMin == 15){
-        newMin = 30;
-    }
-    var newWidth = (newHours * 100) + (newMin/15*25);
-    
-    //Save documentation questions
-    var genQs = [];
+    //Update inputs and outputs if changed
+    ev.inputs = $('#inputs').val();
+    ev.outputs = $('#outputs' ).val();
+
+
+    //Update documentation questions if changed
+	var genQs = [];
     qString = $("#questions").val().split("\n");
     for (i = 0; i < qString.length; i++){
         if (qString[i] != ""){
             genQs.push([qString[i],""]);
         }
     }
+    ev.docQs = genQs;
 
     //Save output questions
     var outQs = {};
@@ -411,27 +433,10 @@ function saveTaskOverview(groupNum){
             } 
         }
     }
-
-  
-    //Update JSON
-    var indexOfJSON = getEventJSONIndex(groupNum);
-
-    ev.notes = eventNotes;
-    ev.dri = driId;
-    ev.pc = pcId;
-    ev.startHr = parseInt(startHour);
-    ev.startMin = Math.round(parseInt(startMin)/15) * 15;
-    ev.startTime = ev.startHr*60 + ev.startMin;
-    ev.duration = durationForWidth(newWidth);
-    ev.x = newX;
-    ev.inputs = $('#inputs').val();
-    ev.outputs = $('#outputs' ).val();
-    ev.docQs = genQs;
     ev.outputQs = outQs;
 
     drawEvent(ev, 0);
 
     updateStatus();
-    //showTaskOverview(groupNum);
-      $('#task_modal').modal('hide'); 
+    $('#task_modal').modal('hide'); 
 }
