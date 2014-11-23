@@ -76,25 +76,10 @@
 	float: left;
 }
 
-#addTimeBtn {
-	float: right;
-}
-
 .well{
 	padding-top: 5px;
 	border: 1px solid white;
 }
-
-/*
-#foundry-header{
-	background-color: #434343;
-	color: white;
-	position: fixed;
-	z-index: 1999;
-	top: 0;
-	left: 0;
-}
-*/
 
 .ft-buttons{
 	margin-top: 5px;
@@ -110,10 +95,6 @@
 	padding-left: 79px;
 }
 
-#ft-name{
-	padding-left: 19px;
-}
-
 #newMemberForm{
   /*
 	margin-bottom: 5px;
@@ -124,18 +105,6 @@
 #search-events-container {
 	height: 385px;
 }
-
-
-#project-overview-container{
-	padding-bottom: 10px;
-}
-
-/* #project-overview-text span{ */
-/*
-#project-overview-text{
-	background: white;
-}
-*/
 
 #projectOverviewInput{
 	overflow: auto; 
