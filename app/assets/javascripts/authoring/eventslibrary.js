@@ -39,63 +39,66 @@ callajaxreq("searchEventsInput", "GET", "/flash_teams/event_search", "search-res
 
 /* Called when a user drags an event over the overlay div covering the timeline svg element, allowing overlay to catch and handle the drop */
 function allowDrop(ev) {
-ev.preventDefault();
+  ev.preventDefault();
 }
 
 /* Called when an Event div is being dragged. */
 function dragEvent(ev) {
   //console.log(ev);
-ev.dataTransfer.setData('eventHash', ev.target.getAttribute('data-hash'));
-ev.dataTransfer.setData("Text",ev.target.id); //saves id of dragged Event div into 'data'
-document.getElementById("overlay").style.display = "block"; //turns overlay on
+  ev.dataTransfer.setData('eventHash', ev.target.getAttribute('data-hash'));
+  ev.dataTransfer.setData("Text",ev.target.id); //saves id of dragged Event div into 'data'
+  document.getElementById("overlay").style.display = "block"; //turns overlay on
 }
 
 /* Called when a user drops an event in a div that allows drop, in this case, overlay. Mouse coordinates at the point of drop are detected and members belonging to the dragged event and members belonging to the existing flash-team are compared */
 function drop(ev) {
-ev.preventDefault();
+  ev.preventDefault();
 
-//console.log(ev);
+  //console.log(ev);
 
-var targetHash = ev.dataTransfer.getData('eventHash');
+  var targetHash = ev.dataTransfer.getData('eventHash');
 
-//calculates mouse coordinates relative to timeline svg to draw dragged event in corresponding location
-var mouseCoords = calcMouseCoords(ev);
+  //calculates mouse coordinates relative to timeline svg to draw dragged event in corresponding location
+  var mouseCoords = calcMouseCoords(ev);
 
-//turn overlay off so event blocks can be drawn on timeline svg
-document.getElementById("overlay").style.display = "none";  
+  //turn overlay off so event blocks can be drawn on timeline svg
+  document.getElementById("overlay").style.display = "none";  
 
-//added createdragevent (and changed eventJSONId to eventJSONindex) here instead of compMember to test:
-createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
+  //added createdragevent (and changed eventJSONId to eventJSONindex) here instead of compMember to test:
+  createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
 
-//compares two members. Currently both are sample Member JSONs from MembersJSONArray, but should compared a team member from dragged Event and an existing team member in flash-team
-//compMember(MembersJSONArray[0], MembersJSONArray[2], mouseCoords, eventJSONindex); //TO BE CHANGED
+  //compares two members. Currently both are sample Member JSONs from MembersJSONArray, but should compared a team member from dragged Event and an existing team member in flash-team
+  //compMember(MembersJSONArray[0], MembersJSONArray[2], mouseCoords, eventJSONindex); //TO BE CHANGED
 }
 
 /* Calculates mouse coordinates relative to timeline svg so Event block can be drawn in correct spot*/
 function calcMouseCoords(event) {
-var timelineX = document.getElementById("timeline-container").offsetLeft;
-var timelineY = document.getElementById("timeline-container").offsetTop;
-var overlayX = document.getElementById("overlay").offsetLeft;
-var overlayY = document.getElementById("overlay").offsetTop;
+  var timelineX = document.getElementById("timeline-container").offsetLeft;
+  var timelineY = document.getElementById("timeline-container").offsetTop;
+  var overlayX = document.getElementById("overlay").offsetLeft;
+  var overlayY = document.getElementById("overlay").offsetTop;
 
-var svgX = timelineX + overlayX;
-var svgY = timelineY + overlayY;
+  var svgX = timelineX + overlayX;
+  var svgY = timelineY + overlayY;
 
-var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
-var timelineScrollY = document.getElementById("timeline-container").scrollTop;
+  var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
+  var timelineScrollY = document.getElementById("timeline-container").scrollTop;
 
-var absoluteX = event.pageX+timelineScrollX;
-var absoluteY = event.pageY+timelineScrollY;
+  var absoluteX = event.pageX+timelineScrollX;
+  var absoluteY = event.pageY+timelineScrollY;
 
-var svgpointX = absoluteX - svgX;
-var svgpointY = absoluteY - svgY;
+  var svgpointX = absoluteX - svgX;
+  var svgpointY = absoluteY - svgY;
 
-var svgpoint = [svgpointX, svgpointY];
-return svgpoint;
+  var svgpoint = [svgpointX, svgpointY];
+  return svgpoint;
 }
 
 /* Creates event block on timeline with according pop up information*/
 function createDragEvent(mouseX, mouseY, targetHash) {
+
+  console.log("in createDragEvent", targetHash);
+
    //WRITE IF CASE, IF INTERACTION DRAWING, STOP
    if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
        alert("Please click on another event or the same event to cancel");
@@ -104,43 +107,30 @@ function createDragEvent(mouseX, mouseY, targetHash) {
 
    event_counter++; //To generate id
 
-    /*
-var matchblock = document.getElementById("matchblock");
-console.log("matchblock: " + matchblock.innerHTML);
-*/
+  /*
+  var matchblock = document.getElementById("matchblock");
+  console.log("matchblock: " + matchblock.innerHTML);
+  */
 
-var title = document.getElementById("title-" + targetHash).innerHTML;
-var duration = document.getElementById("duration-" + targetHash).innerHTML * 60;
-var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
-var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
+  var title = document.getElementById("title-" + targetHash).innerHTML;
+  var duration = document.getElementById("duration-" + targetHash).innerHTML * 60;
+  var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
+  var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
 
-var snapPoint = calcSnap(mouseX, mouseY);
+  var snapPoint = calcSnap(mouseX, mouseY);
+  var startTimeObj = getStartTime(snapPoint[0]);
 
-//DRAWEVENT HAS DIFFERENT PARAMETERS NOW
-//var groupNum = drawEvent(snapPoint[0], snapPoint[1], null, eventTitle, duration);
-//var groupNum = drawEvents(snapPoint[0], snapPoint[1], null, eventTitle, duration);
+  var newEvent =  {
+      "title":title, "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+      "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
+      "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
+      "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":inputs, "outputs":outputs,
+      "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
+      ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
+      "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)}; 
+  flashTeamsJSON.events.push(newEvent);
 
-//FILLPOPOVER NO LONGER EXISTS
-//fillPopover(snapPoint[0], groupNum, eventTitle, duration);
-//fillPopover(snapPoint[0], groupNum, false, eventTitle, duration);
-
-//var crev = createEvent(snapPoint);
-var crev = newEventFromLib(snapPoint, title, duration, inputs, outputs); //add DRI, members, other attributes to the arguments (and method params)
-
-drawEvents(crev);
-
-//editablePopoverObj(crev);
-
-//drawPopover(crev, true, true);
-};
-
-//I added this
-function newEventFromLib(snapPoint, eventTitle, duration, inputs, outputs) {
-    event_counter++;
-    var startTimeObj = getStartTime(snapPoint[0]);
-    var newEvent = {"title": eventTitle, "id":event_counter, "x": snapPoint[0], "y": snapPoint[1], "startTime": startTimeObj["startTimeinMinutes"], "duration": duration, "members":[], "dri":"", "notes":"", "startHr": startTimeObj["startHr"], "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x": null, "inputs": inputs, "outputs": outputs };
-    flashTeamsJSON.events.push(newEvent);
-    return newEvent;
+  drawEvent(newEvent);
 };
 
 
