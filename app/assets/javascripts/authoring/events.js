@@ -730,21 +730,44 @@ function drawShade(eventObj, firstTime) {
             }
 
             task_g.selectAll("#rect_" + groupNum)
-                .attr("fill", color)
-                .attr("fill-opacity", .4);
+                .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return WORKER_TASK_NOT_START_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
+                else return TASK_COMPLETE_COLOR;
+            })
+                .attr("fill-opacity", .4); 
 
             break;
         }
     }
 
-    if (currentUserEvents.length > 0){
+    /*
+if (currentUserEvents.length > 0){
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
-        upcomingEvent = currentUserEvents[0].id; 
+         
+	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
+        console.log(upcomingEvent);
         task_g.selectAll("#rect_" + upcomingEvent)
-            .attr("fill", color)
+            //.attr("fill", WORKER_TASK_NOT_START_COLOR)
             .attr("fill-opacity", .9);  
     }
+*/
 }
+    
+
+/*
+function findCurrentUserNextEvent(currentUserEvents){
+	console.log("calling findCurrentUserNextEvent");
+	//console.log("currentUserEvents: " + currentUserEvents);
+	for (var i = 0; i < currentUserEvents.length; i++){
+		if(currentUserEvents[i].status == "not_started"){
+			return currentUserEvents[i]["id"];		
+		}
+	}
+}
+*/
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
