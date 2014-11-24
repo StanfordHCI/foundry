@@ -97,8 +97,6 @@ function calcMouseCoords(event) {
 /* Creates event block on timeline with according pop up information*/
 function createDragEvent(mouseX, mouseY, targetHash) {
 
-  console.log("in createDragEvent", targetHash);
-
    //WRITE IF CASE, IF INTERACTION DRAWING, STOP
    if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
        alert("Please click on another event or the same event to cancel");
@@ -118,6 +116,7 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
 
   var snapPoint = calcSnap(mouseX, mouseY);
+  console.log("mousex", mouseX);
   var startTimeObj = getStartTime(snapPoint[0]);
 
   var newEvent =  {
@@ -131,6 +130,7 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   flashTeamsJSON.events.push(newEvent);
 
   drawEvent(newEvent);
+  updateStatus(false);
 };
 
 
