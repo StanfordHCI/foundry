@@ -1,12 +1,12 @@
 <div class="span12">
 
 	<div class="row span12">
-	<h1>Panels</h1>
-	<p>To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
+		<h1>Panels</h1>
+		<p>To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
 	</div>
 	
 	<div class="row span12">
-	<a data-toggle="modal" data-target="#modal-new-worker" data-remote="<%= new_worker_path %> #panelregform">Add New Worker</a>
+		<a data-toggle="modal" data-target="#modal-new-worker" data-remote="<%= new_worker_path %> #panelregform">Add New Worker</a>
 	</div>
 	
 	<div class="modal hide fade" id="modal-new-worker" style="width: 560px; margin-left: -230px;">
@@ -19,24 +19,22 @@
 	  </div>
 	</div>
 	
-	
-	<p class="row span12">
 	<br />
 	
-	<b>Select a Panel:</b> <br />
-	</p>
+	<h4 class="row span12" style="padding-top: 5px;"><b>Select a Panel:</b></h4> 
+	
+	<br />
+	
 	<p class="row span12">
-	<%= select_tag "panels", options_for_select(@panels), {:prompt => "All Panels"}%>
+		<%= select_tag "panels", options_for_select(@panels), {:prompt => "All Panels"}%>
 	
 	</p>
-	
 	
 	<div id="filter_results" class="row span12">
-	
 		<%= render :partial => "workers/filter_workers" %>
-	
 	</div>
+
 	
-	<%= javascript_include_tag "/assets/authoring/panels" %>
+	<!-- <% javascript_include_tag "/assets/authoring/panels" %> -->
 
 </div>

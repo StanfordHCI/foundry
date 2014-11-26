@@ -102,10 +102,6 @@
 	*/
 }
 
-#search-events-container {
-	height: 385px;
-}
-
 #projectOverviewInput{
 	overflow: auto; 
   overflow-y: auto;

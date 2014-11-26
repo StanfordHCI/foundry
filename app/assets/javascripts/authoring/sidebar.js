@@ -116,11 +116,12 @@ function sendChatMessage() {
   }
   
   myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
-  $('#messageInput').attr("placeholder", "Type your message here...").val('').blur();
+  $('#messageInput').focus().val('');
 }
 
 $('#messageInput').keydown(function(e){
     if (e.keyCode == 13) {
+        e.preventDefault();
         sendChatMessage();
     }
 });
