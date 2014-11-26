@@ -199,8 +199,9 @@ function displayChatMessage(name, uniq, role, date, text) {
         var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
         var textDiv = $('<div/>', {"id": "m"+lastMessage}).addClass("text").text(text);
 
-        var wrapperDiv = $('<div/>');
+        var wrapperDiv = $('<div/>').addClass('message');
       
+        var clearDiv = $('<div class="clear"></div>');
         // TODO: I'm not totally sure which this is supposed to equal,
         // so I'm checking both for now
         if(current_user === role || current_user === name) {
@@ -210,15 +211,18 @@ function displayChatMessage(name, uniq, role, date, text) {
       
         wrapperDiv
           .append(authorDiv)
-          .append(textDiv);
+          .append(textDiv)
+          .append(clearDiv.clone());
       
         var messageFooterDiv = $('<div/>').addClass('message-footer');
-        authorDiv.clone().addClass('author')
-            .removeClass('author-header')
-            .appendTo(messageFooterDiv);
-        dateDiv.appendTo(messageFooterDiv);
+        messageFooterDiv
+          .append(authorDiv.clone().addClass('author')
+                    .removeClass('author-header'))
+          .append(dateDiv);
         
-        messageFooterDiv.appendTo(wrapperDiv);
+        wrapperDiv
+          .append(messageFooterDiv)
+          .append(clearDiv.clone());
       
         wrapperDiv.appendTo($('#messageList'));
         

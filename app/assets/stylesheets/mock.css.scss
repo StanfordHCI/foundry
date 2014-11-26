@@ -76,7 +76,7 @@ $header-height: 64px;
 
 #foundry-header > .menu-button:hover,
 #foundry-header > .menu-button.active {
-  background-color: rgb(125, 194, 229);
+  background-color: #dd5151;
 }
 
 #foundry-header > .menu-button:hover:after,
@@ -323,9 +323,13 @@ $left-sidebar-width: 251px;
   position: absolute;
   right: 0px;
   width: 280px;
+  height: 100%;
   margin-top: 11px;
   top: 64px;
-  z-index: 2;
+  z-index: 8;
+}
+
+#right-sidebar > .content {
   background: #fff;
   border-left: $secondary-border;
   border-top: $secondary-border;
@@ -346,6 +350,10 @@ $left-sidebar-width: 251px;
   box-sizing: border-box;
 }
 
+#messageList .message {
+  margin-bottom: 11px;
+}
+
 #messageList .author-header {
   /*color: rgb(45, 161, 244); /* TODO: change this to colors based on something */
   color: #333;
@@ -356,9 +364,31 @@ $left-sidebar-width: 251px;
 }
 
 #messageList .text {
-  padding: 11px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 11px 18px 11px 11px;
   
+  background: #efefef;
+  color: #333;
+  
+  /* color: #333; */
+  font-weight: 400;
+  font-size: 12px;
+  margin-bottom: 4px;
+  margin-left: 11px;
+  
+  border: solid 1px rgba(218, 218, 218, 0.2);
+  
+  /* TODO: make this depend on a sass variable
+     for the right-sidebar width*/
+  max-width: 188px;
+  
+  float: left;
+  
+  text-align: left;
+  @include border-radius( 2px );
+}
+
+/* message was by current user */
+#messageList .by-user .text {
   /* brown + orange */
   /* background: rgb(97, 94, 94);
   color: #f7d17f; */
@@ -367,33 +397,28 @@ $left-sidebar-width: 251px;
   background: #33a6ec;
   color: white;
   
-  /* color: #333; */
   font-weight: 200;
-  font-size: 12px;
-  margin-bottom: 4px;
-  margin-left: 11px;
   
-  text-align: right;
-  @include border-radius( 2px );
-}
-
-/* message was by current user */
-#messageList .by-user .text {
+  border: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
+  
+  padding: 11px;
   margin-right: 11px;
-  text-align: left;
+  float: right;
 }
 
 #messageList .message-footer {
   font-size: 12px;
   color: #6c6c6c;
   text-align: left;
-  border-bottom: $secondary-border;
-  margin: 0 70px 0 11px;
+  margin-left: 11px;
   padding: 8px 0px;
+  float: left;
 }
 
 #messageList .by-user .message-footer {
-  margin: 0 11px 0 70px;
+  margin-right: 11px;
+  float: right;
   text-align: right;
 }
 
@@ -405,11 +430,7 @@ $left-sidebar-width: 251px;
   width: 0px;
   z-index: 1;
   
-  /* brown */
-  /* border-color: rgb(97, 94, 94) transparent; */
-  
-  /* blue */
-  border-color: #33a6ec transparent;
+  border-color: #efefef transparent;
   
   float: left;
   margin-top: -18px;
@@ -417,14 +438,17 @@ $left-sidebar-width: 251px;
 }
 
 #messageList .by-user .message-footer .author::before {
+  /* brown */
+  /* border-color: rgb(97, 94, 94) transparent; */
+  
+  /* blue */
+  border-color: #33a6ec transparent;
+  
   float: right;
   margin-right: 11px;
 }
 
 #right-sidebar .entry {
-  position: absolute;
-  left: 0;
-  bottom: 0px;
   width: 100%;
   padding-bottom: 11px;
 }
@@ -451,10 +475,6 @@ $left-sidebar-width: 251px;
   transition: border-color 0.8s;
 }
 
-#messageInput:focus {
-  border-color: rgba(0, 136, 204, 0.7);
-}
-
 #sendChatButton {
   color: white;
   display: inline-block;
@@ -475,31 +495,27 @@ $left-sidebar-width: 251px;
 }
 
 #presenceDiv {
-  display: none;
-  height: auto;
-  margin-bottom: 10px;
-  padding: 8px;
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  right: 0;
-  border: solid 1px rgba(255,255,255,0.1);
 }
 
-.show-online-button {
-  text-transform: uppercase;
-  font-size: 14px;
+#online-users-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  
+  background-color: rgba(255, 255, 255, 0.9);
+}
 
-  display: inline-block;
-
-  margin-bottom: 11px;
-  cursor: pointer;
-  transition: color 0.4s;
+#online-users-box .content {
+  color: #333;
 }
 
 .sidebar .chat-header {
+  color: rgb(119, 119, 119);
   background: rgba(247, 247, 247, 0.28);
-  padding: 11px;
+  padding: 16px;
   border-bottom: $secondary-border;
 }
 
@@ -507,7 +523,31 @@ $left-sidebar-width: 251px;
   margin: 0;
   font-size: 18px;
   font-weight: 200;
-  color: rgb(119, 119, 119);
+}
+
+.sidebar .chat-header #show-online-button {
+  float: right;
+  
+  color: #181818;
+  
+  text-transform: uppercase;
+  font-size: 10px;
+  margin-bottom: 11px;
+  cursor: pointer;
+  
+  
+  transition: color 0.4s;
+}
+
+.sidebar .chat-content.blurred {
+  overflow: hidden;
+  
+  -webkit-filter: blur(4px);
+     -moz-filter: blur(4px);
+       -o-filter: blur(4px);
+          filter: blur(4px);
+          /* for firefox */
+          filter: url("../assets/blur.svg#blur");
 }
 
 /* icons */
