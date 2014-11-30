@@ -210,6 +210,7 @@ function createEvent(point, duration) {
     // create event object
     var eventObj = createEventObj(snapPoint, duration);
     
+
     // render event on timeline
     drawEvent(eventObj, true);
 
@@ -259,6 +260,7 @@ function createEventObj(snapPoint, duration) {
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
+    
     return newEvent;
 };
 

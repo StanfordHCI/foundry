@@ -11,6 +11,8 @@ var fire_interval = 180; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
+
+//not updated in the current version
 var remaining_tasks = [];
 
 var live_tasks = [];
