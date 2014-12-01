@@ -23,6 +23,7 @@ class WorkersController < ApplicationController
     	@workers = Worker.all.order(name: :asc)
 		@fw = Worker.all.pluck(:email)
 	end
+
     	
   	@panels = Worker.distinct.pluck(:panel)
   	  	  

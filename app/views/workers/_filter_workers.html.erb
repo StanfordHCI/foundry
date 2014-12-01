@@ -5,13 +5,20 @@
 	<br />
 	<!-- <% @fw.to_s.gsub('"', '')%> -->
 	
-	<%= @fw.join(", ")%>
+	<% @emails = @fw.uniq.join(", ")%>
 	
+	<%= @emails %>
+	<br />
+	<button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
+
+	<%= javascript_include_tag "ZeroClipboard" %>
+	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+
 	<br />
 	<br />
 </p>
 
-
+<h4><b>Or Select Specific Workers:</b></h4>
 <div>
 	<table class="table table-bordered table-striped">
 	    <thead>
@@ -62,6 +69,7 @@
 
 
 <%= javascript_include_tag "/assets/authoring/panels" %>
+
 
 
 

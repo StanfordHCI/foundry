@@ -3,7 +3,7 @@
  * 
  */
 
-var RECTANGLE_WIDTH = 100;
+var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var HIRING_HEIGHT = 50;
 var ROW_HEIGHT = 80;
@@ -30,8 +30,6 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -39,8 +37,6 @@ var drag_right = d3.behavior.drag()
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        var ev = getEventFromId(d.groupNum);
-        //drawPopover(ev, true, false);
         updateStatus(false);
     });
 
@@ -90,6 +86,7 @@ function leftResize(d) {
     
     var startHr = startHrForX(newX);
     var startMin = startMinForX(newX);
+  
     ev.startHr = startHr;
     ev.startMin = startMin;
     ev.startTime = startHr * 60 + startMin;
@@ -103,7 +100,6 @@ function rightResize(d) {
         return;
     }
 
-
     // get event id
     var groupNum = d.groupNum;
 
@@ -115,9 +111,9 @@ function rightResize(d) {
         newX = SVG_WIDTH;
     }
     var newWidth = newX - ev.x;
-    if (newWidth < 30)
+    if (newWidth < 30) {
         return;
-
+    }
     ev.duration = durationForWidth(newWidth);
 
     drawEvent(ev, false);
@@ -217,9 +213,6 @@ function createEvent(point, duration) {
     // render event on timeline
     drawEvent(eventObj, true);
 
-    // render event popover
-    //drawPopover(eventObj, true, true);
-
     // save
     updateStatus(false);
 };
@@ -229,14 +222,10 @@ function checkWithinTimelineBounds(snapPoint) {
 };
 
 function getStartTime(mouseX) {
-    var startHr = (mouseX-(mouseX%100))/100;
-    var startMin = (mouseX%100)/25*15;
-    if(startMin == 57.599999999999994) {
-        startHr++;
-        startMin = 0;
-    } else startMin += 2.4
+    var startHr = startHrForX(mouseX);
+    var startMin = startMinForX(mouseX);
+    
     var startTimeinMinutes = parseInt((startHr*60)) + parseInt(startMin);
-
     return {"startHr":startHr, "startMin":startMin, "startTimeinMinutes":startTimeinMinutes};
 };
 
@@ -248,20 +237,25 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
+//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
     event_counter++;
     
     duration = duration || 60;
     
     var startTimeObj = getStartTime(snapPoint[0]);
+  
     var newEvent = {
         "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":null, "outputs":null,
-        "row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
+        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
+        ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
+        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
+        createNewFolder(document.getElementById("ft-name").innerHTML);
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
@@ -329,7 +323,7 @@ function drawG(eventObj, firstTime) {
 
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
-    var x_offset = -4;
+    var x_offset = -6;
     
     var y = _foundry.timeline.rowHeight * eventObj.row;
     var y_offset = (_foundry.timeline.rowHeight - RECTANGLE_HEIGHT)/2;
@@ -376,8 +370,8 @@ function drawMainRect(eventObj, firstTime) {
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") return TASK_START_COLOR;
-                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
                 else return TASK_COMPLETE_COLOR;
             })
             .attr("fill-opacity", .6)
@@ -392,8 +386,8 @@ function drawMainRect(eventObj, firstTime) {
             .attr("fill", function(d) {
                 var stat = eventObj.status;
                 if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") return TASK_START_COLOR;
-                else if (stat == "delayed") return TASK_DELAY_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
                 else return TASK_COMPLETE_COLOR;
             });
     }
@@ -454,7 +448,7 @@ function drawLeftDragBar(eventObj, firstTime) {
 }
 
 function drawTitleText(eventObj, firstTime) {
-    var x_offset = 10; // unique for title
+    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
     var y_offset = 14; // unique for title
 
     var groupNum = eventObj["id"];
@@ -469,16 +463,15 @@ function drawTitleText(eventObj, firstTime) {
     var width = (spn.offsetWidth );
     var event_width = getWidth(eventObj);
         
-  while (width > event_width - 15){ 
+    while (width > event_width - 15){ 
         shortened_title = shortened_title.substring(0,shortened_title.length - 4);
         shortened_title = shortened_title + "...";
         spn.innerHTML = shortened_title;
         width = spn.offsetWidth;
-  }
+    }
 
     title = shortened_title;
    
-
     var existingTitleText = task_g.selectAll("#title_text_" + groupNum);
     if(existingTitleText[0].length == 0){ // first time
         task_g.append("text")
@@ -501,7 +494,7 @@ function drawTitleText(eventObj, firstTime) {
 }
 
 function drawDurationText(eventObj, firstTime) {
-    var x_offset = 10; // unique for duration
+    var x_offset = 15; // unique for duration (NOTE FROM DR: Used to be 10)
     var y_offset = 26; // unique for duration
 
     var totalMinutes = eventObj["duration"];
@@ -542,7 +535,7 @@ function drawDurationText(eventObj, firstTime) {
 }
 
 function drawGdriveLink(eventObj, firstTime) {
-    var x_offset = 10; // unique for gdrive link
+    var x_offset = 15; // unique for gdrive link (NOTE FROM DR: Used to be 10)
     var y_offset = 38; // unique for gdrive link
 
     var groupNum = eventObj["id"];
@@ -584,7 +577,7 @@ function drawHandoffBtn(eventObj, firstTime) {
         return;
     }
 
-    var x_offset = getWidth(eventObj)-18; // unique for handoff btn
+    var x_offset = getWidth(eventObj)-24; // unique for handoff btn (NOTE FROM DR: Used to be -18)
     var y_offset = 40; // unique for handoff btn
 
     var groupNum = eventObj["id"];
@@ -626,7 +619,7 @@ function drawHandoffBtn(eventObj, firstTime) {
 function drawCollabBtn(eventObj, firstTime) {
     if(isUser || in_progress){ return; }
 
-    var x_offset = getWidth(eventObj)-38; // unique for collab btn
+    var x_offset = getWidth(eventObj)-44; // unique for collab btn (NOTE FROM DR: Used to be -38)
     var y_offset = 40; // unique for collab btn
 
     var groupNum = eventObj["id"];
@@ -673,7 +666,7 @@ function drawMemberCircles(eventObj) {
     //Find out if first draw or redrawing
     for (var i=0; i<members.length; i++) {
         var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
-        var x_offset = 16 + (i*14); //unique for each member line
+        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
         var y_offset = 60;
         var member = getMemberById(members[i]);
         var color = member.color;
@@ -731,21 +724,44 @@ function drawShade(eventObj, firstTime) {
             }
 
             task_g.selectAll("#rect_" + groupNum)
-                .attr("fill", color)
-                .attr("fill-opacity", .4);
+                .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return WORKER_TASK_NOT_START_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
+                else return TASK_COMPLETE_COLOR;
+            })
+                .attr("fill-opacity", .4); 
 
             break;
         }
     }
 
-    if (currentUserEvents.length > 0){
+    /*
+if (currentUserEvents.length > 0){
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
-        upcomingEvent = currentUserEvents[0].id; 
+         
+	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
+        console.log(upcomingEvent);
         task_g.selectAll("#rect_" + upcomingEvent)
-            .attr("fill", color)
+            //.attr("fill", WORKER_TASK_NOT_START_COLOR)
             .attr("fill-opacity", .9);  
     }
+*/
 }
+    
+
+/*
+function findCurrentUserNextEvent(currentUserEvents){
+	console.log("calling findCurrentUserNextEvent");
+	//console.log("currentUserEvents: " + currentUserEvents);
+	for (var i = 0; i < currentUserEvents.length; i++){
+		if(currentUserEvents[i].status == "not_started"){
+			return currentUserEvents[i]["id"];		
+		}
+	}
+}
+*/
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
@@ -842,14 +858,111 @@ function drawEvent(eventObj) {
     drawTitleText(eventObj);
     drawDurationText(eventObj);
     drawGdriveLink(eventObj);
+
+    drawTimer(eventObj);
+
     drawHandoffBtn(eventObj);
     drawCollabBtn(eventObj);
     drawMemberCircles(eventObj);
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
+    
+    // subtract two so there's always at least one empty row
+    // (event.row is 0 indexed)
+    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+      window._foundry.timeline.updateNumRows(eventObj.row + 2);
+    }
 };
 
+
+
+function drawTimer(eventObj){
+   
+    if( in_progress != true || eventObj.status == "not_started" )
+        return;
+
+    var x_offset = 15; // unique for timer (NOTE FROM DR: this used to be 10)
+    var y_offset = 50; // unique for handoff btn
+
+    if( eventObj.status == "started" ){
+    
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
+
+        if(remaining_time < 0){
+            eventObj.status = "delayed";
+             
+            
+            var groupNum = parseInt(eventObj["id"]);
+            
+            var idx = live_tasks.indexOf(groupNum);
+            if (idx != -1) { // delayed task
+                live_tasks.splice(idx, 1);
+            }
+            delayed_tasks.push(groupNum);
+    
+            drawEvent(eventObj);
+            //console.log("in drawTimer: ", remaining_time);
+        }
+
+        eventObj["timer"] = remaining_time;
+        updateStatus(true);
+    }
+    else if( eventObj.status == "delayed" ){
+    
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
+
+        eventObj["timer"] = remaining_time;
+        updateStatus(true);
+    }
+
+   
+    var totalMinutes = eventObj["timer"];
+    
+    if(totalMinutes < 0){
+        var numHoursInt = Math.floor(totalMinutes/60);
+        var minutesLeft = Math.abs(Math.round(totalMinutes%60));
+    }
+    else{
+        var numHoursInt = Math.floor(totalMinutes/60);
+        var minutesLeft = Math.round(totalMinutes%60);
+    }
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    var existingTimerText = task_g.selectAll("#timer_text_" + groupNum);
+    if(existingTimerText[0].length == 0){ // first time
+        task_g.append("text")
+            .text(function (d) {
+                if (numHoursInt == 0){
+                    return "0 :"+ minutesLeft;
+                }
+                else
+                    return numHoursInt+" : "+minutesLeft;
+            })
+            .attr("class", "timer_text")
+            .attr("id", function(d) {return "timer_text_" + groupNum;})
+            .attr("groupNum", function(d){return d.groupNum})
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset})
+            .attr("font-size", "12px");
+    } else {
+        task_g.selectAll(".timer_text")
+            .text(function (d) {
+                if (numHoursInt == 0){
+                    return "0 :"+minutesLeft; 
+                }
+                else
+                    return numHoursInt+" : "+minutesLeft;
+            })
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset});
+    }
+}
 
 //Draw a triangular hiring event on the timeline
 function drawHiringEvent() {

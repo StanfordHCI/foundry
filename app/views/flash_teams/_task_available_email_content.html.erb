@@ -1,12 +1,19 @@
 <p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
 
-<p><b>Project overview:</b> <%=@project_overview%></p>
-<p><b>Task description:</b> <%=@task_description%></p>
+<p><b>Project overview:</b> <%=@project_overview.html_safe%></p>
+<p><b>Task description:</b> <%=@task_description.html_safe%></p>
 
-<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>, which you can access at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+
+<%if !@input_link.empty?%>
+You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
+<%end%>
 
 <p><b>Deliverable(s):</b> <%=@outputs%></p>
+
+<%if !@output_description.empty?%>
 <p><b>Deliverable information:</b> <%=@output_description%></p>
+<%end%>
 
 <p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
 

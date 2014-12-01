@@ -1,9 +1,7 @@
 function showTaskOverview(groupNum){
-
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
-   	
 	
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
 	var uniq_u=getParameterByName('uniq');
@@ -20,7 +18,7 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        if(eventObj.status == "started"){
+        if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
             $("#start-end-task").html('Complete');
@@ -61,7 +59,6 @@ function showTaskOverview(groupNum){
 }
 
 function editTaskOverview(popover,groupNum){
-
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
@@ -75,10 +72,7 @@ function editTaskOverview(popover,groupNum){
 
         //content
         var taskOverviewForm = getTaskOverviewForm(groupNum);
-		/*var taskOverviewForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
-					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
-					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
-					+'</form>';*/
+
 		$('#task-text').html(taskOverviewForm);
 		
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
@@ -86,17 +80,40 @@ function editTaskOverview(popover,groupNum){
         
         $("#inputs").tagsinput(); 
         $("#outputs").tagsinput();
-	}
 
-				
+        //Adds the appropraiate documentation question field when 
+        $("#outputs").change(function() {
+            tempText = {};
+            for (i = 0; i < $(".oQs").length; i++){
+                val = ($(".oQs")[i].id).substring(3);
+                tempText[val] = ($(".oQs")[i].value).split("\n");
+            }
+            outputArray = ($("#outputs").val()).split(",");
+            htmlString = "";
+            for (i = 0; i < outputArray.length; i++){
+                if (outputArray[i] != ""){
+                    htmlString = htmlString + '<div><b>Questions about <i>' + outputArray[i] + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">'; 
+                    if (outputArray[i] in tempText){
+                        for (j = 0; j < tempText[outputArray[i]].length; j++){
+                            htmlString = htmlString + tempText[outputArray[i]][j] + '\n';
+                        }
+                    }
+                    else{
+                        htmlString = htmlString + "Please write a brief (1 sentence) description of this deliverable";
+                    }
+                    htmlString = htmlString + '</textarea></div>';
+                }
+            }
+            document.getElementById("outputQForm").innerHTML = htmlString;
+        });
+
+	}	
 }
 
 function getTaskOverviewForm(groupNum){
-
-var task_id = getEventJSONIndex(groupNum);
+    var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
-	
-	 var totalMinutes = eventObj["duration"];
+	var totalMinutes = eventObj["duration"];
     var groupNum = eventObj["id"];
     var title = eventObj["title"];
     var startHr = eventObj["startHr"];
@@ -110,12 +127,17 @@ var task_id = getEventJSONIndex(groupNum);
     var minutesLeft = totalMinutes%60;
     var dri_id = eventObj.dri;
     var PC_id = eventObj.pc;
-/*'<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
-					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
-					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
-					+'</form>';*/
+    var questions = "";
+    for (i = 0; i < eventObj["docQs"].length; i++){
+        questions = questions + eventObj["docQs"][i][0] + "\n";
+    }
+    var outputQuestions = eventObj["outputQs"];
+    /*'<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
+    					+'<textarea type="text"" id="descriptionInput" rows="6" placeholder="Task description ...">'+description+'</textarea>'
+    					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
+    					+'</form>';*/
 
-var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
+    var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
         + '<div class="event-table-wrapper">'
         + '<div class="row-fluid">' 
         + '<div class="span6">'
@@ -149,7 +171,16 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
-      
+        + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
+        + '<div id="outputQForm">';
+        for (var key in outputQuestions){
+            form = form + '<div><b>Questions about <i>' + key + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">'; 
+            for (i = 0; i < outputQuestions[key].length; i++){
+                form = form + outputQuestions[key][i][0] + '\n';
+            }
+            form = form + '</textarea></div>';
+        }
+        form = form + '</div>'
         + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
         
         + '</div>'
@@ -158,7 +189,7 @@ var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bot
         
         + '</form>';
 
-        return form;
+    return form;
 
 }
 
@@ -255,54 +286,93 @@ function getTaskOverviewContent(groupNum){
         }
         var member = getMemberById(ev.members[num_members-1]);
         content += member.role;
-        content += '<br>';
+        content += '<br/>';
     }
 
-
-    
     if (ev.notes != ""){
-        content += '<b>Description:</b><br>';
+        content += '</br><b>Description:</b><br>';
         content += ev.notes;
         content += '<br>';
     }
- 
+
+
+    content += "<hr/>";
+    content += "<b>Documentation Questions</b><hr/>";
+
+    //Add output documentation questions to task modal    
+    for (var key in ev.outputQs){
+        if (key != ""){
+            content += "<b>" + key + "</b></br>";
+            keyArray = ev.outputQs[key];
+            for (i = 0; i < keyArray.length; i++){
+                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
+            }
+        }
+    }
+    content += "<hr/>";
+
+    //Add general documentation questions to task modal
+    if (ev.docQs.length > 0){
+        docQs = ev.docQs;
+        for (i = 0; i < docQs.length; i++){
+            if (docQs[i][1] != null){
+                content += "<b>" + docQs[i][0] + " </b>";
+                content += "<p>" + docQs[i][1] + "</p>";
+            }
+        }
+    }
    
     return content;
 }
 
 function saveTaskOverview(groupNum){
-	var task_id = getEventJSONIndex(groupNum); 
-	var ev = flashTeamsJSON["events"][task_id];
-	 
-    if($("#eventName").val() !="")
+	var task_index = getEventJSONIndex(groupNum); 
+	var ev = flashTeamsJSON["events"][task_index];
+
+    //Update title
+    if($("#eventName").val() != "")
         ev.title = $("#eventName").val();
-	
-	
 
-    
-    //Get Start Time
+    //Update start time if changed
     var startHour = $("#startHr").val();    
-    if (startHour == "") startHour = parseInt($("#startHr").attr("placeholder"));
+    if (startHour != "") startHour = parseInt($("#startHr").val());
+    else startHour = parseInt($("#startHr").attr("placeholder"));
+
     var startMin = $("#startMin").val();
+    if (startMin != "") startMin = parseInt($("#startMin").val());
+    else startMin = parseInt($("#startMin").attr("placeholder"));
 
-    if (startMin == "") startMin = parseInt($("#startMin").attr("placeholder"));
-    //newX
-    startHour = parseInt(startHour);
-    startMin = parseInt(startMin);
-    var newX = (startHour * 100) + (startMin/15*25);
-    newX = newX - (newX%(STEP_WIDTH)) - DRAGBAR_WIDTH/2;
+    var totalStartMin = (startHour*60) + startMin;
+    ev.startTime = totalStartMin;
+    ev.startHr = startHour;
+    ev.startMin = startMin;
+    //SHOULD WE BE UPDATING EV.X HERE??
 
-    var eventNotes = $("#notes").val();
-    var driId = getDRI(groupNum);
+    //Update duration if changed
+    var newHours = $("#hours").val();
+    if (newHours != "") newHours = parseInt($("#hours").val());
+    else newHours = parseInt($("#hours").attr("placeholder"));
+
+    var newMin = $("#minutes").val();
+    if (newMin != "") newMin = parseInt($("#minutes").val());
+    else newMin = parseInt($("#minutes").attr("placeholder"));
+    newMin = Math.round(parseInt(newMin)/15) * 15;
+
+    if (newHours == 0 && newMin == 15){    //cannot have events shorter than 30 minutes
+        newMin = 30;
+    }
+    ev.duration = (newHours * 60) + newMin;
+
+    //Update PC if changed
     var pcId = getPC(groupNum);
+    ev.pc = pcId;
 
-    var indexOfJSON = getEventJSONIndex(groupNum);
-    var ev = flashTeamsJSON["events"][indexOfJSON];
+    //Update DRI if changed
+    var driId = getDRI(groupNum);
+        ev.dri = driId;
 
-    removeAllMemberCircles(ev);
-    
-    //Update members of event
-    flashTeamsJSON["events"][indexOfJSON].members = [];
+    //Update Members if changed
+    ev.members = [];
     for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
         var member = flashTeamsJSON["members"][i];
         var memberId = member.id;
@@ -313,36 +383,44 @@ function saveTaskOverview(groupNum){
         } 
     }
 
-    //Update width
-    var newHours = $("#hours").val();
-    var newMin = $("#minutes").val();
-    if (newHours == "") newHours = parseInt($("#hours")[0].placeholder);
-    if (newMin == "") newMin = parseInt($("#minutes" )[0].placeholder);
-    newMin = Math.round(parseInt(newMin)/15) * 15;
-
-    //cannot have events shorter than 30 minutes
-    if (newHours == 0 && newMin == 15){
-        newMin = 30;
-    }
-    var newWidth = (newHours * 100) + (newMin/15*25);
-  
-    //Update JSON
-    var indexOfJSON = getEventJSONIndex(groupNum);
-
+    //Update description if changed
+    var eventNotes = $("#notes").val();
     ev.notes = eventNotes;
-    ev.dri = driId;
-    ev.pc = pcId;
-    ev.startHr = parseInt(startHour);
-    ev.startMin = Math.round(parseInt(startMin)/15) * 15;
-    ev.startTime = ev.startHr*60 + ev.startMin;
-    ev.duration = durationForWidth(newWidth);
-    ev.x = newX;
+
+    //Update inputs and outputs if changed
     ev.inputs = $('#inputs').val();
     ev.outputs = $('#outputs' ).val();
 
-    drawEvent(ev, 0);
 
+    //Update documentation questions if changed
+	var genQs = [];
+    qString = $("#questions").val().split("\n");
+    for (i = 0; i < qString.length; i++){
+        if (qString[i] != ""){
+            genQs.push([qString[i],""]);
+        }
+    }
+    ev.docQs = genQs;
+
+    //Save output questions
+    var outQs = {};
+    outputVals = ($("#outputs").val()).split(",");
+    for (i = 0; i < outputVals.length; i++){
+        output = outputVals[i];
+        if (output != ""){
+            outQs[output] = [];
+            questionArray = (document.getElementById("num" + outputVals[i]).value).split("\n");
+            for (j = 0; j < questionArray.length; j++){
+                if (questionArray[j] != ""){
+                    outQs[output].push([questionArray[j],""]);
+                }
+            } 
+        }
+    }
+    ev.outputQs = outQs;
+
+    drawEvent(ev, 0);
     updateStatus();
-    //showTaskOverview(groupNum);
-      $('#task_modal').modal('hide'); 
+
+    $('#task_modal').modal('hide'); 
 }

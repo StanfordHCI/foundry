@@ -7,20 +7,31 @@
 	<!-- <% @abc.to_s.gsub('"', '')%> -->
 	
 	<%if !@abc.nil? %>
-		<%= @abc.join(", ") %>
+		<% @filt_emails = @abc.uniq.join(", ") %>
+		<%= @filt_emails %>
+		<br />
+		<button class="btn btn-default" id="copy-button-filt" data-clipboard-text="<%=@filt_emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
 	<%end%>
 
-	
 	<br />
 
-
-
-
 <%= javascript_include_tag "/assets/jquery" %>
-<%= javascript_include_tag "/assets/jquery_ujs" %>
 <%= javascript_include_tag "bootstrap/bootstrap.min" %>
 <%= javascript_include_tag "bootstrap-editable.min" %>
 <%= javascript_include_tag "bootstrap-tour.min" %>
-<!-- <% javascript_include_tag "bootstrap-table" %> -->
 
 <!-- <% javascript_include_tag "/assets/authoring/panels" %> -->
+
+<script>
+	
+	var client_filt = new ZeroClipboard( document.getElementById("copy-button-filt") );
+	
+	client_filt.on( "ready", function( readyEvent ) {
+	  //alert( "ZeroClipboard SWF is ready!" );
+	
+	  client_filt.on( "aftercopy", function( event ) {
+	    alert("Copied emails to clipboard: " + event.data["text/plain"] );
+	  } );
+	} );
+</script>
+	

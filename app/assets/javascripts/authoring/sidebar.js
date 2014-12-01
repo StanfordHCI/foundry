@@ -99,7 +99,7 @@ function saveProjectOverview(){
 
 /***chat****/
 
-var firebaseURL = 'https://foundry-ft-dev.firebaseio.com/'; //should be foundry-ft for production and foundry-ft-dev for development
+//var firebaseURL is saved in an ENV var and included in the globals partial
 
 var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 
@@ -107,21 +107,26 @@ var currentdate = new Date();
 
 var name;
 
+function sendChatMessage() {
+  var text = $('#messageInput').val();
+  var uniq_u=getParameterByName('uniq');
+  
+  if(uniq_u == undefined || uniq_u == ""){
+    uniq_u = 'Author';
+  }
+  
+  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
+  $('#messageInput').focus().val('');
+}
 
 $('#messageInput').keydown(function(e){
     if (e.keyCode == 13) {
-        //console.log("PRESSED RETURN KEY!");
-        var text = $('#messageInput').val();
-        var uniq_u=getParameterByName('uniq');
-        
-        if(uniq_u == undefined || uniq_u == ""){
-	        uniq_u = 'Author';
-        }
-        
-        myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
-        $('#messageInput').attr("placeholder", "Type your message here...").val('').blur();
+        e.preventDefault();
+        sendChatMessage();
     }
 });
+
+$('#sendChatButton').click(sendChatMessage);
 
 //load all chats that were sent before page was reloaded
 /*myDataRef.once('value', function(snapshot) {
@@ -189,15 +194,21 @@ function displayChatMessage(name, uniq, role, date, text) {
 	//revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
     if(lastWriter!=name){
         lastMessage=(lastMessage+1)%2;
-        var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text).prepend($('<strong/>').text(name+ ' (' + role + ')' + ': ' )).prepend('<br>').prepend($('<em/>').text(dateform));
+        // var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text).prepend($('<strong/>').text(name+ ' (' + role + ')' + ': ' )).prepend('<br>').prepend($('<em/>').text(dateform));
 
-        div1.css('padding-left','5%');
-        div1.appendTo($('#messageList'));
+        //div1.css('padding-left','5%');
+      
+        var dateDiv = $('<div/>').addClass("date").text(dateform);
+        var authorDiv = $('<div/>').addClass("author").text(name + ' (' + role + ')');
+        var textDiv = $('<div/>', {"id": "m"+lastMessage}).addClass("text").text(text);
+      
+        dateDiv.appendTo($('#messageList'));
+        authorDiv.appendTo($('#messageList'));
+        textDiv.appendTo($('#messageList'));
         
-    }else{
-        var div1 = $('<div/>',{"id":"m"+lastMessage}).text(text);
-        div1.css('padding-left','5%');
-        div1.appendTo($('#messageList'));
+    } else{
+        var textDiv = $('<div/>',{"id":"m"+lastMessage}).addClass("text").text(text);
+        textDiv.appendTo($('#messageList'));
     }
     lastWriter=name;
     lastDate = message_date;
@@ -270,6 +281,13 @@ userListRef.on("child_added", function(snapshot) {
 	  .attr("id", getMessageId(snapshot))
 	  .text(user.name + " is " + user.status)
 	  .appendTo("#presenceDiv");
+  
+    // update display for num people online
+    var numOnlineElem = $(".num-online");
+    // number of occurrences of the string "is online"
+    // TODO: is there a better way to do this?
+    var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
+    numOnlineElem.text(numOnline);
 });
 
 // Update our GUI to remove the status of a user who has left.
