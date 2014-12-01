@@ -14,6 +14,16 @@
 
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
+    // check if events before have been completed
+    var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
+    for (var i = 0; i < eventsBefore.length; i++) {
+        var ev = eventsBefore[i];
+        if (ev.status != "completed") {
+            alert("This task depends on one or more tasks that have not been completed yet. Please let them finish first.");
+            return;
+        }
+    }
+
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
