@@ -1,6 +1,7 @@
 window.dependencyAPI = {
 	forward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY AFTER
 	backward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY BEFORE
+	latest_interactions: [],
 	/*
 	 * Populates the forward and backward dependency maps by iterating over the interactions just once.
 	 * Usage:
@@ -9,31 +10,52 @@ window.dependencyAPI = {
 	 * dependency_maps["backward"] gives you the backward map.
 	 */
 	getDependencyMaps: function(interactions){
-		// TODO(jay): add a dirty bit
-		this.forward_dependency_map = {};
-		this.backward_dependency_map = {};
+		if (this.checkInteractionsChanged(interactions)) {
+			console.log("Interactions changed from " + this.latest_interactions.join() + " to " + interactions.join());
+			// clear the maps because interactions have changed
+			this.forward_dependency_map = {};
+			this.backward_dependency_map = {};
 
-		var num_interactions = interactions.length;
-		for (var i=0; i<num_interactions; i++){
-			var interaction = interactions[i];
-			if (interaction.type == "handoff"){ // we only care about the handoffs
-				// add the dependencies in forward direction
-				if(!this.forward_dependency_map.hasOwnProperty(interaction.event1)){
-					this.forward_dependency_map[interaction.event1] = [parseInt(interaction.event2)];
-				} else {
-					this.forward_dependency_map[interaction.event1].push(parseInt(interaction.event2));
-				}
+			// populate the maps
+			var num_interactions = interactions.length;
+			for (var i=0; i<num_interactions; i++){
+				var interaction = interactions[i];
+				if (interaction.type == "handoff"){ // we only care about the handoffs
+					// add the dependencies in forward direction
+					if(!this.forward_dependency_map.hasOwnProperty(interaction.event1)){
+						this.forward_dependency_map[interaction.event1] = [parseInt(interaction.event2)];
+					} else {
+						this.forward_dependency_map[interaction.event1].push(parseInt(interaction.event2));
+					}
 
-				// add the dependencies in backward direction
-				if(!this.backward_dependency_map.hasOwnProperty(interaction.event2)){
-					this.backward_dependency_map[interaction.event2] = [parseInt(interaction.event1)];
-				} else {
-					this.backward_dependency_map[interaction.event2].push(parseInt(interaction.event1));
+					// add the dependencies in backward direction
+					if(!this.backward_dependency_map.hasOwnProperty(interaction.event2)){
+						this.backward_dependency_map[interaction.event2] = [parseInt(interaction.event1)];
+					} else {
+						this.backward_dependency_map[interaction.event2].push(parseInt(interaction.event1));
+					}
 				}
 			}
+
+			// update the interactions array
+			this.latest_interactions = interactions.slice(0);
 		}
 
 		return {"forward": this.forward_dependency_map, "backward": this.backward_dependency_map};
+	},
+	/*
+	 * Returns true if the specified interactions array is different from the last
+	 * one passed as an argument when calling getDependencyMaps.
+	 * Returns false if they are the same.
+	 */
+	checkInteractionsChanged: function(interactions){
+		if (interactions.length != this.latest_interactions.length) return true;
+
+		for (var i = 0; i < interactions.length; i++) {
+			if (JSON.stringify(interactions[i]) != JSON.stringify(this.latest_interactions[i])) return true;
+		}
+
+		return false;
 	},
 	/*
 	 * Returns an array of event ids that need to be completed BEFORE specified event_id.
