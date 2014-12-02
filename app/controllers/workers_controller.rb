@@ -6,11 +6,13 @@ class WorkersController < ApplicationController
   	session.delete(:ref_page)
   	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
 
+  	if valid_user?
     @workers = Worker.all.order(name: :asc)
     	
   	@panels = Worker.distinct.pluck(:panel)
   	
   	@fw = Worker.all.pluck(:email)
+  	end
   	  	  	  	  	
   end
   
@@ -41,7 +43,12 @@ class WorkersController < ApplicationController
   end
 
   def new
-  	@worker = Worker.new
+  	if valid_user?
+  		 #redirect_to :action => 'index'
+  		 @worker = Worker.new
+  	end
+  	
+  	#@worker = Worker.new
   end
 
   def create
@@ -107,6 +114,21 @@ class WorkersController < ApplicationController
 
   end
   
+  def valid_user?
+	  if session[:user].nil? 
+			  	
+		  	if !session[:member].nil? && session[:member][:mem_type] == "pc"
+			  	valid_user = true
+				#@flash_team = FlashTeam.find(params[:id])
+			else
+				valid_user = false
+			end			
+	   else 
+			valid_user = true	
+	   end
+	
+		valid_user	
+   end
   
   private
 
