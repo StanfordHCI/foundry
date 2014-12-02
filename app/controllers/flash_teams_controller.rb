@@ -155,6 +155,7 @@ end
      member = Member.where(:uniq => uniq)[0]
      @user_name = member.name
      
+          
      
     flash_team_members = json_status['flash_teams_json']['members']
         
@@ -163,6 +164,12 @@ end
     		@member_type = member['type']
     	end
     end
+    
+    #create session to use for hiring panel
+     #session[:member] = member.uniq
+     session.delete(:member)
+	 session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
+
 
 
     else
@@ -438,7 +445,29 @@ end
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
-	   	@flash_team = FlashTeam.find(params[:id])
+	   	if !params.has_key?("uniq") #if in author view
+		  	if session[:user].nil? 
+			  	
+			  	if !session[:member].nil? && session[:member][:mem_type] == "pc"
+					@flash_team = FlashTeam.find(params[:id])
+				else
+					@user = nil 
+					@title = "Invalid User ID"
+					@flash_team = nil
+					redirect_to(welcome_index_path)
+				end			
+			else 
+				@flash_team = FlashTeam.find(params[:id])
+				
+				if @flash_team.user_id != session[:user].id 
+					flash[:notice] = 'You cannot access this flash team.' 
+					redirect_to(flash_teams_path)
+				end
+			end
+
+    	end 
+	   	
+	   	#@flash_team = FlashTeam.find(params[:id])
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
