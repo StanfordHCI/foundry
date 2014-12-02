@@ -1,23 +1,22 @@
 class WorkersController < ApplicationController
  
   def index
-  	session.delete(:return_to)
-  	session[:return_to] ||= request.original_url
-  	session.delete(:ref_page)
-  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
-
   	if valid_user?
-    @workers = Worker.all.order(name: :asc)
-    	
-  	@panels = Worker.distinct.pluck(:panel)
-  	
-  	@fw = Worker.all.pluck(:email)
+	  	session.delete(:return_to)
+	  	session[:return_to] ||= request.original_url
+	  	session.delete(:ref_page)
+	  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+	
+	    @workers = Worker.all.order(name: :asc)
+	    	
+	  	@panels = Worker.distinct.pluck(:panel)
+	  	
+	  	@fw = Worker.all.pluck(:email)
   	end
   	  	  	  	  	
   end
   
-    def filter_workers
-    
+  def filter_workers
   	if params[:panels] && params[:panels] != ""
   		@workers = Worker.where(:panel => params[:panels]).order(name: :asc)
   		@fw = Worker.where(:panel => params[:panels]).pluck(:email)
@@ -26,7 +25,6 @@ class WorkersController < ApplicationController
 		@fw = Worker.all.pluck(:email)
 	end
 
-    	
   	@panels = Worker.distinct.pluck(:panel)
   	  	  
   	@abc = Worker.where(:id => params[:workers]).pluck(:email)
@@ -46,9 +44,7 @@ class WorkersController < ApplicationController
   	if valid_user?
   		 #redirect_to :action => 'index'
   		 @worker = Worker.new
-  	end
-  	
-  	#@worker = Worker.new
+  	end	
   end
 
   def create
@@ -88,7 +84,9 @@ class WorkersController < ApplicationController
   end
   
   def edit
-  	@worker = Worker.find(params[:id])
+  	if valid_user?
+  		@worker = Worker.find(params[:id])
+  	end
   end
   
   def update
@@ -119,7 +117,6 @@ class WorkersController < ApplicationController
 			  	
 		  	if !session[:member].nil? && session[:member][:mem_type] == "pc"
 			  	valid_user = true
-				#@flash_team = FlashTeam.find(params[:id])
 			else
 				valid_user = false
 			end			
@@ -131,7 +128,6 @@ class WorkersController < ApplicationController
    end
   
   private
-
   def worker_params
     params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :timezone_utc, :additional_info, :panel)
   end
