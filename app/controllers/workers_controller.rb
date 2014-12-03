@@ -111,22 +111,7 @@ class WorkersController < ApplicationController
   	redirect_to session.delete(:return_to)
 
   end
-  
-  def valid_user?
-	  if session[:user].nil? 
-			  	
-		  	if !session[:member].nil? && session[:member][:mem_type] == "pc"
-			  	valid_user = true
-			else
-				valid_user = false
-			end			
-	   else 
-			valid_user = true	
-	   end
-	
-		valid_user	
-   end
-  
+    
   private
   def worker_params
     params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :timezone_utc, :additional_info, :panel)
