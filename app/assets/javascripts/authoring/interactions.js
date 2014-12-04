@@ -164,23 +164,9 @@ function startWriteHandoff() {
 };
 
 function handoffStart(firstEvent){
-    var x1;
-     if (drawn_blue_tasks.indexOf(firstEvent["id"]) != -1){
-        x1 = firstEvent.completed_x;
-    } 
-    else if (completed_red_tasks.indexOf(firstEvent["id"]) != -1){
-        x1 = firstEvent.completed_x;
-    }
-    else if(delayed_tasks.indexOf(firstEvent["id"]) != -1){
-        var cursor_x = parseFloat(cursor.attr("x1"));
-        var widthRect = parseFloat(getWidth(firstEvent));
-        var red_width = cursor_x - (firstEvent.x + widthRect);
-        x1 = firstEvent.x + widthRect + red_width;
-    }
-    else { 
-        x1 = firstEvent.x + 3 + getWidth(firstEvent);
-    }
-    return x1;
+    var x1 = firstEvent.x;
+    var width = getWidth(firstEvent);
+    return x1+width;
 }
 
 // Draw a handoff for the first time
@@ -273,12 +259,12 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     //Route to second event vertically
     pathStr += "L " + x2 + ", " + y2 + "\n";
     //Line from gutter to second event
-    pathStr += "L " + (x2+10) + ", " + y2 + "\n";
+    pathStr += "L " + (x2+5) + ", " + y2 + "\n";
 
     //Arrowhead
-    pathStr += "L" + (x2+10) + ", " + (y2+1) + "\n";
-    pathStr += "L" + (x2+12) + ", " + (y2) + "\n";
-    pathStr += "L" + (x2+10) + ", " + (y2-1) + "\n";
+    pathStr += "L" + (x2+5) + ", " + (y2+1) + "\n";
+    pathStr += "L" + (x2+7) + ", " + (y2) + "\n";
+    pathStr += "L" + (x2+5) + ", " + (y2-1) + "\n";
     
     return pathStr;
 }

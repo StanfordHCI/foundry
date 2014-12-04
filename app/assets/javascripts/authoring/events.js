@@ -781,6 +781,7 @@ function drawEachHandoffForEvent(eventObj){
             }  
             
             if (draw){
+                console.log("reposition existing handoff");
                 //Reposition an existing handoff
                 var x1 = handoffStart(ev1);
                 var y1 = ev1.y + 50;
@@ -894,7 +895,6 @@ function drawTimer(eventObj){
         if(remaining_time < 0){
             eventObj.status = "delayed";
              
-            
             var groupNum = parseInt(eventObj["id"]);
             
             var idx = live_tasks.indexOf(groupNum);
@@ -971,15 +971,6 @@ function drawHiringEvent() {
 
     
 }
-
-/*imported popover to modal
-function drawAllPopovers() {
-    var events = flashTeamsJSON["events"];
-    for (var i = 0; i < events.length; i++){
-        var ev = events[i];
-        drawPopover(ev, true, false);
-    }
-};*/
 
 
 function removeAllMemberCircles(eventObj){
