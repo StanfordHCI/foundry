@@ -1,21 +1,22 @@
 class WorkersController < ApplicationController
  
   def index
-  	session.delete(:return_to)
-  	session[:return_to] ||= request.original_url
-  	session.delete(:ref_page)
-  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
-
-    @workers = Worker.all.order(name: :asc)
-    	
-  	@panels = Worker.distinct.pluck(:panel)
-  	
-  	@fw = Worker.all.pluck(:email)
+  	if valid_user?
+	  	session.delete(:return_to)
+	  	session[:return_to] ||= request.original_url
+	  	session.delete(:ref_page)
+	  	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+	
+	    @workers = Worker.all.order(name: :asc)
+	    	
+	  	@panels = Worker.distinct.pluck(:panel)
+	  	
+	  	@fw = Worker.all.pluck(:email)
+  	end
   	  	  	  	  	
   end
   
-    def filter_workers
-    
+  def filter_workers
   	if params[:panels] && params[:panels] != ""
   		@workers = Worker.where(:panel => params[:panels]).order(name: :asc)
   		@fw = Worker.where(:panel => params[:panels]).pluck(:email)
@@ -24,7 +25,6 @@ class WorkersController < ApplicationController
 		@fw = Worker.all.pluck(:email)
 	end
 
-    	
   	@panels = Worker.distinct.pluck(:panel)
   	  	  
   	@abc = Worker.where(:id => params[:workers]).pluck(:email)
@@ -41,7 +41,10 @@ class WorkersController < ApplicationController
   end
 
   def new
-  	@worker = Worker.new
+  	if valid_user?
+  		 #redirect_to :action => 'index'
+  		 @worker = Worker.new
+  	end	
   end
 
   def create
@@ -81,7 +84,9 @@ class WorkersController < ApplicationController
   end
   
   def edit
-  	@worker = Worker.find(params[:id])
+  	if valid_user?
+  		@worker = Worker.find(params[:id])
+  	end
   end
   
   def update
@@ -106,10 +111,8 @@ class WorkersController < ApplicationController
   	redirect_to session.delete(:return_to)
 
   end
-  
-  
+    
   private
-
   def worker_params
     params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :timezone_utc, :additional_info, :panel)
   end
