@@ -174,14 +174,14 @@ function displayChatMessage(name, uniq, role, date, text) {
     //notification body
     var notif_body = dateform;
     
-    var showchatnotif = false; // true if notifications should be shown
-        
-    if ((current_user == 'Author' && role == 'Author') || (current_user.uniq == uniq)){
-    	showchatnotif = false;
-    }
-    else{
-	    showchatnotif = true;
-    }
+    
+    
+    // true if the message was sent by the current user
+    var is_current_user_message = (current_user == 'Author' && role == 'Author') ||
+                                  (current_user.uniq == uniq);
+  
+    var showchatnotif = !is_current_user_message; // true if notifications should be shown
+
     
     // checks if last notification was less than 5 seconds ago
     // this is used to only create notifications for messages that were sent from the time you logged in and forward 
@@ -202,9 +202,8 @@ function displayChatMessage(name, uniq, role, date, text) {
         var wrapperDiv = $('<div/>').addClass('message');
       
         var clearDiv = $('<div class="clear"></div>');
-        // TODO: I'm not totally sure which this is supposed to equal,
-        // so I'm checking both for now
-        if(current_user === role || current_user === name) {
+      
+        if(is_current_user_message) {
           wrapperDiv.addClass('by-user');
           dateDiv.addClass('m'+lastMessage);
         }
