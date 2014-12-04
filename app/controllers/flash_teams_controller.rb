@@ -155,6 +155,7 @@ end
      member = Member.where(:uniq => uniq)[0]
      @user_name = member.name
      
+          
      
     flash_team_members = json_status['flash_teams_json']['members']
         
@@ -163,6 +164,12 @@ end
     		@member_type = member['type']
     	end
     end
+    
+    #create session to use for hiring panel
+     #session[:member] = member.uniq
+     session.delete(:member)
+	 session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
+
 
 
     else
@@ -424,7 +431,12 @@ end
    def task_portal
    
    		@id_team = params[:id]
-   		@flash_team = FlashTeam.find(params[:id])
+   		
+   		#@flash_team = FlashTeam.find(params[:id])
+   		
+   		if valid_user?	
+			@flash_team = FlashTeam.find(params[:id])
+		end
    		
    		# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -437,8 +449,12 @@ end
      def hire_form
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
+
+		if valid_user?	
+			@flash_team = FlashTeam.find(params[:id])
+		end
 	   	
-	   	@flash_team = FlashTeam.find(params[:id])
+	   	#@flash_team = FlashTeam.find(params[:id])
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -521,7 +537,11 @@ end
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
-	   	@flash_team = FlashTeam.find(params[:id])
+	   	#@flash_team = FlashTeam.find(params[:id])
+	   	
+	   	if valid_user?	
+			@flash_team = FlashTeam.find(params[:id])
+		end
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -603,7 +623,11 @@ end
    		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
-	   	@flash_team = FlashTeam.find(params[:id])
+	   	#@flash_team = FlashTeam.find(params[:id])
+	   	
+	   	if valid_user?	
+			@flash_team = FlashTeam.find(params[:id])
+		end
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -665,7 +689,10 @@ end
    	@id_team = params[:id]
    	@id_task = params[:event_id].to_i
    	
-   	@flash_team = FlashTeam.find(params[:id])
+   	#@flash_team = FlashTeam.find(params[:id])
+   	if valid_user?	
+		@flash_team = FlashTeam.find(params[:id])
+	end
    	    
    	# Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
@@ -678,7 +705,7 @@ end
   	
   	@fw = Worker.all.pluck(:email)   
    end
-
+   
   def flash_team_params params
     params.permit(:name, :author)
   end
