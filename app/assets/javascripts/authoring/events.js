@@ -931,6 +931,12 @@ function drawTimer(eventObj){
         var numHoursInt = Math.floor(totalMinutes/60);
         var minutesLeft = Math.round(totalMinutes%60);
     }
+    
+    // this solves the issue that was causing times with minutes < 10 to cut the first zero 
+    if(minutesLeft < 10){
+	    minutesLeft = '0' + minutesLeft;
+    }
+    
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
