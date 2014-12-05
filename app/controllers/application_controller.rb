@@ -4,16 +4,13 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   def valid_user?
-	  if session[:user].nil? 	  	
-		  	if !session[:member].nil? && session[:member][:mem_type] == "pc" || "client"
-			  	valid_user = true
-			else
-				valid_user = false
-			end			
-	   else 
-			valid_user = true	
-	   end
-	
-		valid_user	
+	  if session[:member][:mem_type].nil? || session[:member][:mem_type] == "worker"
+		  	valid_user = false	
+	  elsif session[:member][:mem_type] == "author" || "pc" || "client"
+			valid_user = true		
+	  else 
+			valid_user = false
+	  end
+ 		valid_user	
    end
 end
