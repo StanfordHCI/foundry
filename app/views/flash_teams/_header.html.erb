@@ -4,16 +4,22 @@
     <span class="text">Foundry</span>
   </div>
   
-  
-  <div class="span3 ft-buttons" id="ft-buttons-left" style="position:absolute;left:180px;top:12px;">
-    <input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
-    <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Tour"/>
-  </div>
-   
-   <% if in_author_view %>
-     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
-       <input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
-       <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
-     </div> 
+   <!-- if in author view show the back button on left and foundry tour and start/end button on right --> 
+   <% if in_author_view %> 
+	     <div class="span3 ft-buttons" id="ft-buttons-left" style="position:absolute;left:150px;top:12px;">
+	       <input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
+	  	</div>
+	     
+	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
+	       <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Tour"/>
+	       <input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
+	       <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
+	     </div> 
+     
+     <% else %> <! -- else only show the start foundry tour button --> 
+	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
+	       <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Tour"/>
+	     </div> 
+     
    <% end %>
 </header>
