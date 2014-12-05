@@ -56,12 +56,11 @@ var header_svg = d3TimelineElem.append("svg")
     .style({"display": "block",
             "border-bottom": "solid 1px " + STROKE_COLOR});
 
+//Append timeline to DOM
 var timeline_svg = d3TimelineElem.append("svg")
     .attr("class", "timeline-svg chart")
     .attr("width", SVG_WIDTH)
     .attr("height", SVG_HEIGHT)
-
-//console.log("APPENDED TIMELINE TO DOM!");
 
 window._foundry = {
   timeline: {
