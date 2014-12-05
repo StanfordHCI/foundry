@@ -932,7 +932,7 @@ function drawTimer(eventObj){
         var minutesLeft = Math.round(totalMinutes%60);
     }
     
-    // this solves the issue that was causing times with minutes < 10 to cut the first zero 
+    // if the minutes are < 10, you need to add a zero before
     if(minutesLeft < 10){
 	    minutesLeft = '0' + minutesLeft;
     }
