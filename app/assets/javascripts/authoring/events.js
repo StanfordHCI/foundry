@@ -294,7 +294,8 @@ function getWidth(ev) {
 
 function durationForWidth(width) {
     var hrs = parseFloat(width)/parseFloat(RECTANGLE_WIDTH);
-    return hrs*60;
+    var mins = hrs*60;
+    return Math.ceil(mins/15) * 15;
 };
 
 function startHrForX(X){
