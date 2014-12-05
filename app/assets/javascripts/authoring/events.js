@@ -931,6 +931,12 @@ function drawTimer(eventObj){
         var numHoursInt = Math.floor(totalMinutes/60);
         var minutesLeft = Math.round(totalMinutes%60);
     }
+    
+    // if the minutes are < 10, you need to add a zero before
+    if(minutesLeft < 10){
+	    minutesLeft = '0' + minutesLeft;
+    }
+    
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
