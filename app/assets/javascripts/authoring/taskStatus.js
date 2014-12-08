@@ -12,8 +12,27 @@
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
 
+ function checkEventsBeforeCompleted(groupNum) {
+    // check if events before have been completed
+    var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
+    if (eventsBefore == null)
+        return true;
+    for (var i = 0; i < eventsBefore.length; i++) {
+        var ev = getEventFromId(eventsBefore[i]);
+        if (ev.status != "completed") {
+            alert("This task depends on one or more tasks that have not been completed yet. Please let them finish first.");
+            return false;
+        }
+    }
+
+    return true;
+ }
+
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
+    if (!checkEventsBeforeCompleted(groupNum))
+        return;
+
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
