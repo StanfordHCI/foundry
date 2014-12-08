@@ -118,6 +118,10 @@ function startFlashTeam() {
     removeHandoffBtns();
     startTeam(true);
     
+    //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json. 
+    //This is used for the notification emails. 
+    save_tasksAfter_json();
+
     //addAllFolders();
     //googleDriveLink();
 }
@@ -133,6 +137,22 @@ function endTeam() {
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
 }
+
+
+//save dependencyAPI.getEventsAfter(task_id, true) for each event in the json. 
+//This is used for the notification emails. 
+function save_tasksAfter_json(){
+    var events_after = [];
+    for(var i =0;i<  flashTeamsJSON["events"].length; i++){
+        
+        var id = parseInt(flashTeamsJSON["events"][i]["id"]);
+        flashTeamsJSON["events"][i]["events_after"] = dependencyAPI.getEventsAfter(id, true);
+        console.log(flashTeamsJSON["events"][i]["events_after"]);
+    }
+
+
+}
+
 
 //Asks user to confirm that they want to end the team
 $("#flashTeamEndBtn").click(function(){
