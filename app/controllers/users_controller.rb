@@ -55,6 +55,10 @@ class UsersController < ApplicationController
 			@user = User.find_by_username(params[:login].downcase)
 			
 				session[:user] = @user  #store user id in the session
+				
+				session.delete(:member)
+				session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
+
 				flash[:notice] = "Welcome back, #{session[:user].username}!"
 				redirect_to(:controller => :flash_teams, :action => :index)
 							

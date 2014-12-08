@@ -199,12 +199,25 @@ function getTaskOverviewContent(groupNum){
 
     var hrs = Math.floor(ev.duration/60);
     var mins = ev.duration % 60;
+    
+    // if the minutes are < 10, you need to add a zero before
+    if(mins < 10){
+	    mins = '0' + mins;
+    }
+    
+    var evStartHr = ev.startHr; 
+	var evStartMin = ev.startMin.toFixed(0); 
+	
+	// if the minutes are < 10, you need to add a zero before
+	if(evStartMin < 10){
+	    evStartMin = '0' + evStartMin;
+    }
 
     var content = '<div class="row-fluid" >' 
         + '<div class="span6">'
         + '<b>Event Start:  </b>'
-        + ev.startHr + ':'
-        + ev.startMin.toFixed(0) + '<br>'
+        + evStartHr + ':'
+        + evStartMin + '<br>'
         + '</div>'
         + '<div class="span6" style="margin-left:0px">'
         +'<b>Total Runtime:  </b>' 
