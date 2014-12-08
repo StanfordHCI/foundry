@@ -16,7 +16,7 @@ namespace :notification do
    default_url = 'foundry-app-dev.herokuapp.com'
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
-   call_period= 30
+   call_period= 30 #sec
    puts "checking if a task is delayed..."
 
    
@@ -61,7 +61,7 @@ namespace :notification do
       live_tasks = flash_team_status["live_tasks"]
 
       #get members of live and remaining tasks
-      roles_remaining_live=[];
+      #roles_remaining_live=[];
 
      # remaining_tasks.each do |remaining_task|
       #   groupNum = remaining_task;
@@ -84,25 +84,8 @@ namespace :notification do
       
       #live_tasks.each do |remaining_task|
       #   groupNum = remaining_task;
-         flash_team_events.each do |event|
-          eventId = event["id"];
-          #if eventId == groupNum
-            event["members"].each do |member_id|
-              if event["members"].length == 0
-                print "error: delayed event has no members\n"
-                break
-              end    
-              member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
-              if roles_remaining_live.index(member)==nil
-                roles_remaining_live.push(member);
-
-              end
-            end
-      #    end
-      #  end
-      end
-      #end
-     
+   
+      
 
       #/get index of delayed event in events array/    
       delayed_tasks_num.each do |groupNum|
@@ -225,6 +208,31 @@ namespace :notification do
                 event_id=eventId
                 team_id=flash_team_json["id"]
                 
+                roles_remaining_live = []
+                
+                if (delayed_event["events_after"] == nil)
+                  break;
+                end
+
+                delayed_event["events_after"].each do |event_after_id|
+                  event_after = flash_team_events.detect{|ev| ev["id"].to_i == event_after_id.to_i}        
+
+                  if event_after["members"].length == 0
+                    print "error: following event has no members\n"
+                    break
+                  end 
+                  event_after["members"].each do |member_id|   
+                    member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
+                    if roles_remaining_live.index(member)==nil
+                      roles_remaining_live.push(member);
+                    end
+                  end  
+                end
+              
+                if roles_remaining_live == [] 
+                  break
+                end
+
                 roles_remaining_live.each do |role|
                   uniq = role["uniq"]
                  
@@ -251,7 +259,3 @@ namespace :notification do
   end
 end
 
-def get_delay_start(name)
-  
-  return result
-end

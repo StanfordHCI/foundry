@@ -1561,7 +1561,9 @@ var updateOriginalStatus = function(){
 
 var sendEmailOnCompletionOfDelayedTask = function(groupNum){
     // send "delayed task is finished" email
-    if(remaining_tasks.length!=0){
+   var tasks_after = flashTeamsJSON["events"][getEventJSONIndex(parseInt(groupNum))]["tasks_after"];
+
+    if(tasks_after.length!=0){
         var title="test";
         var events = flashTeamsJSON["events"];
         
@@ -1573,7 +1575,7 @@ var sendEmailOnCompletionOfDelayedTask = function(groupNum){
             }
         }
 
-        DelayedTaskFinished_helper(remaining_tasks,title);
+        DelayedTaskFinished_helper(tasks_after,title);
     }
 };
 
