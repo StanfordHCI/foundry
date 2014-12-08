@@ -165,7 +165,7 @@ function startWriteHandoff() {
 
 function handoffStart(firstEvent){
     var x1;
-     if (drawn_blue_tasks.indexOf(firstEvent["id"]) != -1){
+   /*  if (drawn_blue_tasks.indexOf(firstEvent["id"]) != -1){
         x1 = firstEvent.completed_x;
     } 
     else if (completed_red_tasks.indexOf(firstEvent["id"]) != -1){
@@ -179,7 +179,10 @@ function handoffStart(firstEvent){
     }
     else { 
         x1 = firstEvent.x + 3 + getWidth(firstEvent);
-    }
+    }*/
+    //events are no longer shifted if a task is delayed. the above code is not required anymore.
+    x1 = firstEvent.x + 3 + getWidth(firstEvent);
+
     return x1;
 }
 

@@ -18,7 +18,7 @@ function sendBeforeTaskStartsEmail(minutes,email){
 
 
 function sendDelayedTaskFinishedEmail(minutes,uniq,title){
-	alert("here!!");
+	alert(uniq);
     var flash_team_id = $("#flash_team_id").val();
     var url = '/flash_teams/' + flash_team_id + '/delayed_task_finished_email';
     

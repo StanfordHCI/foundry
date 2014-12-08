@@ -16,7 +16,7 @@ namespace :notification do
    default_url = 'foundry-app-dev.herokuapp.com'
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
-   call_period= 30 #sec
+   call_period= 30 #sec [TODO change back to 600]
    puts "checking if a task is delayed..."
 
    

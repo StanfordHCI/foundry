@@ -116,12 +116,13 @@ function startFlashTeam() {
     //console.log("here0");
     removeColabBtns();
     removeHandoffBtns();
+    save_tasksAfter_json();
+
     startTeam(true);
     
     //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json. 
     //This is used for the notification emails. 
-    save_tasksAfter_json();
-
+    
     //addAllFolders();
     //googleDriveLink();
 }
@@ -1561,8 +1562,11 @@ var updateOriginalStatus = function(){
 
 var sendEmailOnCompletionOfDelayedTask = function(groupNum){
     // send "delayed task is finished" email
-   var tasks_after = flashTeamsJSON["events"][getEventJSONIndex(parseInt(groupNum))]["tasks_after"];
+   var tasks_after = flashTeamsJSON["events"][getEventJSONIndex(parseInt(groupNum))]["events_after"];
 
+    if(tasks_after == null)
+        return;
+    
     if(tasks_after.length!=0){
         var title="test";
         var events = flashTeamsJSON["events"];
