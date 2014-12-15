@@ -251,7 +251,7 @@ function createEventObj(snapPoint, duration) {
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
-        ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
+        ["Please add anything else you want other team members, the project coordinator, or the client, to know (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
     if (flashTeamsJSON.events.length == 0){
