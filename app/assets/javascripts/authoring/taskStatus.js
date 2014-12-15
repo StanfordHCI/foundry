@@ -15,8 +15,27 @@
 var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
 var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
 
+function checkEventsBeforeCompleted(groupNum) {
+    // check if events before have been completed
+    var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
+    if (eventsBefore == null)
+        return true;
+    for (var i = 0; i < eventsBefore.length; i++) {
+        var ev = getEventFromId(eventsBefore[i]);
+        if (ev.status != "completed") {
+            alert("This task depends on one or more tasks that have not been completed yet. Please let them finish first.");
+            return false;
+        }
+    }
+
+    return true;
+ }
+
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
+    if (!checkEventsBeforeCompleted(groupNum))
+        return;
+
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";

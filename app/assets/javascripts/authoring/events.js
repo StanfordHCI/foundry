@@ -294,7 +294,8 @@ function getWidth(ev) {
 
 function durationForWidth(width) {
     var hrs = parseFloat(width)/parseFloat(RECTANGLE_WIDTH);
-    return hrs*60;
+    var mins = hrs*60;
+    return Math.ceil(mins/15) * 15;
 };
 
 function startHrForX(X){
@@ -781,6 +782,7 @@ function drawEachHandoffForEvent(eventObj){
             }  
             
             if (draw){
+                console.log("reposition existing handoff");
                 //Reposition an existing handoff
                 var x1 = handoffStart(ev1);
                 var y1 = ev1.y + 50;
@@ -894,7 +896,6 @@ function drawTimer(eventObj){
         if(remaining_time < 0){
             eventObj.status = "delayed";
              
-            
             var groupNum = parseInt(eventObj["id"]);
             
             var idx = live_tasks.indexOf(groupNum);
@@ -931,6 +932,12 @@ function drawTimer(eventObj){
         var numHoursInt = Math.floor(totalMinutes/60);
         var minutesLeft = Math.round(totalMinutes%60);
     }
+    
+    // if the minutes are < 10, you need to add a zero before
+    if(minutesLeft < 10){
+	    minutesLeft = '0' + minutesLeft;
+    }
+    
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
 
@@ -971,15 +978,6 @@ function drawHiringEvent() {
 
     
 }
-
-/*imported popover to modal
-function drawAllPopovers() {
-    var events = flashTeamsJSON["events"];
-    for (var i = 0; i < events.length; i++){
-        var ev = events[i];
-        drawPopover(ev, true, false);
-    }
-};*/
 
 
 function removeAllMemberCircles(eventObj){
