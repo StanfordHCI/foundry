@@ -11,9 +11,9 @@
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
 
-//Documentation Questions
+//Dummy arrays in case something went wrong
 var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
-var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
+var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Add any anything else you want other team members, the project coordinator, or the client, to know (optional)"];
 
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
@@ -105,8 +105,11 @@ function confirmCompleteTask(groupNum) {
         var completed = true;
         for (i = 0; i < outputFormLength; i++){
             if ($(".outputForm")[i].type != "checkbox"){
-                if ($(".outputForm")[i].value == ""){
-                    completed = false;
+                idVal = "text" + $(".outputForm")[i].id;
+                if (document.getElementById(idVal).innerHTML.indexOf("optional") == -1){
+                    if ($(".outputForm")[i].value == ""){
+                        completed = false;
+                    }
                 }
             }
         }
@@ -164,7 +167,7 @@ function completeTaskModalText(eventToComplete) {
                 else{
                     var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
                 }
-                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + placeholderVal + '</textarea></br>';
+                modalText += '<p id = "textoutput' + i + 'q' + j + '">' + outputQuestions[j] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + placeholderVal + '</textarea></br>';
             }
             modalText += "</div>";
         }
@@ -179,7 +182,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '"class="outputForm" rows="3">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id = "textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
