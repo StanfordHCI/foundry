@@ -78,7 +78,7 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Answer all questions to submit";
     $("#confirmButton").attr("class","btn btn-success");
-    if (eventToComplete.outputs != null && eventToComplete.outputs != "") {
+    if ($(".outputForm").length > 0) {
         $("#confirmButton").prop('disabled', true); //Defaults to disabled
     }
     $('#confirmAction').modal('show');
@@ -120,8 +120,10 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        eventslse 
+        else{
             $("#confirmButton").prop('disabled', true);
+            $("#confirmButton")[0].innerHTML = "Answer all questions to submit";
+        }
     });
 
 
