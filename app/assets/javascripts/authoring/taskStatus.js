@@ -7,33 +7,31 @@
 
  //TASK STATUS COLORS
  var TASK_NOT_START_COLOR = "#F5F5F5"; //gray
- var WORKER_TASK_NOT_START_COLOR = "#FFFF33"; //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
  var TASK_START_COLOR = "#1E90FF"; //blue
  var TASK_DELAY_COLOR = "#DC143C"; //red
  var TASK_COMPLETE_COLOR = "#00FF7F"; //green
+
+//Documentation Questions
+var outputQuestions = ["Please write a brief (1 sentence) description of this deliverable", "Please explain all important decisions made about the deliverable, and the reason they were made", "If there is other information that you want team members and the project coordinators who will use this deliverable to know, please explain it here"];
+var generalQuestions = ["Please explain all other design or execution decisions made, along with the reason they were made", "Is there anything else you want other team members, the project coordinator, or the client, to know?"];
 
 //Fires on "Start" button on task modal
  function startTask(groupNum) {
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
-    eventObj.timer = eventObj.duration;
-    eventObj.task_startBtn_time = (new Date).getTime();
-    
-    //remove task from remaining and add to live task array
-    var idx = remaining_tasks.indexOf(groupNum);
-    if (idx != -1) { // delayed task
-        remaining_tasks.splice(idx, 1);
-    }
-    live_tasks.push(groupNum);
 
-    updateStatus(true);
-    drawEvent(eventObj); //Will update color
+    //START TIMER
+    //START HERE ALEXANDRA
 
     //Close the task modal
     $("#task_modal").modal('hide');
 
-    
+    updateStatus();
+    drawEvent(eventObj); //Will update color
+
+    console.log("redraw event after start");
+
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
@@ -53,7 +51,6 @@ function confirmCompleteTask(groupNum) {
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
-    
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
     alertText.innerHTML = completeTaskModalText(eventToComplete);
@@ -62,18 +59,11 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Answer all questions to submit";
     $("#confirmButton").attr("class","btn btn-success");
-    completed = allCompleted(groupNum);
-    if (completed){
-            $("#confirmButton").prop('disabled', false);
-            $("#confirmButton")[0].innerHTML = "Submit!";
-        }
-        else{ 
-            $("#confirmButton").prop('disabled', true);
-            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
-        }
+    if (eventToComplete.outputs != null && eventToComplete.outputs != "") {
+        $("#confirmButton").prop('disabled', true); //Defaults to disabled
+    }
     $('#confirmAction').modal('show');
 
-    //Code for Documentation Question Save Button
     var saveButton = document.getElementById("saveButton");
     saveButton.innerHTML = "Save and Close";
     $("#saveButton").attr("class","btn btn-default");
@@ -82,16 +72,34 @@ function confirmCompleteTask(groupNum) {
     
 
     $(".outputForm").change(function() {
-        completed = allCompleted(groupNum);
-        //console.log(completed);
+        var totalCheckboxes = $(".outputCheckbox").length;
+        var checkedCheckboxes = $(".outputCheckbox:checked").length;
+        var splitOutputs = eventToComplete.outputs.split(",");
+        for (j = 0; j < checkedCheckboxes; j++){
+            for (i = 0; i < totalCheckboxes; i++){
+                if ($(".outputCheckbox:checked")[j].contains($(".outputCheckbox")[i])){
+                    $("#output" + splitOutputs[i]).attr("style", "display:block;");
+                }
+            }
+        }
+        var outputFormLength = $(".outputForm").length;
+        var completed = true;
+        for (i = 0; i < outputFormLength; i++){
+            if ($(".outputForm")[i].type != "checkbox"){
+                if ($(".outputForm")[i].value == ""){
+                    completed = false;
+                }
+            }
+        }
+        if (totalCheckboxes != checkedCheckboxes) {
+            completed = false;
+        }
         if (completed){
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        else{ 
+        eventslse 
             $("#confirmButton").prop('disabled', true);
-            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
-        }
     });
 
 
@@ -110,49 +118,9 @@ function confirmCompleteTask(groupNum) {
     };
 }
 
-var allCompleted = function(groupNum){
-    var indexOfJSON = getEventJSONIndex(groupNum);
-    var events = flashTeamsJSON["events"];
-    var eventToComplete = events[indexOfJSON];
-    var totalCheckboxes = $(".outputCheckbox").length;
-    var checkedCheckboxes = $(".outputCheckbox:checked").length;
-    if (eventToComplete.outputs == null){
-        return;
-    }
-    var splitOutputs = eventToComplete.outputs.split(",");
-    for (i = 0; i < totalCheckboxes; i++){
-        value = false;
-        for (j = 0; j < checkedCheckboxes; j++){
-            if ($(".outputCheckbox")[i].contains($(".outputCheckbox:checked")[j])){
-                value = true;
-            }
-        } 
-            if (value){ 
-            //console.log(splitOutputs[i]);
-            document.getElementById("output" + splitOutputs[i]).style.display = "block";
-        }else{ 
-            document.getElementById("output" + splitOutputs[i]).style.display = "none";
-        }
-    }
-
-    var outputFormLength = $(".outputForm").length;
-    var completed = true;
-    for (i = 0; i < outputFormLength; i++){
-        if ($(".outputForm")[i].type != "checkbox"){
-            if ($(".outputForm")[i].value == ""){
-                completed = false;
-            }
-        }
-    }
-    if (totalCheckboxes != checkedCheckboxes) {
-        completed = false;
-    }
-    return completed
-}
-
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + ">Google Drive Folder</a></p>";
+    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href='http://www.google.com'>google drive</a></p>";
     
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
@@ -163,38 +131,25 @@ function completeTaskModalText(eventToComplete) {
     var outputFilledQ = eventToComplete["outputQs"];
     var generalFilledQ = eventToComplete["docQs"];
 
-    generalQuestions = [];
-    for (i = 0; i < eventToComplete.docQs.length; i++){
-        generalQuestions.push(eventToComplete.docQs[i][0]);
-    }
-
     //Create Checklist of outputs with the relevant documentation questions for each output
     modalText += "<form id='event_checklist_" + eventToComplete.id + "' align='left' >";
     if (eventOutputs == null || eventOutputs == "") {
         modalText += "No outputs were specified for this task.";
     } else {
         for (i=0; i<eventOutputs.length; i++) {
-            if (!eventToComplete.checkboxes){
-                value = ""; styleVal = "display:none;"
-            }
-            else if(eventToComplete.checkboxes[eventOutputs[i]] == true){
-                value = "checked"; styleVal = "display:block;"
-            }
-            else{
-                value = ""; styleVal = "display:none;"
-            }
-            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm' " + value + ">" + " " + eventOutputs[i] + "</input></b><br>";
-            modalText += '<div id="output' + eventOutputs[i] + '" style = ' + styleVal + '>';
-            questions = outputFilledQ[eventOutputs[i]];
-            for (j = 0; j < questions.length; j++){
-                if (questions[j] != ""){
-                    modalText += questions[j][0] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + questions[j][1] + '</textarea></br>';
+            modalText += "<b><input type='checkbox' id = '" + eventOutputs[i] + "' class='outputCheckbox outputForm'>" + " " + eventOutputs[i] + "</input></b><br>";
+            modalText += '<div id="output' + eventOutputs[i] + '" style = "display:none;">';
+            for (j = 0; j<outputQuestions.length; j++){
+                if (!outputFilledQ)
+                    var placeholderVal = "";
+                else{
+                    var placeholderVal = outputFilledQ[eventOutputs[i]][j][1]; 
                 }
+                modalText += outputQuestions[j] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + placeholderVal + '</textarea></br>';
             }
-            modalText += "</div>"
+            modalText += "</div>";
         }
     }
-
     //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
     modalText += '<p align="left"><b>General Questions:</b></p>';
@@ -216,38 +171,19 @@ function completeTaskModalText(eventToComplete) {
 function saveDocQuestions(groupNum){
     var task_id = getEventJSONIndex(groupNum); 
     var ev = flashTeamsJSON["events"][task_id];
-
-    var eventOutputs = ev["outputs"];
-    if (eventOutputs != null && eventOutputs != "") {
-        eventOutputs = ev["outputs"].split(",");
-        for (i=0; i<eventOutputs.length; i++) {
-            questions = ev["outputQs"][eventOutputs[i]];
-            for (j = 0; j < questions.length; j++){
-                ev["outputQs"][eventOutputs[i]][j][1] = $("#output" + i + "q" + j).val();
+    if (ev["outputs"]){
+        var outputList = ev["outputs"].split(",");
+        var outputQMap = {};
+        for (i = 0; i < outputList.length; i++){
+             outputQ = []
+             for (j = 0; j < outputQuestions.length; j++){
+                 outputQ.push([outputQuestions[j], $("#output" + i + "q" + j).val()]);
             }
+            outputQMap[outputList[i]] = outputQ;
         }
+        ev["outputQs"] = outputQMap;
     }
-
-    checked = $(".outputCheckbox:checked");
-    total = $(".outputCheckbox");
-    if (total.length > 0){
-        ev["checkboxes"] = {};
-        for (i = 0; i < total.length; i++){
-            value = false;
-            for (j = 0; j < checked.length; j++){
-                if (total[i].contains(checked[j])){
-                    value = true;
-                }
-            }
-            ev["checkboxes"][total[i].id] = value;
-        }   
-    }
-    
     var docQuestions = [];
-    generalQuestions = [];
-    for (i = 0; i < ev.docQs.length; i++){
-        generalQuestions.push(ev.docQs[i][0]);
-    }
     for (i = 0; i < generalQuestions.length; i++){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
@@ -266,51 +202,9 @@ var completeTask = function(groupNum){
     //Update the status of a task
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
-    saveDocQuestions(groupNum);
-    //console.log(eventToComplete["docQs"]);
-    
-    if(eventToComplete.status == "delayed"){
-        
-        var idx = delayed_tasks.indexOf(groupNum);
-        if (idx != -1) { // delayed task
-            delayed_tasks.splice(idx, 1);
-            //console.log("removed task from delayed and added to completed_red");
-            
-        }
-        completed_red_tasks.push(groupNum);
-        //sendEmailOnCompletionOfDelayedTask(groupNum);
-    }
-    else if (eventToComplete.status == "started"){
-       
-        var idx = live_tasks.indexOf(groupNum);
-        if (idx != -1){ // live task
-            live_tasks.splice(idx, 1);
-        }
-         drawn_blue_tasks.push(groupNum);
-    }
-
-    // remove from either live or delayed tasks. Add to completed_red_tasks or drawn_blue_tasks
-    var idx = delayed_tasks.indexOf(groupNum);
-    if (idx != -1) { // delayed task
-        delayed_tasks.splice(idx, 1);
-        completed_red_tasks.push(groupNum);
-        //updateStatus(true);
-        //console.log("removed task from delayed and added to completed_red");
-        sendEmailOnCompletionOfDelayedTask(groupNum);
-    } else {
-        idx = live_tasks.indexOf(groupNum);
-        if (idx != -1){ // live task
-            //var task_g = getTaskGFromGroupNum (groupNum);
-            //var blue_width = drawBlueBox(ev, task_g);
-            drawn_blue_tasks.push(groupNum);
-            
-            //sendEmailOnEarlyCompletion(blue_width);
-            live_tasks.splice(idx, 1);
-        }
-    }
-
     eventToComplete.status = "completed";
-   
+    saveDocQuestions(groupNum);
+
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
     //Update database, must be false b/c we are not using the old ticker
