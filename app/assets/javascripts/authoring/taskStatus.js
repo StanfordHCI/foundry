@@ -81,7 +81,7 @@ function confirmCompleteTask(groupNum) {
     var completeButton = document.getElementById("confirmButton");
     completeButton.innerHTML = "Answer all questions to submit";
     $("#confirmButton").attr("class","btn btn-success");
-    completed = allCompleted(groupNum);
+    completed = allCompleted(eventToComplete);
     if (completed){
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
@@ -101,7 +101,7 @@ function confirmCompleteTask(groupNum) {
     
 
     $(".outputForm").change(function() {
-        completed = allCompleted(groupNum);
+        completed = allCompleted(eventToComplete);
         //console.log(completed);
         if (completed){
             $("#confirmButton").prop('disabled', false);
@@ -129,28 +129,27 @@ function confirmCompleteTask(groupNum) {
     };
 }
 
-var allCompleted = function(groupNum){
-    var indexOfJSON = getEventJSONIndex(groupNum);
-    var events = flashTeamsJSON["events"];
-    var eventToComplete = events[indexOfJSON];
+var allCompleted = function(eventToComplete){
+    // var indexOfJSON = getEventJSONIndex(groupNum);
+    // var events = flashTeamsJSON["events"];
+    // var eventToComplete = events[indexOfJSON];
     var totalCheckboxes = $(".outputCheckbox").length;
     var checkedCheckboxes = $(".outputCheckbox:checked").length;
-    if (eventToComplete.outputs == null){
-        return;
-    }
-    var splitOutputs = eventToComplete.outputs.split(",");
-    for (i = 0; i < totalCheckboxes; i++){
-        value = false;
-        for (j = 0; j < checkedCheckboxes; j++){
-            if ($(".outputCheckbox")[i].contains($(".outputCheckbox:checked")[j])){
-                value = true;
+    if (eventToComplete.outputs != null){
+        var splitOutputs = eventToComplete.outputs.split(",");
+        for (i = 0; i < totalCheckboxes; i++){
+            value = false;
+            for (j = 0; j < checkedCheckboxes; j++){
+                if ($(".outputCheckbox")[i].contains($(".outputCheckbox:checked")[j])){
+                    value = true;
+                }
+            } 
+                if (value){ 
+                //console.log(splitOutputs[i]);
+                document.getElementById("output" + splitOutputs[i]).style.display = "block";
+            }else{ 
+                document.getElementById("output" + splitOutputs[i]).style.display = "none";
             }
-        } 
-            if (value){ 
-            //console.log(splitOutputs[i]);
-            document.getElementById("output" + splitOutputs[i]).style.display = "block";
-        }else{ 
-            document.getElementById("output" + splitOutputs[i]).style.display = "none";
         }
     }
 
@@ -158,8 +157,11 @@ var allCompleted = function(groupNum){
     var completed = true;
     for (i = 0; i < outputFormLength; i++){
         if ($(".outputForm")[i].type != "checkbox"){
-            if ($(".outputForm")[i].value == ""){
-                completed = false;
+            idVal = "text" + $(".outputForm")[i].id;
+            if (document.getElementById(idVal).innerHTML.indexOf("optional") == -1){
+                if ($(".outputForm")[i].value == ""){
+                    completed = false;
+                }
             }
         }
     }
@@ -167,6 +169,34 @@ var allCompleted = function(groupNum){
         completed = false;
     }
     return completed
+}
+
+var keyUpFunc = function(eventToComplete){
+    var outputFormLength = $(".outputForm").length;
+    var totalCheckboxes = $(".outputCheckbox").length;
+    var checkedCheckboxes = $(".outputCheckbox:checked").length;
+    var completed = true;
+    for (i = 0; i < outputFormLength; i++){
+        if ($(".outputForm")[i].type != "checkbox"){
+            idVal = "text" + $(".outputForm")[i].id;
+            if (document.getElementById(idVal).innerHTML.indexOf("optional") == -1){
+                if ($(".outputForm")[i].value == ""){
+                    completed = false;
+                }
+            }
+        }
+    }
+    if (totalCheckboxes != checkedCheckboxes) {
+        completed = false;
+    }
+    if (completed){
+        $("#confirmButton").prop('disabled', false);
+        $("#confirmButton")[0].innerHTML = "Submit!";
+    }
+    else{ 
+        $("#confirmButton").prop('disabled', true);
+        $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+    }
 }
 
 //Return text to fill complete task modal
@@ -207,7 +237,7 @@ function completeTaskModalText(eventToComplete) {
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
-                    modalText += questions[j][0] + '</br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3">' + questions[j][1] + '</textarea></br>';
+                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3" onkeyup="keyUpFunc()">' + questions[j][1] + '</textarea></br>';
                 }
             }
             modalText += "</div>"
@@ -224,7 +254,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += generalQuestions[i] + ': </br><textarea id="q' + i + '"class="outputForm" rows="3">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup="keyUpFunc()">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
