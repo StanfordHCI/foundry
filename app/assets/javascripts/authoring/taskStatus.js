@@ -142,6 +142,48 @@ function confirmCompleteTask(groupNum) {
     };
 }
 
+function keyChangeFunction(groupNum){
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var events = flashTeamsJSON["events"];
+    var eventToComplete = events[indexOfJSON];
+    console.log("HERE'SATEST");
+    var totalCheckboxes = $(".outputCheckbox").length;
+    var checkedCheckboxes = $(".outputCheckbox:checked").length;
+    if (totalCheckboxes > 0){
+        var splitOutputs = eventToComplete.outputs.split(",");
+    }
+    for (j = 0; j < checkedCheckboxes; j++){
+        for (i = 0; i < totalCheckboxes; i++){
+            if ($(".outputCheckbox:checked")[j].contains($(".outputCheckbox")[i])){
+                $("#output" + splitOutputs[i]).attr("style", "display:block;");
+            }
+        }
+    }
+    var outputFormLength = $(".outputForm").length;
+    var completed = true;
+    for (i = 0; i < outputFormLength; i++){
+        if ($(".outputForm")[i].type != "checkbox"){
+            idVal = "text" + $(".outputForm")[i].id;
+            if (document.getElementById(idVal).innerHTML.indexOf("optional") == -1){
+                if ($(".outputForm")[i].value == ""){
+                    completed = false;
+                }
+            }
+        }
+    }
+    if (totalCheckboxes != checkedCheckboxes) {
+        completed = false;
+    }
+    if (completed){
+        $("#confirmButton").prop('disabled', false);
+        $("#confirmButton")[0].innerHTML = "Submit!";
+    }
+    else{
+        $("#confirmButton").prop('disabled', true);
+        $("#confirmButton")[0].innerHTML = "Answer all questions to submit";
+    }
+};
+
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
     var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href='http://www.google.com'>google drive</a></p>";
@@ -184,7 +226,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += '<p id = "textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id = "textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup = "keyChangeFunction()">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
