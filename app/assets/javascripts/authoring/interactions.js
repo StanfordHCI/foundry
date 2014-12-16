@@ -251,15 +251,16 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     //Then route to second event horizontally
     if (y1 <= y2) { //Event 1 is higher
         pathStr += "L " + x1 + ", " + (y1+25) + "\n";
-        pathStr += "L " + x2 + ", " + (y1+25) + "\n"; 
+        pathStr += "L " + (x2+1) + ", " + (y1+25) + "\n"; 
     } else { //Event 2 is higher
         pathStr += "L " + x1 + ", " + (y1-55) + "\n";
-        pathStr += "L " + x2 + ", " + (y1-55) + "\n";
+        pathStr += "L " + (x2+1) + ", " + (y1-55) + "\n";
     }
     //Route to second event vertically
-    pathStr += "L " + x2 + ", " + y2 + "\n";
+    pathStr += "L " + (x2+1) + ", " + y2 + "\n";
     //Line from gutter to second event
     pathStr += "L " + (x2+5) + ", " + y2 + "\n";
+
 
     //Arrowhead
     pathStr += "L" + (x2+5) + ", " + (y2+1) + "\n";
