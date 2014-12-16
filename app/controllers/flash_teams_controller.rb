@@ -162,6 +162,7 @@ end
     flash_team_members.each do |member|
     	if(member['uniq'] == uniq)
     		@member_type = member['type']
+    		@member_role = member['role']
     	end
     end
     
