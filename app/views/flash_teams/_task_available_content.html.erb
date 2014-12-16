@@ -36,10 +36,12 @@
 		
 		<div class="span10">
 			<p>This is an email from the Stanford HCI Group notifying you that a job requiring a 
-			<select name="task_member">
-			<%@task_members.each do |task_member|%>
-			<%=options_for_select([[task_member['role'], task_member['role']]])%>
-			<%end%>
+
+			<select name="task_member" required="required">
+				<option value="">-- SELECT MEMBER ROLE --</option>
+				<%@task_members.each do |task_member|%>
+					<%=options_for_select([[task_member['role'], task_member['role']]])%>
+				<%end%>
 			</select> 
 			
 			for the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task for the <em><%=@flash_team_json['title']%></em> project 
@@ -57,7 +59,7 @@
 			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
 			For this task, you will receive the following input(s):
 					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>. You can access the input(s) at the following link (optional):
-					<%= text_field_tag(:input_link, "", :placeholder => "[INSERT LINK TO INPUT]", :class => 'span6') %></p>
+					<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span6') %></p>
 			
 			<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
 			<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>

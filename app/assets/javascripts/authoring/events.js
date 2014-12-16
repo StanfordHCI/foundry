@@ -925,7 +925,12 @@ function drawTimer(eventObj){
     var totalMinutes = eventObj["timer"];
     
     if(totalMinutes < 0){
-        var numHoursInt = Math.floor(totalMinutes/60);
+        var numHoursInt = Math.ceil(totalMinutes/60);
+        
+        if (numHoursInt == 0){
+	        numHoursInt = '-' + numHoursInt;
+        }
+        //console.log("numHoursInt: " + numHoursInt);
         var minutesLeft = Math.abs(Math.round(totalMinutes%60));
     }
     else{
@@ -945,8 +950,11 @@ function drawTimer(eventObj){
     if(existingTimerText[0].length == 0){ // first time
         task_g.append("text")
             .text(function (d) {
-                if (numHoursInt == 0){
-                    return "0 :"+ minutesLeft;
+                if (numHoursInt == 0 && totalMinutes >= 0){
+                    return "0 :"+minutesLeft; 
+                }
+                else if (numHoursInt == 0 && totalMinutes < 0){
+                    return "-0 :"+minutesLeft; 
                 }
                 else
                     return numHoursInt+" : "+minutesLeft;
@@ -960,8 +968,11 @@ function drawTimer(eventObj){
     } else {
         task_g.selectAll(".timer_text")
             .text(function (d) {
-                if (numHoursInt == 0){
+                if (numHoursInt == 0 && totalMinutes >= 0){
                     return "0 :"+minutesLeft; 
+                }
+                else if (numHoursInt == 0 && totalMinutes < 0){
+                    return "-0 :"+minutesLeft; 
                 }
                 else
                     return numHoursInt+" : "+minutesLeft;
