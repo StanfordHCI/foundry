@@ -11,6 +11,20 @@ $('#panels').change(function(){
 	    }); //end request.done
  });
 
+$('#panels_right').change(function(){
+	  var request = $.ajax({
+	    url: "/workers/filter_workers_rightsidebar",
+	    type: "GET",
+	    data: {panels : document.getElementById("panels_right").value },
+	    dataType: "html"
+	    }); //end var request
+	   
+	    request.done(function( msg ) {
+	     $("#filter_results").html( msg );
+	    }); //end request.done
+ });
+
+
 
 var selWorkers = [];
 
@@ -71,6 +85,12 @@ $('[data-load-remote]').on('click',function(e) {
     }
 });
 
+function copyEmailsToForm() {
+	console.log("in copy emails");
+	emails = document.getElementById("copy-emails-button").getAttribute("data-clipboard-text");
+	console.log("emails: " + emails);
+ 	$("#recipient_email").val(emails);		
+ }
 
 /*Zero Clipboard All Emails Copy Button */ 
 

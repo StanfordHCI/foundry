@@ -127,6 +127,7 @@ Foundry::Application.routes.draw do
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
   get '/workers/right_sidebar_filt' => 'workers#right_sidebar_filt'
+  get '/workers/filter_workers_rightsidebar' => 'workers#filter_workers_rightsidebar'
 
   
   resources :workers do

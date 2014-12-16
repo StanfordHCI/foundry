@@ -41,7 +41,8 @@ class WorkersController < ApplicationController
   end
   
   def right_sidebar_filt
-	  
+
+
 	  @abc = Worker.where(:id => params[:workers]).pluck(:email)
 		  
 # 		if !@abc.nil?
@@ -50,6 +51,23 @@ class WorkersController < ApplicationController
 # 		end
 	  render :partial => "right_sidebar_filt"
 	  
+  end
+  
+    def filter_workers_rightsidebar
+  	if params[:panels] && params[:panels] != ""
+  		@workers = Worker.where(:panel => params[:panels]).order(name: :asc)
+  		@fw = Worker.where(:panel => params[:panels]).pluck(:email)
+	else
+    	@workers = Worker.all.order(name: :asc)
+		@fw = Worker.all.pluck(:email)
+	end
+
+  	@panels = Worker.distinct.pluck(:panel)
+  	  	  
+  	@abc = Worker.where(:id => params[:workers]).pluck(:email)
+  	
+  	render :partial => "filter_workers_rightsidebar"
+  	
   end
   
   def new
