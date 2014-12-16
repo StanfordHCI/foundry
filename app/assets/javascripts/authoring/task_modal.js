@@ -21,16 +21,19 @@ function showTaskOverview(groupNum){
         if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+            $("#start-end-task").addClass('btn-success');
             $("#start-end-task").html('Complete');
         }  
         else if(eventObj.status == "completed"){
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
+              $("#start-end-task").addClass('btn-success');
               $("#start-end-task").prop('disabled', true)
         }
         else{
            $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'startTask('+groupNum+')');
+            $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
     }
