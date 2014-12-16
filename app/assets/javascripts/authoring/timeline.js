@@ -169,9 +169,8 @@ window._foundry = {
      *
      * Enables drag selection
      */
-    timelineMousedownFn: function(e) {
-      e = e || window.event;
-      e = $.event.fix(e);
+    timelineMousedownFn: function() {
+      var e = d3.event;
       
       // event delegation
       var target = e.target || e.srcElement;
@@ -200,20 +199,19 @@ window._foundry = {
       }
     },
     
-    timelineMouseoverFn: function(e) {
+    timelineMouseoverFn: function() {
       var timeline = window._foundry.timeline;
       
       // if the mouse wasn't pushed down on a marker,
       // cut out early
       if(!timeline.mousedownOnMarker) {return;}
       
-      e = e || window.event;
-      
+      var e = d3.event;
       // event delegation
       var target = e.target || e.srcElement;
       var targetClassName = target.className.baseVal;
-      if(targetClassName.indexOf("marker") === -1) {return;}
       
+      if(targetClassName.indexOf("marker") === -1) {return;}
       
       if(timeline.mousedownMarker !== undefined) {
         var targetLeft = parseInt(target.getAttribute("x"));
@@ -238,7 +236,7 @@ window._foundry = {
     },
     
     // should be attached to the window mouseup event
-    timelineMouseupFn: function(e) {
+    timelineMouseupFn: function() {
       var timeline = window._foundry.timeline;
       
       timeline.mousedownMarker = undefined;
@@ -256,7 +254,6 @@ window._foundry = {
         timeline.selection.svg.attr("x"),
         timeline.selection.svg.attr("y")
       ];
-      //console.log(point);
       
       var duration = timeline.getRangeDuration(
           timeline.rangeStartMarker,
