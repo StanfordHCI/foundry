@@ -455,6 +455,12 @@ end
 		end
 	   	
 	   	#@flash_team = FlashTeam.find(params[:id])
+	   	
+	   		@workers = Worker.all.order(name: :asc)
+    	
+	   		@panels = Worker.distinct.pluck(:panel)
+  	
+	   		@fw = Worker.all.pluck(:email)   
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)

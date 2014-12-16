@@ -126,6 +126,8 @@ Foundry::Application.routes.draw do
   get '/workers/:id/destroy' => 'workers#destroy' 
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
+  get '/workers/right_sidebar_filt' => 'workers#right_sidebar_filt'
+
   
   resources :workers do
     member do

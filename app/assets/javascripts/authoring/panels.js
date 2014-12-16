@@ -35,7 +35,23 @@ $('input[type=checkbox]').change(function(e){
 
 	request.done(function( msg ) {
 		$("#worker_results").html( msg );
+		//$("#recipient_email").val( msg );
 	}); //end request.done
+	
+	//for sidebar view
+	var req2 = $.ajax({
+	   url: "/workers/right_sidebar_filt",
+	   type: "GET",
+	   data: {workers : selWorkers },
+	   //dataType: "html"
+	}); //end var request
+
+	req2.done(function( res ) {
+		//$("#worker_results").html( msg );
+		res_trim = res.trim();
+		$("#recipient_email").val(res_trim);
+	}); //end request.done
+
 
  });
  

@@ -39,7 +39,19 @@ class WorkersController < ApplicationController
   	render :partial => "filter_workers_emails"
   	
   end
-
+  
+  def right_sidebar_filt
+	  
+	  @abc = Worker.where(:id => params[:workers]).pluck(:email)
+		  
+# 		if !@abc.nil?
+# 			@filt_emails = @abc.uniq.join(", ")
+# 			@filt_emails 
+# 		end
+	  render :partial => "right_sidebar_filt"
+	  
+  end
+  
   def new
   	if valid_user?
   		 #redirect_to :action => 'index'
