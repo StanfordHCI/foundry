@@ -56,6 +56,7 @@ $('input[type=checkbox]').change(function(e){
  });
  
  
+ 
 /*The code below updates the content of the edit modal each time you click on the edit button next to a worker in the panel
 (fixes the issue that was causing the same worker information to appear in the edit modal unless you refreshed the page)
 found via: http://stackoverflow.com/questions/13104919/twitter-bootstrap-modal-loads-wrong-remote-data

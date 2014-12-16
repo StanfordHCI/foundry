@@ -23,6 +23,20 @@
 	
 	<%= @emails %>
 	<br />
+	
+	<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmails()" title="Select all emails">Select all emails</button>
+	
+	<script>
+		
+		function copyEmails() {
+			console.log("in copy emails");
+			emails = document.getElementById("copy-emails-button").getAttribute("data-clipboard-text");
+			console.log("emails: " + emails);
+		 	$("#recipient_email").val(emails);		
+		 }
+
+	</script>
+	
 	<button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
 
 	<%= javascript_include_tag "ZeroClipboard" %>
