@@ -82,11 +82,9 @@ function eventMousedown(task2idNum) {
         updateStatus();
         var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1idNum)];
         var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2idNum)];
-        var task1X = ev1.x;
-        var task1Width = getWidth(ev1);
-        var task2X = ev2.x;
+        var task1End = ev1.startTime + ev1.duration;
         
-        if ((task1X + task1Width) <= task2X) {
+        if (task1End <= ev2.startTime) {
             var color = colorBox.grabColor();
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
@@ -251,13 +249,13 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     //Then route to second event horizontally
     if (y1 <= y2) { //Event 1 is higher
         pathStr += "L " + x1 + ", " + (y1+25) + "\n";
-        pathStr += "L " + x2 + ", " + (y1+25) + "\n"; 
+        pathStr += "L " + (x2+1) + ", " + (y1+25) + "\n"; 
     } else { //Event 2 is higher
         pathStr += "L " + x1 + ", " + (y1-55) + "\n";
-        pathStr += "L " + x2 + ", " + (y1-55) + "\n";
+        pathStr += "L " + (x2+1) + ", " + (y1-55) + "\n";
     }
     //Route to second event vertically
-    pathStr += "L " + x2 + ", " + y2 + "\n";
+    pathStr += "L " + (x2+1) + ", " + y2 + "\n";
     //Line from gutter to second event
     pathStr += "L " + (x2+5) + ", " + y2 + "\n";
 
