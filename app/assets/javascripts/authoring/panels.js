@@ -107,3 +107,10 @@ client.on( "ready", function( readyEvent ) {
   } );
 } );
 
+function insertFoundryLink(sel){
+	link = sel.value.split(',');
+	foundry_member_url = link[1].substring(2, link[1].length-2);
+	console.log("link: " + link[1].substring(2, link[1].length-2));
+
+	$("#foundry_member_url").val(foundry_member_url);
+}

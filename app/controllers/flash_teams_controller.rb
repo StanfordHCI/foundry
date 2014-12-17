@@ -607,7 +607,8 @@ end
    		
    		@flash_team_name = @flash_team_json['title']
    		
-   		@task_member = params[:task_member] #i.e. role of recipient 
+   		tm = params[:task_member].split(',') #i.e. role of recipient 
+   		@task_member = tm[0][2..-2]
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		

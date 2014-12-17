@@ -21,10 +21,10 @@
 		<div class="span10">
 		
 			<p>Congratulations!  You have been hired for the 
-			<select name="task_member" required="required">
+			<select name="task_member" id="task_member_dropdown" onchange="insertFoundryLink(this)" required="required">
 				<option value="">-- SELECT MEMBER ROLE --</option>
 				<%@task_members.each do |task_member|%>
-					<%=options_for_select([[task_member['role'], task_member['role'], :data_inviteurl => task_member['invitation_link']]])%>
+					<%=options_for_select([[task_member['role'], [task_member['role'],task_member['invitation_link']]]])%>
 				<%end%>
 			</select> 
 			
@@ -53,7 +53,7 @@
 			
 			<p><b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your 
 			progress and submit your work.</p>  Click the following URL to sign up for this project on Foundry: 
-			<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span7', :required => true) %></p>
+			<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span7', :id => 'foundry_member_url', :required => true) %></p>
 			
 			<p>After you sign up, you will receive a unique link to the project, which you should use throughout the project. 
 			As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress 
