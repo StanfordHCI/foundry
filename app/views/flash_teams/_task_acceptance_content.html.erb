@@ -24,7 +24,7 @@
 			<select name="task_member" required="required">
 				<option value="">-- SELECT MEMBER ROLE --</option>
 				<%@task_members.each do |task_member|%>
-					<%=options_for_select([[task_member['role'], task_member['role']]])%>
+					<%=options_for_select([[task_member['role'], task_member['role'], :data_inviteurl => task_member['invitation_link']]])%>
 				<%end%>
 			</select> 
 			
