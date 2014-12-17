@@ -888,7 +888,7 @@ function drawTimer(eventObj){
         var numHoursInt = Math.ceil(totalMinutes/60);
         
         if (numHoursInt == 0){
-            numHoursInt = '-' + numHoursInt;
+	        numHoursInt = '-' + numHoursInt;
         }
         //console.log("numHoursInt: " + numHoursInt);
         var minutesLeft = Math.abs(Math.round(totalMinutes%60));
