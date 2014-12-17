@@ -1,4 +1,3 @@
-
 <p id="panel_results">
 	<b><em>Emails for all workers this panel:</em></b>
 
@@ -12,7 +11,7 @@
 	
 	<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
 	
-	<button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
+	<!-- <button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard">Copy Emails to Clipboard</button> -->
 
 	<%= javascript_include_tag "ZeroClipboard" %>
 	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
@@ -44,8 +43,8 @@
 	</table>
 </div>
 
-				
 <p id="worker_results">
+	
 	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
 

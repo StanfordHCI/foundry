@@ -40,7 +40,8 @@ $('input[type=checkbox]').change(function(e){
     }
     console.log(selWorkers);
            
-   var request = $.ajax({
+   
+	var request = $.ajax({
 	   url: "/workers/filter_workers_emails",
 	   type: "GET",
 	   data: {workers : selWorkers },
@@ -51,6 +52,7 @@ $('input[type=checkbox]').change(function(e){
 		$("#worker_results").html( msg );
 		//$("#recipient_email").val( msg );
 	}); //end request.done
+
 	
 	//for sidebar view
 	var req2 = $.ajax({
@@ -114,3 +116,16 @@ function insertFoundryLink(sel){
 
 	$("#foundry_member_url").val(foundry_member_url);
 }
+
+function hideRightPanels(){	
+	$("#hidePanelsLink").html('View Panels');
+	$("#right-sidebar-wrapper").css('display', 'none');
+	$("#hidePanelsLink").attr('onclick', 'viewRightPanels()');
+}	
+
+function viewRightPanels(){	
+	$("#hidePanelsLink").html('Hide Panels');
+	$("#right-sidebar-wrapper").css('display', '');
+	$("#hidePanelsLink").attr('onclick', 'hideRightPanels()');
+}	
+	

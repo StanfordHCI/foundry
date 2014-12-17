@@ -696,6 +696,8 @@ end
    
    def panels
    
+   	@show_right_sidebar = false
+   	
    	session.delete(:return_to)
    	session[:return_to] ||= request.original_url
   	

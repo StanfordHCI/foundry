@@ -11,29 +11,16 @@
 		<%= text_field_tag(:sender_email, "", :placeholder => "stanfordhci.odesk@gmail.com", :class => 'span5') %></p>
 		
 		<p><%= label_tag(:recipient_email, "Recipient Email(s):", :class => 'span2', :style => "display:inline; font-weight:bold;") %>
-		<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %>
-<!-- 		<div class="row span12"> -->
-			<a data-toggle="modal" data-target="#modal-view-panel" data-remote="<%= workers_index_path %>"> View Panels</a>
-		<!-- </div> --></p>
+		<%= text_field_tag(:recipient_email, "", :class => 'span5', :required => true) %> 
+		<a id="hidePanelsLink" onclick="hideRightPanels()">Hide Panels</a>
+
 		<br />
 		
 		<p><%= label_tag(:subject, "Subject:" , :class => 'span2', :style => "display:inline; font-weight:bold;") %>
 		<%= text_field_tag(:subject, @task_avail_email_subject, :class => 'span7', :required => true) %> </p>
 		
 		<br />
-		
-		
-	
-	<div class="modal hide fade" id="modal-view-panel" style="width: 860px; margin-left: -430px;">
-	  <div class="modal-header">
-	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	    <h3>New Worker</h3>
-	  </div>
-	  <div class="modal-body">
-	      <p> Loading... </p>
-	  </div>
-	</div>
-		
+				
 		<div class="span10">
 			<p>This is an email from the Stanford HCI Group notifying you that a job requiring a 
 

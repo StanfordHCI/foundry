@@ -1,6 +1,10 @@
 <div id="right-sidebar-wrapper">
+	<h3 class="row span12" id="panel-right-header"> Panels </h3>
+	
+	<div id="right-sidebar-content">
+		
 	   <!--  <p> Test </p> -->
-	   <h4 class="row span12" style="padding-top: 5px; width: 400px;"><b>Select a Panel:</b></h4> 
+	   <h4 class="row span12" style="width: 400px;"><b>Select a Panel:</b></h4> 
 	
 	<br />
 	
@@ -13,30 +17,31 @@
 		<% #render :partial => "workers/filter_workers" %>
 		
 		
-<p id="panel_results" style="width:400px;">
-	<b><em>Emails for all workers this panel:</em></b>
+		<p id="panel_results" style="width:400px;">
+			<b><em>Emails for all workers this panel:</em></b>
 
-	<br />
-	<!-- <% @fw.to_s.gsub('"', '')%> -->
+			<br />
 	
-	<% @emails = @fw.uniq.join(", ")%>
+			<% @emails = @fw.uniq.join(", ")%>
 	
-	<%= @emails %>
-	<br />
+			<%= @emails %>
+			
+			<br />
 	
-	<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
+			<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
 	
 
-	<button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
+			<!-- <button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard!</button> -->
 
-	<%= javascript_include_tag "ZeroClipboard" %>
-	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+			<%= javascript_include_tag "ZeroClipboard" %>
+			<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
 
-	<br />
-	<br />
-</p>
+			<br />
+			<br />
+		</p>
 
 <h4><b>Or Select Specific Workers:</b></h4>
+
 <div style="width:400px;">
 	<table class="table table-bordered table-striped">
 	    <thead>
@@ -58,15 +63,15 @@
 	    </tbody>
 	</table>
 </div>
-
-				
 				
 <p id="worker_results" style="width:400px;">
+	
 	<%=render :partial => "workers/filter_workers_emails"%>
 </p>
 
 
 <%= javascript_include_tag "/assets/authoring/panels" %>
 
-	</div>
+	</div> <! -- end filter results -->
+	</div> <! -- end right-sidebar-content -->
 </div>
