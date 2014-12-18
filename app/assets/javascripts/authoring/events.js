@@ -120,11 +120,9 @@ function rightResize(d) {
 }
 
 function dragEventBlock(d) {
-    
     if(isUser || in_progress) { // user page
         return;
     }
-
     dragged = true;
 
     // get event id
@@ -132,7 +130,6 @@ function dragEventBlock(d) {
 
     // get event object
     var ev = getEventFromId(groupNum);
-
     var width = getWidth(ev);
 
     //Horizontal dragging
@@ -162,8 +159,7 @@ function dragEventBlock(d) {
     ev.row = newRow;
     ev.y = currentY+5;
     updateStatus();
-    drawEvent(ev, false);
-    
+    drawEvent(ev, false);   
 }
 
 //VCom Calculates where to snap event block to when created
@@ -737,32 +733,7 @@ function drawShade(eventObj, firstTime) {
             break;
         }
     }
-
-    /*
-if (currentUserEvents.length > 0){
-        currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
-         
-	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
-        console.log(upcomingEvent);
-        task_g.selectAll("#rect_" + upcomingEvent)
-            //.attr("fill", WORKER_TASK_NOT_START_COLOR)
-            .attr("fill-opacity", .9);  
-    }
-*/
 }
-    
-
-/*
-function findCurrentUserNextEvent(currentUserEvents){
-	console.log("calling findCurrentUserNextEvent");
-	//console.log("currentUserEvents: " + currentUserEvents);
-	for (var i = 0; i < currentUserEvents.length; i++){
-		if(currentUserEvents[i].status == "not_started"){
-			return currentUserEvents[i]["id"];		
-		}
-	}
-}
-*/
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
@@ -782,7 +753,6 @@ function drawEachHandoffForEvent(eventObj){
             }  
             
             if (draw){
-                console.log("reposition existing handoff");
                 //Reposition an existing handoff
                 var x1 = handoffStart(ev1);
                 var y1 = ev1.y + 50;
@@ -801,7 +771,7 @@ function drawEachCollabForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
     for (var i = 0; i < interactions.length; i++){
         var inter = interactions[i];
-        var draw;
+        var draw = false;
         if (inter["type"] == "collaboration"){
             if (inter["event1"] == eventObj["id"]){
                 draw = true;
@@ -814,40 +784,30 @@ function drawEachCollabForEvent(eventObj){
                 var ev2 = eventObj;
             }
             if (draw){
-                /*var existingInter = timeline_svg.selectAll("#interaction_" + inter["id"]);
-                if(existingInter[0].length == 0){ // first time
-                    //Alexandra - I'm not convinced this ever get called? 
-                    var handoffData = {"event1":inter["event1"], "event2":inter["event2"], 
-                        "type":"handoff", "description":"", "id":inter["id"]};
-                    drawHandoff(handoffData);
-                } else {*/
-                    //Reposition existing collaboration
-                    var y1 = ev1.y;
-                    var x1 = ev1.x + 3;
-                    var x2 = ev2.x + 3;
-                    var y2 = ev2.y;
-                    var firstTaskY = 0;
-                    var taskDistance = 0;
-                    var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
-                    if (y1 < y2) {
-                        firstTaskY = y1 + RECTANGLE_HEIGHT;
-                        taskDistance = y2 - firstTaskY;
-                    } else {
-                        firstTaskY = y2 + RECTANGLE_HEIGHT;
-                        taskDistance = y1 - firstTaskY;
-                    }
-                    if (x1 <= x2) var startX = x2;
-                    else var startX = x1;
-                    $("#interaction_" + inter["id"])
-                        .attr("x", startX)
-                        .attr("y", firstTaskY)
-                        .attr("height", taskDistance)
-                        .attr("width", overlap);
-                /*}*/
+                var y1 = ev1.y;
+                var x1 = ev1.x + 3;
+                var x2 = ev2.x + 3;
+                var y2 = ev2.y;
+                var firstTaskY = 0;
+                var taskDistance = 0;
+                var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
+                if (y1 < y2) {
+                    firstTaskY = y1 + RECTANGLE_HEIGHT;
+                    taskDistance = y2 - firstTaskY;
+                } else {
+                    firstTaskY = y2 + RECTANGLE_HEIGHT;
+                    taskDistance = y1 - firstTaskY;
+                }
+                if (x1 <= x2) var startX = x2;
+                else var startX = x1;
+                $("#interaction_" + inter["id"])
+                    .attr("x", startX)
+                    .attr("y", firstTaskY)
+                    .attr("height", taskDistance)
+                    .attr("width", overlap);
             }
         }
     }
-
 }
 
 //Creates graphical elements from array of data (task_rectangles)
@@ -940,7 +900,7 @@ function drawTimer(eventObj){
     
     // if the minutes are < 10, you need to add a zero before
     if(minutesLeft < 10){
-	    minutesLeft = '0' + minutesLeft;
+        minutesLeft = '0' + minutesLeft;
     }
     
     var groupNum = eventObj["id"];
@@ -1079,10 +1039,10 @@ function deleteEvent(eventId){
 
     $('#confirmAction').modal('hide');
 
-	var indexOfJSON = getEventJSONIndex(eventId);
-	var events = flashTeamsJSON["events"];
-		
-	events.splice(indexOfJSON, 1);
+    var indexOfJSON = getEventJSONIndex(eventId);
+    var events = flashTeamsJSON["events"];
+        
+    events.splice(indexOfJSON, 1);
     //console.log("event deleted from json");
     
     //stores the ids of all of the interactions to erase
@@ -1103,7 +1063,7 @@ function deleteEvent(eventId){
         flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
 
         // remove from timeline
-    	deleteInteraction(intId);
+        deleteInteraction(intId);
     }
 
     removeTask(eventId);
