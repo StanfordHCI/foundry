@@ -21,7 +21,7 @@
 		
 		<br />
 				
-		<div class="span10">
+		<div class="span8">
 			<p>This is an email from the Stanford HCI Group notifying you that a job requiring a 
 
 			<select name="task_member" required="required">
@@ -38,39 +38,43 @@
 			<br />
 			
 			<p><%= label_tag(:project_overview, "Project Overview:" , :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5, :required => true) %></p>
+			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span8', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
-			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5, :required => true) %></p>
+			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span8', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
 			For this task, you will receive the following input(s):
-					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>. You can access the input(s) at the following link (optional):
-					<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span6') %></p>
+					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span3') %>. You can access the input(s) at the following link:
+					<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span4') %></p>
 			
 			<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
 			<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>
 			<p><%=label_tag(:output_description, "Deliverable Information (optional):", :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :rows =>3) %></p>
+			<%= text_area_tag(:output_description, "", :placeholder => "OPTIONAL: [INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span8', :rows =>3) %></p>
 			
 			<p><%= label_tag(:task_duration, "Task Duration:", :style => "display:inline; font-weight: bold;") %>
 			You will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3', :required => true)%> to finish this task.</p>
 			
-			<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  
-			If you have not already done so, please familiarize yourself with Foundry by visiting 
-			<a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  
-			Feel free to contact us if you have any questions regarding the use of Foundry.</p>
+			<br />
+			<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting 
+			<a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.</p>
 			
-			<p>If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by 
-			accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.</p>
+			<br />
+			
+			<p>If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.</p>
+			
+			<br />
 			
 			<p>If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation 
 			that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will 
 			hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.</p>
-			
+						
 			<p>
+				<br />
 				Best, <br />
 				Stanford HCI Research Team
+				<br /><br />
 			</p>
 			
 			<%= button_tag("Send Task Available Email", :type => 'submit', :class => 'btn btn-primary') %>

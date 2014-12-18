@@ -20,7 +20,7 @@
 		<%= text_field_tag(:subject, @task_acceptance_email_subject, :class => 'span6', :required => true) %> </p>		
 		<br />
 		
-		<div class="span10">
+		<div class="span8">
 		
 			<p>Congratulations!  You have been hired for the 
 			<select name="task_member" id="task_member_dropdown" onchange="insertFoundryLink(this)" required="required">
@@ -36,37 +36,45 @@
 			you will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span3', :required => true)%> to complete this task 
 			and must start working within 30 minutes of receiving this email. Please make sure to track your working hours 
 			on oDesk. For your reference, we have included the job description below:</p>
+			
+			<br />
 								
 			<p><%= label_tag(:project_overview, "Project Overview:" , :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5, :required => true) %></p>
+			<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span8', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:task_description, "Task Description:" , :style => "display:inline;font-weight:bold;") %>
-			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5, :required => true) %></p>
+			<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span8', :rows =>5, :required => true) %></p>
 			
 			<p><%= label_tag(:inputs, "Input(s):", :style => "display:inline; font-weight: bold;") %>
 			For this task, you will receive the following input(s):
-					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span4') %>. You can access the input(s) at the following link (optional):
-					<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span6') %></p>
+					<%= text_field_tag(:inputs, @flash_team_event['inputs'], :class => 'span3') %>. You can access the input(s) at the following link:
+					<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span4') %></p>
 			
 			<p><%= label_tag(:outputs, "Deliverable(s):", :style => "display:inline; font-weight:bold;") %>
 			<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span4') %></p>
-			<p><%=label_tag(:output_description, "Deliverable Information (optional):", :style => "display:inline; font-weight:bold;") %>
-			<%= text_area_tag(:output_description, "", :placeholder => "[INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span10', :rows =>3) %></p>
+			<p><%=label_tag(:output_description, "Deliverable Information:", :style => "display:inline; font-weight:bold;") %>
+			<%= text_area_tag(:output_description, "", :placeholder => "OPTIONAL: [INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span8', :rows =>3) %></p>
 			
 			<p><b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your 
-			progress and submit your work.</p>  Click the following URL to sign up for this project on Foundry: 
+			progress and submit your work. Click the following URL to sign up for this project on Foundry: 
 			<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span7', :id => 'foundry_member_url', :required => true) %></p>
+			
+			<br />
 			
 			<p>After you sign up, you will receive a unique link to the project, which you should use throughout the project. 
 			As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress 
 			and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" 
 			button on the top left of the page.  Feel free to contact us if you have any remaining questions.</p>  
 			
+			<br />
+			
 			<p>Thank you for involvement in this project and we look forward to receiving your work!</p>
 			
 			<p>
-			Best, <br />
-			Stanford HCI Research Team
+				<br />
+				Best, <br />
+				Stanford HCI Research Team
+				<br /><br />
 			</p>
 		
 			<%= button_tag("Send Task Acceptance Email", :type => 'submit', :class => 'btn btn-primary') %>
