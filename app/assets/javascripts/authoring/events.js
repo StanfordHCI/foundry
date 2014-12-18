@@ -738,21 +738,21 @@ function drawShade(eventObj, firstTime) {
         }
     }
 
-    /*
-if (currentUserEvents.length > 0){
-        currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
-         
-	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
-        console.log(upcomingEvent);
-        task_g.selectAll("#rect_" + upcomingEvent)
-            //.attr("fill", WORKER_TASK_NOT_START_COLOR)
-            .attr("fill-opacity", .9);  
-    }
-*/
+    
+    if (currentUserEvents.length > 0){
+            currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
+            
+    	    upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
+            console.log(upcomingEvent);
+            /*task_g.selectAll("#rect_" + upcomingEvent)
+                //.attr("fill", WORKER_TASK_NOT_START_COLOR)
+                .attr("fill-opacity", .9);  */
+        }
+
 }
     
 
-/*
+
 function findCurrentUserNextEvent(currentUserEvents){
 	console.log("calling findCurrentUserNextEvent");
 	//console.log("currentUserEvents: " + currentUserEvents);
@@ -762,7 +762,7 @@ function findCurrentUserNextEvent(currentUserEvents){
 		}
 	}
 }
-*/
+
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];

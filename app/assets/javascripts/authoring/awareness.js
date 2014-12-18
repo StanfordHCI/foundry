@@ -7,7 +7,7 @@ var poll_interval = 5000; // 20 seconds
 var poll_interval_id;
 var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
 var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
-var fire_interval = 180; // change back to 180
+var fire_interval = 1000; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
@@ -1335,8 +1335,9 @@ function getEventIndexFromId(event_id) {
     return index;
 }
 
+//trackUpcomingEvent_old is the version of code for tracking upcoming tasks before the ticker was disabled.
 //Tracks a current user's ucpcoming and current events
-var trackUpcomingEvent = function(){
+/*var trackUpcomingEvent = function(){
      if (current == undefined){
         return;
     }
@@ -1417,7 +1418,7 @@ var trackUpcomingEvent = function(){
                         overallTime = "A task ahead of yours has been delayed. Your next task will start as soon as the delayed task is completed";
                     } else {
                         overallTime = "A task ahead of yours has been delayed. Your next task will start " + overallTime + " after the delayed task is completed.";
-                    }
+          e          }
                     statusText.style("color", "red");
                 } else {
                     overallTime = "Your next task starts in " + overallTime;
@@ -1439,8 +1440,52 @@ var trackUpcomingEvent = function(){
     }, fire_interval);
 
     //console.log("EXITING TRACKUPCOMINGEVENT FUNCTION");
-}
+}*/
 
+
+var trackUpcomingEvent = function(){
+    
+     if (current == undefined){
+        return;
+    }
+    
+    setInterval(function(){
+        if(!upcomingEvent) return;
+        alert("here!");
+        var ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
+        var task_g = getTaskGFromGroupNum(upcomingEvent);
+
+        var overallTime;
+        
+        if (ev.status = "completed"){
+            toDelete = upcomingEvent;
+            currentUserEvents.splice(0,1);
+            if (currentUserEvents.length == 0){
+                upcomingEvent = undefined;
+                statusText.style("color", "green");
+                statusText.text("You've completed all your tasks!");
+                return;
+            }
+            upcomingEvent = currentUserEvents[0].id;
+            task_g = getTaskGFromGroupNum(upcomingEvent);
+        }
+
+        currentUserEvents[0].startTime = parseInt(currentUserEvents[0].startHr)*60 + parseInt(currentUserEvents[0].startMin);
+        var cur_ev_id = currentUserEvents[0].id;
+        var cur_ev_ind = getEventIndexFromId(cur_ev_id);
+        var ev_start_time = parseInt(ev.startHr) * 60 + parseInt(ev.startMin);
+       
+        if( currentUserEvents[0].status == "delayed"){
+            overallTime = "Your task is delayed.";
+            statusText.style("color", "red");
+        }
+        else if ( currentUserEvents[0].status == "started"){
+            overallTime = "You task is in progress.";
+        }
+        
+        statusText.text(overallTime);
+    }, fire_interval);
+}
 
 var getAllData = function(){
     var all_data = [];
