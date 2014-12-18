@@ -126,14 +126,14 @@
     position: fixed;
     top: 0px;
     right: 0px;
-    width: 420px;
+    width: 350px;
     height: 100%;
-    border-left: 1px solid black;
+    border-left: 2px solid black;
    // margin-right: -250px;
     overflow-y: auto;
 	//background: #000;
-   //background: red;
-   background: white;
+   background: #f9f9f9;
+   //background: white;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -142,11 +142,11 @@
 
 #right-sidebar-content{
 	padding-top: 5px;
-	width: 400px;
+	width: 340px;
 }
 
 #panel-right-header{
-	width: 400px;
+	width: 300px;
 	padding-top: 20px;
 	padding-bottom: 10px;
 }
