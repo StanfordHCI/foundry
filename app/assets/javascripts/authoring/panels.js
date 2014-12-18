@@ -21,6 +21,7 @@ $('#panels_right').change(function(){
 	   
 	    request.done(function( msg ) {
 	     $("#filter_results").html( msg );
+	     copyEmailsToForm();
 	    }); //end request.done
  });
 
