@@ -456,6 +456,12 @@ end
 		end
 	   	
 	   	#@flash_team = FlashTeam.find(params[:id])
+	   	
+	   		@workers = Worker.all.order(name: :asc)
+    	
+	   		@panels = Worker.distinct.pluck(:panel)
+  	
+	   		@fw = Worker.all.pluck(:email)   
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -543,6 +549,10 @@ end
 	   	if valid_user?	
 			@flash_team = FlashTeam.find(params[:id])
 		end
+		
+		@workers = Worker.all.order(name: :asc)
+		@panels = Worker.distinct.pluck(:panel)
+		@fw = Worker.all.pluck(:email)  
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -597,7 +607,8 @@ end
    		
    		@flash_team_name = @flash_team_json['title']
    		
-   		@task_member = params[:task_member] #i.e. role of recipient 
+   		tm = params[:task_member].split(',') #i.e. role of recipient 
+   		@task_member = tm[0][2..-2]
    		@recipient_email = params[:recipient_email]
    		@subject = params[:subject]
    		
@@ -629,6 +640,10 @@ end
 	   	if valid_user?	
 			@flash_team = FlashTeam.find(params[:id])
 		end
+		
+		@workers = Worker.all.order(name: :asc)
+		@panels = Worker.distinct.pluck(:panel)
+		@fw = Worker.all.pluck(:email)  
 	   	    
 	   	# Extract data from the JSON
 	    flash_team_status = JSON.parse(@flash_team.status)
@@ -681,6 +696,8 @@ end
    
    def panels
    
+   	@show_right_sidebar = false
+   	
    	session.delete(:return_to)
    	session[:return_to] ||= request.original_url
   	

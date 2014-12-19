@@ -1,0 +1,4 @@
+<%if !@abc.nil? %>
+		<%@filt_emails = @abc.uniq.join(", ") %>
+		<%=@filt_emails.strip %>
+<%end%>

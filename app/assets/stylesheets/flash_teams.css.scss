@@ -121,12 +121,43 @@
     transition: all 0.5s ease;
 }
 
+#right-sidebar-wrapper {
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 350px;
+    height: 100%;
+    border-left: 2px solid black;
+   // margin-right: -250px;
+    overflow-y: auto;
+	//background: #000;
+   background: #f9f9f9;
+   //background: white;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#right-sidebar-content{
+	padding-top: 5px;
+	width: 340px;
+}
+
+#panel-right-header{
+	width: 300px;
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+
 #wrapper.toggled #sidebar-wrapper {
     width: 250px;
 }
 
 #page-content-wrapper {
     width: 100%;
+    //width: 800px;
     padding: 15px;
 }
 

@@ -1,5 +1,4 @@
 
-
 	<b><em>Emails for selected workers:</em></b>
 
 	<br />
@@ -10,7 +9,11 @@
 		<% @filt_emails = @abc.uniq.join(", ") %>
 		<%= @filt_emails %>
 		<br />
+				
+		<%if !@filt_emails.empty?%>
+		
 		<button class="btn btn-default" id="copy-button-filt" data-clipboard-text="<%=@filt_emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard</button>
+		<%end%>
 	<%end%>
 
 	<br />
