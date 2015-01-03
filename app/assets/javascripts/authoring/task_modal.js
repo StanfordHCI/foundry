@@ -41,12 +41,15 @@ function showTaskOverview(groupNum){
             $("#start-end-task").css('display', 'none');   
     }
 
-    if(uniq_u == "" || memberType == "pc" || memberType == "client"){
+	$("#hire-task").css('display','none');
+    /*
+if(uniq_u == "" || memberType == "pc" || memberType == "client"){
         $("#hire-task").css('display','');
     }
     else{
         $("#hire-task").css('display','none');
     }
+*/
     
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '');
