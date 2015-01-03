@@ -186,7 +186,9 @@ function renderMemberPopovers(members) {
 
         content +='</ul>';
         
-		content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
+        //content += 'Member Type: <select name="membertype" id="member' + member_id + '_type" style="display:none;">';
+		/*
+content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
 		
 		if(member_type == "worker"){
         	content += '<option value="worker" selected>Worker</option>';
@@ -207,9 +209,10 @@ function renderMemberPopovers(members) {
         }
                     
         content += '</select><br />';
+*/
 
         content += 'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
-        +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
+        +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script><br /></p>'
 
          +'<p><button class="btn btn-success" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
          +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>     '
