@@ -5,8 +5,8 @@
 
 var poll_interval = 5000; // 20 seconds
 var poll_interval_id;
-var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
-var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
+var task_timer_interval = 60000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
+var timeline_interval = 1800000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
 var fire_interval = 180; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
