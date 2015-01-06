@@ -273,7 +273,6 @@ window._foundry = {
     updateNumRows: function(numRows) {
       this.numRows = numRows;
       redrawTimeline();
-      //console.log(numRows);
     },
   },
 };
