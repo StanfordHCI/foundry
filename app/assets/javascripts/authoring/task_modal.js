@@ -152,11 +152,9 @@ function getTaskOverviewForm(groupNum){
             + '" min="0" style="width:36px">         ' 
         + 'Minutes : <input type="number" id="startMin" placeholder="' + startMin 
             + '" min="0" step="15" max="45" style="width:36px"><br />'
-
-        + '<b>Project Coordinator</b><br><select class="pcInput"' 
-            +' name="pcName" id="pcEvent"' 
-            + 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
     
+        + '<b>Members</b><br/> <div id="eventMemberList">'
+        + writeEventMembers(eventObj)  +'</div>'
         + '</div> <div class="span6">'
         + '<b>Total Runtime </b> <br />' 
         + 'Hours : <input type = "number" id="hours" placeholder="'
@@ -170,10 +168,8 @@ function getTaskOverviewForm(groupNum){
         + '</div>'
 
         + '<div class="row-fluid">' 
-        + '<div class="span12">'
-        + '<b>Members</b><br/> <div id="eventMemberList">'
-        + writeEventMembers(eventObj)  +'</div>'
-
+        
+		+ '<div class="span12"><br />'
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
@@ -225,7 +221,7 @@ function getTaskOverviewContent(groupNum){
         + evStartHr + ':'
         + evStartMin + '<br>'
         + '</div>'
-        + '<div class="span6" style="margin-left:0px">'
+        + '<div class="span6">'
         +'<b>Total Runtime:  </b>' 
         + hrs+':'+mins
         + '</div>';
@@ -254,6 +250,8 @@ function getTaskOverviewContent(groupNum){
 
     }
 
+content += '<div class="row-fluid">';
+
      if (ev.dri != "" && ev.dri != undefined){
         var dri_id = parseInt (ev.dri);
         var mem = null;
@@ -267,37 +265,21 @@ function getTaskOverviewContent(groupNum){
         }
 
         if(mem && mem != undefined){
+            //content += '<div class="span6">';
             content += '<div class="span6">';
             content += '<b>Directly-Responsible Individual:</b><br>';
             content += mem;
-            content += '</div> </div>'
+            //content += '</div> </div>'
+            content += '</div>'
         }
     }
     else{
 
     }
-
-    if(ev.inputs) {
-        content += '<b>Inputs:</b><br>';
-        var inputs = ev.inputs.split(",");
-        for(var i=0;i<inputs.length;i++){
-            content += inputs[i];
-            content += "<br>";
-        }
-    }
     
-    if(ev.outputs) {
-        content += '<b>Deliverables:</b><br>';
-        var outputs = ev.outputs.split(",");
-        for(var i=0;i<outputs.length;i++){
-            content += outputs[i];
-            content += "<br>";
-        }
-    }
-
-    var num_members = ev.members.length;
+     var num_members = ev.members.length;
     if(num_members > 0){
-        content += '<b>Members:</b><br>';
+        content += '<div class="span6"><b>Members:</b><br>';
         for (var j=0;j<num_members-1;j++){
             var member = getMemberById(ev.members[j]);
             content += member.role;
@@ -305,8 +287,34 @@ function getTaskOverviewContent(groupNum){
         }
         var member = getMemberById(ev.members[num_members-1]);
         content += member.role;
-        content += '<br/>';
+        content += '<br/></div>';
     }
+
+content += '</div>';
+
+content += '<div class="row-fluid">';
+    if(ev.inputs) {
+	    content += '<div class="span6">';
+        content += '<b>Inputs:</b><br>';
+        var inputs = ev.inputs.split(",");
+        for(var i=0;i<inputs.length;i++){
+            content += inputs[i];
+            content += "<br>"
+            content += '</div>';
+        }
+    }
+    
+    if(ev.outputs) {
+        content += '<div class="span6"><b>Deliverables:</b><br>';
+        var outputs = ev.outputs.split(",");
+        for(var i=0;i<outputs.length;i++){
+            content += outputs[i];
+            content += "<br>"
+            content += '</div>';
+        }
+    }
+content += '</div>';
+   
 
     if (ev.notes != ""){
         content += '</br><b>Description:</b><br>';
