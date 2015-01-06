@@ -481,7 +481,8 @@ function saveMemberInfo(popId) {
     flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
     flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
     
-    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
+    //flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
+    flashTeamsJSON["members"][indexOfJSON].type = "worker";
 
     var newColor = $("#color_" + popId).spectrum("get").toHexString();
 
