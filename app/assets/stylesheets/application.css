@@ -11,4 +11,12 @@
  * require self
  * require_tree ./bootstrap
  *= require_tree .
+ *
+ * Exclude the panel stylesheets from the rest of the applciation: 
+ *
+ *= stub panel-css/panel-bootstrap
+ *= stub panel-css/panel-style
+ *= stub panel-css/panel-style-responsive
+ *= stub panel-css/panel-table-responsive
+ *= stub panel-css/font-awesome
  */

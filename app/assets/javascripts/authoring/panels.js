@@ -120,13 +120,16 @@ function insertFoundryLink(sel){
 
 function hideRightPanels(){	
 	$("#hidePanelsLink").html('View Panels');
-	$("#right-sidebar-wrapper").css('display', 'none');
+	$("#panels-right-sidebar").css('display', 'none');
 	$("#hidePanelsLink").attr('onclick', 'viewRightPanels()');
+	$("#email-form-div").removeClass("col-lg-7");
+	$("#email-form-div").addClass("col-lg-12");
 }	
 
 function viewRightPanels(){	
 	$("#hidePanelsLink").html('Hide Panels');
-	$("#right-sidebar-wrapper").css('display', '');
+	$("#panels-right-sidebar").css('display', '');
 	$("#hidePanelsLink").attr('onclick', 'hideRightPanels()');
+	$("#email-form-div").removeClass("col-lg-12");
+	$("#email-form-div").addClass("col-lg-7");
 }	
-	
