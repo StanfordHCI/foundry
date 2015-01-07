@@ -1,39 +1,48 @@
-<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
+<h2><i class="fa fa-angle-right"></i> Task Available Email Sent!</h2>
+          	
+          	<!-- INPUT MESSAGES -->
+          	<div class="row mt">
+          		<div id="email-form-div" class="col-lg-12">
+          			<div class="form-panel">
 
-<br />
+						<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
+						
+						<p><b>Project overview:</b> <%=@project_overview.html_safe%></p>
+						<p><b>Task description:</b> <%=@task_description.html_safe%></p>
+						
+						<p>
+							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+						
+						<%if !@input_link.empty?%>
+							You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
+						</p>
+						<%end%>
+						
+						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+						
+						<%if !@output_description.empty?%>
+						<p><b>Deliverable information:</b> <%=@output_description%></p>
+						<%end%>
+						
+						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
+						
+						<p>
+							As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.
+						</p>
+						
+						<p>
+							If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.
+						</p>
+						
+						<p>
+							If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
+						</p>
+						
+						<p>
+							Best, <br />
+							Stanford HCI Research Team
+						</p>
 
-<p><b>Project overview:</b> <%=@project_overview.html_safe%></p>
-<p><b>Task description:</b> <%=@task_description.html_safe%></p>
-
-<p><b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
-
-<%if !@input_link.empty?%>
-You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a></p>
-<%end%>
-
-<p><b>Deliverable(s):</b> <%=@outputs%></p>
-
-<%if !@output_description.empty?%>
-<p><b>Deliverable information:</b> <%=@output_description%></p>
-<%end%>
-
-<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
-
-<br />
-
-<p>As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.</p>
-
-<br />
-
-<p>If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.</p>
-
-<br />
-
-<p>If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.</p>
-
-<br />
-
-<p>
-Best, <br />
-Stanford HCI Research Team
-</p>
+					</div>
+          		</div>
+          	</div>    			
