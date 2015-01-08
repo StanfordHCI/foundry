@@ -122,11 +122,15 @@ function hideRightPanels(){
 	$("#hidePanelsLink").html('View Panels');
 	$("#right-sidebar-wrapper").css('display', 'none');
 	$("#hidePanelsLink").attr('onclick', 'viewRightPanels()');
+	$("#email-form-div").removeClass("span5");
+	$("#email-form-div").addClass("span9");
 }	
 
 function viewRightPanels(){	
 	$("#hidePanelsLink").html('Hide Panels');
 	$("#right-sidebar-wrapper").css('display', '');
 	$("#hidePanelsLink").attr('onclick', 'hideRightPanels()');
+	$("#email-form-div").removeClass("span9");
+	$("#email-form-div").addClass("span5");
 }	
 	

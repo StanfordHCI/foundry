@@ -1,78 +1,70 @@
-<div id="right-sidebar-wrapper">
-	<h3 class="row span12" id="panel-right-header" style="width: 330px;"> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right; padding-right: 10px;"></i></h3>
-		
-	<div id="right-sidebar-content">
-		
-	   <!--  <p> Test </p> -->
-	   <h4 class="row span12" style="width: 300px;"><b>Select a Panel:</b></h4> 
-	
-	<br />
-	
-	<p class="row span12" style="width:300px;">
-		<%= select_tag "panels_right", options_for_select(@panels), {:prompt => "All Panels"}%>
-	
-	</p>
-	
-	<div id="filter_results" class="row span12" style="width:300px;">
-		<% #render :partial => "workers/filter_workers" %>
-		
-		
-		<p id="panel_results" style="width:300px;">
-			<b><em>Emails for all workers this panel:</em></b>
+<div class="span4" id="right-sidebar-wrapper">
+                 
+   <div class="form-panel">   
+      <h4><i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right; padding-right: 10px;"></i></h4>
+      
+      <div class="form-group">
+      	<h5>Select a panel:</h5>
+	  	<%= select_tag "panels_right", options_for_select(@panels), {:prompt => "All Panels", :class => 'span12'}%>
+      </div>
+      
+      
+      <div class="form-group">
+          <div id="filter_results">		
+			<p id="panel_results">
+				<b><em>Emails for all workers this panel:</em></b>
 
-			<br />
-	
-			<% @emails = @fw.uniq.join(", ")%>
-	
-			<%= @emails %>
-			
-			<br />
-	
-			<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
-	
+				<br />
 
-			<!-- <button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard.">Copy Emails to Clipboard!</button> -->
-
-			<%= javascript_include_tag "ZeroClipboard" %>
-			<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
-
-			<br />
-			<br />
-		</p>
-
-<h4><b>Or Select Specific Workers:</b></h4>
-
-<div>
-	<!-- <table class="table table-bordered table-striped" style="background-color: white;"> -->
-	<table class="table table-bordered">
-	    <thead>
-			<th>Name</th>
-			<th>Email</th>
-			<th>Panel</th>
-			<th><i class="icon-ok"></i></th>
-	    </thead>
-	    <tbody>
-			<% @workers.each do |worker| %>
-			    <tr>
-			        <td><%= worker.name %></td>
-			        <td><%= worker.email %></td>
-			        <td><%= worker.panel %></td>
-			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        
-			    </tr>
-			<% end %>
-	    </tbody>
-	</table>
-</div>
+				<% @emails = @fw.uniq.join(", ")%>
+				<%= @emails %>
 				
-<p id="worker_results" style="width:300px;">
+				<br />
+		
+				<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
+
+				<%= javascript_include_tag "ZeroClipboard" %>
+				<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+
+				<br />
+				<br />
+			</p>
+	</div>
+      
+      
+	<div class="form-group">
+		<h4><b>Or Select Specific Workers:</b></h4>
+			<table class="table table-bordered">
+			    <thead>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Panel</th>
+					<th><i class="icon-ok"></i></th>
+			    </thead>
+			    <tbody>
+					<% @workers.each do |worker| %>
+					    <tr>
+					        <td><%= worker.name %></td>
+					        <td><%= worker.email %></td>
+					        <td><%= worker.panel %></td>
+					        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+					        
+					    </tr>
+					<% end %>
+			    </tbody>
+		</table>
+	</div>
+      
+      
+	<div class="form-group">
+		<p id="worker_results">
+			<%=render :partial => "workers/filter_workers_emails"%>
+		</p>
+	</div> <!--end form-group -->
 	
-	<%=render :partial => "workers/filter_workers_emails"%>
-</p>
+	<%= javascript_include_tag "/assets/authoring/panels" %>
+	
+	</div><!--end filter results -->
 
-
-<%= javascript_include_tag "/assets/authoring/panels" %>
-
-	</div> <! -- end filter results -->
-	</div> <! -- end right-sidebar-content -->
-</div>
+  </div> <!-- end form-panel -->
+	</div>   <!--end span4 --> 
