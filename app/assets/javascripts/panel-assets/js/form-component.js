@@ -62,7 +62,7 @@ var Script = function () {
         $(".tagsinput").tagsInput();
 
         // Switch
-        $("[data-toggle='switch']").wrap('<div class="switch" />').parent().bootstrapSwitch();
+        //$("[data-toggle='switch']").wrap('<div class="switch" />').parent().bootstrapSwitch();
 
     });
 
@@ -70,13 +70,16 @@ var Script = function () {
 
     //color picker
 
-    $('.cp1').colorpicker({
+    /*
+$('.cp1').colorpicker({
         format: 'hex'
     });
     $('.cp2').colorpicker();
+*/
 
 
-    //date picker
+    /*
+//date picker
 
     if (top.location != location) {
         top.location.href = document.location.href ;
@@ -186,6 +189,7 @@ var Script = function () {
 
     //Set the initial state of the picker label
     $('#reportrange span').html(Date.today().add({ days: -29 }).toString('MMMM d, yyyy') + ' - ' + Date.today().toString('MMMM d, yyyy'));
+*/
 
 
 }();
