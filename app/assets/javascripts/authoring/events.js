@@ -316,80 +316,6 @@ function getMemberIndexFromName(name) {
     return -1;
 }
 
-function drawG(eventObj, firstTime) {
-
-    var x = _foundry.timeline.stepWidth *
-            (eventObj.startTime/_foundry.timeline.stepInterval);
-    var x_offset = -6;
-    
-    var y = _foundry.timeline.rowHeight * eventObj.row;
-    var y_offset = (_foundry.timeline.rowHeight - RECTANGLE_HEIGHT)/2;
-    
-    var groupNum = eventObj["id"];
-
-    var idx = getDataIndexFromGroupNum(groupNum);
-    if(idx == null) {
-        var new_data = {
-          id: "task_g_" + groupNum, class: "task_g",
-          groupNum: groupNum, x: x + x_offset, y: y + y_offset
-        };
-          
-        task_groups.push(new_data);
-    } else {
-        task_groups[idx].x = x + x_offset;
-        task_groups[idx].y = y + y_offset;
-    }
-
-    // add group to timeline, based on the data object
-    timeline_svg.selectAll("g")
-        .data(task_groups, function(d){ return d.groupNum; })
-        .enter()
-        .append("g")
-        .attr("id", "g_" + groupNum);
-}
-
-function drawMainRect(eventObj, firstTime) {
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-    var width = getWidth(eventObj);
-
-    var existingMainRect = task_g.selectAll("#rect_" + groupNum);
-    if(existingMainRect[0].length == 0){ // first time
-        task_g.append("rect")
-            .attr("class", "task_rectangle")
-            .attr("x", function(d) {return (d.x+(GUTTER/2));})
-            .attr("y", function(d) {return d.y;})
-            .attr("id", function(d) {
-                return "rect_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum;})
-            .attr("height", RECTANGLE_HEIGHT)
-            .attr("width", width-(GUTTER/2))
-            .attr("fill", function(d) {
-                var stat = eventObj.status;
-                if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") {return TASK_START_COLOR; }
-                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
-                else return TASK_COMPLETE_COLOR;
-            })
-            .attr("fill-opacity", .6)
-            .attr("stroke", "#5F5A5A")
-            .attr('pointer-events', 'all')
-            .call(drag);
-    } else {
-        task_g.selectAll(".task_rectangle")
-            .attr("x", function(d) {return d.x +(GUTTER/2);})
-            .attr("y", function(d) {return d.y;})
-            .attr("width", width-(GUTTER/2))
-            .attr("fill", function(d) {
-                var stat = eventObj.status;
-                if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") {return TASK_START_COLOR; }
-                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
-                else return TASK_COMPLETE_COLOR;
-            });
-    }
-};
-
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
@@ -442,52 +368,6 @@ function drawLeftDragBar(eventObj, firstTime) {
             .attr("x", function(d) {return d.x + (GUTTER/4);}) 
             .attr("y", function(d) {return d.y});
     }
-}
-
-function drawTitleText(eventObj, firstTime) {
-    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
-    var y_offset = 14; // unique for title
-
-    var groupNum = eventObj["id"];
-    var title = eventObj["title"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    //shorten title to fit inside event
-    var existingTitleTextDiv = document.getElementById("titleLength");
-    var spn = existingTitleTextDiv.getElementsByTagName('span')[0];
-    spn.innerHTML = title;
-    var shortened_title = title;
-    var width = (spn.offsetWidth );
-    var event_width = getWidth(eventObj);
-        
-    while (width > event_width - 15){ 
-        shortened_title = shortened_title.substring(0,shortened_title.length - 4);
-        shortened_title = shortened_title + "...";
-        spn.innerHTML = shortened_title;
-        width = spn.offsetWidth;
-    }
-
-    title = shortened_title;
-   
-    var existingTitleText = task_g.selectAll("#title_text_" + groupNum);
-    if(existingTitleText[0].length == 0){ // first time
-        task_g.append("text")
-            .text(title)
-            .attr("class", "title_text")
-            .attr("id", function(d) { return "title_text_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum})
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset})
-            .attr("font-weight", "bold")
-            .attr("font-size", "12px");
-    } else {
-        task_g.selectAll(".title_text")
-            .text(title)
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
-    }
-
-
 }
 
 function drawDurationText(eventObj, firstTime) {
@@ -810,9 +690,249 @@ function drawEachCollabForEvent(eventObj){
     }
 }
 
+if(!window._foundry) {
+    window._foundry = {};
+}
+window._foundry.events = {
+    
+    /// The height of the rectangular event block
+    bodyHeight: 64,
+    
+    bodyColor: 'rgb(245, 135, 136)',
+    
+    clock: {
+        attrs: {
+            x: function(d) {return d.x + 10},
+            y: function(d) {return d.y + 10},
+            width: 9,
+            height: 9,
+            "xlink:href": "/assets/icons/clock/clock_white.svg"
+        }
+    },
+    
+    title: {
+        attrs: {
+            x: function(d) {return d.x + 24},
+            y: function(d) {return d.y + 19}
+        },
+        styles: {
+            "font-family": "proxima-nova",
+            fill: "white",
+            "font-weight": 200,
+            "letter-spacing": "1px",
+            "font-size": '12px',
+            "text-transform": "uppercase"
+        }
+    },
+    
+    duration: {
+        attrs: {
+            x: function(d) {return d.x + 24},
+            y: function(d) {return d.y + 32}
+        },
+        styles: {
+            "font-family": "proxima-nova",
+            fill: "white",
+            "font-weight": 200,
+            "letter-spacing": "1px",
+            "font-size": '10px',
+            "text-transform": "uppercase"
+        }
+    }
+    
+};
+
+function drawG(eventObj) {
+    var x = _foundry.timeline.stepWidth *
+            (eventObj.startTime/_foundry.timeline.stepInterval);
+    var y = _foundry.timeline.rowHeight * eventObj.row;
+    
+    var groupNum = eventObj["id"];
+
+    var idx = getDataIndexFromGroupNum(groupNum);
+    if(idx == null) {
+        var new_data = {
+          id: "task_g_" + groupNum, class: "task_g",
+          groupNum: groupNum, x: x, y: y
+        };
+          
+        task_groups.push(new_data);
+    } else {
+        task_groups[idx].x = x;
+        task_groups[idx].y = y;
+    }
+
+    // add group to timeline, based on the data object
+    timeline_svg.selectAll("g")
+        .data(task_groups, function(d){ return d.groupNum; })
+        .enter()
+        .append("g")
+        .attr("id", "g_" + groupNum);
+}
+
+function drawMainRect(eventObj) {
+    var events = window._foundry.events;
+    
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    var width = getWidth(eventObj);
+
+    var existingMainRect = task_g.selectAll("#rect_" + groupNum);
+    
+    // Note the ternary operator
+    var rect = existingMainRect[0].length === 0 ?
+        task_g.append("rect")
+            .attr("class", "task_rectangle")
+            .attr("id", function(d){return "rect_"+d.groupNum})
+            .attr("groupNum", function(d) {return d.groupNum}) :
+            // watch the colon
+        task_g.selectAll(".task_rectangle");
+    
+    rect
+        .attr("width", width)
+        .attr("height", events.bodyHeight)
+        .attr("x", function(d) {return d.x})
+        .attr("y", function(d) {return d.y})
+        .attr("fill", function(d) {
+            return events.bodyColor;
+        });
+    
+    /*
+    if(existingMainRect[0].length == 0){ // first time
+        task_g.append("rect")
+            .attr("class", "task_rectangle")
+            .attr("x", function(d) {return (d.x+(GUTTER/2));})
+            .attr("y", function(d) {return d.y;})
+            .attr("id", function(d) {
+                return "rect_" + d.groupNum; })
+            .attr("groupNum", function(d) {return d.groupNum;})
+            .attr("height", RECTANGLE_HEIGHT)
+            .attr("width", width-(GUTTER/2))
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
+                else return TASK_COMPLETE_COLOR;
+            })
+            .attr("fill-opacity", .6)
+            .attr("stroke", "#5F5A5A")
+            .attr('pointer-events', 'all')
+            .call(drag);
+    } else {
+        task_g.selectAll(".task_rectangle")
+            .attr("x", function(d) {return d.x +(GUTTER/2);})
+            .attr("y", function(d) {return d.y;})
+            .attr("width", width-(GUTTER/2))
+            .attr("fill", function(d) {
+                var stat = eventObj.status;
+                if (stat == "not_started") return TASK_NOT_START_COLOR;
+                else if (stat == "started") {return TASK_START_COLOR; }
+                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
+                else return TASK_COMPLETE_COLOR;
+            });
+    }
+    */
+};
+
+/*
+function drawTitleText(eventObj, firstTime) {
+    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
+    var y_offset = 14; // unique for title
+
+    var groupNum = eventObj["id"];
+    var title = eventObj["title"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    //shorten title to fit inside event
+    var existingTitleTextDiv = document.getElementById("titleLength");
+    var spn = existingTitleTextDiv.getElementsByTagName('span')[0];
+    spn.innerHTML = title;
+    var shortened_title = title;
+    var width = (spn.offsetWidth );
+    var event_width = getWidth(eventObj);
+        
+    while (width > event_width - 15){ 
+        shortened_title = shortened_title.substring(0,shortened_title.length - 4);
+        shortened_title = shortened_title + "...";
+        spn.innerHTML = shortened_title;
+        width = spn.offsetWidth;
+    }
+
+    title = shortened_title;
+   
+    var existingTitleText = task_g.selectAll("#title_text_" + groupNum);
+    if(existingTitleText[0].length == 0){ // first time
+        task_g.append("text")
+            .text(title)
+            .attr("class", "title_text")
+            .attr("id", function(d) { return "title_text_" + d.groupNum; })
+            .attr("groupNum", function(d) {return d.groupNum})
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset})
+            .attr("font-weight", "bold")
+            .attr("font-size", "12px");
+    } else {
+        task_g.selectAll(".title_text")
+            .text(title)
+            .attr("x", function(d) {return d.x + x_offset})
+            .attr("y", function(d) {return d.y + y_offset});
+    }
+} */
+
+function drawUpperText(eventObj) {
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    var width = getWidth(eventObj);
+
+    // grab the main rectangle
+    var rect = task_g.select("#rect_" + groupNum);
+    
+    var clockData = window._foundry.events.clock;
+    var clockSvg = task_g.append("svg:image");
+    
+    for(var key in clockData.attrs) {
+        clockSvg.attr(key, clockData.attrs[key]);
+    }
+    
+    var title = eventObj.title;
+    var titleData = window._foundry.events.title;
+    var titleSvg = task_g.append("text").text(title);
+    
+    for(var key in titleData.attrs) {
+        titleSvg.attr(key, titleData.attrs[key]);
+    }
+    titleSvg.style(titleData.styles);
+    
+    var duration = eventObj.duration;
+    var hours = Math.floor(duration / 60);
+    var minutes = duration % 60;
+    
+    var durationArray = [];
+    if(hours !== 0) {durationArray.push(hours + ' ' + (hours === 1 ? 'hr' : 'hrs'));}
+    if(minutes !== 0) {durationArray.push(minutes + ' min');}
+    
+    var durationStr = durationArray.join();
+    var durationData = window._foundry.events.duration;
+    var durationSvg = task_g.append("text").text(durationStr);
+    for(key in durationData.attrs) {
+        durationSvg.attr(key, durationData.attrs[key]);
+    }
+    durationSvg.style(durationData.styles);
+}
+
 //Creates graphical elements from array of data (task_rectangles)
-function drawEvent(eventObj) { 
+function drawEvent(eventObj) {
+    // TODO write some draw functions
+    
+    drawG(eventObj);
+    drawMainRect(eventObj);
+    drawUpperText(eventObj);
+    
+    
     //console.log("redrawing event");
+
+    /*
     drawG(eventObj);
     drawMainRect(eventObj);
     drawRightDragBar(eventObj);
@@ -829,6 +949,8 @@ function drawEvent(eventObj) {
     drawShade(eventObj);
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
+    */
+    
     
     // subtract two so there's always at least one empty row
     // (event.row is 0 indexed)
