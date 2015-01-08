@@ -693,6 +693,7 @@ function drawEachCollabForEvent(eventObj){
 if(!window._foundry) {
     window._foundry = {};
 }
+
 window._foundry.events = {
     
     /// The height of the rectangular event block
@@ -737,6 +738,24 @@ window._foundry.events = {
             "letter-spacing": "1px",
             "font-size": '10px',
             "text-transform": "uppercase"
+        }
+    },
+    
+    line: {
+        attrs: {
+            x1: function(d) {return d.x + 10},
+            y1: function(d) {return d.y + 40},
+            y2: function(d) {return d.y + 40},
+            "stroke": "rgba(255, 255, 255, 0.24)",
+            "stroke-width": "1px"
+        }
+    },
+    
+    bottomBorder: {
+        attrs: {
+            x: function(d) {return d.x},
+            y: function(d) {return d.y + window._foundry.events.bodyHeight},
+            height: function(d) {return 2}
         }
     }
     
@@ -796,6 +815,14 @@ function drawMainRect(eventObj) {
         .attr("fill", function(d) {
             return events.bodyColor;
         });
+    
+    var borderBottom = task_g.append("rect")
+        .attr("class", "border-bottom")
+        .attr("width", width)
+        .attr("height", 2)
+        .attr("x", function(d) {return d.x})
+        .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
+        .attr("fill", "rgb(215, 100, 91)");
     
     /*
     if(existingMainRect[0].length == 0){ // first time
@@ -915,10 +942,21 @@ function drawUpperText(eventObj) {
     var durationStr = durationArray.join();
     var durationData = window._foundry.events.duration;
     var durationSvg = task_g.append("text").text(durationStr);
-    for(key in durationData.attrs) {
+    for(var key in durationData.attrs) {
         durationSvg.attr(key, durationData.attrs[key]);
     }
     durationSvg.style(durationData.styles);
+    
+    var lineData = window._foundry.events.line;
+    var lineSvg = task_g.append("line");
+    for(var key in lineData.attrs) {
+        lineSvg.attr(key, lineData.attrs[key]);
+    }
+    lineSvg.attr('x2', function(d) {
+        var x1 = lineData.attrs.x1(d);
+        return x1 + (getWidth(eventObj) - (2 * (x1 - d.x)));
+    });
+    
 }
 
 //Creates graphical elements from array of data (task_rectangles)

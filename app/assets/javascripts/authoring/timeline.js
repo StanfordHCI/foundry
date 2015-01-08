@@ -355,7 +355,7 @@ function redrawTimeline() {
   timelineSvg.attr("width", SVG_WIDTH);
   
   //Remove all existing grid lines & background
-  timelineSvg.selectAll("line").remove();
+  timelineSvg.selectAll("line.grid-line").remove();
   timelineSvg.selectAll("rect.marker").remove();
   
   // draw markers to timeline svg
@@ -381,7 +381,7 @@ function redrawTimeline() {
   timelineSvg.selectAll("line.x")
       .data(intervals)
       .enter().append("line")
-      .attr("class", "x")
+      .attr("class", "x grid-line")
       .attr("x1", function(d) {return d * STEP_WIDTH})
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
@@ -398,7 +398,7 @@ function redrawTimeline() {
   timelineSvg.selectAll("line.y")
       .data(intervals.slice(1, numRows+1))
       .enter().append("line")
-        .attr("class", "y")
+        .attr("class", "y grid-line")
         .attr("x1", 0)
         .attr("x2", "100%")
         .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
