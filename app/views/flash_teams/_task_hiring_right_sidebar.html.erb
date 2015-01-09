@@ -1,8 +1,11 @@
 <div class="span4" id="right-sidebar-wrapper">
                  
    <div class="form-panel">   
-      <h4><i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right; padding-right: 10px;"></i></h4>
-      
+      <!-- <h4><i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right; padding-right: 10px;"></i></h4> -->
+      <p style="font-size:18px;">
+	      <i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right;"></i>
+	   </p>
+	      
       <div class="form-group">
       	<h5>Select a panel:</h5>
 	  	<%= select_tag "panels_right", options_for_select(@panels), {:prompt => "All Panels", :class => 'span12'}%>

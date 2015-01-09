@@ -4,14 +4,14 @@
           	
   	<!-- INPUT MESSAGES -->
   	<div class="row-fluid">
-  		<div id="email-form-div" class="span8">
-  			<div class="form-panel">
+  		<div id="email-form-div" class="form-panel span8">
+  			<div>
 		  	  	<div class="row-fluid">
 		  	  		<div class="span7">
 		  	  			<p class="mb" style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Acceptance Email </p>
 					</div>
 					
-					<div class="span4">
+					<div class="span5">
 						<p class="mb"><a id="hidePanelsLink" style="font-size:14px; float: right;" onclick="hideRightPanels()">Hide Panels</a></p>
 					</div>
 				</div> <!-- end div class row -->
@@ -20,7 +20,7 @@
                       <div class="row-fluid span12">
                           <%= label_tag(:sender_email, "From:", :class => 'span2') %>
 						  <div class="span10">
-						  	<%= text_field_tag(:sender_email, "", :placeholder => "stanfordhci.odesk@gmail.com", :class => 'span10') %>
+						  	<%= text_field_tag(:sender_email, "", :placeholder => "stanfordhci.odesk@gmail.com", :class => 'span11') %>
 							</div>
                       </div>
                       
@@ -28,7 +28,7 @@
                           <%= label_tag(:recipient_email, "To:", :class => 'span2') %>
                           
 						  <div class="span10">
-						  	<%= text_field_tag(:recipient_email, "", :placeholder => "Enter recipient's email address", :class => 'span10', :required => true ) %>
+						  	<%= text_field_tag(:recipient_email, "", :placeholder => "Enter recipient's email address", :class => 'span11', :required => true ) %>
 							</div>
 						
                       </div>
@@ -36,7 +36,7 @@
                        <div class="row-fluid span12">
                           <%= label_tag(:subject, "Subject:", :class => 'span2') %>
 						  <div class="span10">
-						  	<%= text_field_tag(:subject, @task_acceptance_email_subject, :class => 'span10', :required => true) %>
+						  	<%= text_field_tag(:subject, @task_acceptance_email_subject, :class => 'span11', :required => true) %>
 							</div>
                       </div>
 
@@ -59,14 +59,14 @@
 		            <div class="row-fluid span12">
 						<div class="span11">
 							<%= label_tag(:project_overview, "Project Overview:") %>
-							<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span10', :rows =>5, :required => true) %>
+							<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span12', :rows =>5, :required => true) %>
 						</div>
 					</div>
 		                              
 		            <div class="row-fluid span12">
 						<div class="span11">			
 							<%= label_tag(:task_description, "Task Description:") %>
-							<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span10', :rows =>5, :required => true) %>
+							<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span12', :rows =>5, :required => true) %>
 						</div>
 					</div>
 		                              
@@ -85,7 +85,7 @@
 						<div class="span11">
 							<p>
 								<%= label_tag(:outputs, "Deliverable(s):") %>
-								<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span10') %>
+								<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span12') %>
 							</p>
 							<p>
 								<%=label_tag(:output_description, "Deliverable Information (optional):") %>
@@ -97,8 +97,8 @@
 		            <div class="row-fluid span12">
 						<div class="span11">
 							<p>
-								<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work. Click the following URL to sign up for this project on Foundry: 
-								<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span7', :id => 'foundry_member_url', :required => true) %>
+								<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work. Click the following URL to sign up for this project on Foundry: <br />
+								<%= text_field_tag(:foundry_url, "", :placeholder => "[INSERT FOUNDRY URL]", :class => 'span12', :id => 'foundry_member_url', :required => true) %>
 							</p>
 	
 							<p>
@@ -114,7 +114,6 @@
 							</p>								
 					
 					<p>
-						<br />
 						Best, <br />
 						Stanford HCI Research Team
 						<br /><br />
