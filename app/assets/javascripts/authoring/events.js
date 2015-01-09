@@ -702,24 +702,28 @@ window._foundry.events = {
     bodyColor: 'rgb(245, 135, 136)',
     
     clock: {
+        selector: ".clock_icon",
         tag: "image",
         attrs: {
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 10},
             width: 9,
             height: 9,
+            "class": "clock_icon",
             "xlink:href": "/assets/icons/clock/clock_white.svg"
         }
     },
     
     title: {
+        selector: '.title',
         tag: "text",
         text: function(eventObj) {return eventObj.title},
         attrs: {
+            "class": "title",
             x: function(d) {return d.x + 24},
             y: function(d) {return d.y + 19}
         },
-        styles: {
+        style: {
             "font-family": "proxima-nova",
             fill: "white",
             "font-weight": 200,
@@ -730,6 +734,7 @@ window._foundry.events = {
     },
     
     duration: {
+        selector: ".duration",
         tag: "text",
         /**
          * @param {object} eventObj
@@ -749,10 +754,11 @@ window._foundry.events = {
             return durationArray.join(' ');
         },
         attrs: {
+            "class": "duration",
             x: function(d) {return d.x + 24},
             y: function(d) {return d.y + 32}
         },
-        styles: {
+        style: {
             "font-family": "proxima-nova",
             fill: "white",
             "font-weight": 200,
@@ -763,44 +769,52 @@ window._foundry.events = {
     },
     
     line: {
+        selector: ".underline",
         tag: "line",
         attrs: {
             x1: function(d) {return d.x + 10},
             y1: function(d) {return d.y + 40},
             y2: function(d) {return d.y + 40},
             "stroke": "rgba(255, 255, 255, 0.24)",
-            "stroke-width": "1px"
+            "stroke-width": "1px",
+            "class": "underline"
         }
     },
     
     bottomBorder: {
+        selector: ".bottom-border",
         tag: "rect",
         attrs: {
             x: function(d) {return d.x},
             y: function(d) {return d.y + window._foundry.events.bodyHeight},
-            height: function(d) {return 2}
+            height: function(d) {return 2},
+            class: "bottom-border"
         }
     },
     
     numMembersIcon: {
+        selector: ".num-members-icon",
         tag: "image",
         attrs: {
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
             width: 10,
             height: 10,
-            "xlink:href": "/assets/icons/group/group_white.svg"
+            "xlink:href": "/assets/icons/group/group_white.svg",
+            "class": "num-members-icon"
         }
     },
     
     numMembers: {
+        selector: ".num-members",
         tag: "text",
         text: function(eventObj) {return eventObj.members.length || 0;},
         attrs: {
             x: function(d) {return d.x + 24},
             y: function(d) {return d.y + window._foundry.events.bodyHeight - 9},
+            "class": "num-members"
         },
-        styles: {
+        style: {
             "font-size": "8px",
             fill: "white",
             "font-weight": 200,
@@ -809,35 +823,57 @@ window._foundry.events = {
     },
     
     uploadIcon: {
+        selector: ".upload",
         tag: "image",
         attrs: {
-            x: function(d) {return d.x + 100}, // TODO remove
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            x: function(d) {
+                return window._foundry.events.collabIcon.attrs.x(d) - 16;
+            },
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
             width: 14,
             height: 14,
-            "xlink:href": "/assets/icons/upload/upload_white.svg"
+            "xlink:href": "/assets/icons/upload/upload_white.svg",
+            "class": "upload"
         },
+        style: {
+            cursor: "pointer"
+        }
     },
     
     collabIcon: {
+        selector: ".collab_btn",
         tag: "image",
         attrs: {
-            x: function(d) {return d.x + 120}, // TODO remove
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            x: function(d) {
+                return window._foundry.events.handoffIcon.attrs.x(d) - 16;
+            },
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
             width: 14,
             height: 14,
-            "xlink:href": "/assets/icons/collaboration/collaboration_white.svg"
+            "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
+            id: function(d) {return "collab_btn_" + d.groupNum;},
+            "class": "collab_btn"
         }
     },
     
     handoffIcon: {
+        selector: ".handoff_btn",
         tag: "image",
         attrs: {
-            x: function(d) {return d.x + 140}, // TODO remove
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            x: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj);
+                
+                // subtract the button's width and the right margin
+                return d.x + width - (15 + 10);
+            },
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
             width: 15,
             height: 15,
-            "xlink:href": "/assets/icons/arrow/right_arrow_white.svg"
+            "xlink:href": "/assets/icons/arrow/right_arrow_white.svg",
+            id: function(d) {return "handoff_btn_" + d.groupNum;},
+            class: "handoff_btn"
         }
     }
     
@@ -877,7 +913,7 @@ function drawMainRect(eventObj) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var width = getWidth(eventObj);
-
+    
     var existingMainRect = task_g.selectAll("#rect_" + groupNum);
     
     // Note the ternary operator
@@ -890,15 +926,23 @@ function drawMainRect(eventObj) {
         task_g.selectAll(".task_rectangle");
     
     rect
+        .attr("id", function(d) {
+                return "rect_" + d.groupNum; })
+        .attr("class", "task_rectangle")
         .attr("width", width)
         .attr("height", events.bodyHeight)
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y})
         .attr("fill", function(d) {
             return events.bodyColor;
-        });
+        })
+        .call(drag);
     
-    var borderBottom = task_g.append("rect")
+    var borderBottom = task_g.selectAll('.border-bottom');
+    if(borderBottom.empty()) {
+        borderBottom = task_g.append("rect");
+    }
+    borderBottom
         .attr("class", "border-bottom")
         .attr("width", width)
         .attr("height", 2)
@@ -999,7 +1043,16 @@ function drawTitleText(eventObj, firstTime) {
  */
 function addToTaskFromData(data, eventObj, taskGroup) {
     var tag = data.tag;
-    var svgElem = taskGroup.append(tag);
+    
+    var selector = data.selector;
+    if(typeof(selector) === 'function') {
+        // if the selector is a function, pass it the event object to get
+        // the string selector
+        selector = selector(eventObj);
+    }
+    var selection = taskGroup.selectAll(selector);
+    
+    var svgElem = selection.empty() ? taskGroup.append(tag) : selection;
     
     if(tag === 'text') {
         svgElem.text(data.text(eventObj));
@@ -1009,8 +1062,8 @@ function addToTaskFromData(data, eventObj, taskGroup) {
         svgElem.attr(key, data.attrs[key]);
     }
     
-    if(data.styles) {
-        svgElem.style(data.styles);
+    if(data.style) {
+        svgElem.style(data.style);
     }
     
     return svgElem;
@@ -1051,13 +1104,24 @@ function drawBottom(eventObj) {
     addToTaskFromData(events.numMembers, eventObj, task_g);
     
     // upload icon
-    addToTaskFromData(events.uploadIcon, eventObj, task_g);
+    var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
+    uploadIcon.on('click', function(ev){
+        ev.stopPropagation();
+        if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
+            window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
+        }
+        else{
+            alert("The flash team must be running for you to upload a file!");
+        }
+    });
     
     // collaboration icon
-    addToTaskFromData(events.collabIcon, eventObj, task_g);
+    var collabIconSvg = addToTaskFromData(events.collabIcon, eventObj, task_g);
+    collabIconSvg.on("click", startWriteCollaboration);
     
     // handoff icon
-    addToTaskFromData(events.handoffIcon, eventObj, task_g);
+    var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
+    handoffIconSvg.on("click", startWriteHandoff);
 }
 
 //Creates graphical elements from array of data (task_rectangles)
