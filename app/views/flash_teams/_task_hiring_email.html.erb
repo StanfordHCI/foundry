@@ -22,23 +22,22 @@
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
       <!--header start-->
-      <!--
-<header class="header black-bg">
+	  <header class="header black-bg">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
--->
+              
             <!--logo start-->
             <!-- <p class="logo"><b>FOUNDRY HIRING PORTAL</b></p> -->
+            <a href="#" class="logo"><b>FOUNDRY HIRING PORTAL</b></a>
+            
             <!--logo end-->
-             <!--
-<div class="top-menu">
+             <div class="top-menu">
             	<ul class="nav pull-right top-menu">
 	            	<li><%=link_to "Back to Foundry", edit_flash_team_path, :class=> "logout"%></li>
             	</ul>
             </div>
         </header>
--->
       <!--header end-->
       
       <!-- **********************************************************************************************************************************************************
@@ -46,9 +45,13 @@
       *********************************************************************************************************************************************************** -->
       <!--sidebar start-->
       <aside>
-          <div class="span3" id="sidebar-wrapper">
+          <!-- div class="span3" id="sidebar"> -->
               <!-- sidebar menu start-->
-              <ul class="sidebar-nav">
+              <!-- <ul class="sidebar-nav"> -->
+              
+              <div class="span3" id="sidebar">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu">
 
               	  <h5>Project: <%=@flash_team_json["title"]%></h5>
               	   <h5>Task Title: <%=@flash_team_event["title"]%></h5>
@@ -88,7 +91,7 @@
                       </ul>
                   </li>
                   
-                  <li><%=link_to "Back to Foundry", edit_flash_team_path, :class=> "logout"%></li>
+                  <!-- <li><%#link_to "Back to Foundry", edit_flash_team_path, :class=> "logout"%></li> -->
 
               </ul>
               <!-- sidebar menu end-->
