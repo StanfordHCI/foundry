@@ -656,7 +656,7 @@ if(!window._foundry) {
   var events = {
     /// The height of the rectangular event block
     bodyHeight: 64,
-    bodyColor: 'rgb(245, 135, 136)',
+    bodyColor: "rgb(245, 135, 136)",
     
     tabHeight: 11,
     
@@ -684,7 +684,7 @@ if(!window._foundry) {
     },
     
     title: {
-        selector: '.title',
+        selector: ".title",
         tag: "text",
         text: function(eventObj) {
             var title = eventObj.title;
@@ -731,7 +731,7 @@ if(!window._foundry) {
             fill: "white",
             "font-weight": 300,
             "letter-spacing": "1px",
-            "font-size": '12px',
+            "font-size": "12px",
             "text-transform": "uppercase"
         }
     },
@@ -750,11 +750,11 @@ if(!window._foundry) {
 
             var durationArray = [];
             if(hours !== 0) {
-                durationArray.push(hours + ' ' + (hours === 1 ? 'hr' : 'hrs'));
+                durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
             }
-            if(minutes !== 0) {durationArray.push(minutes + ' min');}
+            if(minutes !== 0) {durationArray.push(minutes + " min");}
 
-            return durationArray.join(' ');
+            return durationArray.join(" ");
         },
         attrs: {
             "class": "duration",
@@ -766,7 +766,7 @@ if(!window._foundry) {
             fill: "white",
             "font-weight": 300,
             "letter-spacing": "1px",
-            "font-size": '10px',
+            "font-size": "10px",
             "text-transform": "uppercase"
         }
     },
@@ -887,6 +887,50 @@ if(!window._foundry) {
             class: "handoff_btn",
             groupNum: function(d) {return d.groupNum}
         }
+    },
+    
+    leftHandle: {
+        selector: ".left-handle",
+        tag: "rect",
+        attrs: {
+            x: function(d) {return d.x + 4},
+            y: function(d) {return d.y + (events.bodyHeight - 11)/2},
+            width: 2,
+            height: 11,
+            rx: 1,
+            ry: 1,
+            fill: "rgba(255, 255, 255, 0.8)",
+            "class": "left-handle"
+        },
+        style: {
+            display: "none",
+            cursor: "ew-resize"
+        }
+    },
+    
+    rightHandle: {
+        selector: ".right-handle",
+        tag: "rect",
+        attrs: {
+            x: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj);
+                return d.x + width - 2 * events.marginLeft - 2 - 4;
+            },
+            y: function(d) {return d.y + (events.bodyHeight - 11)/2},
+            width: 2,
+            height: 11,
+            rx: 1,
+            ry: 1,
+            fill: "rgba(255, 255, 255, 0.8)",
+            "class": "right-handle"
+        },
+        
+        style: {
+            display: "none",
+            cursor: "ew-resize"
+        }
     }
   };
   
@@ -917,13 +961,38 @@ function drawG(eventObj) {
         task_groups[idx].x = x + xOffset;
         task_groups[idx].y = y + yOffset;
     }
+    
+    var showHandles = function(d) {
+        var x = d3.mouse(this)[0];
+        var eventX = d.x;
 
+        var left = d3.select(this).selectAll(".left-handle");
+        var right = d3.select(this).selectAll(".right-handle");
+
+        var width = getWidth(getEventFromId(groupNum));
+
+        if(x < eventX + width/2) {
+            // show the left and hide the right
+            left.style({display: ""})
+            right.style({display: "none"});
+        } else {
+            // show the right and hide the left
+            right.style({display: ""});
+            left.style({display: "none"});
+        }
+    };
+    
     // add group to timeline, based on the data object
     timeline_svg.selectAll("g")
         .data(task_groups, function(d){ return d.groupNum; })
         .enter()
         .append("g")
-        .attr("id", "g_" + groupNum);
+        .attr("id", "g_" + groupNum)
+        .on("mousemove", showHandles)
+        .on("mouseout", function() {
+            var handles = d3.select(this).selectAll(".left-handle, .right-handle");
+            handles.style({display: "none"});
+        });;
 }
 
 /**
@@ -936,7 +1005,7 @@ function drawG(eventObj) {
 function addBoxShadowFilter(svg, id) {
     // store the actual element here
     var svgRoot = svg[0][0];
-    while(svgRoot.tagName.toLowerCase() !== 'svg') {
+    while(svgRoot.tagName.toLowerCase() !== "svg") {
         svgRoot = svgRoot.parentNode;
         if(!svgRoot) {
             svgRoot = svg[0][0];
@@ -1003,9 +1072,9 @@ function drawMainRect(eventObj) {
             return events.bodyColor;
         })
         .style("filter", "url(#box-shadow)")
-        .call(drag);
+        .call(drag)
     
-    var borderBottom = task_g.selectAll('.border-bottom');
+    var borderBottom = task_g.selectAll(".border-bottom");
     if(borderBottom.empty()) {
         borderBottom = task_g.append("rect");
     }
@@ -1112,7 +1181,7 @@ function addToTaskFromData(data, eventObj, taskGroup) {
     var tag = data.tag;
     
     var selector = data.selector;
-    if(typeof(selector) === 'function') {
+    if(typeof(selector) === "function") {
         // if the selector is a function, pass it the event object to get
         // the string selector
         selector = selector(eventObj);
@@ -1121,7 +1190,7 @@ function addToTaskFromData(data, eventObj, taskGroup) {
     
     var svgElem = selection.empty() ? taskGroup.append(tag) : selection;
     
-    if(tag === 'text') {
+    if(tag === "text") {
         svgElem.text(data.text(eventObj));
     }
     
@@ -1154,7 +1223,7 @@ function drawTop(eventObj) {
     
     // special case, have to determine x2
     var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
-    lineSvg.attr('x2', function(d) {
+    lineSvg.attr("x2", function(d) {
         var x1 = events.line.attrs.x1(d);
         return x1 + (getWidth(eventObj) - (2 * events.marginLeft) - (2 * (x1 - d.x)));
     });
@@ -1174,7 +1243,7 @@ function drawBottom(eventObj) {
     
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
-    uploadIcon.on('click', function(ev){
+    uploadIcon.on("click", function(ev){
         ev.stopPropagation();
         if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
             window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
@@ -1243,7 +1312,7 @@ function drawMemberTabs(eventObj) {
     for(var i = 0; i < members.length; i++) {
         var memberId = members[i];
         var member = getMemberById(memberId);
-        var memberTab = task_g.selectAll('#mem_tab_' + memberId);
+        var memberTab = task_g.selectAll("#mem_tab_" + memberId);
         if(memberTab.empty()) {
             memberTab = task_g.append("path");
         }
@@ -1271,6 +1340,18 @@ function drawMemberTabs(eventObj) {
     }
 }
 
+function drawDragHandles(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    
+    var leftHandleSvg = addToTaskFromData(events.leftHandle, eventObj, task_g);
+    leftHandleSvg.call(drag_left);
+    
+    var rightHandleSvg = addToTaskFromData(events.rightHandle, eventObj, task_g);
+    rightHandleSvg.call(drag_right);
+}
+
 //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
     // TODO write some draw functions
@@ -1284,6 +1365,8 @@ function drawEvent(eventObj) {
     
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
+    
+    drawDragHandles(eventObj);
     
     //console.log("redrawing event");
 
