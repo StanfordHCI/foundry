@@ -676,7 +676,12 @@ if(!window._foundry) {
         attrs: {
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 10},
-            width: 9,
+            width: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // set the width to zero if this is an hour long event
+                return eventObj.duration <= 60 ? 0 : 9;
+            },
             height: 9,
             "class": "clock_icon",
             "xlink:href": "/assets/icons/clock/clock_white.svg"
@@ -690,9 +695,10 @@ if(!window._foundry) {
             var title = eventObj.title;
             var clockAttrs = events.clock.attrs;
             
+            
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
-                               - clockAttrs.width
+                               - clockAttrs.width(d3.select("#g_" + eventObj.id).data()[0])
                                - 10 // clock's left margin
                                - 10 // right margin
                                - 5;
@@ -712,7 +718,6 @@ if(!window._foundry) {
                 length--;
                 title = title.substr(0, length) + "...";
                 textSvg.text(title);
-                console.log(title);
             }
             
             textSvg.remove();
@@ -722,7 +727,7 @@ if(!window._foundry) {
             "class": "title",
             x: function(d) {
                 var attrs = events.clock.attrs;
-                return attrs.x(d) + attrs.width + 5;
+                return attrs.x(d) + attrs.width(d) + 5;
             },
             y: function(d) {return d.y + 19}
         },
@@ -752,13 +757,16 @@ if(!window._foundry) {
             if(hours !== 0) {
                 durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
             }
-            if(minutes !== 0) {durationArray.push(minutes + " min");}
+            if(minutes !== 0) {durationArray.push(minutes + (duration > 30 ? " min" : ""));}
 
             return durationArray.join(" ");
         },
         attrs: {
             "class": "duration",
-            x: function(d) {return d.x + 24},
+            x: function(d) {
+                var attrs = events.clock.attrs;
+                return attrs.x(d) + attrs.width(d) + 4;
+            },
             y: function(d) {return d.y + 32}
         },
         style: {
@@ -823,6 +831,13 @@ if(!window._foundry) {
                 return attrs.x(d) + attrs.width(d) + 4;
             },
             y: function(d) {return d.y + window._foundry.events.bodyHeight - 9},
+            style: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // don't display the number of members if the event
+                // is an hour or shorter
+                return eventObj.duration <= 60 ? "display:none;" : "";
+            },
             "class": "num-members"
         },
         style: {
@@ -838,10 +853,21 @@ if(!window._foundry) {
         tag: "image",
         attrs: {
             x: function(d) {
-                return events.collabIcon.attrs.x(d) - 16;
+                var iconWidth = events.uploadIcon.attrs.width(d);
+                return events.collabIcon.attrs.x(d) - iconWidth;
             },
             y: function(d) {return d.y + events.bodyHeight - 19},
-            width: 14,
+            width: function(d) {
+                var iconWidth = 14;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                return iconWidth;
+            },
             height: 14,
             "xlink:href": "/assets/icons/upload/upload_white.svg",
             "class": "upload"
@@ -856,10 +882,21 @@ if(!window._foundry) {
         tag: "image",
         attrs: {
             x: function(d) {
-                return events.handoffIcon.attrs.x(d) - 14;
+                var iconWidth = events.collabIcon.attrs.width(d);
+                return events.handoffIcon.attrs.x(d) - iconWidth;
             },
             y: function(d) {return d.y + events.bodyHeight - 19},
-            width: 14,
+            width: function(d) {
+                var iconWidth = 14;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                return iconWidth;
+            },
             height: 14,
             "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
             id: function(d) {return "collab_btn_" + d.groupNum;},
@@ -875,12 +912,31 @@ if(!window._foundry) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
                 var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var iconWidth = events.handoffIcon.attrs.width(d);
                 
                 // subtract the button's width and the right margin
-                return d.x + width - (13 + 10);
+                if(iconWidth < 15) {
+                    // if the width is to small to fit everything, just
+                    // center the icons, don't worry about the padding
+                    return (d.x + width - iconWidth) - (width - 3 * iconWidth)/2;
+                } else {
+                    return d.x + width - iconWidth - 10;
+                }
             },
             y: function(d) {return d.y + events.bodyHeight - 19},
-            width: 15,
+            width: function(d) {
+                var iconWidth = 15;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                
+                return iconWidth;
+            },
             height: 15,
             "xlink:href": "/assets/icons/arrow/right_arrow_white.svg",
             id: function(d) {return "handoff_btn_" + d.groupNum;},
@@ -1373,13 +1429,13 @@ function drawEvent(eventObj) {
     
     drawG(eventObj);
     
+    drawEachHandoffForEvent(eventObj);
+    drawEachCollabForEvent(eventObj);
+    
     drawMemberTabs(eventObj);
     drawMainRect(eventObj);
     drawTop(eventObj);
     drawBottom(eventObj);
-    
-    drawEachHandoffForEvent(eventObj);
-    drawEachCollabForEvent(eventObj);
     
     drawDragHandles(eventObj);
     
