@@ -702,6 +702,7 @@ window._foundry.events = {
     bodyColor: 'rgb(245, 135, 136)',
     
     clock: {
+        tag: "image",
         attrs: {
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 10},
@@ -712,6 +713,8 @@ window._foundry.events = {
     },
     
     title: {
+        tag: "text",
+        text: function(eventObj) {return eventObj.title},
         attrs: {
             x: function(d) {return d.x + 24},
             y: function(d) {return d.y + 19}
@@ -727,6 +730,24 @@ window._foundry.events = {
     },
     
     duration: {
+        tag: "text",
+        /**
+         * @param {object} eventObj
+         * @returns {string} the event's duration in the format 'x hrs y min'
+         */
+        text: function(eventObj) {
+            var duration = eventObj.duration;
+            var hours = Math.floor(duration / 60);
+            var minutes = duration % 60;
+
+            var durationArray = [];
+            if(hours !== 0) {
+                durationArray.push(hours + ' ' + (hours === 1 ? 'hr' : 'hrs'));
+            }
+            if(minutes !== 0) {durationArray.push(minutes + ' min');}
+
+            return durationArray.join(' ');
+        },
         attrs: {
             x: function(d) {return d.x + 24},
             y: function(d) {return d.y + 32}
@@ -742,6 +763,7 @@ window._foundry.events = {
     },
     
     line: {
+        tag: "line",
         attrs: {
             x1: function(d) {return d.x + 10},
             y1: function(d) {return d.y + 40},
@@ -752,10 +774,70 @@ window._foundry.events = {
     },
     
     bottomBorder: {
+        tag: "rect",
         attrs: {
             x: function(d) {return d.x},
             y: function(d) {return d.y + window._foundry.events.bodyHeight},
             height: function(d) {return 2}
+        }
+    },
+    
+    numMembersIcon: {
+        tag: "image",
+        attrs: {
+            x: function(d) {return d.x + 10},
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            width: 10,
+            height: 10,
+            "xlink:href": "/assets/icons/group/group_white.svg"
+        }
+    },
+    
+    numMembers: {
+        tag: "text",
+        text: function(eventObj) {return eventObj.members.length || 0;},
+        attrs: {
+            x: function(d) {return d.x + 24},
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 9},
+        },
+        styles: {
+            "font-size": "8px",
+            fill: "white",
+            "font-weight": 200,
+            "font-family": "Helvetica"
+        }
+    },
+    
+    uploadIcon: {
+        tag: "image",
+        attrs: {
+            x: function(d) {return d.x + 100}, // TODO remove
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            width: 14,
+            height: 14,
+            "xlink:href": "/assets/icons/upload/upload_white.svg"
+        },
+    },
+    
+    collabIcon: {
+        tag: "image",
+        attrs: {
+            x: function(d) {return d.x + 120}, // TODO remove
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            width: 14,
+            height: 14,
+            "xlink:href": "/assets/icons/collaboration/collaboration_white.svg"
+        }
+    },
+    
+    handoffIcon: {
+        tag: "image",
+        attrs: {
+            x: function(d) {return d.x + 140}, // TODO remove
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
+            width: 15,
+            height: 15,
+            "xlink:href": "/assets/icons/arrow/right_arrow_white.svg"
         }
     }
     
@@ -907,7 +989,36 @@ function drawTitleText(eventObj, firstTime) {
     }
 } */
 
-function drawUpperText(eventObj) {
+/**
+ * Adds an item (e.g. an icon or a text tag) to a task group.
+ *
+ * @param {object} data
+ * @param {object} eventObj
+ * @param {object} taskGroup SVG group for the task
+ * @returns {object} the added svg element
+ */
+function addToTaskFromData(data, eventObj, taskGroup) {
+    var tag = data.tag;
+    var svgElem = taskGroup.append(tag);
+    
+    if(tag === 'text') {
+        svgElem.text(data.text(eventObj));
+    }
+    
+    for(var key in data.attrs) {
+        svgElem.attr(key, data.attrs[key]);
+    }
+    
+    if(data.styles) {
+        svgElem.style(data.styles);
+    }
+    
+    return svgElem;
+}
+
+function drawTop(eventObj) {
+    var events = window._foundry.events;
+    
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var width = getWidth(eventObj);
@@ -915,48 +1026,38 @@ function drawUpperText(eventObj) {
     // grab the main rectangle
     var rect = task_g.select("#rect_" + groupNum);
     
-    var clockData = window._foundry.events.clock;
-    var clockSvg = task_g.append("svg:image");
+    addToTaskFromData(events.clock, eventObj, task_g);
+    addToTaskFromData(events.title, eventObj, task_g);
+    addToTaskFromData(events.duration, eventObj, task_g);
     
-    for(var key in clockData.attrs) {
-        clockSvg.attr(key, clockData.attrs[key]);
-    }
-    
-    var title = eventObj.title;
-    var titleData = window._foundry.events.title;
-    var titleSvg = task_g.append("text").text(title);
-    
-    for(var key in titleData.attrs) {
-        titleSvg.attr(key, titleData.attrs[key]);
-    }
-    titleSvg.style(titleData.styles);
-    
-    var duration = eventObj.duration;
-    var hours = Math.floor(duration / 60);
-    var minutes = duration % 60;
-    
-    var durationArray = [];
-    if(hours !== 0) {durationArray.push(hours + ' ' + (hours === 1 ? 'hr' : 'hrs'));}
-    if(minutes !== 0) {durationArray.push(minutes + ' min');}
-    
-    var durationStr = durationArray.join();
-    var durationData = window._foundry.events.duration;
-    var durationSvg = task_g.append("text").text(durationStr);
-    for(var key in durationData.attrs) {
-        durationSvg.attr(key, durationData.attrs[key]);
-    }
-    durationSvg.style(durationData.styles);
-    
-    var lineData = window._foundry.events.line;
-    var lineSvg = task_g.append("line");
-    for(var key in lineData.attrs) {
-        lineSvg.attr(key, lineData.attrs[key]);
-    }
+    // special case, have to determine x2
+    var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
     lineSvg.attr('x2', function(d) {
-        var x1 = lineData.attrs.x1(d);
+        var x1 = events.line.attrs.x1(d);
         return x1 + (getWidth(eventObj) - (2 * (x1 - d.x)));
     });
     
+}
+
+function drawBottom(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    
+    // icon for the number of members
+    addToTaskFromData(events.numMembersIcon, eventObj, task_g);
+    
+    // the number of members
+    addToTaskFromData(events.numMembers, eventObj, task_g);
+    
+    // upload icon
+    addToTaskFromData(events.uploadIcon, eventObj, task_g);
+    
+    // collaboration icon
+    addToTaskFromData(events.collabIcon, eventObj, task_g);
+    
+    // handoff icon
+    addToTaskFromData(events.handoffIcon, eventObj, task_g);
 }
 
 //Creates graphical elements from array of data (task_rectangles)
@@ -965,7 +1066,8 @@ function drawEvent(eventObj) {
     
     drawG(eventObj);
     drawMainRect(eventObj);
-    drawUpperText(eventObj);
+    drawTop(eventObj);
+    drawBottom(eventObj);
     
     
     //console.log("redrawing event");
