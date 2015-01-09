@@ -924,7 +924,7 @@ if(!window._foundry) {
             rx: 1,
             ry: 1,
             fill: "rgba(255, 255, 255, 0.8)",
-            "class": "right-handle"
+            "class": "right-handle",
         },
         
         style: {
@@ -992,7 +992,7 @@ function drawG(eventObj) {
         .on("mouseout", function() {
             var handles = d3.select(this).selectAll(".left-handle, .right-handle");
             handles.style({display: "none"});
-        });;
+        });
 }
 
 /**
@@ -1331,12 +1331,27 @@ function drawMemberTabs(eventObj) {
                 .interpolate("linear")(line);
         };
         
-        memberTab
-            .attr("id", "mem_tab_" + memberId)
-            .attr("width", 24)
-            .attr("height", 11)
-            .attr("d", function(d) {return tabPathFn(lineData, d)})
-            .attr("fill", member.color);
+        var attrs = {
+            id: "mem_tab_" + memberId,
+            width: 24,
+            height: 11,
+            d: function(d) {return tabPathFn(lineData, d)},
+            fill: member.color,
+            
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: member.role
+        }
+        
+        for(var key in attrs) {
+            memberTab.attr(key, attrs[key]);
+        }
+        
+        (function () {
+          $("#mem_tab_" + memberId).tooltip()
+        })();
     }
 }
 
