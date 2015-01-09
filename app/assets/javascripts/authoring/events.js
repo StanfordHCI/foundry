@@ -535,48 +535,6 @@ function drawCollabBtn(eventObj, firstTime) {
     }
 }
 
-function drawMemberCircles(eventObj) {
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    //Find out if first draw or redrawing
-    for (var i=0; i<members.length; i++) {
-        var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
-        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
-        var y_offset = 60;
-        var member = getMemberById(members[i]);
-        var color = member.color;
-
-        if (existingMemCircle[0].length ==0) { //First time
-            var name = member.name;
-
-            task_g.append("circle")
-                .attr("class", "member_circle")
-                .attr("id", function(d) {
-                    return "event_" + groupNum + "_eventMemCircle_" + (i+1);
-                })
-                .attr("groupNum", groupNum)
-                .attr("r", 6)
-                .attr("cx", function(d) {
-                    return d.x + x_offset;
-                })
-                .attr("cy", function(d) {
-                    return d.y + y_offset;
-                })
-                .attr("fill", color);
-        
-        } else { //Redrawing
-            existingMemCircle
-                .attr("cx", function(d) {return d.x + x_offset})
-                .attr("cy", function(d) {return d.y + y_offset})
-                .attr("fill", color);
-        }
-    }
-};
-
-
-
 // TODO: might have issues with redrawing
 function drawShade(eventObj, firstTime) {
     if(current_user == undefined) {return;}
@@ -694,12 +652,23 @@ if(!window._foundry) {
     window._foundry = {};
 }
 
-window._foundry.events = {
-    
+(function() {
+  var events = {
     /// The height of the rectangular event block
     bodyHeight: 64,
-    
     bodyColor: 'rgb(245, 135, 136)',
+    
+    tabHeight: 11,
+    
+    get totalHeight() {
+        return events.bodyHeight + events.tabHeight;
+    },
+    
+    get marginTop() {
+        return (window._foundry.timeline.rowHeight - events.totalHeight)/2;
+    },
+    
+    marginLeft: 4,
     
     clock: {
         selector: ".clock_icon",
@@ -717,16 +686,50 @@ window._foundry.events = {
     title: {
         selector: '.title',
         tag: "text",
-        text: function(eventObj) {return eventObj.title},
+        text: function(eventObj) {
+            var title = eventObj.title;
+            var clockAttrs = events.clock.attrs;
+            
+            var workingWidth =   getWidth(eventObj)
+                               - 2 * events.marginLeft
+                               - clockAttrs.width
+                               - 10 // clock's left margin
+                               - 10 // right margin
+                               - 5;
+            
+            var textSvg = d3.select("#g_" + eventObj.id).append("text")
+                    .style(events.title.style)
+                    .style({color: "transparent"})
+                    .attr("x", 0)
+                    .attr("y", 0)
+                    .text(title);
+            var length = title.length;
+            while (textSvg.node().getBBox().width > workingWidth) {
+                if(length === 0) {
+                    title = eventObj.title;
+                    break;
+                }
+                length--;
+                title = title.substr(0, length) + "...";
+                textSvg.text(title);
+                console.log(title);
+            }
+            
+            textSvg.remove();
+            return title;
+        },
         attrs: {
             "class": "title",
-            x: function(d) {return d.x + 24},
+            x: function(d) {
+                var attrs = events.clock.attrs;
+                return attrs.x(d) + attrs.width + 5;
+            },
             y: function(d) {return d.y + 19}
         },
         style: {
             "font-family": "proxima-nova",
             fill: "white",
-            "font-weight": 200,
+            "font-weight": 300,
             "letter-spacing": "1px",
             "font-size": '12px',
             "text-transform": "uppercase"
@@ -761,7 +764,7 @@ window._foundry.events = {
         style: {
             "font-family": "proxima-nova",
             fill: "white",
-            "font-weight": 200,
+            "font-weight": 300,
             "letter-spacing": "1px",
             "font-size": '10px',
             "text-transform": "uppercase"
@@ -786,7 +789,7 @@ window._foundry.events = {
         tag: "rect",
         attrs: {
             x: function(d) {return d.x},
-            y: function(d) {return d.y + window._foundry.events.bodyHeight},
+            y: function(d) {return d.y + events.bodyHeight},
             height: function(d) {return 2},
             class: "bottom-border"
         }
@@ -797,8 +800,13 @@ window._foundry.events = {
         tag: "image",
         attrs: {
             x: function(d) {return d.x + 10},
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 18},
-            width: 10,
+            y: function(d) {return d.y + events.bodyHeight - 18},
+            width: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // set the width to zero if this is an hour long event
+                return eventObj.duration <= 60 ? 0 : 10;
+            },
             height: 10,
             "xlink:href": "/assets/icons/group/group_white.svg",
             "class": "num-members-icon"
@@ -810,7 +818,10 @@ window._foundry.events = {
         tag: "text",
         text: function(eventObj) {return eventObj.members.length || 0;},
         attrs: {
-            x: function(d) {return d.x + 24},
+            x: function(d) {
+                var attrs = events.numMembersIcon.attrs;
+                return attrs.x(d) + attrs.width(d) + 4;
+            },
             y: function(d) {return d.y + window._foundry.events.bodyHeight - 9},
             "class": "num-members"
         },
@@ -827,9 +838,9 @@ window._foundry.events = {
         tag: "image",
         attrs: {
             x: function(d) {
-                return window._foundry.events.collabIcon.attrs.x(d) - 16;
+                return events.collabIcon.attrs.x(d) - 16;
             },
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
+            y: function(d) {return d.y + events.bodyHeight - 19},
             width: 14,
             height: 14,
             "xlink:href": "/assets/icons/upload/upload_white.svg",
@@ -845,9 +856,9 @@ window._foundry.events = {
         tag: "image",
         attrs: {
             x: function(d) {
-                return window._foundry.events.handoffIcon.attrs.x(d) - 16;
+                return events.handoffIcon.attrs.x(d) - 14;
             },
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
+            y: function(d) {return d.y + events.bodyHeight - 19},
             width: 14,
             height: 14,
             "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
@@ -863,26 +874,34 @@ window._foundry.events = {
             x: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                var width = getWidth(eventObj);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
                 
                 // subtract the button's width and the right margin
-                return d.x + width - (15 + 10);
+                return d.x + width - (13 + 10);
             },
-            y: function(d) {return d.y + window._foundry.events.bodyHeight - 20},
+            y: function(d) {return d.y + events.bodyHeight - 19},
             width: 15,
             height: 15,
             "xlink:href": "/assets/icons/arrow/right_arrow_white.svg",
             id: function(d) {return "handoff_btn_" + d.groupNum;},
-            class: "handoff_btn"
+            class: "handoff_btn",
+            groupNum: function(d) {return d.groupNum}
         }
     }
-    
-};
+  };
+  
+  window._foundry.events = events;
+})();
+
+
 
 function drawG(eventObj) {
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
     var y = _foundry.timeline.rowHeight * eventObj.row;
+    
+    var xOffset = window._foundry.events.marginLeft;
+    var yOffset = window._foundry.events.marginTop;
     
     var groupNum = eventObj["id"];
 
@@ -890,13 +909,13 @@ function drawG(eventObj) {
     if(idx == null) {
         var new_data = {
           id: "task_g_" + groupNum, class: "task_g",
-          groupNum: groupNum, x: x, y: y
+          groupNum: groupNum, x: x + xOffset, y: y + yOffset
         };
           
         task_groups.push(new_data);
     } else {
-        task_groups[idx].x = x;
-        task_groups[idx].y = y;
+        task_groups[idx].x = x + xOffset;
+        task_groups[idx].y = y + yOffset;
     }
 
     // add group to timeline, based on the data object
@@ -907,28 +926,75 @@ function drawG(eventObj) {
         .attr("id", "g_" + groupNum);
 }
 
+/**
+ * Adds a box shadow filter to the root <svg> element and gives it the
+ * passed in id
+ *
+ * @param svg
+ * @param {string} id
+ */
+function addBoxShadowFilter(svg, id) {
+    // store the actual element here
+    var svgRoot = svg[0][0];
+    while(svgRoot.tagName.toLowerCase() !== 'svg') {
+        svgRoot = svgRoot.parentNode;
+        if(!svgRoot) {
+            svgRoot = svg[0][0];
+        }
+    }
+    
+    var selection = d3.select(svgRoot);
+    
+    var filter = selection.append("filter")
+        .attr("id", id)
+        .attr("height", "130%");
+    
+    var feGaussianBlur = filter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 2);
+    
+    var feOffset = filter.append("feOffset")
+        .attr("dx", 0)
+        .attr("dy", 1)
+        .attr("result", "offsetblur");
+    
+    var feComponentTransfer = filter.append("feComponentTransfer");
+    feComponentTransfer.append("feFuncA")
+        .attr("type", "linear")
+        .attr("slope", 0.20);
+    
+    var feMerge = filter.append("feMerge");
+    feMerge.append("feMergeNode");
+    feMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
+}
+
 function drawMainRect(eventObj) {
     var events = window._foundry.events;
     
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
-    var width = getWidth(eventObj);
     
-    var existingMainRect = task_g.selectAll("#rect_" + groupNum);
+    var width = getWidth(eventObj) - 2 * events.marginLeft;
     
-    // Note the ternary operator
-    var rect = existingMainRect[0].length === 0 ?
-        task_g.append("rect")
+    var rect = task_g.selectAll("#rect_" + groupNum);
+    if(rect.empty()) {
+        rect = task_g.append("rect")
             .attr("class", "task_rectangle")
             .attr("id", function(d){return "rect_"+d.groupNum})
-            .attr("groupNum", function(d) {return d.groupNum}) :
-            // watch the colon
-        task_g.selectAll(".task_rectangle");
+            .attr("groupNum", function(d) {return d.groupNum});
+    }
+
+    var boxShadow = d3.select("#box-shadow");
+    if(boxShadow.empty()) {
+        addBoxShadowFilter(task_g, "box-shadow");
+    }
     
     rect
         .attr("id", function(d) {
                 return "rect_" + d.groupNum; })
         .attr("class", "task_rectangle")
+        .attr("groupNum", function(d) {return d.groupNum})
         .attr("width", width)
         .attr("height", events.bodyHeight)
         .attr("x", function(d) {return d.x})
@@ -936,6 +1002,7 @@ function drawMainRect(eventObj) {
         .attr("fill", function(d) {
             return events.bodyColor;
         })
+        .style("filter", "url(#box-shadow)")
         .call(drag);
     
     var borderBottom = task_g.selectAll('.border-bottom');
@@ -1080,14 +1147,16 @@ function drawTop(eventObj) {
     var rect = task_g.select("#rect_" + groupNum);
     
     addToTaskFromData(events.clock, eventObj, task_g);
+    
     addToTaskFromData(events.title, eventObj, task_g);
+    
     addToTaskFromData(events.duration, eventObj, task_g);
     
     // special case, have to determine x2
     var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
     lineSvg.attr('x2', function(d) {
         var x1 = events.line.attrs.x1(d);
-        return x1 + (getWidth(eventObj) - (2 * (x1 - d.x)));
+        return x1 + (getWidth(eventObj) - (2 * events.marginLeft) - (2 * (x1 - d.x)));
     });
     
 }
@@ -1124,15 +1193,97 @@ function drawBottom(eventObj) {
     handoffIconSvg.on("click", startWriteHandoff);
 }
 
+function drawMemberCircles(eventObj) {
+    var groupNum = eventObj["id"];
+    var members = eventObj["members"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    //Find out if first draw or redrawing
+    for (var i=0; i<members.length; i++) {
+        var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
+        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
+        var y_offset = 60;
+        var member = getMemberById(members[i]);
+        var color = member.color;
+
+        if (existingMemCircle[0].length ==0) { //First time
+            var name = member.name;
+
+            task_g.append("circle")
+                .attr("class", "member_circle")
+                .attr("id", function(d) {
+                    return "event_" + groupNum + "_eventMemCircle_" + (i+1);
+                })
+                .attr("groupNum", groupNum)
+                .attr("r", 6)
+                .attr("cx", function(d) {
+                    return d.x + x_offset;
+                })
+                .attr("cy", function(d) {
+                    return d.y + y_offset;
+                })
+                .attr("fill", color);
+        
+        } else { //Redrawing
+            existingMemCircle
+                .attr("cx", function(d) {return d.x + x_offset})
+                .attr("cy", function(d) {return d.y + y_offset})
+                .attr("fill", color);
+        }
+    }
+};
+
+function drawMemberTabs(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var members = eventObj.members;
+    var task_g = getTaskGFromGroupNum(groupNum);
+    
+    var start = 4;
+    for(var i = 0; i < members.length; i++) {
+        var memberId = members[i];
+        var member = getMemberById(memberId);
+        var memberTab = task_g.selectAll('#mem_tab_' + memberId);
+        if(memberTab.empty()) {
+            memberTab = task_g.append("path");
+        }
+        
+        var lineData = [
+            {x: 0, y: 0}, {x: 24, y: 0},
+            {x: 24, y: 11}, {x: 7, y: 11},
+            {x: 0, y: 0}
+        ];
+        
+        var xOffset = 4 + i * 16;
+        var tabPathFn = function(line, data) {
+            return d3.svg.line()
+                .x(function(d) {return data.x + xOffset + d.x;})
+                .y(function(d) {return data.y + events.bodyHeight + d.y;})
+                .interpolate("linear")(line);
+        };
+        
+        memberTab
+            .attr("id", "mem_tab_" + memberId)
+            .attr("width", 24)
+            .attr("height", 11)
+            .attr("d", function(d) {return tabPathFn(lineData, d)})
+            .attr("fill", member.color);
+    }
+}
+
 //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
     // TODO write some draw functions
     
     drawG(eventObj);
+    
+    drawMemberTabs(eventObj);
     drawMainRect(eventObj);
     drawTop(eventObj);
     drawBottom(eventObj);
     
+    drawEachHandoffForEvent(eventObj);
+    drawEachCollabForEvent(eventObj);
     
     //console.log("redrawing event");
 
@@ -1291,7 +1442,8 @@ function renderAllMemberCircles() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
-        drawMemberCircles(ev);
+        drawMemberTabs(ev);
+        // drawMemberCircles(ev);
     }
 };
 

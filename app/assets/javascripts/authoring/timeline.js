@@ -9,7 +9,7 @@ var SVG_WIDTH = 4850,
 
 var HEADER_HEIGHT = 28;
 
-var STEP_WIDTH = 20,
+var STEP_WIDTH = 22,
     HOUR_WIDTH = 4 * STEP_WIDTH;
 
 // declared in events.js
@@ -23,7 +23,7 @@ var TOTAL_HOUR_PIXELS = TIMELINE_HOURS*HOUR_WIDTH;
 var XTicks = TOTAL_HOUR_PIXELS / STEP_WIDTH,
     YTicks = 6;
 
-var ROW_HEIGHT = ROW_HEIGHT || 80;
+var ROW_HEIGHT = ROW_HEIGHT || 90;
 
 var BKG_COLOR = "white";
 var STROKE_COLOR = "rgba(233,233,233,0.4)";
