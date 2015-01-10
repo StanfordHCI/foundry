@@ -7,7 +7,7 @@ $('#panels').change(function(){
 	    }); //end var request
 	   
 	    request.done(function( msg ) {
-	     $("#filter_results").html( msg );
+	     $("#panel_results").html( msg );
 	    }); //end request.done
  });
 
