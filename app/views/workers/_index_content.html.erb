@@ -1,11 +1,10 @@
-<h3><i class="fa fa-angle-right"></i>Panels</h3>
+<h3><i class="fa fa-angle-right"></i> Panels</h3>
 
 <div class="form-panel">
 	
 	<!-- <div class="form-panel"> -->
 		
-		<p>To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
-	<!-- </div> -->
+			<!-- </div> -->
           	
   	<!-- INPUT MESSAGES -->
   	<div class="row-fluid">
@@ -13,7 +12,9 @@
 
 	
 				<div class="row-fluid span12">
-					<a data-toggle="modal" data-target="#modal-new-worker" data-remote="<%= new_worker_path %> #panelregform">Add New Worker</a>
+					<p class="span9"> To filter, select a panel from the dropdown and/or click on the checkboxes in the table.</p>
+
+					<p class="span3"> <button class="btn btn-primary" data-toggle="modal" data-target="#modal-new-worker" data-remote="<%= new_worker_path %> #panelregform"><i class="fa fa-user" id="user-icon"></i>Add New Worker</button></p>
 				</div>
 				
 				<div class="modal hide fade" id="modal-new-worker" style="width: 560px; margin-left: -230px;">
