@@ -201,7 +201,7 @@ var keyUpFunc = function(eventToComplete){
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + ">Google Drive Folder</a></p>";
+    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
     
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
