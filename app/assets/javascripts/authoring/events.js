@@ -1044,6 +1044,7 @@ function drawG(eventObj) {
         .enter()
         .append("g")
         .attr("id", "g_" + groupNum)
+        .style({cursor: "pointer"})
         .on("mousemove", showHandles)
         .on("mouseout", function() {
             var handles = d3.select(this).selectAll(".left-handle, .right-handle");
@@ -1115,6 +1116,7 @@ function drawMainRect(eventObj) {
         addBoxShadowFilter(task_g, "box-shadow");
     }
     
+    // call drag on both of these
     rect
         .attr("id", function(d) {
                 return "rect_" + d.groupNum; })
@@ -1128,7 +1130,7 @@ function drawMainRect(eventObj) {
             return events.bodyColor;
         })
         .style("filter", "url(#box-shadow)")
-        .call(drag)
+        .call(drag);
     
     var borderBottom = task_g.selectAll(".border-bottom");
     if(borderBottom.empty()) {
@@ -1140,7 +1142,8 @@ function drawMainRect(eventObj) {
         .attr("height", 2)
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
-        .attr("fill", "rgb(215, 100, 91)");
+        .attr("fill", "rgb(215, 100, 91)")
+        .call(drag);
     
     /*
     if(existingMainRect[0].length == 0){ // first time
@@ -1271,18 +1274,20 @@ function drawTop(eventObj) {
     // grab the main rectangle
     var rect = task_g.select("#rect_" + groupNum);
     
-    addToTaskFromData(events.clock, eventObj, task_g);
-    
-    addToTaskFromData(events.title, eventObj, task_g);
-    
-    addToTaskFromData(events.duration, eventObj, task_g);
+    var clockSvg = addToTaskFromData(events.clock, eventObj, task_g);
+    clockSvg.call(drag);
+    var titleSvg = addToTaskFromData(events.title, eventObj, task_g);
+    titleSvg.call(drag);
+    var durationSvg = addToTaskFromData(events.duration, eventObj, task_g);
+    durationSvg.call(drag);
     
     // special case, have to determine x2
     var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
     lineSvg.attr("x2", function(d) {
         var x1 = events.line.attrs.x1(d);
         return x1 + (getWidth(eventObj) - (2 * events.marginLeft) - (2 * (x1 - d.x)));
-    });
+    })
+    .call(drag);
     
 }
 
