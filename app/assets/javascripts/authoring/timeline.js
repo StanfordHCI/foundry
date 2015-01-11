@@ -269,6 +269,7 @@ window._foundry = {
     
     /* updates the number of rows on the timeline and moves
      * overlay accordingly
+     * @param {number} numRows
      */
     updateNumRows: function(numRows) {
       this.numRows = numRows;
