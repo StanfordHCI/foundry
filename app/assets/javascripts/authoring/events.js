@@ -1012,7 +1012,6 @@ function drawG(eventObj) {
           id: "task_g_" + groupNum, class: "task_g",
           groupNum: groupNum, x: x + xOffset, y: y + yOffset
         };
-          
         task_groups.push(new_data);
     } else {
         task_groups[idx].x = x + xOffset;
@@ -1392,12 +1391,16 @@ function drawDragHandles(eventObj) {
 
 //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
-    // TODO write some draw functions
+    // Start off by redrawing the timeline if we need to, so the events
+    
+    // subtract two so there's always at least one empty row
+    // (event.row is 0 indexed)
+    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+      window._foundry.timeline.updateNumRows(eventObj.row + 2);
+    }
+    
     
     drawG(eventObj);
-    
-    drawEachHandoffForEvent(eventObj);
-    drawEachCollabForEvent(eventObj);
     
     drawMemberTabs(eventObj);
     drawMainRect(eventObj);
@@ -1405,6 +1408,9 @@ function drawEvent(eventObj) {
     drawBottom(eventObj);
     
     drawDragHandles(eventObj);
+    
+    drawEachHandoffForEvent(eventObj);
+    drawEachCollabForEvent(eventObj);
     
     //console.log("redrawing event");
 
@@ -1426,13 +1432,6 @@ function drawEvent(eventObj) {
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
     */
-    
-    
-    // subtract two so there's always at least one empty row
-    // (event.row is 0 indexed)
-    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
-      window._foundry.timeline.updateNumRows(eventObj.row + 2);
-    }
 };
 
 
