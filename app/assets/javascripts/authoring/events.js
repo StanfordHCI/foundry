@@ -916,7 +916,7 @@ if(!window._foundry) {
                 var iconWidth = events.handoffIcon.attrs.width(d);
                 
                 // subtract the button's width and the right margin
-                if(iconWidth < 15) {
+                if(iconWidth !== 15) {
                     // if the width is to small to fit everything, just
                     // center the icons, don't worry about the padding
                     return (d.x + width - iconWidth) - (width - 3 * iconWidth)/2;
