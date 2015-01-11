@@ -1299,8 +1299,8 @@ function drawBottom(eventObj) {
     
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
-    uploadIcon.on("click", function(ev){
-        ev.stopPropagation();
+    uploadIcon.on("click", function(){
+        d3.event.stopPropagation();
         if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
             window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
         }
