@@ -1323,46 +1323,6 @@ function drawBottom(eventObj) {
     handoffIconSvg.on("click", startWriteHandoff);
 }
 
-function drawMemberCircles(eventObj) {
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    //Find out if first draw or redrawing
-    for (var i=0; i<members.length; i++) {
-        var existingMemCircle = task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1));
-        var x_offset = 21 + (i*14); //unique for each member line (NOTE FROM DR: Used to be 16)
-        var y_offset = 60;
-        var member = getMemberById(members[i]);
-        var color = member.color;
-
-        if (existingMemCircle[0].length ==0) { //First time
-            var name = member.name;
-
-            task_g.append("circle")
-                .attr("class", "member_circle")
-                .attr("id", function(d) {
-                    return "event_" + groupNum + "_eventMemCircle_" + (i+1);
-                })
-                .attr("groupNum", groupNum)
-                .attr("r", 6)
-                .attr("cx", function(d) {
-                    return d.x + x_offset;
-                })
-                .attr("cy", function(d) {
-                    return d.y + y_offset;
-                })
-                .attr("fill", color);
-        
-        } else { //Redrawing
-            existingMemCircle
-                .attr("cx", function(d) {return d.x + x_offset})
-                .attr("cy", function(d) {return d.y + y_offset})
-                .attr("fill", color);
-        }
-    }
-};
-
 function drawMemberTabs(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
@@ -1378,7 +1338,8 @@ function drawMemberTabs(eventObj) {
             memberTab = task_g.append("path");
         }
         
-        var lineData = [
+        // coordinates for drawing the tab shape
+        var shapeData = [
             {x: 0, y: 0}, {x: 24, y: 0},
             {x: 24, y: 11}, {x: 7, y: 11},
             {x: 0, y: 0}
@@ -1396,7 +1357,7 @@ function drawMemberTabs(eventObj) {
             id: "mem_tab_" + memberId,
             width: 24,
             height: 11,
-            d: function(d) {return tabPathFn(lineData, d)},
+            d: function(d) {return tabPathFn(shapeData, d)},
             fill: member.color,
             
             "data-toggle": "tooltip",
