@@ -813,10 +813,10 @@ if(!window._foundry) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
                 // set the width to zero if this is an hour long event
-                return eventObj.duration <= 60 ? 0 : 10;
+                return eventObj.duration <= 60 ? 0 : 12;
             },
-            height: 10,
-            "xlink:href": "/assets/icons/group/group_white.svg",
+            height: 12,
+            "xlink:href": "/assets/icons/member/member_white.svg",
             "class": "num-members-icon"
         }
     },
