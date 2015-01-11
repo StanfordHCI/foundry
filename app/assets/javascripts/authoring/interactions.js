@@ -184,7 +184,7 @@ function drawHandoff(handoffData) {
     var x2 = ev2.x + 3;
     var y2 = ev2.y + 50;
 
-    var path = timeline_svg.selectAll("path")
+    var path = timeline_svg.selectAll("path.handoffLine")
        .data(flashTeamsJSON["interactions"]);
 
     path.enter().insert("svg:path")
@@ -408,6 +408,7 @@ function deleteInteraction(intId) {
 
 //Returns the event that begins first
 function firstEvent(task1idNum, task2idNum) {
+    console.log(arguments);
     var task1Rect = $("#rect_" + task1idNum)[0];
     var x1 = task1Rect.x.animVal.value + 3;
     var task2Rect = $("#rect_" + task2idNum)[0];
