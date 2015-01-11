@@ -900,7 +900,8 @@ if(!window._foundry) {
             height: 14,
             "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
             id: function(d) {return "collab_btn_" + d.groupNum;},
-            "class": "collab_btn"
+            "class": "collab_btn",
+            groupNum: function(d) {return d.groupNum}
         }
     },
     
