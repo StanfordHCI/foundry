@@ -539,6 +539,14 @@ if(!window._foundry) {
     
     iconOpacity: 0.38,
     
+    /**
+     * @param {object} eventObj
+     * @returns true if the current user is assigned this task
+     */
+    isWorkerTask: function(eventObj) {
+        return current_user && eventObj.members.indexOf(current_user.id) > - 1;
+    },
+    
     clock: {
         selector: ".clock_icon",
         tag: "image",
@@ -556,7 +564,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
             }
         },
@@ -565,7 +573,8 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    events.iconOpacity : 1;
             }
         }
     },
@@ -618,12 +627,14 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? "#444" : "white";
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    "#444" : "white";
             },
             "font-weight": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? 400 : 300;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    400 : 300;
             },
             "letter-spacing": "1px",
             "font-size": "12px",
@@ -672,12 +683,14 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? "#444" : "white";
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    "#444" : "white";
             },
             "font-weight": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? 400 : 300;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    400 : 300;
             },
             "letter-spacing": "1px",
             "font-size": "10px",
@@ -698,7 +711,8 @@ if(!window._foundry) {
             "stroke": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
             },
             "stroke-width": "1px"
         }
@@ -731,7 +745,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
             "class": "num-members-icon"
@@ -741,7 +755,8 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    events.iconOpacity : 1;
             }
         }
     },
@@ -770,7 +785,8 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? "black" : "white";
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    "black" : "white";
             },
             "font-weight": 200,
             "font-family": "Helvetica"
@@ -801,7 +817,8 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                console.log(d);
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
             "class": "upload"
@@ -811,7 +828,8 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    events.iconOpacity : 1;
             }
         }
     },
@@ -840,7 +858,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "/assets/icons/collaboration/collaboration.svg" :
                     "/assets/icons/collaboration/collaboration_white.svg";
             },
@@ -853,7 +871,8 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    events.iconOpacity : 1;
             }
         }
     },
@@ -895,7 +914,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "/assets/icons/arrow/right_arrow.svg" :
                     "/assets/icons/arrow/right_arrow_white.svg";
             },
@@ -908,7 +927,8 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
+                    events.iconOpacity : 1;
             }
         }
     },
@@ -931,7 +951,7 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
             }
         }
@@ -961,7 +981,7 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" ?
+                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
                     "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
             }
         }
@@ -1106,7 +1126,11 @@ function drawMainRect(eventObj) {
         .attr("fill", function(d) {
             switch(eventObj.status) {
                 case "not_started":
-                    return TASK_NOT_START_COLOR;
+                    if(events.isWorkerTask(eventObj)) {
+                        return WORKER_TASK_NOT_START_COLOR;
+                    } else {
+                        return TASK_NOT_START_COLOR;
+                    }
                 case "started":
                     return TASK_START_COLOR;
                 case "delayed":
@@ -1138,7 +1162,12 @@ function drawMainRect(eventObj) {
         .attr("fill", function(d) {
             switch(eventObj.status) {
                 case "not_started":
-                    return TASK_NOT_START_BORDER_COLOR;
+                    // if the task is for the currently logged in user
+                    if(events.isWorkerTask(eventObj)) {
+                        return WORKER_TASK_NOT_START_BORDER_COLOR
+                    } else {
+                        return TASK_NOT_START_BORDER_COLOR;
+                    }
                 case "started":
                     return TASK_START_BORDER_COLOR;
                 case "delayed":
@@ -1306,6 +1335,36 @@ function drawDragHandles(eventObj) {
     rightHandleSvg.call(drag_right);
 }
 
+// TODO: might have issues with redrawing
+function drawShade(eventObj) {
+    if(current_user == undefined) {return;}
+
+    var groupNum = eventObj["id"];
+    var members = eventObj["members"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    // draw shade on main rect of this event
+    //for each event it draws the shade. 
+    //in doing so it takes its array of members FOR THAT EVENT
+    //for each member for that event it gets their ID
+    //if they are the CURRENT member
+    for (var i=0; i<members.length; i++) {
+        var member_id = members[i];
+        //var idx = getMemberIndexFromName(member["name"]);
+        //debugger;
+        if (current_user.id == member_id){
+            if (currentUserIds.indexOf(groupNum) < 0){
+                currentUserIds.push(groupNum);
+                currentUserEvents.push(eventObj);
+            }
+
+            
+            task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            break;
+        }
+    }
+}
+
 //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
     // Start off by redrawing the timeline if we need to, so the events
@@ -1329,6 +1388,7 @@ function drawEvent(eventObj) {
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
     
+    drawShade(eventObj);
     drawTimer(eventObj);
 };
 
