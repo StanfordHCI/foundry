@@ -450,6 +450,8 @@ end
      def hire_form
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
+	   	
+	   	@task_avail_active = "active";
 
 		if valid_user?	
 			@flash_team = FlashTeam.find(params[:id])
@@ -499,6 +501,8 @@ end
  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
+	   	@task_avail_active = "active";
+	   	
 	   	@flash_team = FlashTeam.find(params[:id])
 	   	    
 	   	# Extract data from the JSON
@@ -543,6 +547,8 @@ end
       def task_acceptance
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
+	   	
+	   	@task_accept_active = "active";
 	   	
 	   	#@flash_team = FlashTeam.find(params[:id])
 	   	
@@ -592,6 +598,8 @@ end
    		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
+	   	@task_accept_active = "active";
+	   	
 	   	@flash_team = FlashTeam.find(params[:id])
 	   	    
 	   	# Extract data from the JSON
@@ -635,6 +643,8 @@ end
    		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
+	   	@task_reject_active = "active";
+	   	
 	   	#@flash_team = FlashTeam.find(params[:id])
 	   	
 	   	if valid_user?	
@@ -668,6 +678,8 @@ end
    
   		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
+	   	
+	   	@task_reject_active = "active";
 	   	
 	   	@flash_team = FlashTeam.find(params[:id])
 	   	    
