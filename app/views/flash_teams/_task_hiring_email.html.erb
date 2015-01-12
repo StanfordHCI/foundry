@@ -72,9 +72,9 @@
                           <span>Hiring Emails</span>
                       </a>
                       <ul class="sub">
-                          <li><%=link_to "Task Available", controller: "flash_teams", action: "hire_form"%> </li>
-                          <li><%=link_to "Task Acceptance", controller: "flash_teams", action: "task_acceptance"%></li>
-                          <li><%=link_to "Task Unavailable", controller: "flash_teams", action: "task_rejection"%></li>
+                          <li class=<%=@task_avail_active%>><%=link_to "Task Available", controller: "flash_teams", action: "hire_form"%> </li>
+                          <li class=<%=@task_accept_active%>><%=link_to "Task Acceptance", controller: "flash_teams", action: "task_acceptance"%></li>
+                          <li class=<%=@task_reject_active%>><%=link_to "Task Unavailable", controller: "flash_teams", action: "task_rejection"%></li>
                       </ul>
                   </li>
 
