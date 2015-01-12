@@ -639,18 +639,26 @@ if(!window._foundry) {
          * @returns {string} the event's duration in the format 'x hrs y min'
          */
         text: function(eventObj) {
-            var duration = eventObj.duration;
-            var hours = Math.floor(duration / 60);
-            var minutes = duration % 60;
+            var time = eventObj.timer || eventObj.duration;
+            
+            console.log(eventObj.timer, eventObj.duration);
+            
+            var hours = Math.floor(time / 60);
+            var minutes = time % 60;
 
             var durationArray = [];
             if(hours !== 0) {
                 durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
             }
-            if(minutes !== 0) {durationArray.push(minutes + (duration > 30 ? " min" : ""));}
+            
+            if(minutes !== 0) {
+                var minStr = (eventObj.timer || time > 30 ? " min" : "");
+                durationArray.push(minutes + minStr);
+            }
 
             return durationArray.join(" ");
         },
+        
         attrs: {
             "class": "duration",
             x: function(d) {
@@ -1320,18 +1328,18 @@ function drawEvent(eventObj) {
     
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
+    
+    drawTimer(eventObj);
 };
 
 
 
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" )
+    if( in_progress != true || eventObj.status == "not_started" ) {
         return;
-
-    var x_offset = 15; // unique for timer (NOTE FROM DR: this used to be 10)
-    var y_offset = 50; // unique for handoff btn
-
+    }
+    
     if( eventObj.status == "started" ){
     
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
@@ -1348,9 +1356,7 @@ function drawTimer(eventObj){
                 live_tasks.splice(idx, 1);
             }
             delayed_tasks.push(groupNum);
-    
             drawEvent(eventObj);
-            //console.log("in drawTimer: ", remaining_time);
         }
 
         eventObj["timer"] = remaining_time;
@@ -1364,66 +1370,6 @@ function drawTimer(eventObj){
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
-    }
-
-   
-    var totalMinutes = eventObj["timer"];
-    
-    if(totalMinutes < 0){
-        var numHoursInt = Math.ceil(totalMinutes/60);
-        
-        if (numHoursInt == 0){
-	        numHoursInt = '-' + numHoursInt;
-        }
-        //console.log("numHoursInt: " + numHoursInt);
-        var minutesLeft = Math.abs(Math.round(totalMinutes%60));
-    }
-    else{
-        var numHoursInt = Math.floor(totalMinutes/60);
-        var minutesLeft = Math.round(totalMinutes%60);
-    }
-    
-    // if the minutes are < 10, you need to add a zero before
-    if(minutesLeft < 10){
-        minutesLeft = '0' + minutesLeft;
-    }
-    
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    var existingTimerText = task_g.selectAll("#timer_text_" + groupNum);
-    if(existingTimerText[0].length == 0){ // first time
-        task_g.append("text")
-            .text(function (d) {
-                if (numHoursInt == 0 && totalMinutes >= 0){
-                    return "0 :"+minutesLeft; 
-                }
-                else if (numHoursInt == 0 && totalMinutes < 0){
-                    return "-0 :"+minutesLeft; 
-                }
-                else
-                    return numHoursInt+" : "+minutesLeft;
-            })
-            .attr("class", "timer_text")
-            .attr("id", function(d) {return "timer_text_" + groupNum;})
-            .attr("groupNum", function(d){return d.groupNum})
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset})
-            .attr("font-size", "12px");
-    } else {
-        task_g.selectAll(".timer_text")
-            .text(function (d) {
-                if (numHoursInt == 0 && totalMinutes >= 0){
-                    return "0 :"+minutesLeft; 
-                }
-                else if (numHoursInt == 0 && totalMinutes < 0){
-                    return "-0 :"+minutesLeft; 
-                }
-                else
-                    return numHoursInt+" : "+minutesLeft;
-            })
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
     }
 }
 
