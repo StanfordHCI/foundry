@@ -720,8 +720,10 @@ function drawShade(eventObj, firstTime) {
         //debugger;
         if (current_user.id == member_id){
             if (currentUserIds.indexOf(groupNum) < 0){
-                currentUserIds.push(groupNum);
-                currentUserEvents.push(eventObj);
+                if(eventObj.status != "completed"){
+                    currentUserIds.push(groupNum);
+                    currentUserEvents.push(eventObj);
+                }
             }
 
             task_g.selectAll("#rect_" + groupNum)
@@ -757,7 +759,7 @@ function findCurrentUserNextEvent(currentUserEvents){
 	console.log("calling findCurrentUserNextEvent");
 	//console.log("currentUserEvents: " + currentUserEvents);
 	for (var i = 0; i < currentUserEvents.length; i++){
-		if(currentUserEvents[i].status == "not_started"){
+		if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
 			return currentUserEvents[i]["id"];		
 		}
 	}

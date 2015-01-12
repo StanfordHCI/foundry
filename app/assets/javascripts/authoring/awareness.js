@@ -1451,13 +1451,16 @@ var trackUpcomingEvent = function(){
     
     setInterval(function(){
         if(!upcomingEvent) return;
-        alert("here!");
+        //alert("here!");
         var ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
         var task_g = getTaskGFromGroupNum(upcomingEvent);
+        
+        //console.log("here");
+        //console.log(ev);
 
         var overallTime;
         
-        if (ev.status = "completed"){
+        while (ev.status == "completed" || currentUserEvents[0]=="completed"){
             toDelete = upcomingEvent;
             currentUserEvents.splice(0,1);
             if (currentUserEvents.length == 0){
@@ -1468,6 +1471,8 @@ var trackUpcomingEvent = function(){
             }
             upcomingEvent = currentUserEvents[0].id;
             task_g = getTaskGFromGroupNum(upcomingEvent);
+            ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
+        
         }
 
         currentUserEvents[0].startTime = parseInt(currentUserEvents[0].startHr)*60 + parseInt(currentUserEvents[0].startMin);
@@ -1480,7 +1485,7 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "red");
         }
         else if ( currentUserEvents[0].status == "started"){
-            overallTime = "You task is in progress.";
+            overallTime = "Your task is in progress.";
         }
         
         statusText.text(overallTime);
