@@ -93,11 +93,9 @@ input, textarea, select, button{
 }
 /*---*/
 
-/*
 .nav-collapse.collapse {
     display: inline;
 }
-*/
 
 ul.sidebar-menu , ul.sidebar-menu li ul.sub{
     margin: -2px 0 0;
@@ -109,7 +107,7 @@ ul.sidebar-menu {
 }
 
 #sidebar > ul > li > ul.sub {
-    // display: none;
+    //display: none;
 }
 
 #sidebar > ul > li.active > ul.sub, #sidebar > ul > li > ul.sub > li > a {
@@ -185,8 +183,8 @@ ul.sidebar-menu li a{
     transition: all 0.3s ease;
 }
 
-//ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover, ul.sidebar-menu li a:focus {
-ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover{
+ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover, ul.sidebar-menu li a:focus {
+// ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover{
     background: #68dff0;
     color: #fff;
     display: block;
@@ -211,7 +209,6 @@ ul.sidebar-menu li a:hover i, ul.sidebar-menu li a:focus i {
 ul.sidebar-menu li a.active i {
     color: #fff;
 }
-
 
 .mail-info, .mail-info:hover {
     margin: -3px 6px 0 0;

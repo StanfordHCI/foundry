@@ -51,9 +51,13 @@
               <!-- sidebar menu start-->
               <!-- <ul class="sidebar-nav"> -->
               
-              <div class="span3" id="sidebar">
+              <!-- <div class="span3" id="sidebar"> -->
               <!-- sidebar menu start-->
-              <ul class="sidebar-menu">
+             <!--  <ul class="sidebar-menu"> -->
+	              
+	        <div id="sidebar"  class="span3 nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
 
               	  <h5 class="project-name">Project: <%=@flash_team_json["title"]%></h5>
               	   <h6 class="task-name">Task: <%=@flash_team_event["title"]%></h6>
@@ -130,7 +134,8 @@
 	<%= javascript_include_tag "/assets/jquery" %>
 	<%= javascript_include_tag "/assets/jquery_ujs" %>
 	<%= javascript_include_tag "bootstrap/bootstrap.min" %>
-	<%= javascript_include_tag "/assets/authoring/panels" %>
+	<%= javascript_include_tag "/assets/jquery.dcjqaccordion.2.7" %>
+	
 
 
   </body>

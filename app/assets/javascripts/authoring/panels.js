@@ -133,4 +133,20 @@ function viewRightPanels(){
 	$("#email-form-div").removeClass("span12");
 	$("#email-form-div").addClass("span8");
 }	
-	
+
+/*---LEFT BAR ACCORDION----*/
+/*
+$(function() {
+    $('#nav-accordion').dcAccordion({
+        eventType: 'click',
+        autoClose: true,
+        saveState: true,
+        disableLink: true,
+        speed: 'slow',
+        showCount: false,
+        autoExpand: true,
+//        cookie: 'dcjq-accordion-1',
+        classExpand: 'dcjq-current-parent'
+    });
+});
+*/
