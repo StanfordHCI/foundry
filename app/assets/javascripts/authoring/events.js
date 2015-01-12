@@ -171,29 +171,21 @@ function calcSnap(mouseX, mouseY) {
     
 }
 
-// mousedown on timeline => creates new event and draws it
+// drag on timeline => creates new event and draws it
 function newEvent(point, duration) {
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
         return;
     }
-
     if (overlayIsOn) {
         overlayOff();
         return;
     } 
 
-    //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
-        var idNum = flashTeamsJSON["events"][i].id;
-        $(timeline_svg.selectAll("g#g_"+idNum)[0][0]).popover('hide');
-    }
-
     if(isUser || in_progress) { // user page
         return;
     }
-    
     createEvent(point, duration);
 };
 
@@ -242,8 +234,10 @@ function createEventObj(snapPoint, duration) {
     var startTimeObj = getStartTime(snapPoint[0]);
   
     var newEvent = {
-        "title":"New Event", "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
+        "title":"New Event", "id":event_counter, 
+        "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
+        "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
