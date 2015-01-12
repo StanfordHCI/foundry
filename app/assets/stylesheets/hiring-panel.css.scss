@@ -183,8 +183,8 @@ ul.sidebar-menu li a{
     transition: all 0.3s ease;
 }
 
-ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover, ul.sidebar-menu li a:focus {
-// ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover{
+//ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover, ul.sidebar-menu li a:focus {
+ul.sidebar-menu li a.active, ul.sidebar-menu li a:hover{
     background: #68dff0;
     color: #fff;
     display: block;
