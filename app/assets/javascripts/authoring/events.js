@@ -1127,7 +1127,16 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y})
         .attr("fill", function(d) {
-            return events.bodyColor;
+            switch(eventObj.status) {
+                case "not_started":
+                    return TASK_NOT_START_COLOR;
+                case "started":
+                    return TASK_START_COLOR;
+                case "delayed":
+                    return TASK_DELAY_COLOR;
+                default:
+                    return TASK_COMPLETE_COLOR;
+            }
         })
         .style("filter", "url(#box-shadow)")
         .call(drag);
@@ -1142,7 +1151,18 @@ function drawMainRect(eventObj) {
         .attr("height", 2)
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
-        .attr("fill", "rgb(215, 100, 91)")
+        .attr("fill", function(d) {
+            switch(eventObj.status) {
+                case "not_started":
+                    return TASK_NOT_START_BORDER_COLOR;
+                case "started":
+                    return TASK_START_BORDER_COLOR;
+                case "delayed":
+                    return TASK_DELAY_BORDER_COLOR;
+                default:
+                    return TASK_COMPLETE_BORDER_COLOR;
+            }
+        })
         .call(drag);
     
     /*
