@@ -6,7 +6,6 @@
 var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var HIRING_HEIGHT = 50;
-var ROW_HEIGHT = 80;
 var DRAGBAR_WIDTH = 8;
 var event_counter = 0;
 var GUTTER = 20;
@@ -443,130 +442,6 @@ function drawGdriveLink(eventObj, firstTime) {
     }
 }
 
-function drawHandoffBtn(eventObj, firstTime) {
-     if(isUser || in_progress){
-        return;
-    }
-
-    var x_offset = getWidth(eventObj)-24; // unique for handoff btn (NOTE FROM DR: Used to be -18)
-    var y_offset = 40; // unique for handoff btn
-
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    var existingHandoffBtn = task_g.selectAll("#handoff_btn_" + groupNum);
-    if(existingHandoffBtn[0].length == 0){ // first time
-        task_g.append("image")
-            .attr("xlink:href", "/assets/rightArrow.png")
-            .attr("class", "handoff_btn")
-            .attr("id", function(d) {return "handoff_btn_" + d.groupNum;})
-            .attr("groupNum", function(d){return d.groupNum})
-            .attr("width", 16)
-            .attr("height", 16)
-            .attr("x", function(d) {return d.x+x_offset})
-            .attr("y", function(d) {return d.y+y_offset})
-            .on("click", startWriteHandoff);
-
-    /*$("#handoff_btn_" + groupNum).popover({
-        trigger: "click",
-        html: true,
-        class: "interactionPopover",
-        style: "font-size: 8px",
-        placement: "right",
-        content: "Click another event to draw a handoff. <br>Click on this event to cancel.",
-        container: $("#timeline-container")
-    });
-    
-    $("#handoff_btn_" + groupNum).popover("show");
-    $("#handoff_btn_" + groupNum).popover("hide");*/
-    
-    } else {
-        task_g.selectAll(".handoff_btn")
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
-    }
-}
-
-function drawCollabBtn(eventObj, firstTime) {
-    if(isUser || in_progress){ return; }
-
-    var x_offset = getWidth(eventObj)-44; // unique for collab btn (NOTE FROM DR: Used to be -38)
-    var y_offset = 40; // unique for collab btn
-
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    var existingCollabBtn = task_g.selectAll("#collab_btn_" + groupNum);
-    if(existingCollabBtn[0].length == 0){ // first time
-        task_g.append("image")
-            .attr("xlink:href", "/assets/doubleArrow.png")
-            .attr("class", "collab_btn")
-            .attr("id", function(d) {return "collab_btn_" + d.groupNum;})
-            .attr("groupNum", function(d){return d.groupNum})
-            .attr("width", 16)
-            .attr("height", 16)
-            .attr("x", function(d) {return d.x+x_offset})
-            .attr("y", function(d) {return d.y+y_offset})
-            .on("click", startWriteCollaboration);
-
-    /*$("#collab_btn_" + groupNum).popover({
-        trigger: "click",
-        html: true,
-        class: "interactionPopover",
-        style: "font-size: 8px",
-        placement: "right",
-        content: "Click another event to draw a collaboration. <br>Click on this event to cancel.",
-        container: $("#timeline-container")
-    });
-
-    $("#collab_btn_" + groupNum).popover("show");
-    $("#collab_btn_" + groupNum).popover("hide");*/
-    
-    } else {
-        task_g.selectAll(".collab_btn")
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
-    }
-}
-
-// TODO: might have issues with redrawing
-function drawShade(eventObj, firstTime) {
-    if(current_user == undefined) {return;}
-
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    // draw shade on main rect of this event
-    //for each event it draws the shade. 
-    //in doing so it takes its array of members FOR THAT EVENT
-    //for each member for that event it gets their ID
-    //if they are the CURRENT member
-    for (var i=0; i<members.length; i++) {
-        var member_id = members[i];
-        //var idx = getMemberIndexFromName(member["name"]);
-        //debugger;
-        if (current_user.id == member_id){
-            if (currentUserIds.indexOf(groupNum) < 0){
-                currentUserIds.push(groupNum);
-                currentUserEvents.push(eventObj);
-            }
-
-            task_g.selectAll("#rect_" + groupNum)
-                .attr("fill", function(d) {
-                var stat = eventObj.status;
-                if (stat == "not_started") return WORKER_TASK_NOT_START_COLOR;
-                else if (stat == "started") {return TASK_START_COLOR; }
-                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
-                else return TASK_COMPLETE_COLOR;
-            })
-                .attr("fill-opacity", .4); 
-
-            break;
-        }
-    }
-}
-
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
     for (var i = 0; i < interactions.length; i++){
@@ -648,9 +523,7 @@ if(!window._foundry) {
 
 (function() {
   var events = {
-    /// The height of the rectangular event block
     bodyHeight: 64,
-    bodyColor: "rgb(245, 135, 136)",
     
     tabHeight: 11,
     
@@ -663,6 +536,8 @@ if(!window._foundry) {
     },
     
     marginLeft: 4,
+    
+    iconOpacity: 0.38,
     
     clock: {
         selector: ".clock_icon",
@@ -678,7 +553,20 @@ if(!window._foundry) {
             },
             height: 9,
             "class": "clock_icon",
-            "xlink:href": "/assets/icons/clock/clock_white.svg"
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
+            }
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+            }
         }
     },
     
@@ -727,8 +615,16 @@ if(!window._foundry) {
         },
         style: {
             "font-family": "proxima-nova",
-            fill: "white",
-            "font-weight": 300,
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? "#444" : "white";
+            },
+            "font-weight": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? 400 : 300;
+            },
             "letter-spacing": "1px",
             "font-size": "12px",
             "text-transform": "uppercase"
@@ -765,8 +661,16 @@ if(!window._foundry) {
         },
         style: {
             "font-family": "proxima-nova",
-            fill: "white",
-            "font-weight": 300,
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? "#444" : "white";
+            },
+            "font-weight": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? 400 : 300;
+            },
             "letter-spacing": "1px",
             "font-size": "10px",
             "text-transform": "uppercase"
@@ -780,9 +684,15 @@ if(!window._foundry) {
             x1: function(d) {return d.x + 10},
             y1: function(d) {return d.y + 40},
             y2: function(d) {return d.y + 40},
-            "stroke": "rgba(255, 255, 255, 0.24)",
-            "stroke-width": "1px",
             "class": "underline"
+        },
+        style: {
+            "stroke": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
+            },
+            "stroke-width": "1px"
         }
     },
     
@@ -810,8 +720,21 @@ if(!window._foundry) {
                 return eventObj.duration <= 60 ? 0 : 12;
             },
             height: 12,
-            "xlink:href": "/assets/icons/member/member_white.svg",
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
+            },
             "class": "num-members-icon"
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+            }
         }
     },
     
@@ -836,7 +759,11 @@ if(!window._foundry) {
         },
         style: {
             "font-size": "8px",
-            fill: "white",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? "black" : "white";
+            },
             "font-weight": 200,
             "font-family": "Helvetica"
         }
@@ -863,11 +790,21 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 14,
-            "xlink:href": "/assets/icons/upload/upload_white.svg",
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
+            },
             "class": "upload"
         },
         style: {
-            cursor: "pointer"
+            cursor: "pointer",
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+            }
         }
     },
     
@@ -892,10 +829,24 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 14,
-            "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "/assets/icons/collaboration/collaboration.svg" :
+                    "/assets/icons/collaboration/collaboration_white.svg";
+            },
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
             groupNum: function(d) {return d.groupNum}
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+            }
         }
     },
     
@@ -933,10 +884,24 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 15,
-            "xlink:href": "/assets/icons/arrow/right_arrow_white.svg",
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "/assets/icons/arrow/right_arrow.svg" :
+                    "/assets/icons/arrow/right_arrow_white.svg";
+            },
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
             groupNum: function(d) {return d.groupNum}
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ? events.iconOpacity : 1;
+            }
         }
     },
     
@@ -950,12 +915,17 @@ if(!window._foundry) {
             height: 11,
             rx: 1,
             ry: 1,
-            fill: "rgba(255, 255, 255, 0.8)",
             "class": "left-handle"
         },
         style: {
             display: "none",
-            cursor: "ew-resize"
+            cursor: "ew-resize",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
+            }
         }
     },
     
@@ -974,13 +944,18 @@ if(!window._foundry) {
             height: 11,
             rx: 1,
             ry: 1,
-            fill: "rgba(255, 255, 255, 0.8)",
             "class": "right-handle",
         },
         
         style: {
             display: "none",
-            cursor: "ew-resize"
+            cursor: "ew-resize",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" ?
+                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
+            }
         }
     }
   };
@@ -1081,7 +1056,7 @@ function addBoxShadowFilter(svg, id) {
     var feComponentTransfer = filter.append("feComponentTransfer");
     feComponentTransfer.append("feFuncA")
         .attr("type", "linear")
-        .attr("slope", 0.20);
+        .attr("slope", 0.08);
     
     var feMerge = filter.append("feMerge");
     feMerge.append("feMergeNode");
@@ -1135,6 +1110,13 @@ function drawMainRect(eventObj) {
         .style("filter", "url(#box-shadow)")
         .call(drag);
     
+    if(eventObj.status === "not_started") {
+        rect.style({
+            stroke: TASK_NOT_START_STROKE_COLOR,
+            "stroke-width": "1",
+        });
+    }
+    
     var borderBottom = task_g.selectAll(".border-bottom");
     if(borderBottom.empty()) {
         borderBottom = task_g.append("rect");
@@ -1158,89 +1140,7 @@ function drawMainRect(eventObj) {
             }
         })
         .call(drag);
-    
-    /*
-    if(existingMainRect[0].length == 0){ // first time
-        task_g.append("rect")
-            .attr("class", "task_rectangle")
-            .attr("x", function(d) {return (d.x+(GUTTER/2));})
-            .attr("y", function(d) {return d.y;})
-            .attr("id", function(d) {
-                return "rect_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum;})
-            .attr("height", RECTANGLE_HEIGHT)
-            .attr("width", width-(GUTTER/2))
-            .attr("fill", function(d) {
-                var stat = eventObj.status;
-                if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") {return TASK_START_COLOR; }
-                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
-                else return TASK_COMPLETE_COLOR;
-            })
-            .attr("fill-opacity", .6)
-            .attr("stroke", "#5F5A5A")
-            .attr('pointer-events', 'all')
-            .call(drag);
-    } else {
-        task_g.selectAll(".task_rectangle")
-            .attr("x", function(d) {return d.x +(GUTTER/2);})
-            .attr("y", function(d) {return d.y;})
-            .attr("width", width-(GUTTER/2))
-            .attr("fill", function(d) {
-                var stat = eventObj.status;
-                if (stat == "not_started") return TASK_NOT_START_COLOR;
-                else if (stat == "started") {return TASK_START_COLOR; }
-                else if (stat == "delayed") {return TASK_DELAY_COLOR; }
-                else return TASK_COMPLETE_COLOR;
-            });
-    }
-    */
 };
-
-/*
-function drawTitleText(eventObj, firstTime) {
-    var x_offset = 15; // unique for title (NOTE FROM DR: Used to be 10)
-    var y_offset = 14; // unique for title
-
-    var groupNum = eventObj["id"];
-    var title = eventObj["title"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    //shorten title to fit inside event
-    var existingTitleTextDiv = document.getElementById("titleLength");
-    var spn = existingTitleTextDiv.getElementsByTagName('span')[0];
-    spn.innerHTML = title;
-    var shortened_title = title;
-    var width = (spn.offsetWidth );
-    var event_width = getWidth(eventObj);
-        
-    while (width > event_width - 15){ 
-        shortened_title = shortened_title.substring(0,shortened_title.length - 4);
-        shortened_title = shortened_title + "...";
-        spn.innerHTML = shortened_title;
-        width = spn.offsetWidth;
-    }
-
-    title = shortened_title;
-   
-    var existingTitleText = task_g.selectAll("#title_text_" + groupNum);
-    if(existingTitleText[0].length == 0){ // first time
-        task_g.append("text")
-            .text(title)
-            .attr("class", "title_text")
-            .attr("id", function(d) { return "title_text_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum})
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset})
-            .attr("font-weight", "bold")
-            .attr("font-size", "12px");
-    } else {
-        task_g.selectAll(".title_text")
-            .text(title)
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
-    }
-} */
 
 /**
  * Adds an item (e.g. an icon or a text tag) to a task group.
@@ -1267,13 +1167,8 @@ function addToTaskFromData(data, eventObj, taskGroup) {
         svgElem.text(data.text(eventObj));
     }
     
-    for(var key in data.attrs) {
-        svgElem.attr(key, data.attrs[key]);
-    }
-    
-    if(data.style) {
-        svgElem.style(data.style);
-    }
+    svgElem.attr(data.attrs);
+    svgElem.style(data.style);
     
     return svgElem;
 }
@@ -1425,27 +1320,6 @@ function drawEvent(eventObj) {
     
     drawEachHandoffForEvent(eventObj);
     drawEachCollabForEvent(eventObj);
-    
-    //console.log("redrawing event");
-
-    /*
-    drawG(eventObj);
-    drawMainRect(eventObj);
-    drawRightDragBar(eventObj);
-    drawLeftDragBar(eventObj);
-    drawTitleText(eventObj);
-    drawDurationText(eventObj);
-    drawGdriveLink(eventObj);
-
-    drawTimer(eventObj);
-
-    drawHandoffBtn(eventObj);
-    drawCollabBtn(eventObj);
-    drawMemberCircles(eventObj);
-    drawShade(eventObj);
-    drawEachHandoffForEvent(eventObj);
-    drawEachCollabForEvent(eventObj);
-    */
 };
 
 
