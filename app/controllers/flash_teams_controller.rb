@@ -451,7 +451,7 @@ end
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
-	   	@task_avail_active = "active";
+	   	@task_avail_active = "active"
 
 		if valid_user?	
 			@flash_team = FlashTeam.find(params[:id])
