@@ -62,7 +62,7 @@
               	  <h5 class="project-name">Project: <%=@flash_team_json["title"]%></h5>
               	   <h6 class="task-name">Task: <%=@flash_team_event["title"]%></h6>
               	  	     
-                   <li class="mt">
+                   <li class=<%=@panels_active%>>
                    
                    <%= link_to raw('<i class="fa fa-th"></i><span>Edit Panels</span>'), controller: "flash_teams", action: "panels" %> 			
                           
