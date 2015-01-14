@@ -70,12 +70,12 @@ $header-height: 64px;
 #foundry-header > .menu-button:after {
   content: '';
   background-image: url('../assets/icons/menu/menus.svg');
-  background-size: 24px 48px;
+  background-size: 20px 44px;
   background-position: 0 24px;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: inline-block;
-  margin: 8px 0 0 8px;
+  margin: 8px 0 0 10px;
 }
 
 #foundry-header > .menu-button:hover,
@@ -144,7 +144,7 @@ $left-sidebar-width: 251px;
 
 #left-sidebar .sidebar-item {
   border-bottom: $primary-border;
-  transition: height 0.8s;
+  @include transition(height 0.8s);
 }
 
 #left-sidebar .sidebar-item .header {
@@ -152,8 +152,6 @@ $left-sidebar-width: 251px;
   width: 100%;
   cursor: pointer;
   text-align: left;
-  
-  @include transition( color 0.4s );
 }
 
 #left-sidebar .sidebar-item .header:hover,

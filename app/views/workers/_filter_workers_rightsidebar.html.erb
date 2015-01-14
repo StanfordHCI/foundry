@@ -1,0 +1,59 @@
+<p id="panel_results">
+	<b><em>Emails for all workers this panel:</em></b>
+
+	<br />
+	<!-- <% @fw.to_s.gsub('"', '')%> -->
+	
+	<% @emails = @fw.uniq.join(", ")%>
+	
+	<%= @emails %>
+	<br />
+	
+	<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
+	
+	<!-- <button class="btn btn-default" id="copy-button" data-clipboard-text="<%=@emails%>" title="Click to copy emails to clipboard">Copy Emails to Clipboard</button> -->
+
+	<%= javascript_include_tag "ZeroClipboard" %>
+	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+
+	<br />
+	<br />
+</p>
+
+<h4><b>Or Select Specific Workers:</b></h4>
+<div>
+	<!-- <table class="table table-bordered table-striped" style="background-color: white;"> -->
+	<table class="table table-bordered">
+	    <thead>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Panel</th>
+			<th><i class="icon-ok"></i></th>
+	    </thead>
+	    <tbody>
+			<% @workers.each do |worker| %>
+			    <tr>
+			        <td><%= worker.name %></td>
+			        <td><%= worker.email %></td>
+			        <td><%= worker.panel %></td>
+			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+			        
+			    </tr>
+			<% end %>
+	    </tbody>
+	</table>
+</div>
+
+<p id="worker_results">
+	
+	<%=render :partial => "workers/filter_workers_emails"%>
+</p>
+
+
+<%= javascript_include_tag "/assets/authoring/panels" %>
+
+
+
+
+
+

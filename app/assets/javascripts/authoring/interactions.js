@@ -184,7 +184,7 @@ function drawHandoff(handoffData) {
     var x2 = ev2.x + 3;
     var y2 = ev2.y + 50;
 
-    var path = timeline_svg.selectAll("path")
+    var path = timeline_svg.selectAll("path.handoffLine")
        .data(flashTeamsJSON["interactions"]);
 
     path.enter().insert("svg:path")
@@ -242,16 +242,15 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
         + " 0 0,0 " + x2 + "," + (y2+15);*/
 
     //Line out from first event to gutter
-    var pathStr = "M " + (x1-10) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
-    pathStr += "L " + x1 + ", " + y1 + "\n";
-
+    var pathStr = "M " + (x1) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
+    pathStr += "L " + (x1+4) + ", " + y1 + "\n";3
     //Route path either to the horizontal gutter above or below
     //Then route to second event horizontally
     if (y1 <= y2) { //Event 1 is higher
-        pathStr += "L " + x1 + ", " + (y1+25) + "\n";
+        pathStr += "L " + (x1+4) + ", " + (y1+25) + "\n";
         pathStr += "L " + (x2+1) + ", " + (y1+25) + "\n"; 
     } else { //Event 2 is higher
-        pathStr += "L " + x1 + ", " + (y1-55) + "\n";
+        pathStr += "L " + (x1+4) + ", " + (y1-55) + "\n";
         pathStr += "L " + (x2+1) + ", " + (y1-55) + "\n";
     }
     //Route to second event vertically
@@ -260,9 +259,9 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     pathStr += "L " + (x2+5) + ", " + y2 + "\n";
 
     //Arrowhead
-    pathStr += "L" + (x2+5) + ", " + (y2+1) + "\n";
-    pathStr += "L" + (x2+7) + ", " + (y2) + "\n";
-    pathStr += "L" + (x2+5) + ", " + (y2-1) + "\n";
+    pathStr += "L" + (x2+6) + ", " + (y2+2) + "\n";
+    pathStr += "L" + (x2+8) + ", " + (y2) + "\n";
+    pathStr += "L" + (x2+6) + ", " + (y2-2) + "\n";
     
     return pathStr;
 }
@@ -408,6 +407,7 @@ function deleteInteraction(intId) {
 
 //Returns the event that begins first
 function firstEvent(task1idNum, task2idNum) {
+    console.log(arguments);
     var task1Rect = $("#rect_" + task1idNum)[0];
     var x1 = task1Rect.x.animVal.value + 3;
     var task2Rect = $("#rect_" + task2idNum)[0];

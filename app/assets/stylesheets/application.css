@@ -11,4 +11,6 @@
  * require self
  * require_tree ./bootstrap
  *= require_tree .
+ *= stub hiring-panel
+ *= stub font-awesome
  */

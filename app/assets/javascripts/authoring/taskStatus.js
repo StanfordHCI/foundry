@@ -5,14 +5,28 @@
  */
 
 
- //TASK STATUS COLORS
- var TASK_NOT_START_COLOR = "#F5F5F5"; //gray
- var WORKER_TASK_NOT_START_COLOR = "#FFFF33"; //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
- var TASK_START_COLOR = "#1E90FF"; //blue
- var TASK_DELAY_COLOR = "#DC143C"; //red
- var TASK_COMPLETE_COLOR = "#00FF7F"; //green
+//TASK STATUS COLORS
+var TASK_NOT_START_COLOR = "white"; // greyish white
+var TASK_NOT_START_BORDER_COLOR = "transparent"; // no border
+var TASK_NOT_START_STROKE_COLOR = "rgba(82, 82, 82, 0.11)";
 
- function checkEventsBeforeCompleted(groupNum) {
+//yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
+var WORKER_TASK_NOT_START_COLOR = "#ffdd32";
+var WORKER_TASK_NOT_START_BORDER_COLOR = "#eacd72";
+
+//blue
+var TASK_START_COLOR = "#40b8e4";
+var TASK_START_BORDER_COLOR = "#45a1da";
+
+//red
+var TASK_DELAY_COLOR = "#f52020";
+var TASK_DELAY_BORDER_COLOR = "#c84d4d";
+
+//green
+var TASK_COMPLETE_COLOR = "#3fb53f";
+var TASK_COMPLETE_BORDER_COLOR = "#308e30";
+
+function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
     if (eventsBefore == null)
@@ -26,10 +40,10 @@
     }
 
     return true;
- }
+}
 
 //Fires on "Start" button on task modal
- function startTask(groupNum) {
+function startTask(groupNum) {
     if (!checkEventsBeforeCompleted(groupNum))
         return;
 
@@ -56,7 +70,7 @@
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
- }
+}
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
@@ -201,7 +215,7 @@ var keyUpFunc = function(eventToComplete){
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + ">Google Drive Folder</a></p>";
+    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
     
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;

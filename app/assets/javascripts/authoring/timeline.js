@@ -9,7 +9,7 @@ var SVG_WIDTH = 4850,
 
 var HEADER_HEIGHT = 28;
 
-var STEP_WIDTH = 20,
+var STEP_WIDTH = 22,
     HOUR_WIDTH = 4 * STEP_WIDTH;
 
 // declared in events.js
@@ -169,9 +169,8 @@ window._foundry = {
      *
      * Enables drag selection
      */
-    timelineMousedownFn: function(e) {
-      e = e || window.event;
-      e = $.event.fix(e);
+    timelineMousedownFn: function() {
+      var e = d3.event;
       
       // event delegation
       var target = e.target || e.srcElement;
@@ -200,20 +199,19 @@ window._foundry = {
       }
     },
     
-    timelineMouseoverFn: function(e) {
+    timelineMouseoverFn: function() {
       var timeline = window._foundry.timeline;
       
       // if the mouse wasn't pushed down on a marker,
       // cut out early
       if(!timeline.mousedownOnMarker) {return;}
       
-      e = e || window.event;
-      
+      var e = d3.event;
       // event delegation
       var target = e.target || e.srcElement;
       var targetClassName = target.className.baseVal;
-      if(targetClassName.indexOf("marker") === -1) {return;}
       
+      if(targetClassName.indexOf("marker") === -1) {return;}
       
       if(timeline.mousedownMarker !== undefined) {
         var targetLeft = parseInt(target.getAttribute("x"));
@@ -238,7 +236,7 @@ window._foundry = {
     },
     
     // should be attached to the window mouseup event
-    timelineMouseupFn: function(e) {
+    timelineMouseupFn: function() {
       var timeline = window._foundry.timeline;
       
       timeline.mousedownMarker = undefined;
@@ -256,7 +254,6 @@ window._foundry = {
         timeline.selection.svg.attr("x"),
         timeline.selection.svg.attr("y")
       ];
-      //console.log(point);
       
       var duration = timeline.getRangeDuration(
           timeline.rangeStartMarker,
@@ -272,11 +269,11 @@ window._foundry = {
     
     /* updates the number of rows on the timeline and moves
      * overlay accordingly
+     * @param {number} numRows
      */
     updateNumRows: function(numRows) {
       this.numRows = numRows;
       redrawTimeline();
-      //console.log(numRows);
     },
   },
 };
@@ -359,7 +356,7 @@ function redrawTimeline() {
   timelineSvg.attr("width", SVG_WIDTH);
   
   //Remove all existing grid lines & background
-  timelineSvg.selectAll("line").remove();
+  timelineSvg.selectAll("line.grid-line").remove();
   timelineSvg.selectAll("rect.marker").remove();
   
   // draw markers to timeline svg
@@ -385,7 +382,7 @@ function redrawTimeline() {
   timelineSvg.selectAll("line.x")
       .data(intervals)
       .enter().append("line")
-      .attr("class", "x")
+      .attr("class", "x grid-line")
       .attr("x1", function(d) {return d * STEP_WIDTH})
       .attr("x2", function(d) {return d * STEP_WIDTH})
       .attr("y1", 0)
@@ -402,7 +399,7 @@ function redrawTimeline() {
   timelineSvg.selectAll("line.y")
       .data(intervals.slice(1, numRows+1))
       .enter().append("line")
-        .attr("class", "y")
+        .attr("class", "y grid-line")
         .attr("x1", 0)
         .attr("x2", "100%")
         .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
