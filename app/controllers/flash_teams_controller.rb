@@ -108,6 +108,9 @@ end
  
   def edit
   
+  	session.delete(:return_to)
+	session[:return_to] ||= request.original_url
+	  
   if !params.has_key?("uniq") #if in author view
 	  	if session[:user].nil? 
 			@user = nil 
