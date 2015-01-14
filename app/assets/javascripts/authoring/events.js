@@ -640,6 +640,17 @@ function findCurrentUserNextEvent(currentUserEvents){
 
 =======
 >>>>>>> master*/
+
+function findCurrentUserNextEvent(currentUserEvents){
+    console.log("calling findCurrentUserNextEvent");
+    //console.log("currentUserEvents: " + currentUserEvents);
+    for (var i = 0; i < currentUserEvents.length; i++){
+        if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
+            return currentUserEvents[i]["id"];      
+        }
+    }
+}
+
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
     for (var i = 0; i < interactions.length; i++){

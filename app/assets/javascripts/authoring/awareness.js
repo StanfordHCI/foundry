@@ -351,6 +351,7 @@ var renderChatbox = function(){
               current_user = flash_team_members[i];
 
               // here there once existed a call to boldEvents
+
               trackUpcomingEvent();
             }
          }
@@ -1450,9 +1451,15 @@ var trackUpcomingEvent = function(){
     }
     
     setInterval(function(){
-        if(!upcomingEvent) return;
-        //alert("here!");
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
+       
+        if (currentUserEvents.length <= 0) return;
+
+        currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
+        //upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
+        
+        //if(!upcomingEvent) return;
+        
+        var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
         var task_g = getTaskGFromGroupNum(upcomingEvent);
         
         //console.log("here");
@@ -1460,7 +1467,7 @@ var trackUpcomingEvent = function(){
 
         var overallTime;
         
-        while (ev.status == "completed" || currentUserEvents[0]=="completed"){
+        while (ev.status == "completed"){
             toDelete = upcomingEvent;
             currentUserEvents.splice(0,1);
             if (currentUserEvents.length == 0){
@@ -1480,13 +1487,19 @@ var trackUpcomingEvent = function(){
         var cur_ev_ind = getEventIndexFromId(cur_ev_id);
         var ev_start_time = parseInt(ev.startHr) * 60 + parseInt(ev.startMin);
        
-        if( currentUserEvents[0].status == "delayed"){
+         if( ev.status == "not_started"){
+            overallTime = "Your are assigned to "+ ".";
+            statusText.style("color", "red");
+        }
+        if( ev.status == "delayed"){
             overallTime = "Your task is delayed.";
             statusText.style("color", "red");
         }
-        else if ( currentUserEvents[0].status == "started"){
+        else if ( ev.status == "started"){
             overallTime = "Your task is in progress.";
+            statusText.style("color", "blue");
         }
+        
         
         statusText.text(overallTime);
     }, fire_interval);
