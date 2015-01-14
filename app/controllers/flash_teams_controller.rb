@@ -113,13 +113,13 @@ end
 			@user = nil 
 			@title = "Invalid User ID"
 			@flash_team = nil
-			redirect_to(welcome_index_path)			
+			redirect_to(welcome_index_path) and return		
 		else 
 			@flash_team = FlashTeam.find(params[:id])
 			
 			if @flash_team.user_id != session[:user].id 
 				flash[:notice] = 'You cannot access this flash team.' 
-				redirect_to(flash_teams_path)
+				redirect_to(flash_teams_path) and return 
 			end
 		end
 			
