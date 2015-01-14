@@ -4,6 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   def valid_user?
+	  	  
+	  session.delete(:return_to)
+	  session[:return_to] ||= request.original_url
 	  
 	  redirect_to(:controller => :users, :action => :login) and return unless session[:member]
 		  

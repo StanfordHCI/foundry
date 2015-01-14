@@ -452,7 +452,6 @@ end
 	   
 	   #if valid_user?
 	   	
-	   	
 	   	@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	
