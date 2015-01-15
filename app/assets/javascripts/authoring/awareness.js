@@ -1379,11 +1379,11 @@ var trackUpcomingEvent = function(){
        
          if( ev.status == "not_started"){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent)){
-                  overallTime = "Your can start "+ ev.title +" task.";
+                  overallTime = "Your can start "+ ev.title +".";
                 statusText.style("color", "#ffdd32");
             }
             else{
-                overallTime = "Your are assigned to "+ ev.title +" task.";
+                overallTime = "Your are assigned to "+ ev.title +".";
                 statusText.style("color", "ffdd32");
             }
         }
