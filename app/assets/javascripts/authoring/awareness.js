@@ -1347,17 +1347,25 @@ var trackUpcomingEvent = function(){
     
     setInterval(function(){
        
-        if (currentUserEvents.length <= 0) return;
+        var overallTime;
+        
+        /*if (currentUserEvents.length <= 0) {
+            overallTime = "You are not assigned to any tasks yet.";
+            statusText.style("color", "black");      
+            statusText.text(overallTime);
+            return;
+        }*/
+
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         
+
         var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
+        upcomingEvent = ev.id;
         var task_g = getTaskGFromGroupNum(upcomingEvent);
         
         //console.log("here");
-        //console.log(ev);
-
-        var overallTime;
+        //console.log(ev);     
         
         while (ev.status == "completed"){
             toDelete = upcomingEvent;
@@ -1371,22 +1379,18 @@ var trackUpcomingEvent = function(){
             upcomingEvent = currentUserEvents[0].id;
             task_g = getTaskGFromGroupNum(upcomingEvent);
             ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
-        
         }
 
-        currentUserEvents[0].startTime = parseInt(currentUserEvents[0].startHr)*60 + parseInt(currentUserEvents[0].startMin);
-        var cur_ev_id = currentUserEvents[0].id;
-        var cur_ev_ind = getEventIndexFromId(cur_ev_id);
-        var ev_start_time = parseInt(ev.startHr) * 60 + parseInt(ev.startMin);
        
-         if( ev.status == "not_started"){
-            if(checkEventsBeforeCompletedNoAlert(upcomingEvent)){
-                  overallTime = "Your can start "+ ev.title +".";
-                statusText.style("color", "#ffdd32");
+        if( ev.status == "not_started" ){
+            if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
+                //alert(upcomingEvent);
+                overallTime = "Your can start "+ ev.title +".";
+                statusText.style("color", "black");
             }
             else{
                 overallTime = "Your are assigned to "+ ev.title +".";
-                statusText.style("color", "ffdd32");
+                statusText.style("color", "black");
             }
         }
         if( ev.status == "delayed"){
