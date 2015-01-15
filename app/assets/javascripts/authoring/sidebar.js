@@ -368,15 +368,15 @@ var project_status_svg = d3.select("#status-bar-container").append("svg")
 .attr("height", 100);
 
 var statusText = project_status_svg.append("foreignObject")
-.attr("x", 0)
+.attr("x", 11)
 .attr("y", 15)
-.attr("width", "100%")
+.attr("width", "90%")
 .attr("height", 100)
 .append("xhtml:p")
 .style("color", "blue")
-.style("font-size", "18px")
-.style("background-color", "#f5f5f5")
-.style("width", "100%")
+.style("font-size", "16px")
+.style("background-color", "#ffffff")
+.style("width", "90%")
 .text("");
 
 

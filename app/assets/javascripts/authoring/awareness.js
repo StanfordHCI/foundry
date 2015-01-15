@@ -1455,9 +1455,6 @@ var trackUpcomingEvent = function(){
         if (currentUserEvents.length <= 0) return;
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
-        //upcomingEvent = findCurrentUserNextEvent(currentUserEvents);
-        
-        //if(!upcomingEvent) return;
         
         var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
         var task_g = getTaskGFromGroupNum(upcomingEvent);
@@ -1472,7 +1469,7 @@ var trackUpcomingEvent = function(){
             currentUserEvents.splice(0,1);
             if (currentUserEvents.length == 0){
                 upcomingEvent = undefined;
-                statusText.style("color", "green");
+                statusText.style("color", "#3fb53f");
                 statusText.text("You've completed all your tasks!");
                 return;
             }
@@ -1488,16 +1485,22 @@ var trackUpcomingEvent = function(){
         var ev_start_time = parseInt(ev.startHr) * 60 + parseInt(ev.startMin);
        
          if( ev.status == "not_started"){
-            overallTime = "Your are assigned to "+ ".";
-            statusText.style("color", "red");
+            if(checkEventsBeforeCompletedNoAlert(upcomingEvent)){
+                  overallTime = "Your can start "+ ev.title +" task.";
+                statusText.style("color", "#ffdd32");
+            }
+            else{
+                overallTime = "Your are assigned to "+ ev.title +" task.";
+                statusText.style("color", "ffdd32");
+            }
         }
         if( ev.status == "delayed"){
             overallTime = "Your task is delayed.";
-            statusText.style("color", "red");
+            statusText.style("color", "#f52020");
         }
         else if ( ev.status == "started"){
             overallTime = "Your task is in progress.";
-            statusText.style("color", "blue");
+            statusText.style("color", "#40b8e4");
         }
         
         
