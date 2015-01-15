@@ -561,21 +561,7 @@ if(!window._foundry) {
             },
             height: 9,
             "class": "clock_icon",
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
-            }
-        },
-        
-        style: {
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    events.iconOpacity : 1;
-            }
+            "xlink:href": "/assets/icons/clock/clock_white.svg"
         }
     },
     
@@ -624,18 +610,8 @@ if(!window._foundry) {
         },
         style: {
             "font-family": "proxima-nova",
-            fill: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "#444" : "white";
-            },
-            "font-weight": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    400 : 300;
-            },
+            fill: "white",
+            "font-weight": 300,
             "letter-spacing": "1px",
             "font-size": "12px",
             "text-transform": "uppercase"
@@ -651,8 +627,6 @@ if(!window._foundry) {
          */
         text: function(eventObj) {
             var time = eventObj.timer || eventObj.duration;
-            
-            console.log(eventObj.timer, eventObj.duration);
             
             var hours = Math.floor(time / 60);
             var minutes = time % 60;
@@ -680,18 +654,8 @@ if(!window._foundry) {
         },
         style: {
             "font-family": "proxima-nova",
-            fill: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "#444" : "white";
-            },
-            "font-weight": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    400 : 300;
-            },
+            fill: "white",
+            "font-weight": 300,
             "letter-spacing": "1px",
             "font-size": "10px",
             "text-transform": "uppercase"
@@ -708,12 +672,7 @@ if(!window._foundry) {
             "class": "underline"
         },
         style: {
-            "stroke": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
-            },
+            "stroke": "rgba(255, 255, 255, 0.24)",
             "stroke-width": "1px"
         }
     },
@@ -742,22 +701,8 @@ if(!window._foundry) {
                 return eventObj.duration <= 60 ? 0 : 12;
             },
             height: 12,
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
-            },
+            "xlink:href": "/assets/icons/member/member_white.svg",
             "class": "num-members-icon"
-        },
-        
-        style: {
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    events.iconOpacity : 1;
-            }
         }
     },
     
@@ -782,12 +727,7 @@ if(!window._foundry) {
         },
         style: {
             "font-size": "8px",
-            fill: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "black" : "white";
-            },
+            fill: "white",
             "font-weight": 200,
             "font-family": "Helvetica"
         }
@@ -814,23 +754,11 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 14,
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                console.log(d);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
-            },
+            "xlink:href": "/assets/icons/upload/upload_white.svg",
             "class": "upload"
         },
         style: {
-            cursor: "pointer",
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    events.iconOpacity : 1;
-            }
+            cursor: "pointer"
         }
     },
     
@@ -855,25 +783,10 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 14,
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "/assets/icons/collaboration/collaboration.svg" :
-                    "/assets/icons/collaboration/collaboration_white.svg";
-            },
+            "xlink:href": "/assets/icons/collaboration/collaboration_white.svg",
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
             groupNum: function(d) {return d.groupNum}
-        },
-        
-        style: {
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    events.iconOpacity : 1;
-            }
         }
     },
     
@@ -911,25 +824,10 @@ if(!window._foundry) {
                 return iconWidth;
             },
             height: 15,
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "/assets/icons/arrow/right_arrow.svg" :
-                    "/assets/icons/arrow/right_arrow_white.svg";
-            },
+            "xlink:href": "/assets/icons/arrow/right_arrow_white.svg",
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
             groupNum: function(d) {return d.groupNum}
-        },
-        
-        style: {
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    events.iconOpacity : 1;
-            }
         }
     },
     
@@ -948,12 +846,7 @@ if(!window._foundry) {
         style: {
             display: "none",
             cursor: "ew-resize",
-            fill: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
-            }
+            fill: "rgba(255, 255, 255, 0.8)"
         }
     },
     
@@ -972,18 +865,13 @@ if(!window._foundry) {
             height: 11,
             rx: 1,
             ry: 1,
-            "class": "right-handle",
+            "class": "right-handle"
         },
         
         style: {
             display: "none",
             cursor: "ew-resize",
-            fill: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" && !events.isWorkerTask(eventObj) ?
-                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
-            }
+            fill: "rgba(255, 255, 255, 0.8)"
         }
     }
   };
@@ -1141,13 +1029,6 @@ function drawMainRect(eventObj) {
         })
         .style("filter", "url(#box-shadow)")
         .call(drag);
-    
-    if(eventObj.status === "not_started") {
-        rect.style({
-            stroke: TASK_NOT_START_STROKE_COLOR,
-            "stroke-width": "1",
-        });
-    }
     
     var borderBottom = task_g.selectAll(".border-bottom");
     if(borderBottom.empty()) {
