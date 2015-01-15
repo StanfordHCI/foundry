@@ -1385,7 +1385,7 @@ var trackUpcomingEvent = function(){
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
                 //alert(upcomingEvent);
-                overallTime = "Your can now start "+ ev.title +" task.";
+                overallTime = "You can now start "+ ev.title +" task.";
                 statusText.style("color", "black");
             }
             else{
