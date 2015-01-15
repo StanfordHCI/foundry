@@ -361,7 +361,6 @@ $(function() {
 
 //*************status bar begin *******//
 
-//var status_width=302; --> negar's
 /* --------------- PROJECT STATUS BAR START ------------ */
 var project_status_svg = d3.select("#status-bar-container").append("svg")
 .attr("width", "100%")
