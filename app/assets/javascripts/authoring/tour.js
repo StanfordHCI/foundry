@@ -11,9 +11,8 @@ var authoringTour = new Tour({
 		orphan: true, 
 		title: "<b>Welcome to Foundry</b>", 
 		content: "Foundry is an online platform that allows you to create "
-		+"and manage teams of experts. Foundry allows you to create a team "
-		+"workflow, guide the team's communication and collaboration efforts, "
-		+"and monitor the team's progress.",
+		+"and manage teams of experts. "
+		+ "//GIF: Create a Workflow, Add Team Members, Manage a Live Team" ,
 		backdrop: true
 	}, 
 	{
@@ -28,17 +27,19 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
 	},
-	/*{
-		//ADD INFORMATION FOR THE TYPES OF WORKERS
-		//E.G., PC, WORKER, CLIENT
-	},*/
+	{
+		element: "#member-container",
+		title: "<b>Team Roles - Privileges</b>",
+		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
+		+"project coordinator, or a worker.",
+	},
 	{
 		element: "#member-container",
 		title: "<b>Customize Each Role</b>",
 		html: true,
-		content: "<div class='tour-content-wrapper'>Once you have added a role, you assign it to a category "
-		+"and specify the necessary skills for that role " 
-		+"skills based on the oDesk platform. <img src='/assets/memberForm.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>You can also assign each role a category "
+		+"and specify the necessary skills for that role based on the oDesk platform." 
+		+"//GIF: ADD DETAILS TO A MEMBER <img src='/assets/memberForm.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -49,8 +50,8 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Interactive Task-Based Timeline</b>",
-		content: "This is the timeline. You can click to add an event "
-		+"and customize it."
+		content: "This is the timeline. Drag to add an event "
+		+"and customize it. //GIF: DRAWING AN EVENT"
 	},
 	{
 		orphan: true,
@@ -159,7 +160,7 @@ authoringTour.init();
 
 $("#tourBtn").click(function(){
     authoringTour.start(true);
-    authoringTour.goTo(0); //Always start tour at the first step
+    //authoringTour.goTo(0); //Always start tour at the first step
 });
 
 
