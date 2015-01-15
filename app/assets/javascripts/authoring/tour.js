@@ -19,7 +19,7 @@ var authoringTour = new Tour({
 		element: "#member-container",
 		title: "<b>Team Roles</b>",
 		content: "<div class='tour-content-wrapper'>In this panel, you can add role-based "
-		+"members to the team. <img src='/assets/members.png'> </img></div>"
+		+"members to the team. <img src=''> </img></div>" // '/assets/img.gif'
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -39,7 +39,7 @@ var authoringTour = new Tour({
 		html: true,
 		content: "<div class='tour-content-wrapper'>You can also assign each role a category "
 		+"and specify the necessary skills for that role based on the oDesk platform." 
-		+"//GIF: ADD DETAILS TO A MEMBER <img src='/assets/memberForm.png'> </img></div>"
+		+"//GIF: ADD DETAILS TO A MEMBER <img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -51,13 +51,20 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Interactive Task-Based Timeline</b>",
 		content: "This is the timeline. Drag to add an event "
-		+"and customize it. //GIF: DRAWING AN EVENT"
+		+"and customize it. <br><img src='/assets/drawEvent.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
 	},
 	{
 		orphan: true,
 		title: "<b>Customize the Events</b>",
-		content: "<div class='tour-content-wrapper'>Use the pop-up form to change the details of the events."
-		+"<img src='/assets/eventForm.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>Add details to each event so workers "
+		+"can easily complete their tasks. "
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -68,10 +75,9 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Handoffs</b>",
-		content: "<div class='tour-content-wrapper'>Click on the gray arrow button on an event to " 
-		+"start drawing a handoff, click another event to complete the interaction. "
-		+"To cancel, click on the same event."
-		+"<img src='/assets/handoffs.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>Draw a handoff between events "
+		+"to show that one task depends on the output of another. //GIF: DRAW HANDOFF"
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -82,10 +88,9 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Collaborations</b>",
-		content: "<div class='tour-content-wrapper'>Click on the black double-sided arrow button on an event to " 
-		+"start drawing a collaboration between two overlapping events, "
-		+" click another event to complete the interaction. "
-		+"<img src='/assets/collabs.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>Draw a collaboration to show that members from "
+		+"both events should collaborate while working. //GIF: DRAW COLLAB"
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -96,10 +101,9 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Google Drive Integration</b>",
-		content: "<div class='tour-content-wrapper'>Google Drive folders are automatically created for each "
-		+"event, workers can upload their work to the folders "
-		+"by clicking 'Upload' on the event."
-		+"<img src='/assets/upload.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>Google Drive folders are automatically created for "
+		+"each event, workers can open the folder by clicking the Upload icon." 
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -126,8 +130,8 @@ var authoringTour = new Tour({
 		title: "<b>Event Library</b>", 
 		content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
 		+"all previously created events by entering in keywords, inputs, "
-		+"and outputs, and drag them to your timeline."
-		+"<img src='/assets/eventlibrary.png'> </img></div>"
+		+"and outputs, and drag them to your timeline. //GIF: EVENT LIBRARY"
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -143,10 +147,16 @@ var authoringTour = new Tour({
 		placement: "bottom"
 	},
 	{
+		orphan: true,
+		title: "<b>Start the Team</b>",
+		content: "Now that the team has started working, workers can click 'Start' on events to begin"
+		+"the event timer to track progress in the workflow. //GIF: STARTED, DELAYED, ETC. EVENT GIF",
+	},
+	{
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "Once the team has started working, you can chat with " 
-		+"all of the team members in this group chat box."
+		+"all of the team members in this group chat box. //GIF: CHAT GIF"
 	},
 	{
 		orphan: true,
@@ -170,10 +180,9 @@ var expertTour = new Tour({
 	{
 		orphan: true, 
 		title: "<b>Welcome to Foundry</b>", 
-		content: "Here you can view your upcoming tasks, "
-		+ "see where you should communicate with other members of the team "
+		content: "View your upcoming tasks, communicate with the team "
 		+ "track the progress of the project, "
-		+ "and upload and download files from a shared Google Drive folder.",
+		+ "and upload and download files from a shared Google Drive folder. //GIF: OVERVIEW WORKER",
 		backdrop: true
 	},
 	{
@@ -198,16 +207,16 @@ var expertTour = new Tour({
 		element: "#timeline-container" ,
 		title: "<b>Timeline</b>", 
 		content: "This is the timeline. Here you can view the entire project's " 
-		+"workflow and its current status.",
+		+"workflow and its current status. //GIF: DELAYED, STARTED, ETC. EVENT",
 		placement: "left"
 	},
 	{
 		orphan: true,
 		title: "<b>Complete Your Events</b>", 
-		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have completed the work for your event, uploaded " 
-		+"any relevant files, etc. you can click the event and choose 'Complete' to mark "
-		+"the task as done, message the project coordinator (PC), and open the documentation questions."
-		+"<img src='/assets/completeTask.png'> </img></div>"
+		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have "
+		+"completed the work for your event, uploaded any relevant files, etc. "
+		+"click 'Complete' to mark the task and answer documentation questions."
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -234,8 +243,8 @@ var expertTour = new Tour({
 		title: "<b>Delayed Events</b>", 
 		content: "<div class='tour-content-wrapper'>If your work takes longer than the expected estimation, the event "
 		+"will extend in red and be marked as delayed. Foundry will email you to request "
-		+"a new estimated complete time so the PC can plan accordingly." 
-		+"<img src='/assets/delayedTask.png'> </img></div>"
+		+"a new estimated complete time so the PC can plan accordingly. //IMG" 
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -248,8 +257,8 @@ var expertTour = new Tour({
 		title: "<b>Early Events</b>", 
 		content: "<div class='tour-content-wrapper'>Similarly, if you complete earlier than the expected estimation, the "
 		+"event will be marked in blue, downstream tasks will shift up, and "
-		+"downstream workers will be notified that they can/should start early." 
-		+"<img src='/assets/earlyTask.png'> </img></div>"
+		+"downstream workers will be notified that they can/should start early. //IMG" 
+		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -274,21 +283,26 @@ $("#expertTourBtn").click(function(){
 });
 
 //TODO: PC Tour
-/* //SHELL FOR THE PC TOUR
+//SHELL FOR THE PC TOUR
 //A tour to walk the PCs through the use of Foundry
 var pcTour = new Tour({
 	steps: [
 	{
-	
+		orphan: true, 
+		title: "<b>Welcome to Foundry</b>", 
+		content: "View your upcoming tasks, communicate with the team "
+		+ "track the progress of the project, "
+		+ "and upload and download files from a shared Google Drive folder. //GIF: OVERVIEW PC",
+		backdrop: true
 	},
 ]});
 	
 //Initialize the PC tour
 pcTour.init();
 
-$("#").click(function(){
+/*$("#").click(function(){
     pcTour.start(true);
     pcTour.goTo(0); //Always start the tour at the first step 
-});
-*/
+});*/
+
 
