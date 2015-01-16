@@ -1027,6 +1027,11 @@ function drawG(eventObj) {
     }
     
     var showHandles = function(d) {
+        // same size as in leftResize and rightResize functions
+        if(isUser || in_progress) {
+            return;
+        }
+        
         var x = d3.mouse(this)[0];
         var eventX = d.x;
 
@@ -1034,7 +1039,7 @@ function drawG(eventObj) {
         var right = d3.select(this).selectAll(".right-handle");
 
         var width = getWidth(getEventFromId(groupNum));
-
+        
         if(x < eventX + width/2) {
             // show the left and hide the right
             left.style({display: ""})
