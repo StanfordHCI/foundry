@@ -21,6 +21,9 @@ class UsersController < ApplicationController
 		if @user.save
 			session[:user] = @user
 			flash[:notice] = "Account created! Welcome, #{session[:user].username}!"
+			
+			session.delete(:member)
+			session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
 
 			redirect_to(:controller => :flash_teams, :action => :index)
 		else
