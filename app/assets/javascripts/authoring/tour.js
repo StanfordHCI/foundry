@@ -6,6 +6,7 @@
 
 //A tour that walks a user through the team authoring process
 var authoringTour = new Tour({
+	autoscroll: true,
 	steps: [
 	{
 		orphan: true, 
@@ -19,13 +20,11 @@ var authoringTour = new Tour({
 		element: "#member-container",
 		title: "<b>Team Roles</b>",
 		content: "<div class='tour-content-wrapper'>In this panel, you can add role-based "
-		+"members to the team. <img src=''> </img></div>" // '/assets/img.gif'
-		+"<nav class='popover-navigation'><div class='btn-group'>"
-		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
-		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
-		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
-		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>"
+		+"members to the team.",
+		onShow: function(authoringTour) {
+			console.log("hi from team roles 1"); //START HERE, TOGGLE SIDEBAR
+			$("#left-sidebar .sidebar-item .header")[0].click();
+		}
 	},
 	{
 		element: "#member-container",
@@ -162,8 +161,8 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Good luck! </b>", 
 		content: "Good luck with your project and please enjoy the use of Foundry!"
-	}
-]});
+	}]
+});
 
 //Initialize the tour
 authoringTour.init();
