@@ -54,7 +54,8 @@ var addCursor = function(){
         .attr("x2", 0)
         .attr("class", "cursor")
         .style("stroke", "red")
-        .style("stroke-width", "2");
+        .style("stroke-width", "2")
+        .style("display", "none");
 };
 
 var getXCoordForTime = function(t){
