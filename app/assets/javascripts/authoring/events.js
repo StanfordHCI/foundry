@@ -590,6 +590,35 @@ if(!window._foundry) {
         }
     },
     
+    /**
+     * @param {string} text
+     * @param {number} workingWidth
+     * @param {object} [style]
+     * @param {number} eventObjectId
+     * @returns The string truncated enough to fit inside of the given working
+     * width
+     */
+    getShortenedString: function(text, workingWidth, eventObjectId, style) {
+        var textSvg = d3.select("#g_" + eventObjectId).append("text")
+            .style(style)
+            .style({color: "transparent"})
+            .text(text);
+        
+        var length = text.length;
+        while (textSvg.node().getBBox().width > workingWidth) {
+            if(length === 0) {
+                text = '...';
+                break;
+            }
+            length--;
+            text = text.substr(0, length) + "...";
+            textSvg.text(text);
+        }
+
+        textSvg.remove();
+        return text;
+    },
+    
     title: {
         selector: ".title",
         tag: "text",
@@ -605,26 +634,10 @@ if(!window._foundry) {
                                - 10 // right margin
                                - 5;
             
-            var textSvg = d3.select("#g_" + eventObj.id).append("text")
-                    .style(events.title.style)
-                    .style({color: "transparent"})
-                    .attr("x", 0)
-                    .attr("y", 0)
-                    .text(title);
-            var length = title.length;
-            while (textSvg.node().getBBox().width > workingWidth) {
-                if(length === 0) {
-                    title = eventObj.title;
-                    break;
-                }
-                length--;
-                title = title.substr(0, length) + "...";
-                textSvg.text(title);
-            }
-            
-            textSvg.remove();
-            return title;
+            return events.getShortenedString(
+                title, workingWidth, eventObj.id, events.title.style);
         },
+        
         attrs: {
             "class": "title",
             x: function(d) {
@@ -633,6 +646,7 @@ if(!window._foundry) {
             },
             y: function(d) {return d.y + 19}
         },
+        
         style: {
             "font-family": "proxima-nova",
             fill: function(d) {
@@ -663,8 +677,6 @@ if(!window._foundry) {
         text: function(eventObj) {
             var time = eventObj.timer || eventObj.duration;
             
-            console.log(eventObj.timer, eventObj.duration);
-            
             var hours = Math.floor(time / 60);
             var minutes = time % 60;
 
@@ -678,17 +690,28 @@ if(!window._foundry) {
                 durationArray.push(minutes + minStr);
             }
 
-            return durationArray.join(" ");
+            var timeStr = durationArray.join(" ");
+            
+            var clockAttrs = events.clock.attrs;
+            
+            var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
+            var workingWidth =   getWidth(eventObj)
+                               - 2 * events.marginLeft
+                               - ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum))
+                               - 10; // right padding
+            return events.getShortenedString(
+                timeStr, workingWidth, eventObj.id, events.duration.style);
         },
         
         attrs: {
             "class": "duration",
             x: function(d) {
-                var attrs = events.clock.attrs;
-                return attrs.x(d) + attrs.width(d) + 4;
+                var clockAttrs = events.clock.attrs;
+                return clockAttrs.x(d) + clockAttrs.width(d) + 4;
             },
             y: function(d) {return d.y + 32}
         },
+        
         style: {
             "font-family": "proxima-nova",
             fill: function(d) {
@@ -1418,10 +1441,10 @@ function drawTimer(eventObj){
     
     if( eventObj.status == "started" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
-
+        
         if(remaining_time < 0){
             eventObj.status = "delayed";
              
