@@ -6,8 +6,8 @@
 
 
 //TASK STATUS COLORS
-var TASK_NOT_START_COLOR = "white"; // greyish white
-var TASK_NOT_START_BORDER_COLOR = "transparent"; // no border
+var TASK_NOT_START_COLOR = "#e4e4e4";
+var TASK_NOT_START_BORDER_COLOR = "#c7c7c7";
 var TASK_NOT_START_STROKE_COLOR = "rgba(82, 82, 82, 0.11)";
 
 //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
