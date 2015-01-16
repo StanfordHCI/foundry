@@ -697,7 +697,8 @@ if(!window._foundry) {
             var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
-                               - ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum));
+                               - ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum))
+                               - 10; // right padding
             return events.getShortenedString(
                 timeStr, workingWidth, eventObj.id, events.duration.style);
         },
@@ -1435,10 +1436,10 @@ function drawTimer(eventObj){
     
     if( eventObj.status == "started" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
-
+        
         if(remaining_time < 0){
             eventObj.status = "delayed";
              
