@@ -1521,20 +1521,17 @@ function addEventMember(eventId, memberIndex) {
 
 //Remove a team member from an event
 function deleteEventMember(eventId, memberNum, memberName) {
-    //Delete the line
-    $("#event_" + eventId + "_eventMemLine_" + memberNum).remove();
     if (memberNum == current){
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
-    //Update the JSON
+    //Update the JSON then redraw the event
     var indexOfJSON = getEventJSONIndex(eventId);
-    for (i = 0; i < flashTeamsJSON["events"][indexOfJSON].members.length; i++) {
-        if (flashTeamsJSON["events"][indexOfJSON].members[i]["name"] == memberName) {
-            flashTeamsJSON["events"][indexOfJSON].members.splice(i, 1);
-            //START HERE IF YOU WANT TO SHIFT UP MEMBER LINES AFTER DELETION
-            break;
-        }
+    var event = flashTeamsJSON["events"][indexOfJSON];
+    var indexInEvent = event.members.indexOf(memberNum);
+    if(indexInEvent != -1) {
+        event.members.splice(indexInEvent, 1);
+        drawEvent(event);
     }
 }
 
