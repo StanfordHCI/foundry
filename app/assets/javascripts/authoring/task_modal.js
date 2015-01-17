@@ -435,7 +435,7 @@ function saveTaskOverview(groupNum){
     }
     ev.outputQs = outQs;
 
-    drawEvent(ev, 0);
+    drawEvent(ev);
     updateStatus();
 
     $('#task_modal').modal('hide'); 

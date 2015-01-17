@@ -1314,6 +1314,7 @@ function drawMemberTabs(eventObj) {
     var members = eventObj.members;
     var task_g = getTaskGFromGroupNum(groupNum);
     
+    task_g.selectAll(".mem_tab").remove();
     var start = 4;
     for(var i = 0; i < members.length; i++) {
         var memberId = members[i];
@@ -1340,6 +1341,7 @@ function drawMemberTabs(eventObj) {
         
         var attrs = {
             id: "mem_tab_" + memberId,
+            class: "mem_tab",
             width: 24,
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
@@ -1521,20 +1523,17 @@ function addEventMember(eventId, memberIndex) {
 
 //Remove a team member from an event
 function deleteEventMember(eventId, memberNum, memberName) {
-    //Delete the line
-    $("#event_" + eventId + "_eventMemLine_" + memberNum).remove();
     if (memberNum == current){
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
-    //Update the JSON
+    //Update the JSON then redraw the event
     var indexOfJSON = getEventJSONIndex(eventId);
-    for (i = 0; i < flashTeamsJSON["events"][indexOfJSON].members.length; i++) {
-        if (flashTeamsJSON["events"][indexOfJSON].members[i]["name"] == memberName) {
-            flashTeamsJSON["events"][indexOfJSON].members.splice(i, 1);
-            //START HERE IF YOU WANT TO SHIFT UP MEMBER LINES AFTER DELETION
-            break;
-        }
+    var event = flashTeamsJSON["events"][indexOfJSON];
+    var indexInEvent = event.members.indexOf(memberNum);
+    if(indexInEvent != -1) {
+        event.members.splice(indexInEvent, 1);
+        drawEvent(event);
     }
 }
 
