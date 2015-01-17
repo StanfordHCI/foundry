@@ -669,7 +669,8 @@ var drawRedBox = function(ev, task_g, use_cursor){
             .attr("width", red_width)
             .attr("fill", "red")
             .attr("fill-opacity", .6)
-            .attr("stroke", "#5F5A5A");
+            .attr("stroke", "#5F5A5A")
+            .attr("display", "none");
     } else {
         existingRedBox
             .attr("width", red_width);
