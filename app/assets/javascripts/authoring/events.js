@@ -1314,6 +1314,7 @@ function drawMemberTabs(eventObj) {
     var members = eventObj.members;
     var task_g = getTaskGFromGroupNum(groupNum);
     
+    task_g.selectAll(".mem_tab").remove();
     var start = 4;
     for(var i = 0; i < members.length; i++) {
         var memberId = members[i];
@@ -1340,6 +1341,7 @@ function drawMemberTabs(eventObj) {
         
         var attrs = {
             id: "mem_tab_" + memberId,
+            class: "mem_tab",
             width: 24,
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
