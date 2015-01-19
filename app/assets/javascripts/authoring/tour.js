@@ -170,8 +170,16 @@ var authoringTour = new Tour({
 	{
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
-		content: "Once the team has started working, you can chat with " 
-		+"all of the team members in this group chat box. //GIF: CHAT GIF"
+		content: "<div class='tour-content-wrapper'>Once the team has started working, you can chat with " 
+		+"all of the team members in this group chat box."
+		+"<img src='/assets/chat.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+		placement: "left"
 	},
 	{
 		orphan: true,
