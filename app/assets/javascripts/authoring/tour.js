@@ -28,8 +28,10 @@ var authoringTour = new Tour({
 		content: "<div class='tour-content-wrapper'>In this panel, you can add role-based "
 		+"members to the team.",
 		onShow: function(authoringTour) {
-			if(!$("#left-sidebar").hasClass("active")) $("#foundry-header .menu-button").click();
-			$("#left-sidebar .sidebar-item .header")[0].click();
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#member-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[0].click();
+			}
 		}
 	},
 	{
@@ -45,7 +47,13 @@ var authoringTour = new Tour({
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>"
+		+"<div class='popover-content'></div>",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#member-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[0].click();
+			}
+		}
 	},
 	{
 		orphan: true,
@@ -63,7 +71,7 @@ var authoringTour = new Tour({
 		title: "<b>Customize the Events</b>",
 		content: "<div class='tour-content-wrapper'>Add details to each event so workers "
 		+"can easily complete their tasks. "
-		+"<img src=''> </img></div>"
+		+"<img src='/assets/editTask.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -75,8 +83,8 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Handoffs</b>",
 		content: "<div class='tour-content-wrapper'>Draw a handoff between events "
-		+"to show that one task depends on the output of another. //GIF: DRAW HANDOFF"
-		+"<img src=''> </img></div>"
+		+"to show that one task depends on the output of another."
+		+"<img src='/assets/handoff.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -88,8 +96,8 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Collaborations</b>",
 		content: "<div class='tour-content-wrapper'>Draw a collaboration to show that members from "
-		+"both events should collaborate while working. //GIF: DRAW COLLAB"
-		+"<img src=''> </img></div>"
+		+"both events should collaborate while working."
+		+"<img src='/assets/collab.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
