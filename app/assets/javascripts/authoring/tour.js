@@ -212,10 +212,13 @@ var expertTour = new Tour({
 		element: "#project-status-container",
 		title: "<b>Project Status</b>", 
 		content: "This panel contains information about this project including "
-		+"the progress of the whole team as well as your next upcoming task. "
+		+"the progress of the whole team as well as your next upcoming task. ",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+		}
 	},
 	{
-		element: "#gFolder" ,
+		element: ".google-drive-button" ,
 		title: "<b>Google Drive Project Folder</b>", 
 		content: "At the top is a link to the Google Drive folder " 
 		+"for the entire project."
@@ -224,21 +227,28 @@ var expertTour = new Tour({
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project coordinator (PC)."
+		+"members of the team as well as the project coordinator (PC).",
+		placement: "left"
 	},
 	{
 		element: "#timeline-container" ,
 		title: "<b>Timeline</b>", 
-		content: "This is the timeline. Here you can view the entire project's " 
-		+"workflow and its current status. //GIF: DELAYED, STARTED, ETC. EVENT",
+		content: "<div class='tour-content-wrapper'>This is the timeline. Here you can "
+		+"view the entire project. Your tasks have been highlighted in yellow. "
+		+"<img src='/assets/highlightTasks.png'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
 		placement: "left"
 	},
 	{
 		orphan: true,
 		title: "<b>Complete Your Events</b>", 
-		content: "<div class='tour-content-wrapper'>If you are the DRI, when you have "
-		+"completed the work for your event, uploaded any relevant files, etc. "
-		+"click 'Complete' to mark the task and answer documentation questions."
+		content: "<div class='tour-content-wrapper'>If you are the DRI, complete the task "
+		+"on the timeline and complete documentation. //GIF: COMPLETE EVENT, ANSWER QUESTIONS"
 		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -277,11 +287,10 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Early Events</b>", 
-		content: "<div class='tour-content-wrapper'>Similarly, if you complete earlier than the expected estimation, the "
-		+"event will be marked in blue, downstream tasks will shift up, and "
-		+"downstream workers will be notified that they can/should start early. //IMG" 
-		+"<img src=''> </img></div>"
+		title: "<b>Early and On-Time Events</b>", 
+		content: "<div class='tour-content-wrapper'>Similarly, if you complete on-time or earlier, "
+		+"the event will be marked in green, and downstream workers "
+		+"will be notified that they can begin working //IMG <img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -302,7 +311,7 @@ expertTour.init();
 
 $("#expertTourBtn").click(function(){
     expertTour.start(true);
-    expertTour.goTo(0); //Always start the tour at the first step 
+    //expertTour.goTo(0); //Always start the tour at the first step 
 });
 
 //TODO: PC Tour
