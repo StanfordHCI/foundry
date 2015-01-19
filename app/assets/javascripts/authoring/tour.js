@@ -221,7 +221,10 @@ var expertTour = new Tour({
 		element: ".google-drive-button" ,
 		title: "<b>Google Drive Project Folder</b>", 
 		content: "At the top is a link to the Google Drive folder " 
-		+"for the entire project."
+		+"for the entire project.",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+		}
 	},
 	{
 		element: "#chat-box-container" ,
