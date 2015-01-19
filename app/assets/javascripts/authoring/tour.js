@@ -10,11 +10,18 @@ var authoringTour = new Tour({
 	steps: [
 	{
 		orphan: true, 
-		title: "<b>Welcome to Foundry</b>", 
-		content: "Foundry is an online platform that allows you to create "
-		+"and manage teams of experts. "
-		+ "//GIF: Create a Workflow, Add Team Members, Manage a Live Team" ,
-		backdrop: true
+		title: "<b>Welcome to Foundry</b>",
+		backdrop: true,
+		html: true,
+		content: "Foundry is an online platform that allows you to create and manage"
+		+"<div class='tour-content-wrapper'>Foundry is an onlien platform that allows you " 
+		+"to create and manage teams of experts.<img src='/assets/overview.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
 	}, 
 	{
 		element: "#member-container",
@@ -22,7 +29,6 @@ var authoringTour = new Tour({
 		content: "<div class='tour-content-wrapper'>In this panel, you can add role-based "
 		+"members to the team.",
 		onShow: function(authoringTour) {
-			console.log("hi from team roles 1"); //START HERE, TOGGLE SIDEBAR
 			$("#left-sidebar .sidebar-item .header")[0].click();
 		}
 	},
@@ -49,8 +55,7 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Interactive Task-Based Timeline</b>",
-		content: "This is the timeline. Drag to add an event "
-		+"and customize it. <br><img src='/assets/drawEvent.gif'> </img></div>"
+		content: "Drag to add an event on the timeline. <br><img src='/assets/drawEvent.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
