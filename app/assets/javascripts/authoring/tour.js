@@ -110,7 +110,7 @@ var authoringTour = new Tour({
 		title: "<b>Google Drive Integration</b>",
 		content: "<div class='tour-content-wrapper'>Google Drive folders are automatically created for "
 		+"each event, workers can open the folder by clicking the Upload icon." 
-		+"<img src=''> </img></div>"
+		+"<img src='/assets/upload.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
