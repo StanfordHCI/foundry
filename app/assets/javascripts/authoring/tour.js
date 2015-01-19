@@ -13,8 +13,7 @@ var authoringTour = new Tour({
 		title: "<b>Welcome to Foundry</b>",
 		backdrop: true,
 		html: true,
-		content: "Foundry is an online platform that allows you to create and manage"
-		+"<div class='tour-content-wrapper'>Foundry is an onlien platform that allows you " 
+		content: "<div class='tour-content-wrapper'>Foundry is an online platform that allows you " 
 		+"to create and manage teams of experts.<img src='/assets/overview.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -29,22 +28,18 @@ var authoringTour = new Tour({
 		content: "<div class='tour-content-wrapper'>In this panel, you can add role-based "
 		+"members to the team.",
 		onShow: function(authoringTour) {
+			if(!$("#left-sidebar").hasClass("active")) $("#foundry-header .menu-button").click();
 			$("#left-sidebar .sidebar-item .header")[0].click();
 		}
 	},
 	{
 		element: "#member-container",
-		title: "<b>Team Roles - Privileges</b>",
-		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
-		+"project coordinator, or a worker.",
-	},
-	{
-		element: "#member-container",
 		title: "<b>Customize Each Role</b>",
 		html: true,
-		content: "<div class='tour-content-wrapper'>You can also assign each role a category "
+		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
+		+"project coordinator, or a worker. You can also assign each role a category "
 		+"and specify the necessary skills for that role based on the oDesk platform." 
-		+"//GIF: ADD DETAILS TO A MEMBER <img src=''> </img></div>"
+		+"<img src='/assets/addWorker.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
