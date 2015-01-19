@@ -218,6 +218,14 @@ var expertTour = new Tour({
 		}
 	},
 	{
+		element: ".welcome" ,
+		title: "<b>Your Role</b>", 
+		content: "This is your role in the project.",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+		}
+	},
+	{
 		element: ".google-drive-button" ,
 		title: "<b>Google Drive Project Folder</b>", 
 		content: "At the top is a link to the Google Drive folder " 
@@ -246,6 +254,19 @@ var expertTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>",
 		placement: "left"
+	},
+	{
+		orphan: true,
+		title: "<b>View Task Details</b>", 
+		content: "<div class='tour-content-wrapper'>//NOT DONE"
+		+" //GIF: COMPLETE EVENT, ANSWER QUESTIONS"
+		+"<img src=''> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
 	},
 	{
 		orphan: true,
