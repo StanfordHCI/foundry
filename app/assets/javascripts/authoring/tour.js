@@ -329,7 +329,7 @@ var pcTour = new Tour({
 		+ "track the progress of the project, "
 		+ "and upload and download files from a shared Google Drive folder. //GIF: OVERVIEW PC",
 		backdrop: true
-	},
+	}
 ]});
 	
 //Initialize the PC tour
