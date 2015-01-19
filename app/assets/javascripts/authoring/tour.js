@@ -137,8 +137,8 @@ var authoringTour = new Tour({
 		title: "<b>Event Library</b>", 
 		content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
 		+"all previously created events by entering in keywords, inputs, "
-		+"and outputs, and drag them to your timeline. //GIF: EVENT LIBRARY"
-		+"<img src=''> </img></div>"
+		+"and outputs, and drag them to your timeline."
+		+"<img src='/assets/eventlibrary.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -151,13 +151,21 @@ var authoringTour = new Tour({
 		title: "<b>Start the Team</b>",
 		content: "When you are done creating your workflow and hiring team members "
 		+"click here to begin the team! ",
-		placement: "bottom"
+		placement: "left"
 	},
 	{
 		orphan: true,
 		title: "<b>Start the Team</b>",
-		content: "Now that the team has started working, workers can click 'Start' on events to begin"
-		+"the event timer to track progress in the workflow. //GIF: STARTED, DELAYED, ETC. EVENT GIF",
+		content: "<div class='tour-content-wrapper'>Now that the team has started working, "
+		+"workers can click 'Start' on events to begin "
+		+"the event timer to track progress in the workflow. //GIF: STARTED, DELAYED, ETC. EVENT GIF"
+		+"<img src=''> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
 	},
 	{
 		element: "#chat-box-container" ,
