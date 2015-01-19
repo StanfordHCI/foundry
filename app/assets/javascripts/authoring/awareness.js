@@ -1351,6 +1351,7 @@ var trackUpcomingEvent = function(){
        
         var overallTime;
         
+        if (currentUserEvents.length == 0 ) return;
         /*if (currentUserEvents.length <= 0) {
             overallTime = "You are not assigned to any tasks yet.";
             statusText.style("color", "black");      
