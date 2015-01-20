@@ -18,7 +18,8 @@ namespace :notification do
    
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
-   call_period= 10 * 60 #sec [TODO change back to 600]
+   #call_period=  ENV['EMAIL_PERIOD'].to_f #sec [TODO change back to 600]
+   call_period = 36000
    puts "checking if a task is delayed..."
 
    
@@ -47,9 +48,7 @@ namespace :notification do
      
       next if not flash_team_json["status"] 
 
-       print "in progress status: "
-      print flash_team_json["status"]
-
+      
       #After pushing end button, members array is emptied
       if flash_team_members.length == 0
           flash_team.notification_email_status = JSON.dump([])
@@ -194,8 +193,7 @@ namespace :notification do
         #todo
         if delta_time_sec >= (1 * call_period) && delta_time_sec < (2 * call_period)
         #if delta_time_sec >= (2 * call_period)
-          
-          #???
+
           if notification_email_status[groupNum-1]== nil
             #flash_team_events.each do |event|
             eventId = groupNum;
