@@ -439,6 +439,7 @@ function deleteMember(pillId) {
     // remove from members array
     var indexOfJSON = getMemberJSONIndex(pillId);
     var members = flashTeamsJSON["members"];
+    var member = members[indexOfJSON];
     var memberId = members[indexOfJSON].id;
     //console.log("deleting member " + memberId);
     //console.log("clicked #mPill_", pillId);
@@ -455,9 +456,7 @@ function deleteMember(pillId) {
         
         // remove member
         if(member_event_index != -1){ // found member in the event
-            removeAllMemberCircles(ev);
-            ev.members.splice(member_event_index,1);
-            drawEvent(ev,false);
+            deleteEventMember(ev.id, memberId, member.role);
         }
 
         //remove dri if the member was a dri

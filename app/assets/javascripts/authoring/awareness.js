@@ -5,9 +5,12 @@
 
 var poll_interval = 5000; // 20 seconds
 var poll_interval_id;
-var task_timer_interval = 60000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
-var timeline_interval = 1800000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
+
+//var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
+//var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
+
 var fire_interval = 180; // change back to 180
+
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
@@ -52,7 +55,8 @@ var addCursor = function(){
         .attr("x2", 0)
         .attr("class", "cursor")
         .style("stroke", "red")
-        .style("stroke-width", "2");
+        .style("stroke-width", "2")
+        .style("display", "none");
 };
 
 var getXCoordForTime = function(t){
@@ -351,6 +355,7 @@ var renderChatbox = function(){
               current_user = flash_team_members[i];
 
               // here there once existed a call to boldEvents
+
               trackUpcomingEvent();
             }
          }
@@ -665,7 +670,8 @@ var drawRedBox = function(ev, task_g, use_cursor){
             .attr("width", red_width)
             .attr("fill", "red")
             .attr("fill-opacity", .6)
-            .attr("stroke", "#5F5A5A");
+            .attr("stroke", "#5F5A5A")
+            .attr("display", "none");
     } else {
         existingRedBox
             .attr("width", red_width);
@@ -1335,112 +1341,75 @@ function getEventIndexFromId(event_id) {
     return index;
 }
 
-//Tracks a current user's ucpcoming and current events
+
 var trackUpcomingEvent = function(){
+    
      if (current == undefined){
         return;
     }
+    
     setInterval(function(){
-        if(!upcomingEvent) return;
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
+       
+        var overallTime;
+        
+        if (currentUserEvents.length == 0 ) return;
+        /*if (currentUserEvents.length <= 0) {
+            overallTime = "You are not assigned to any tasks yet.";
+            statusText.style("color", "black");      
+            statusText.text(overallTime);
+            return;
+        }*/
+
+
+        currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
+        
+
+        var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
+        upcomingEvent = ev.id;
         var task_g = getTaskGFromGroupNum(upcomingEvent);
-        if (ev.completed_x){
-            //console.log("THIS IS THE START TIME", currentUserEvents[0].startTime);
+        
+        //console.log("here");
+        //console.log(ev);     
+        
+        while (ev.status == "completed"){
             toDelete = upcomingEvent;
-            //console.log("BEFORE SPLICING", currentUserEvents);
             currentUserEvents.splice(0,1);
-            //console.log("AFTER SPLICING", currentUserEvents);
-            //console.log("THIS IS THE START TIME", stime);
-            //console.log("THIS IS THE START TIME", currentUserEvents[0].startTime);
             if (currentUserEvents.length == 0){
-                $("#rect_" + toDelete).attr("fill-opacity", .4);
                 upcomingEvent = undefined;
-                statusText.style("color", "green");
+                statusText.style("color", "#3fb53f");
                 statusText.text("You've completed all your tasks!");
                 return;
             }
             upcomingEvent = currentUserEvents[0].id;
-            // console.log("AFTER SPLICING", currentUserEvents, upcomingEvent);
-            $("#rect_" + toDelete).attr("fill-opacity", .4);
-            $("#rect_" + upcomingEvent).attr("fill-opacity", .9);
             task_g = getTaskGFromGroupNum(upcomingEvent);
+            ev = flashTeamsJSON["events"][getEventJSONIndex(upcomingEvent)];
         }
-        var cursor_x = cursor.attr("x1");
-        var cursorHr = (cursor_x-(cursor_x%100))/100;
-        var cursorMin = (cursor_x%100)/25*15;
-        if(cursorMin == 57.599999999999994) {
-            cursorHr++;
-            cursorMin = 0;
-        } else cursorMin += 2.4
 
-        //maggie added the -2 to fix the off by 2 min bug
-        var cursorTimeinMinutes = parseInt((cursorHr*60)) + parseInt(cursorMin) - 2;
-        //console.log(currentUserEvents, currentUserEvents[0]);
-        //console.log("THIS IS START HOUR AND MINUTES", currentUserEvents[0].startHr, currentUserEvents[0].startMin);
-        currentUserEvents[0].startTime = parseInt(currentUserEvents[0].startHr)*60 + parseInt(currentUserEvents[0].startMin);
-        //console.log("THIS IS THE START TIME", currentUserEvents[0].startTime);
-        var cur_ev_id = currentUserEvents[0].id;
-        var cur_ev_ind = getEventIndexFromId(cur_ev_id);
-
-        var ev_start_time = parseInt(ev.startHr) * 60 + parseInt(ev.startMin);
-        var displayTimeinMinutes = ev_start_time - parseInt(cursorTimeinMinutes);
-
-        //console.log(currentUserEvents[0].startTime);
-        //console.log("DISPLAY TIME", displayTimeinMinutes);
-        //console.log("CURSOR TIME", cursorTimeinMinutes);
-        var hours = parseInt(displayTimeinMinutes/60);
-        var minutes = displayTimeinMinutes%60;
-        var minutesText = minutes;
-        if (minutes < 10){
-            minutesText = "0" + minutes;
-        }
-        var overallTime = hours + ":" + minutesText;
-        if (displayTimeinMinutes < 0){
-
-            if(!isDelayed(upcomingEvent)){
-                overallTime = "Your task is IN PROGRESS";
-                statusText.style("color", "blue");
+       
+        if( ev.status == "not_started" ){
+            if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
+                //alert(upcomingEvent);
+                overallTime = "You can now start "+ ev.title +" task.";
+                statusText.style("color", "black");
             }
             else{
-                overallTime = "Your task is DELAYED";
-                statusText.style("color", "red");
-            }
-        } else {
-            if (cursorTimeinMinutes == 0) {
-            	//dr: adding the commented d3 line below as a reminder of a potential solution to reduce height
-            	//project_status_svg.attr("height", 60);
-                overallTime = "Your first task will start " + overallTime + " after the team has begun";
-            } else {
-                if (delayed_tasks.length != 0) {
-                    //if the event starts immediately after the delayed event...
-                    if ((hours == 0) && (minutes <= 2)) {
-                        overallTime = "A task ahead of yours has been delayed. Your next task will start as soon as the delayed task is completed";
-                    } else {
-                        overallTime = "A task ahead of yours has been delayed. Your next task will start " + overallTime + " after the delayed task is completed.";
-                    }
-                    statusText.style("color", "red");
-                } else {
-                    overallTime = "Your next task starts in " + overallTime;
-                    statusText.style("color", "blue");
-                }
+                overallTime = "Your next task is "+ ev.title +".";
+                statusText.style("color", "black");
             }
         }
-        if (displayTimeinMinutes == 0) {
-            if (cursorTimeinMinutes == 0) {
-                overallTime = "Your first task will begin as soon as the team starts";  
-            } else {
-                overallTime = "Your next task begins NOW";
-            }
-            statusText.style("color", "blue");  
+        if( ev.status == "delayed"){
+            overallTime = "Your task is delayed.";
+            statusText.style("color", "#f52020");
+        }
+        else if ( ev.status == "started"){
+            overallTime = "Your task is in progress.";
+            statusText.style("color", "#40b8e4");
         }
         
-        //statusText.text(overallTime);
-       
+        
+        statusText.text(overallTime);
     }, fire_interval);
-
-    //console.log("EXITING TRACKUPCOMINGEVENT FUNCTION");
 }
-
 
 var getAllData = function(){
     var all_data = [];

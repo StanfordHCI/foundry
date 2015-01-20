@@ -5,14 +5,28 @@
  */
 
 
- //TASK STATUS COLORS
- var TASK_NOT_START_COLOR = "#F5F5F5"; //gray
- var WORKER_TASK_NOT_START_COLOR = "#FFFF33"; //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
- var TASK_START_COLOR = "#1E90FF"; //blue
- var TASK_DELAY_COLOR = "#DC143C"; //red
- var TASK_COMPLETE_COLOR = "#00FF7F"; //green
+//TASK STATUS COLORS
+var TASK_NOT_START_COLOR = "#e4e4e4";
+var TASK_NOT_START_BORDER_COLOR = "#c7c7c7";
+var TASK_NOT_START_STROKE_COLOR = "rgba(82, 82, 82, 0.11)";
 
- function checkEventsBeforeCompleted(groupNum) {
+//yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
+var WORKER_TASK_NOT_START_COLOR = "#ffdd32";
+var WORKER_TASK_NOT_START_BORDER_COLOR = "#eacd72";
+
+//blue
+var TASK_START_COLOR = "#40b8e4";
+var TASK_START_BORDER_COLOR = "#45a1da";
+
+//red
+var TASK_DELAY_COLOR = "#f52020";
+var TASK_DELAY_BORDER_COLOR = "#c84d4d";
+
+//green
+var TASK_COMPLETE_COLOR = "#3fb53f";
+var TASK_COMPLETE_BORDER_COLOR = "#308e30";
+
+function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
     if (eventsBefore == null)
@@ -26,10 +40,26 @@
     }
 
     return true;
- }
+}
+
+function checkEventsBeforeCompletedNoAlert(groupNum) {
+    // check if events before have been completed
+    var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
+    if (eventsBefore == null)
+        return true;
+    for (var i = 0; i < eventsBefore.length; i++) {
+        var ev = getEventFromId(eventsBefore[i]);
+        if (ev.status != "completed") {
+            //alert("This task depends on one or more tasks that have not been completed yet. Please let them finish first.");
+            return false;
+        }
+    }
+
+    return true;
+}
 
 //Fires on "Start" button on task modal
- function startTask(groupNum) {
+function startTask(groupNum) {
     if (!checkEventsBeforeCompleted(groupNum))
         return;
 
@@ -56,7 +86,7 @@
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
- }
+}
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 

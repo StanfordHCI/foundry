@@ -1,18 +1,148 @@
-<%= render "task_hiring_sidebar" %>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
 
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid">
+    <title>Foundry Hiring Portal</title>
+
+    <!-- Bootstrap core CSS -->
+    <%= stylesheet_link_tag    "application"%>
+    <%= stylesheet_link_tag    "hiring-panel"%>
+    <%= stylesheet_link_tag    "font-awesome"%>
+
+
+  </head>
+
+  <body>
+
+  <section id="container" >
+      <!-- **********************************************************************************************************************************************************
+      TOP BAR CONTENT & NOTIFICATIONS
+      *********************************************************************************************************************************************************** -->
+      <!--header start-->
+	  <header class="header black-bg">
+              <!--
+			  <div class="sidebar-toggle-box">
+                  <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+              </div>
+				-->
+              
+            <!--logo start-->
+            <!-- <p class="logo"><b>FOUNDRY HIRING PORTAL</b></p> -->
+            <a href="#" class="logo"><b>FOUNDRY HIRING PORTAL</b></a>
             
-            <%= yield %>
-            
-           </div><!-- /#container-fluid -->
-        </div><!-- /#page-content-wrapper -->
+            <!--logo end-->
+             <div class="top-menu">
+            	<ul class="nav pull-right top-menu">
+	            	<li><%=link_to "Back to Foundry", edit_flash_team_path, :class=> "logout"%></li>
+            	</ul>
+            </div>
+        </header>
+      <!--header end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN SIDEBAR MENU
+      *********************************************************************************************************************************************************** -->
+      <!--sidebar start-->
+      <aside>
+          <!-- div class="span3" id="sidebar"> -->
+              <!-- sidebar menu start-->
+              <!-- <ul class="sidebar-nav"> -->
+              
+              <!-- <div class="span3" id="sidebar"> -->
+              <!-- sidebar menu start-->
+             <!--  <ul class="sidebar-menu"> -->
+	              
+	        <div id="sidebar"  class="span3 nav-collapse ">
+              <!-- sidebar menu start-->
+              <ul class="sidebar-menu" id="nav-accordion">
 
-    </div><!-- /#wrapper -->
+              	  <h5 class="project-name">Project: <%=@flash_team_json["title"]%></h5>
+              	   <h6 class="task-name">Task: <%=@flash_team_event["title"]%></h6>
+              	  	     
+                   <li class=<%=@panels_active%>>
+                   
+                   <%= link_to raw('<i class="fa fa-th"></i><span>Edit Panels</span>'), controller: "flash_teams", action: "panels" %> 			
+                          
+                  </li>
+                  
 
-<% if @show_right_sidebar != false %>
-<%= render "task_hiring_right_sidebar" %>
-<% end %>
+                  <li class="sub-menu">
+                      <a href="javascript:;" >
+	                      <i class="fa fa-envelope-o"></i>
+                          <!-- <i class="fa fa-desktop"></i> -->
+                          <span>Hiring Emails</span>
+                      </a>
+                      <ul class="sub">
+                          <li class=<%=@task_avail_active%>><%=link_to "Task Available", controller: "flash_teams", action: "hire_form"%> </li>
+                          <li class=<%=@task_accept_active%>><%=link_to "Task Acceptance", controller: "flash_teams", action: "task_acceptance"%></li>
+                          <li class=<%=@task_reject_active%>><%=link_to "Task Unavailable", controller: "flash_teams", action: "task_rejection"%></li>
+                      </ul>
+                  </li>
 
-<%= render "task_hiring_sidebar_footer" %>
+                  <li class="sub-menu">
+                      <a href="javascript:;" >
+                          <!-- <i class="fa fa-cogs"></i> -->
+                          <i class="fa fa-tasks"></i>
+                          <span>View Other Tasks</span>
+                      </a>
+                      <ul class="sub">
+                          <%i = 0%>
+                          <%@flash_team_json['events'].each do |event|%>
+                          
+                          	<% if i == @id_task %>
+								<li class="active">
+							<% else %>
+								<li>
+							<% end %>
+								<%=link_to event["title"], :controller => "flash_teams", :action => "hire_form", :event_id => i %></li>
+								<%i+= 1%>
+						<% end %>
+                      </ul>
+                  </li>
+                  
+                  <!-- <li><%#link_to "Back to Foundry", edit_flash_team_path, :class=> "logout"%></li> -->
+
+              </ul>
+              <!-- sidebar menu end-->
+          </div>
+      </aside>
+      <!--sidebar end-->
+      
+      <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+      <!--main content start-->
+      <section id="main-content">
+          <section class="wrapper">
+          	          	
+          		<%= yield %>
+          	
+		</section><! --/wrapper -->
+      </section><!-- /MAIN CONTENT -->
+
+      <!--main content end-->
+      <!--footer start-->
+      <footer class="site-footer">
+          <div class="text-center">
+              2014 - Stanford HCI Group
+              <a href="#" class="go-top">
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+      <!--footer end-->
+  </section>
+
+    <!-- js placed at the end of the document so the pages load faster -->
+	<%= javascript_include_tag "/assets/jquery" %>
+	<%= javascript_include_tag "/assets/jquery_ujs" %>
+	<%= javascript_include_tag "bootstrap/bootstrap.min" %>
+	<%= javascript_include_tag "/assets/jquery.dcjqaccordion.2.7" %>
+	
+
+
+  </body>
+</html>
