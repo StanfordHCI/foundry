@@ -228,21 +228,13 @@ var expertTour = new Tour({
 	{
 		element: ".google-drive-button" ,
 		title: "<b>Google Drive Project Folder</b>", 
-		content: "At the top is a link to the Google Drive folder " 
-		+"for the entire project.",
+		content: "This is a link to the shared Google Drive folder for the entire project.",
 		onShow: function(authoringTour) {
 			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
 		}
 	},
 	{
-		element: "#chat-box-container" ,
-		title: "<b>Chat With the Team</b>", 
-		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project coordinator (PC).",
-		placement: "left"
-	},
-	{
-		element: "#timeline-container" ,
+		orphan: true,
 		title: "<b>Timeline</b>", 
 		content: "<div class='tour-content-wrapper'>This is the timeline. Here you can "
 		+"view the entire project. Your tasks have been highlighted in yellow. "
@@ -254,6 +246,19 @@ var expertTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>",
 		placement: "left"
+	},
+	{
+		orphan: true,
+		title: "<b>Start Your Task</b>", 
+		content: "<div class='tour-content-wrapper'>Click 'Start' to begin your task. "
+		+"Live tasks turn blue and the timer begins."
+		+"<img src='/assets/startTask.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
 	},
 	{
 		orphan: true,
@@ -297,12 +302,10 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Delayed Events</b>", 
-		content: "<div class='tour-content-wrapper'>If your work takes longer than the expected estimation, the event "
-		+"will extend in red and be marked as delayed. Foundry will email you to request "
-		+"a new estimated complete time so the PC can plan accordingly. //IMG" 
-		+"<img src=''> </img></div>"
-		+"<nav class='popover-navigation'><div class='btn-group'>"
+		title: "<b>Early and On-Time Events</b>", 
+		content: "<div class='tour-content-wrapper'>When completed, the event will be marked in green, "
+		+"and downstream workers will be notified that they can begin working "
+		+"<img src='/assets/regTask.png'> </img></div><nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
@@ -311,16 +314,24 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Early and On-Time Events</b>", 
-		content: "<div class='tour-content-wrapper'>Similarly, if you complete on-time or earlier, "
-		+"the event will be marked in green, and downstream workers "
-		+"will be notified that they can begin working //IMG <img src=''> </img></div>"
+		title: "<b>Delayed Events</b>", 
+		content: "<div class='tour-content-wrapper'>If your work takes longer than expected, the event "
+		+"will be marked red as delayed. Foundry will email you to request "
+		+"a new estimated complete time so the PC can plan accordingly." 
+		+"<img src='/assets/delay.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
+	},
+	{
+		element: "#chat-box-container" ,
+		title: "<b>Chat With the Team</b>", 
+		content: "You can use this chat feature to commmunicate with the " 
+		+"members of the team as well as the project coordinator (PC).",
+		placement: "left"
 	},
 	{
 		orphan: true,
