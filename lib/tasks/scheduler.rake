@@ -13,7 +13,9 @@ namespace :notification do
    #default_url_options[:host] = 'localhost:3000'
    
 
-   default_url = 'foundry-app-dev.herokuapp.com'
+   #default_url = 'foundry-app-dev.herokuapp.com'
+   default_url = ENV['DEFAULT_URL']
+   
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
    call_period= 30 #sec [TODO change back to 600]

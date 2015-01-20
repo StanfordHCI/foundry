@@ -21,6 +21,9 @@ class UsersController < ApplicationController
 		if @user.save
 			session[:user] = @user
 			flash[:notice] = "Account created! Welcome, #{session[:user].username}!"
+			
+			session.delete(:member)
+			session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
 
 			redirect_to(:controller => :flash_teams, :action => :index)
 		else
@@ -60,7 +63,12 @@ class UsersController < ApplicationController
 				session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
 
 				flash[:notice] = "Welcome back, #{session[:user].username}!"
-				redirect_to(:controller => :flash_teams, :action => :index)
+								
+				if !session[:return_to].nil?
+					redirect_to(session[:return_to])
+				else
+					redirect_to(:controller => :flash_teams, :action => :index)
+				end
 							
 		else #login does not exist in the database
 			flash[:notice] = "Invalid username."

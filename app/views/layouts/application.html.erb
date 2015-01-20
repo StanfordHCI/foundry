@@ -4,11 +4,16 @@
   <title>Foundry</title>
   <%= render "flash_teams/globals" %> 
   
+  <!-- bring in typekit -->
+  <script src="//use.typekit.net/jiy3ujb.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+  
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+
 <%= yield %>
 
 </body>

@@ -1,0 +1,74 @@
+<div class="span4" id="right-sidebar-wrapper">
+                 
+   <div class="form-panel">   
+      <!-- <h4><i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right; padding-right: 10px;"></i></h4> -->
+      <p style="font-size:18px;">
+	      <i class="fa fa-angle-right"></i> Panels <i class="icon-remove" onclick="hideRightPanels()" style="float:right;"></i>
+	   </p>
+	      
+      <div class="form-group">
+      	<h5>Select a panel:</h5>
+	  	<%= select_tag "panels_right", options_for_select(@panels), {:prompt => "All Panels", :class => 'span12'}%>
+      </div>
+      
+      
+      <div class="form-group">
+          <div id="filter_results">		
+			<p id="panel_results">
+				<b><em>Emails for all workers this panel:</em></b>
+
+				<br />
+
+				<% @emails = @fw.uniq.join(", ")%>
+				<%= @emails %>
+				
+				<br />
+		
+				<button class="btn btn-default" id="copy-emails-button" data-clipboard-text="<%=@emails%>" onclick = "copyEmailsToForm()" title="Select all emails">Select all emails</button>
+
+				<%= javascript_include_tag "ZeroClipboard" %>
+				<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+
+				<br />
+				<br />
+			</p>
+	
+      
+      
+	<div class="form-group">
+		<h4><b>Or Select Specific Workers:</b></h4>
+			<table class="table table-bordered" style="word-break: break-word;">
+			    <thead>
+					<th class="span3">Name</th>
+					<th class="span5">Email</th>
+					<th class="span2">Panel</th>
+					<th class="span1"><i class="icon-ok"></i></th>
+			    </thead>
+			    <tbody>
+					<% @workers.each do |worker| %>
+					    <tr>
+					        <td><%= worker.name %></td>
+					        <td><%= worker.email %></td>
+					        <td><%= worker.panel %></td>
+					        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+					        
+					    </tr>
+					<% end %>
+			    </tbody>
+		</table>
+	</div>
+      
+      
+	<div class="form-group">
+		<p id="worker_results">
+			<%=render :partial => "workers/filter_workers_emails"%>
+		</p>
+	</div> <!--end form-group -->
+	
+	<%= javascript_include_tag "/assets/authoring/panels" %>
+	
+	</div><!--end filter results -->
+	</div>
+
+  </div> <!-- end form-panel -->
+	</div>   <!--end span4 --> 
