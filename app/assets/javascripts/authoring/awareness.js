@@ -263,6 +263,7 @@ function renderEverything(firstTime) {
             //console.log("flash team not in progress");
             
             if(flashTeamsJSON["startTime"] == undefined){
+                
 	            //console.log("NO START TIME!");
 				updateOriginalStatus();
             }
@@ -1406,7 +1407,9 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "#40b8e4");
         }
         
-        
+        if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
+            overallTime = "The team is not started. " + overallTime;
+        }
         statusText.text(overallTime);
     }, fire_interval);
 }
