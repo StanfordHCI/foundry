@@ -205,7 +205,7 @@ var expertTour = new Tour({
 		title: "<b>Welcome to Foundry</b>", 
 		content: "View your upcoming tasks, communicate with the team "
 		+ "track the progress of the project, "
-		+ "and upload and download files from a shared Google Drive folder. //GIF: OVERVIEW WORKER",
+		+ "and upload and download files from a shared Google Drive folder.",
 		backdrop: true
 	},
 	{
@@ -253,6 +253,32 @@ var expertTour = new Tour({
 		content: "<div class='tour-content-wrapper'> Click on the task to see details such as: "
 		+"start time, estimated duration, workers, deliverables of the task, etc."
 		+"<img src='/assets/viewTask.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
+	},
+	{
+		orphan: true,
+		title: "<b>Handoffs</b>",
+		content: "<div class='tour-content-wrapper'>Some tasks have handoffs between them. "
+		+"Handoffs indicate that the downstream task requires outputs from the upstream task before "
+		+"it can begin.<img src='/assets/handoff.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
+	},
+	{
+		orphan: true,
+		title: "<b>Collaborations</b>",
+		content: "<div class='tour-content-wrapper'>Similarly, collaborations indiciate that "
+		+"workers from both tasks should collaborate together while working on their separate tasks."
+		+"<img src='/assets/collab.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
