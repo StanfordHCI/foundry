@@ -1456,7 +1456,7 @@ var constructStatusObj = function(){
     var flash_team_id = $("#flash_team_id").val();
     flashTeamsJSON["id"] = flash_team_id;
     flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
-    //flashTeamsJSON["author"] = 
+    flashTeamsJSON["status"] = in_progress; 
    
     var localStatus = {};
 
