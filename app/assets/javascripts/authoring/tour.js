@@ -249,6 +249,19 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
+		title: "<b>View Task Details</b>", 
+		content: "<div class='tour-content-wrapper'> Click on the task to see details such as: "
+		+"start time, estimated duration, workers, deliverables of the task, etc."
+		+"<img src='/assets/viewTask.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
+	},
+	{
+		orphan: true,
 		title: "<b>Start Your Task</b>", 
 		content: "<div class='tour-content-wrapper'>Click 'Start' to begin your task. "
 		+"Live tasks turn blue and the timer begins."
@@ -262,23 +275,10 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>View Task Details</b>", 
-		content: "<div class='tour-content-wrapper'>//NOT DONE"
-		+" //GIF: COMPLETE EVENT, ANSWER QUESTIONS"
-		+"<img src=''> </img></div>"
-		+"<nav class='popover-navigation'><div class='btn-group'>"
-		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
-		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
-		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
-		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>"
-	},
-	{
-		orphan: true,
 		title: "<b>Complete Your Events</b>", 
 		content: "<div class='tour-content-wrapper'>If you are the DRI, complete the task "
-		+"on the timeline and complete documentation. //GIF: COMPLETE EVENT, ANSWER QUESTIONS"
-		+"<img src=''> </img></div>"
+		+"on the timeline and complete documentation."
+		+"<img src='/assets/completeTask.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -329,8 +329,15 @@ var expertTour = new Tour({
 	{
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
-		content: "You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project coordinator (PC).",
+		content: "<div class='tour-content-wrapper'>You can use this chat feature to commmunicate with the " 
+		+"members of the team as well as the project coordinator (PC)."
+		+"<img src='/assets/chat.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
 		placement: "left"
 	},
 	{
@@ -346,7 +353,7 @@ expertTour.init();
 
 $("#expertTourBtn").click(function(){
     expertTour.start(true);
-    //expertTour.goTo(0); //Always start the tour at the first step 
+    expertTour.goTo(0); //Always start the tour at the first step 
 });
 
 //TODO: PC Tour
