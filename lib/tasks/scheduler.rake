@@ -18,7 +18,7 @@ namespace :notification do
    
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
-   call_period= 1000 * 60 #sec [TODO change back to 600]
+   call_period= 1 * 60 #sec [TODO change back to 600]
    puts "checking if a task is delayed..."
 
    
@@ -44,6 +44,9 @@ namespace :notification do
       
       
       ##jump to next team if team is not started yet
+      print "in progress status: "
+      print flash_team_json["in_progress"]
+
       #next if flash_team_json["in_progress"] != true
 
       #After pushing end button, members array is emptied
