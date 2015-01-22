@@ -16,10 +16,9 @@ namespace :notification do
    #default_url = 'foundry-app-dev.herokuapp.com'
    default_url = ENV['DEFAULT_URL']
    
-   #script should be scheduled to run every call_period seconds
-   #call_period= 10 * 60 #minutes [TODO change back]
+   #script should be scheduled to run every 10 minutes
    #call_period=  ENV['EMAIL_PERIOD'].to_f #sec [TODO change back to 600]
-   call_period = 600 # the event timer is set with 
+   call_period = 600 # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
    puts "checking if a task is delayed..."
 
    
@@ -67,42 +66,12 @@ namespace :notification do
       end
      
       flash_team_events=flash_team_json["events"]      
-      #delayed_tasks_num=flash_team_status["delayed_tasks"]
-      #remaining_tasks = flash_team_status["remaining_tasks"]
-      #live_tasks = flash_team_status["live_tasks"]
 
-      #get members of live and remaining tasks
-      #roles_remaining_live=[];
-
-     # remaining_tasks.each do |remaining_task|
-      #   groupNum = remaining_task;
-       #  flash_team_events.each do |event|
-        #  eventId = event["id"];
-         # if eventId == groupNum
-          #  event["members"].each do |member_id|
-           #   if event["members"].length == 0
-            #    print "error: delayed event has no members\n"
-             #   break
-              #end
-              #member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
-              #if roles_remaining_live.index(member)==nil
-              #  roles_remaining_live.push(member);
-              #end
-            #end
-          #end
-        #end
-      #end
-      
-      #live_tasks.each do |remaining_task|
-      #   groupNum = remaining_task;
-   
       
 
       #/get index of delayed event in events array/    
       flash_team_events.each do |delayed_event|
         #start_time= delayed_tasks_time[groupNum]
-        #get delay sart time
-        #delayed_event = flash_team_events.detect{|ev| ev["id"].to_i == groupNum.to_i}        
         next if delayed_event["status"] != "delayed"
         
         groupNum = delayed_event["id"]
@@ -145,13 +114,7 @@ namespace :notification do
               #url = url_for :controller => 'flash_teams',:action => 'delay',:id =>team_id.to_s, :event_id => event_id.to_s
               url = default_url+"/flash_teams/"+team_id.to_s+"/"+event_id.to_s+"/delay"
               member_id= dri_member["id"]
-              #dri_event = delayed_event["members"].detect{|m| m["name"] == dri_role}
-             
-            # if dri_event  == nil
-             #   print "dri_event is nil"
-             #   next
-             # end
-
+           
               dri_uniq = dri_member["uniq"]
               next if dri_uniq == nil
               
