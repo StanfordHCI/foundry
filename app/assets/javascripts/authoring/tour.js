@@ -14,7 +14,7 @@ var authoringTour = new Tour({
 		backdrop: true,
 		html: true,
 		content: "<div class='tour-content-wrapper'>Foundry is an online platform that allows you " 
-		+"to create and manage teams of experts.<img src='/assets/overview.gif'> </img></div>"
+		+"to create and manage teams of experts.<img src=''> </img></div>" //USED TO BE OVERVIEW.GIF, BUT TOO SMALL
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -70,7 +70,8 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Customize the Events</b>",
 		content: "<div class='tour-content-wrapper'>Add details to each event so workers "
-		+"can easily complete their tasks. "
+		+"can easily complete their tasks. Add a title, assign workers, specify inputs and ouputs "
+		+"of the task, write a description, and specify questions for task documentation."
 		+"<img src='/assets/editTask.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -83,8 +84,8 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Handoffs</b>",
 		content: "<div class='tour-content-wrapper'>Draw a handoff between events "
-		+"to show that one task depends on the output of another."
-		+"<img src='/assets/handoff.gif'> </img></div>"
+		+"to show that one task depends on the output of another. Click to add notes "
+		+" or delete the handoffs. <img src='/assets/handoff.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -96,7 +97,7 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Collaborations</b>",
 		content: "<div class='tour-content-wrapper'>Draw a collaboration to show that members from "
-		+"both events should collaborate while working."
+		+"both events should collaborate while working. Click to add notes or delete the collaboration."
 		+"<img src='/assets/collab.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -193,7 +194,7 @@ authoringTour.init();
 
 $("#tourBtn").click(function(){
     authoringTour.start(true);
-    authoringTour.goTo(0); //Always start tour at the first step
+    //authoringTour.goTo(0); //Always start tour at the first step
 });
 
 
