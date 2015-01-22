@@ -1,106 +1,23 @@
-<div class="row-fluid">
-  
-  <h3><i class="fa fa-angle-right"></i> Hiring Emails</h3>
-            
-    <!-- INPUT MESSAGES -->
-    <div class="row-fluid">
-      <div id="email-form-div" class="form-panel span12">
-        <!-- <div class="form-panel"> -->
-        <div>
-            <div class="row-fluid">
-              <div class="span7">
-                <p style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Available Email Sent!</p>
-          </div>
-        </div> <!-- end div class row -->
-        
-        <div class="row-fluid span11">
-          <p>This is an email from the Stanford HCI Group notifying you that a job requiring a  for the  task for the  project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
-            
-              
-            <p>
-              <b>Input(s):</b> For this task, you will receive the following input(s)
-            
-           
-            
-            <p>
-              As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.
-            </p>
-            
-            <p>
-              If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.
-            </p>
-            
-            <p>
-              If you are ready to start working on this task, reply to this email with your name in the content of the email as wel<div class="row-fluid">
-  
-  <h3><i class="fa fa-angle-right"></i> Hiring Emails</h3>
-            
-    <!-- INPUT MESSAGES -->
-    <div class="row-fluid">
-      <div id="email-form-div" class="form-panel span12">
-        <!-- <div class="form-panel"> -->
-        <div>
-            <div class="row-fluid">
-              <div class="span7">
-                <p style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Available Email Sent!</p>
-          </div>
-        </div> <!-- end div class row -->
-        
-        <div class="row-fluid span11">
-          <p>This is an email from the Stanford HCI Group notifying you that a job requiring a  for the task for the  project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
-            
-           
-            <p>
-              <b>Input(s):</b> For this task, you will receive the following input(s): 
-            
-          
-              You can access the input(s) at the following link: <a href="<%=@url%>"><%=@url%></a>
-            </p>
-          
-            
-            <p><b>Deliverable(s):</b> </p>
-            
-            
-            
-            <p><b>Deadline:</b>You will have to finish this task </p>
-            
-            <p>
-              As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.
-            </p>
-            
-            <p>
-              If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.
-            </p>
-            
-            <p>
-              If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the  task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
-            </p>
-
-            <p>
-              Best, <br />
-              Stanford HCI Research Team
-            </p>
-          
-        </div>
-  
-              
-      </div><!-- /form-panel -->
-    </div><!-- /span7 -->
-              
-    </div><!-- /row -->
-</div><l as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
-            </p>
-
-            <p>
-              Best, <br />
-              Stanford HCI Research Team
-            </p>
-          
-        </div>
-  
-              
-      </div><!-- /form-panel -->
-    </div><!-- /span7 -->
-              
-    </div><!-- /row -->
-</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+	  
+	  <p>Hi <%=@name%>,</p>
+	  
+    <p>
+      Welcome to Foundry! Please click on the link below whenever you want to access your team and view your tasks on Foundry:
+    </p>
+    <p>
+      <%=@url%>
+    </p>
+    
+    <p>If you have not already done so, please familiarize yourself with Foundry by clicking the "Start Foundry Tour" button on the top right of the team page.  Feel free to contact us if you have any questions regarding the use of Foundry.</p>
+    
+    <p>Sincerely, <br />
+	    The Foundry Team
+    </p>
+  </body>
+</html>
