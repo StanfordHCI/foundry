@@ -195,11 +195,37 @@ var authoringTour = new Tour({
 	},
 	{
 		orphan: true,
+		title: "<b>Hiring</b>",
+		content: "<div class='tour-content-wrapper'> Foundry can also help you reach out to and "
+		+"hire workers for each event quickly. Click 'Hire' on each event to see the Hiring page "
+		+"and learn more.<img src='/assets/hire.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+	},
+	{
+		orphan: true,
 		title: "<b>Start the Team</b>",
 		content: "<div class='tour-content-wrapper'>Now that the team has started working, "
-		+"workers can click 'Start' on events to begin "
-		+"the event timer to track progress in the workflow. //GIF: STARTED, DELAYED, ETC. EVENT GIF"
-		+"<img src=''> </img></div>"
+		+"workers can click 'Start' on events to begin the event timer to track progress in the workflow. "
+		+"Workers see their tasks highlighted in yellow."
+		+"<img src='/assets/startTask.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+	},
+	{
+		orphan: true,
+		title: "<b>Manage the Live Team</b>",
+		content: "<div class='tour-content-wrapper'> In progress events are blue, completed events "
+		+"are green, and delayed events are red. "
+		+"<img src='/assets/liveTeam.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
