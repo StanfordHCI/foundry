@@ -84,7 +84,7 @@ namespace :notification do
 
         #if scheduler is called before 1 call period an email is sent to the autor
         # the author should estimate the delay and all other workers will automatically get informed of the delay
-        if delta_time_sec<=call_period
+        if delta_time_sec<=call_period && delta_time_sec>0
           #flash_team_events.each do |event|
             eventId = groupNum;
           #  if eventId == groupNum
@@ -154,7 +154,7 @@ namespace :notification do
         
         #DRI has not responded yet, send email to members of remaining tasks
         #todo
-        if delta_time_sec >= (1 * call_period) && delta_time_sec < (2 * call_period)
+        if delta_time_sec > (1 * call_period) && delta_time_sec < (2 * call_period)
         #if delta_time_sec >= (2 * call_period)
 
           if notification_email_status[groupNum-1]== nil
