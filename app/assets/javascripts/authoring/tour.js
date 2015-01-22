@@ -145,7 +145,13 @@ var authoringTour = new Tour({
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>"
+		+"<div class='popover-content'></div>",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#member-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[2].click();
+			}
+		}
 	},
 	{
 		element: "#flashTeamStartBtn",
