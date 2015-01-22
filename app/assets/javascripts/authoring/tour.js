@@ -259,7 +259,7 @@ authoringTour.init();
 
 $("#tourBtn").click(function(){
     authoringTour.start(true);
-    //authoringTour.goTo(0); //Always start tour at the first step
+    authoringTour.goTo(0); //Always start tour at the first step
 });
 
 
