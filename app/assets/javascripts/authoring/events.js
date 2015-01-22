@@ -444,7 +444,6 @@ function drawGdriveLink(eventObj, firstTime) {
 
 
 function findCurrentUserNextEvent(currentUserEvents){
-    console.log("calling findCurrentUserNextEvent");
     //console.log("currentUserEvents: " + currentUserEvents);
     for (var i = 0; i < currentUserEvents.length; i++){
         if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
@@ -851,7 +850,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                console.log(d);
+                //console.log(d);
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
