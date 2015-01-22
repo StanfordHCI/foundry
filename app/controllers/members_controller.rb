@@ -90,6 +90,6 @@ class MembersController < ApplicationController
 
     # send confirmation email
     url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq
-    UserMailer.send_confirmation_email(email, url).deliver
+    UserMailer.send_confirmation_email(name, email, url).deliver
   end
 end
