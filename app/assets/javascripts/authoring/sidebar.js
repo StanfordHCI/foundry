@@ -364,7 +364,10 @@ $(function() {
 /* --------------- PROJECT STATUS BAR START ------------ */
 var project_status_svg = d3.select("#status-bar-container").append("svg")
 .attr("width", "100%")
-.attr("height", 100);
+.attr("height", 100)
+.text("");
+
+
 
 var statusText = project_status_svg.append("foreignObject")
 .attr("x", 11)
