@@ -294,9 +294,30 @@ var expertTour = new Tour({
 	{
 		element: ".google-drive-button" ,
 		title: "<b>Google Drive Project Folder</b>", 
-		content: "This is a link to the shared Google Drive folder for the entire project.",
+		content: "This is a link to the shared Google Drive folder for the entire project. "
+		+"You will need to add the folder to your personal Drive to upload and download files.",
 		onShow: function(authoringTour) {
 			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+		}
+	},
+	{
+		element: "#project-overview-container",
+		title: "<b>Project Overview</b>",
+		html: true,
+		content: "<div class='tour-content-wrapper'>This is the project overview. "
+		+"Here you will see the author's description of the scope of the entire project. " 
+		+"<img src=''> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#project-overview-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[0].click();
+			}
 		}
 	},
 	{
@@ -331,7 +352,7 @@ var expertTour = new Tour({
 		title: "<b>Handoffs</b>",
 		content: "<div class='tour-content-wrapper'>Some tasks have handoffs between them. "
 		+"Handoffs indicate that the downstream task requires outputs from the upstream task before "
-		+"it can begin.<img src='/assets/handoff.gif'> </img></div>"
+		+"it can begin. Click to see notes the author may have added. <img src='/assets/handoff.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -343,8 +364,8 @@ var expertTour = new Tour({
 		orphan: true,
 		title: "<b>Collaborations</b>",
 		content: "<div class='tour-content-wrapper'>Similarly, collaborations indiciate that "
-		+"workers from both tasks should collaborate together while working on their separate tasks."
-		+"<img src='/assets/collab.gif'> </img></div>"
+		+"workers from both tasks should collaborate together while working on their separate tasks. "
+		+"Click to see notes the author may have added. <img src='/assets/collab.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -369,7 +390,8 @@ var expertTour = new Tour({
 		orphan: true,
 		title: "<b>Complete Your Events</b>", 
 		content: "<div class='tour-content-wrapper'>If you are the DRI, complete the task "
-		+"on the timeline and complete documentation."
+		+"on the timeline and complete the documentation questions. There will be a checklist for "
+		+"each deliverable of the task. "
 		+"<img src='/assets/completeTask.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
