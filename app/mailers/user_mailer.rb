@@ -33,8 +33,9 @@ class UserMailer < ActionMailer::Base
   end
 
 
-  def send_confirmation_email(email_address, url)
+  def send_confirmation_email(name, email_address, url)
   	@url = url
+  	@name = name
     mail(:to => email_address, :subject => 'The Link To Your Account On Foundry')
   end
 
