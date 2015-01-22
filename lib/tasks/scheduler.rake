@@ -19,7 +19,7 @@ namespace :notification do
    #script should be scheduled to run every call_period seconds
    #call_period= 10 * 60 #minutes [TODO change back]
    #call_period=  ENV['EMAIL_PERIOD'].to_f #sec [TODO change back to 600]
-   call_period = 36000
+   call_period = 600 # the event timer is set with 
    puts "checking if a task is delayed..."
 
    
