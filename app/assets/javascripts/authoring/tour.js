@@ -81,6 +81,26 @@ var authoringTour = new Tour({
 		+"<div class='popover-content'></div>"
 	},
 	{
+		element: "#search-events-container" ,
+		title: "<b>Event Library</b>", 
+		content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
+		+"all previously created events by entering in keywords, inputs, "
+		+"and outputs, and drag them to your timeline."
+		+"<img src='/assets/eventlibrary.png'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#search-events-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[2].click();
+			}
+		}
+	},
+	{
 		orphan: true,
 		title: "<b>Handoffs</b>",
 		content: "<div class='tour-content-wrapper'>Draw a handoff between events "
@@ -107,6 +127,39 @@ var authoringTour = new Tour({
 		+"<div class='popover-content'></div>"
 	},
 	{
+		element: "#project-overview-container",
+		title: "<b>Project Overview</b>",
+		html: true,
+		content: "<div class='tour-content-wrapper'>Finally, add a description of the overall project "
+		+"here in the project overview. This will give workers a understanding of the scope of the project. " 
+		+"<img src='/assets/projectOverview.gif'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>",
+		onShow: function(authoringTour) {
+			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+			if($("#project-overview-container").hasClass("active") == false) {
+				$("#left-sidebar .sidebar-item .header")[1].click();
+			}
+		}
+	},
+	{
+		orphan: true,
+		title: "<b>Google Drive Integration</b>",
+		content: "<div class='tour-content-wrapper'>When the team has been started, a shared " 
+		+"Google Drive folder is created for the project. The link will appear on the sidebar. " 
+		+"<img src='/assets/gdrive.png'> </img></div>"
+		+"<nav class='popover-navigation'><div class='btn-group'>"
+		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+		+"<div class='popover-content'></div>"
+	},
+	{
 		orphan: true,
 		title: "<b>Google Drive Integration</b>",
 		content: "<div class='tour-content-wrapper'>Google Drive folders are automatically created for "
@@ -122,9 +175,9 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Open in Drive</b>",
-		content: "<div class='tour-content-wrapper'>After clicking on 'Upload' on the event, click on the "
-		+"'Open in Drive' button on the top right side of the Google " 
-		+"drive page so that you can upload to the drive."
+		content: "<div class='tour-content-wrapper'>After clicking the link, click on the "
+		+"'Open in Drive' button on the top right side of the Google Drive to add the project "
+		+"folder or a specific event folder to your personal Drive so you can upload or download items."
 		+"<img src='/assets/openInDrive.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -132,26 +185,6 @@ var authoringTour = new Tour({
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
-	},
-	{
-		element: "#search-events-container" ,
-		title: "<b>Event Library</b>", 
-		content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
-		+"all previously created events by entering in keywords, inputs, "
-		+"and outputs, and drag them to your timeline."
-		+"<img src='/assets/eventlibrary.png'> </img></div>"
-		+"<nav class='popover-navigation'><div class='btn-group'>"
-		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
-		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
-		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
-		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>",
-		onShow: function(authoringTour) {
-			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
-			if($("#member-container").hasClass("active") == false) {
-				$("#left-sidebar .sidebar-item .header")[2].click();
-			}
-		}
 	},
 	{
 		element: "#flashTeamStartBtn",
