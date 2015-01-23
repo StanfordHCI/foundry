@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20141021055050) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "categories", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -30,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141021055050) do
 
   create_table "flash_teams", force: true do |t|
     t.string   "name"
+    t.string   "author"
     t.text     "json"
     t.text     "status"
     t.text     "notification_email_status"
@@ -37,7 +35,6 @@ ActiveRecord::Schema.define(version: 20141021055050) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "original_status"
-    t.string   "author",                    limit: 50
   end
 
   create_table "handoffs", force: true do |t|

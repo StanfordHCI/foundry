@@ -165,6 +165,7 @@ function handoffStart(firstEvent){
     var x1 = firstEvent.x;
     var width = getWidth(firstEvent);
     return x1+width;
+
 }
 
 // Draw a handoff for the first time
@@ -324,7 +325,6 @@ function drawCollaboration(collabData, overlap) {
 
     var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1Id)];
     var y1 = ev1.y; // padding on the top and bottom of timeline rows + height of x-axis labels
-    
 
     var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2Id)];
     var x2 = ev2.x + 3;

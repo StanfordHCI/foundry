@@ -6,7 +6,7 @@
 var poll_interval = 5000; // 20 seconds
 var poll_interval_id;
 
-//var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
+var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
 //var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
 
 var fire_interval = 180; // change back to 180
@@ -14,6 +14,8 @@ var fire_interval = 180; // change back to 180
 var numIntervals = parseFloat(timeline_interval)/parseFloat(fire_interval);
 var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
+
+//not updated in the current version
 var remaining_tasks = [];
 
 var live_tasks = [];
@@ -118,7 +120,12 @@ function startFlashTeam() {
     //console.log("here0");
     removeColabBtns();
     removeHandoffBtns();
+    save_tasksAfter_json();
+
     startTeam(true);
+    
+    //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json. 
+    //This is used for the notification emails. 
     
     //addAllFolders();
     //googleDriveLink();
@@ -135,6 +142,22 @@ function endTeam() {
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
 }
+
+
+//save dependencyAPI.getEventsAfter(task_id, true) for each event in the json. 
+//This is used for the notification emails. 
+function save_tasksAfter_json(){
+    var events_after = [];
+   
+    for(var i =0;i<  flashTeamsJSON["events"].length; i++){   
+        var id = parseInt(flashTeamsJSON["events"][i]["id"]);
+        flashTeamsJSON["events"][i]["events_after"] = dependencyAPI.getEventsAfter(id, true);
+        
+    }
+
+
+}
+
 
 //Asks user to confirm that they want to end the team
 $("#flashTeamEndBtn").click(function(){
@@ -1437,7 +1460,7 @@ var constructStatusObj = function(){
     var flash_team_id = $("#flash_team_id").val();
     flashTeamsJSON["id"] = flash_team_id;
     flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
-    //flashTeamsJSON["author"] = 
+    flashTeamsJSON["status"] = in_progress; 
    
     var localStatus = {};
 
@@ -1511,7 +1534,12 @@ var updateOriginalStatus = function(){
 
 var sendEmailOnCompletionOfDelayedTask = function(groupNum){
     // send "delayed task is finished" email
-    if(remaining_tasks.length!=0){
+   var tasks_after = flashTeamsJSON["events"][getEventJSONIndex(parseInt(groupNum))]["events_after"];
+
+    if(tasks_after == null)
+        return;
+    
+    if(tasks_after.length!=0){
         var title="test";
         var events = flashTeamsJSON["events"];
         
@@ -1523,7 +1551,7 @@ var sendEmailOnCompletionOfDelayedTask = function(groupNum){
             }
         }
 
-        DelayedTaskFinished_helper(remaining_tasks,title);
+        DelayedTaskFinished_helper(tasks_after,title);
     }
 };
 

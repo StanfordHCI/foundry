@@ -197,6 +197,7 @@ function createEvent(point, duration) {
     // create event object
     var eventObj = createEventObj(snapPoint, duration);
     
+
     // render event on timeline
     drawEvent(eventObj, true);
 
@@ -238,7 +239,7 @@ function createEventObj(snapPoint, duration) {
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"", events_after : "",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
@@ -248,6 +249,7 @@ function createEventObj(snapPoint, duration) {
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
+    
     return newEvent;
 };
 
@@ -444,7 +446,6 @@ function drawGdriveLink(eventObj, firstTime) {
 
 
 function findCurrentUserNextEvent(currentUserEvents){
-    console.log("calling findCurrentUserNextEvent");
     //console.log("currentUserEvents: " + currentUserEvents);
     for (var i = 0; i < currentUserEvents.length; i++){
         if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
@@ -851,7 +852,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                console.log(d);
+                //console.log(d);
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
