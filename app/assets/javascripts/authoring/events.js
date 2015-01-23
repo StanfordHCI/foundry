@@ -1074,11 +1074,12 @@ function drawG(eventObj) {
     };
     
     // add group to timeline, based on the data object
-    timeline_svg.selectAll("g")
+    window._foundry.timeline.eventLayer.selectAll("g.event")
         .data(task_groups, function(d){ return d.groupNum; })
         .enter()
         .append("g")
         .attr("id", "g_" + groupNum)
+        .attr("class", "event")
         .style({cursor: "pointer"})
         .on("mousemove", showHandles)
         .on("mouseout", function() {
