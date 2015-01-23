@@ -165,6 +165,7 @@ function handoffStart(firstEvent){
     var x1 = firstEvent.x;
     var width = getWidth(firstEvent);
     return x1+width;
+
 }
 
 // Draw a handoff for the first time

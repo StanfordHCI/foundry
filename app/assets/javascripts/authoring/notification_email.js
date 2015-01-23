@@ -18,7 +18,7 @@ function sendBeforeTaskStartsEmail(minutes,email){
 
 
 function sendDelayedTaskFinishedEmail(minutes,uniq,title){
-	
+	//alert(uniq);
     var flash_team_id = $("#flash_team_id").val();
     var url = '/flash_teams/' + flash_team_id + '/delayed_task_finished_email';
     
@@ -100,10 +100,12 @@ function early_completion_helper(remaining_tasks,early_minutes){
     }
 };
   
-function DelayedTaskFinished_helper(remaining_tasks,title){
+
+ //used when a delayed task is finished. the main function is called in awareness.js 
+function DelayedTaskFinished_helper(tasks_after,title){
   var emails=[];
-  for (var i=0;i<remaining_tasks.length;i++){
-        var groupNum = remaining_tasks[i];
+  for (var i=0;i<tasks_after.length;i++){
+        var groupNum = tasks_after[i];
         //alert(i+" "+groupNum);
     	for (var j = 0; j<flashTeamsJSON["events"].length; j++){
        
@@ -123,8 +125,9 @@ function DelayedTaskFinished_helper(remaining_tasks,title){
 	           
                     if(emails.indexOf(uniq)==-1){
 	                	emails.push(uniq);
-	                    var remaining_time= getUserNextTaskStartTime(memberId);
-
+	                    //var remaining_time= getUserNextTaskStartTime(memberId);
+                        //disabled calculation of remaining time after switching to on demand hiring.
+                        var remaining_time = 0;
                         if (remaining_time != undefined){
 	                       sendDelayedTaskFinishedEmail(remaining_time,uniq,title);
                            //console.log("sent delayed task finished email to"+tmp_email+" "+remaining_time);

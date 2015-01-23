@@ -364,6 +364,9 @@ end
             #tmp_member= flash_team_members.detect{|m| m["role"] == member["role"]}
             #member_id= tmp_member["id"]
             uniq = member["uniq"]
+            
+            next if Member.where(:uniq => uniq)[0] == nil
+
             email = Member.where(:uniq => uniq)[0].email
             UserMailer.send_task_delayed_email(email,@delay_estimation,event_name,dri_role).deliver
          
