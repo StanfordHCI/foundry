@@ -254,10 +254,11 @@ var authoringTour = new Tour({
 	}]
 });
 
-//Initialize the tour
-authoringTour.init();
+
 
 $("#tourBtn").click(function(){
+	//Initialize the tour
+	authoringTour.init();
     authoringTour.start(true);
     authoringTour.goTo(0); //Always start tour at the first step
 });
@@ -462,10 +463,11 @@ var expertTour = new Tour({
 ]});
 
 
-//Initialize the expert tour
-expertTour.init();
+
 
 $("#expertTourBtn").click(function(){
+	//Initialize the expert tour
+	expertTour.init();
     expertTour.start(true);
     expertTour.goTo(0); //Always start the tour at the first step 
 });
