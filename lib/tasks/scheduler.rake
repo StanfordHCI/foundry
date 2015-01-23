@@ -17,7 +17,7 @@ namespace :notification do
    default_url = ENV['DEFAULT_URL']
    
    #script should be scheduled to run every 10 minutes
-   call_period =  ENV['EMAIL_PERIOD'].to_i # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
+   call_period =  ENV['EMAIL_PERIOD'].to_f # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
    #call_period = 600 # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
    puts "checking if a task is delayed..."
 
@@ -140,11 +140,18 @@ namespace :notification do
               end
               
               email_dri = Member.where(:uniq => dri_uniq.to_s)[0].email
+              
+              if Member.where(:uniq => dri_uniq.to_s)[0].name == nil
+                dri_name = ""
+              else
+                dri_name =  Member.where(:uniq => dri_uniq.to_s)[0].name
+              end
+
               if email_dri == nil
                 puts "dri has not entered email yet"
                 next
               end
-              UserMailer.send_dri_on_delay_email(email_dri,event_name, dri_role,url,team_id,event_id,cc_emails).deliver
+              UserMailer.send_dri_on_delay_email(email_dri,event_name, dri_name,url,team_id,event_id,cc_emails).deliver
               break
            # end
           #end
