@@ -150,7 +150,10 @@ function startWriteHandoff() {
     DRAWING_HANDOFF = true;
     var m = d3.mouse(this);
     //console.log("x: " + m[0] + " y: " + m[1]);
-    line = timeline_svg.append("line")
+    
+    var timelineSvg = window._foundry.timeline.timelineSvg;
+    var handoffLayerSvg = window._foundry.timeline.handoffLayer;
+    line = handoffLayerSvg.append("line")
         .attr("class", "followingLine")
         .attr("x1", m[0])
         .attr("y1", m[1])
@@ -158,7 +161,7 @@ function startWriteHandoff() {
         .attr("y2", m[1])
         .attr("stroke-width", 3)
         .attr("stroke", "gray");
-    timeline_svg.on("mousemove", interMouseMove);
+    timelineSvg.on("mousemove", interMouseMove);
 };
 
 function handoffStart(firstEvent){
@@ -185,14 +188,15 @@ function drawHandoff(handoffData) {
     var x2 = ev2.x + 3;
     var y2 = ev2.y + 50;
 
-    var path = timeline_svg.selectAll("path.handoffLine")
+    var handoffLayerSvg = window._foundry.timeline.handoffLayer;
+    var path = handoffLayerSvg.selectAll("path.handoffLine")
        .data(flashTeamsJSON["interactions"]);
 
     path.enter().insert("svg:path")
        .attr("class", "link")
        .style("stroke", "#ccc");
 
-    path = timeline_svg.append("path")
+    path = handoffLayerSvg.append("path")
         .attr("class", "handoffLine")
         .attr("id", function () {
             return "interaction_" + handoffId;
@@ -304,7 +308,9 @@ function startWriteCollaboration(ev) {
     INTERACTION_TASK_ONE_IDNUM = this.getAttribute('groupNum'); 
     DRAWING_COLLAB = true;
     var m = d3.mouse(this);
-    line = timeline_svg.append("line")
+    var timelineSvg = window._foundry.timeline.timelineSvg;
+    var collabLayerSvg = window._foundry.timeline.collabLayer;
+    line = collabLayerSvg.append("line")
         .attr("class", "followingLine")
         .attr("x1", m[0])
         .attr("y1", m[1])
@@ -313,7 +319,7 @@ function startWriteCollaboration(ev) {
         .attr("stroke-width", 3)
         .attr("stroke", "black")
         .attr("stroke-dasharray", (4,4));
-    timeline_svg.on("mousemove", interMouseMove);
+    timelineSvg.on("mousemove", interMouseMove);
 };
 
 //Draw collaboration between two events, calculates which event 
@@ -339,7 +345,8 @@ function drawCollaboration(collabData, overlap) {
         firstTaskY = y2 + RECTANGLE_HEIGHT;
         taskDistance = y1 - firstTaskY;
     }
-    collabLine = timeline_svg.append("rect")
+    var collabLayerSvg = window._foundry.timeline.collabLayer;
+    collabLine = collabLayerSvg.append("rect")
         .attr("class", "collaborationRect")
         .attr("id", function () {
             return "interaction_" + collabId;
