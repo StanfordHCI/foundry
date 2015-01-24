@@ -1,5 +1,4 @@
 function openModal(){
-	console.log("Hits this");	
 	if ($("#password").val().indexOf("pc") == 0){
 		$('#pcModal').modal('show');
 		$('.next').click(function(){
@@ -14,10 +13,12 @@ function openModal(){
 		})
 	}
 	else if ($("#password").val().indexOf("wo") == 0){
-		console.log("IN THIS IF STATEMENT");
 		$('#workerModal').modal('show');
 		$('.next').click(function(){
 	  		var nextId = $(this).parents('.tab-pane').next().attr("id");
+	  		if (nextId == "part5"){
+	  			document.getElementById("woCompleteBtn").disabled = false;	  		
+			}
 	  		$('[href=#'+nextId+']').tab('show');
 		})
 		$('.first').click(function(){
@@ -30,4 +31,10 @@ function openModal(){
 	else{
 		alert("I'm sorry. The code you entered does not match our records. Please wait to recieve a code from us.");
 	}
+}
+
+function showForm(){
+	console.log("Hits this");
+	$(".formDiv").attr("style", "display:inline");
+	$("#launchDiv").attr("style", "display:none");
 }

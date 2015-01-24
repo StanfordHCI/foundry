@@ -13,18 +13,20 @@
 							<p class="span5">Congratulations! You are qualified to join our panel of experts and be notified of job opportunities. In order to register, enter you access code, and open up the appropriate training module. Once you have completed training, you will be able to access the registration form.</p>
 						</div>
 						</br>
-
-						<b>To Launch Training, Enter your Panel Password</b></br>
-						<input type="text" id="password"></input></br>
-						<button type="button" class="btn btn-primary btn-lg" id="launchButton" onclick="openModal()">
-						  Launch 
-						</button>
+						<div id = "launchDiv">
+							<b>To Launch Training, Enter your Panel Password</b></br>
+							<input type="text" id="password"></input></br>
+							<button type="button" class="btn btn-primary btn-lg" id="launchButton" onclick="openModal()">
+							  Launch 
+							</button>
+						</div>
 
 						<%= render partial: "pc_modal" %>
 						<%= render partial: "worker_modal" %>
 						
 				</br>
 					<div class = "formDiv">
+						<p><b>Registration Form</b></p></br>
 						<%= render partial: "new_content" %>
 					</div>
 				</div>
