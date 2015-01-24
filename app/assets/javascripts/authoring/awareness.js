@@ -1012,7 +1012,9 @@ var removeTask = function(groupNum){
     }
     
     // remove from screen
-    timeline_svg.selectAll("g").data(task_groups, function(d){ return d.groupNum; }).exit().remove();
+    timeline_svg.selectAll("g.event")
+        .data(task_groups, function(d){ return d.groupNum; })
+        .exit().remove();
 };
 
 var extendDelayedBoxes = function(){
