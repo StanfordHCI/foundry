@@ -1344,6 +1344,7 @@ function drawMemberTabs(eventObj) {
         var attrs = {
             id: "mem_tab_" + memberId,
             class: "mem_tab",
+            "member-id": memberId,
             width: 24,
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
@@ -1360,9 +1361,9 @@ function drawMemberTabs(eventObj) {
             memberTab.attr(key, attrs[key]);
         }
         
-        (function () {
-          $("#mem_tab_" + memberId).tooltip()
-        })();
+        $(".mem_tab[member-id='" + memberId + "']").each(function() {
+          $(this).tooltip()
+        });
     }
 }
 
