@@ -187,13 +187,16 @@ window._foundry = {
         .attr("y", row * timeline.rowHeight)
         .attr("width", width)
         .attr("height", timeline.rowHeight)
-        .style("fill", "rgba(75, 158, 214, 0.52)");
+        .style({
+          "pointer-events": "none",
+          "fill": "rgba(75, 158, 214, 0.52)"
+      });
     },
 
     clearSelection: function() {
       var timeline = _foundry.timeline;
 
-      timeline.timelineSvg.select("rect.selection").remove();
+      timeline.selectionLayer.select("rect.selection").remove();
 
       timeline.rangeStartMarker = undefined;
       timeline.rangeEndMarker = undefined;
@@ -234,9 +237,8 @@ window._foundry = {
       var offset = e.pageY - $('.timeline-svg').offset().top;
       timeline.mousedownMarkerRow = Math.floor(offset/timeline.rowHeight);
 
-      // Indicate the start of a range and that the
-      // mouse is currently down on the timeline. This
-      // should be reset on mouseup
+      // Indicate the start of a range and that the mouse is currently down on
+      // the timeline. This should be reset on mouseup
       timeline.mousedownOnMarker = true;
       timeline.rangeStartMarker = target;
 
@@ -253,27 +255,32 @@ window._foundry = {
       // cut out early
       if(!timeline.mousedownOnMarker) {return;}
 
-      var e = d3.event;
-      // event delegation
-      var target = e.target || e.srcElement;
-      var targetClassName = target.className.baseVal;
-
-      if(targetClassName.indexOf("marker") === -1) {return;}
-
       if(timeline.mousedownMarker !== undefined) {
-        var targetLeft = parseInt(target.getAttribute("x"));
-        var startLeft = parseInt(timeline.mousedownMarker.getAttribute("x"));
-
-        if(targetLeft > startLeft) {
-          // dragging forward
+        
+        var start = parseInt(timeline.mousedownMarker.getAttribute("x"));
+        var coords = d3.mouse(timeline.timelineSvg.node());
+        var end = coords[0];
+        
+        var numMarkers = Math.floor((end - start) / timeline.stepWidth);
+        
+        var startMarkerNum = parseInt(
+                                 timeline.mousedownMarker
+                                        .getAttribute("marker-num"));
+        
+        var endMarkerNum = startMarkerNum + numMarkers;
+        var endMarker = d3.select(".marker[marker-num='" + endMarkerNum + "']")
+                            .node();
+        
+        if(endMarkerNum > startMarkerNum) {
+          // moving forward
           timeline.rangeStartMarker = timeline.mousedownMarker;
-          timeline.rangeEndMarker = target;
+          timeline.rangeEndMarker = endMarker;
         } else {
-          // dragging backward
-          timeline.rangeStartMarker = target;
+          // moving backward
+          timeline.rangeStartMarker = endMarker;
           timeline.rangeEndMarker = timeline.mousedownMarker;
         }
-
+        
         timeline.highlightMarkerRange(
           timeline.rangeStartMarker,
           timeline.rangeEndMarker,
@@ -307,11 +314,12 @@ window._foundry = {
           timeline.rangeEndMarker
       );
 
-      // TODO: give some sort of response
-      if(duration < 30) return;
-
-      newEvent(point, duration);
       timeline.clearSelection();
+      if(duration >= 30) {
+        newEvent(point, duration);
+      } else {
+        // TODO: give some sort of response
+      }
     },
 
     /**
@@ -414,6 +422,7 @@ function redrawTimeline() {
       .data(intervals) // hour intervals
       .enter().append("rect")
           .attr("class", "marker")
+          .attr("marker-num", function(d) {return d;})
           .style("fill",
                  function(d) {
                    var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
@@ -471,7 +480,7 @@ function redrawTimeline() {
   numMins = -60;
   
   //Add ability to draw rectangles on extended timeline
-  gridLayer
+  timelineSvg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
       .on("mouseover", _foundry.timeline.timelineMouseoverFn);
   
