@@ -197,6 +197,7 @@ function createEvent(point, duration) {
     // create event object
     var eventObj = createEventObj(snapPoint, duration);
     
+
     // render event on timeline
     drawEvent(eventObj, true);
 
@@ -238,7 +239,7 @@ function createEventObj(snapPoint, duration) {
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"",
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"", events_after : "",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
@@ -248,6 +249,7 @@ function createEventObj(snapPoint, duration) {
         //createNewFolder($("#flash_team_name").val());
     }
     flashTeamsJSON.events.push(newEvent);
+    
     return newEvent;
 };
 
@@ -1074,11 +1076,12 @@ function drawG(eventObj) {
     };
     
     // add group to timeline, based on the data object
-    timeline_svg.selectAll("g")
+    window._foundry.timeline.eventLayer.selectAll("g.event")
         .data(task_groups, function(d){ return d.groupNum; })
         .enter()
         .append("g")
         .attr("id", "g_" + groupNum)
+        .attr("class", "event")
         .style({cursor: "pointer"})
         .on("mousemove", showHandles)
         .on("mouseout", function() {
@@ -1341,6 +1344,7 @@ function drawMemberTabs(eventObj) {
         var attrs = {
             id: "mem_tab_" + memberId,
             class: "mem_tab",
+            "member-id": memberId,
             width: 24,
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
@@ -1357,9 +1361,9 @@ function drawMemberTabs(eventObj) {
             memberTab.attr(key, attrs[key]);
         }
         
-        (function () {
-          $("#mem_tab_" + memberId).tooltip()
-        })();
+        $(".mem_tab[member-id='" + memberId + "']").each(function() {
+          $(this).tooltip()
+        });
     }
 }
 

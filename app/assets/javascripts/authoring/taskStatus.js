@@ -357,7 +357,7 @@ var completeTask = function(groupNum){
             
         }
         completed_red_tasks.push(groupNum);
-        //sendEmailOnCompletionOfDelayedTask(groupNum);
+        sendEmailOnCompletionOfDelayedTask(groupNum);
     }
     else if (eventToComplete.status == "started"){
        
