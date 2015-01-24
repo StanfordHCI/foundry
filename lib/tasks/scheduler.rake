@@ -16,8 +16,9 @@ namespace :notification do
    #default_url = 'foundry-app-dev.herokuapp.com'
    default_url = ENV['DEFAULT_URL']
    
-   #script should be scheduled to run every call_period seconds
-   call_period= 10 * 60 #seconds
+   #script should be scheduled to run every 10 minutes
+   call_period =  ENV['EMAIL_PERIOD'].to_i # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
+   #call_period = 600 # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
    puts "checking if a task is delayed..."
 
    
@@ -28,6 +29,8 @@ namespace :notification do
     
     flash_teams = FlashTeam.all
    	flash_teams.each do |flash_team|
+      
+      ## intialize
       next if flash_team.status == nil
       
       flash_team_status = JSON.parse(flash_team.status)
@@ -39,15 +42,21 @@ namespace :notification do
       print flash_team_json["id"]
       puts "\n"
       
-      #when end button is pushed members is emptied
+      
+      ##jump to next team if team is not started yet
+     
+      next if not flash_team_json["status"] 
 
+      
+      #After pushing end button, members array is emptied
       if flash_team_members.length == 0
           flash_team.notification_email_status = JSON.dump([])
           flash_team.save
       end
+      
       next if flash_team_members.length == 0
       
-      delayed_tasks_time=flash_team_status["delayed_tasks_time"]
+      #delayed_tasks_time=flash_team_status["delayed_tasks_time"]
       
       #dri_responded=flash_team_status["dri_responded"]
       if flash_team.notification_email_status != nil
@@ -57,69 +66,30 @@ namespace :notification do
       end
      
       flash_team_events=flash_team_json["events"]      
-      delayed_tasks_num=flash_team_status["delayed_tasks"]
-      remaining_tasks = flash_team_status["remaining_tasks"]
-      live_tasks = flash_team_status["live_tasks"]
 
-      #get members of live and remaining tasks
-      roles_remaining_live=[];
-
-      remaining_tasks.each do |remaining_task|
-         groupNum = remaining_task;
-         flash_team_events.each do |event|
-          eventId = event["id"];
-          if eventId == groupNum
-            event["members"].each do |member_id|
-              if event["members"].length == 0
-                print "error: delayed event has no members\n"
-                break
-              end
-              member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
-              if roles_remaining_live.index(member)==nil
-                roles_remaining_live.push(member);
-              end
-            end
-          end
-        end
-      end
-      live_tasks.each do |remaining_task|
-         groupNum = remaining_task;
-         flash_team_events.each do |event|
-          eventId = event["id"];
-          if eventId == groupNum
-            event["members"].each do |member_id|
-              if event["members"].length == 0
-                print "error: delayed event has no members\n"
-                break
-              end    
-              member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
-              if roles_remaining_live.index(member)==nil
-                roles_remaining_live.push(member);
-
-              end
-            end
-          end
-        end
-      end
-      #end
-     
-      #/get index of delayed event in events array/    
-      delayed_tasks_num.each do |groupNum|
-        start_time= delayed_tasks_time[groupNum]
       
-        delta_time_sec= (cur_time.to_i - start_time.to_i)/1000
 
-        print "elapsed time: "
+      #/get index of delayed event in events array/    
+      flash_team_events.each do |delayed_event|
+        #start_time= delayed_tasks_time[groupNum]
+        next if delayed_event["status"] != "delayed"
+        
+        groupNum = delayed_event["id"]
+        # end get delay start time
+        #delta_time_sec= (cur_time.to_i - start_time.to_i)/1000
+        delta_time_sec = -1 * delayed_event["timer"];
+        
+        print "elapsed time: \n "
         print delta_time_sec 
 
         #if scheduler is called before 1 call period an email is sent to the autor
         # the author should estimate the delay and all other workers will automatically get informed of the delay
-        if delta_time_sec<=call_period
-          flash_team_events.each do |event|
-            eventId = event["id"];
-            if eventId == groupNum
+        if delta_time_sec<=call_period && delta_time_sec>0
+          #flash_team_events.each do |event|
+            eventId = groupNum;
+          #  if eventId == groupNum
               /send email to dri/
-              delayed_event=event
+              #delayed_event=event
              
               if delayed_event["members"].length == 0
                 print "error: delayed event has no members\n"
@@ -144,13 +114,7 @@ namespace :notification do
               #url = url_for :controller => 'flash_teams',:action => 'delay',:id =>team_id.to_s, :event_id => event_id.to_s
               url = default_url+"/flash_teams/"+team_id.to_s+"/"+event_id.to_s+"/delay"
               member_id= dri_member["id"]
-              #dri_event = delayed_event["members"].detect{|m| m["name"] == dri_role}
-             
-            # if dri_event  == nil
-             #   print "dri_event is nil"
-             #   next
-             # end
-
+           
               dri_uniq = dri_member["uniq"]
               next if dri_uniq == nil
               
@@ -176,28 +140,35 @@ namespace :notification do
               end
               
               email_dri = Member.where(:uniq => dri_uniq.to_s)[0].email
+              
+              if Member.where(:uniq => dri_uniq.to_s)[0].name == nil
+                dri_name = ""
+              else
+                dri_name =  Member.where(:uniq => dri_uniq.to_s)[0].name
+              end
+
               if email_dri == nil
                 puts "dri has not entered email yet"
                 next
               end
-              UserMailer.send_dri_on_delay_email(email_dri,event_name, dri_role,url,team_id,event_id,cc_emails).deliver
+              UserMailer.send_dri_on_delay_email(email_dri,event_name, dri_name,url,team_id,event_id,cc_emails).deliver
               break
-            end
-          end
+           # end
+          #end
         end
         #finished sending email to dri to ask for the delay
         
         
         #DRI has not responded yet, send email to members of remaining tasks
         #todo
-        if delta_time_sec >= (1 * call_period) && delta_time_sec < (2 * call_period)
+        if delta_time_sec > (1 * call_period) && delta_time_sec < (2 * call_period)
         #if delta_time_sec >= (2 * call_period)
-        
+
           if notification_email_status[groupNum-1]== nil
-            flash_team_events.each do |event|
-            eventId = event["id"];
-            if eventId == groupNum
-                delayed_event=event
+            #flash_team_events.each do |event|
+            eventId = groupNum;
+            #if eventId == groupNum
+            #    delayed_event=event
                 if delayed_event["members"].length == 0
                   print "error: delayed event has no members\n"
                 break
@@ -220,6 +191,31 @@ namespace :notification do
                 event_id=eventId
                 team_id=flash_team_json["id"]
                 
+                roles_remaining_live = []
+                
+                if (delayed_event["events_after"] == nil)
+                  break;
+                end
+
+                delayed_event["events_after"].each do |event_after_id|
+                  event_after = flash_team_events.detect{|ev| ev["id"].to_i == event_after_id.to_i}        
+
+                  if event_after["members"].length == 0
+                    print "error: following event has no members\n"
+                    break
+                  end 
+                  event_after["members"].each do |member_id|   
+                    member = flash_team_members.detect{|m| m["id"].to_i == member_id.to_i};    
+                    if roles_remaining_live.index(member)==nil
+                      roles_remaining_live.push(member);
+                    end
+                  end  
+                end
+              
+                if roles_remaining_live == [] 
+                  break
+                end
+
                 roles_remaining_live.each do |role|
                   uniq = role["uniq"]
                  
@@ -237,8 +233,8 @@ namespace :notification do
                   UserMailer.send_delayed_dri_not_responded(email,event_name,dri_role).deliver;   
                 end
                 break
-              end
-            end
+             # end
+            #end
           end
         end
       end
