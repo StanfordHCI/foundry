@@ -37,4 +37,5 @@ function showForm(){
 	console.log("Hits this");
 	$(".formDiv").attr("style", "display:inline");
 	$("#launchDiv").attr("style", "display:none");
+	document.getElementById("topText").innerHTML="Thank you for completing the training!";
 }
