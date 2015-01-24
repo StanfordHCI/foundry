@@ -80,6 +80,7 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
 	},
+/*
 	{
 		element: "#search-events-container" ,
 		title: "<b>Event Library</b>", 
@@ -100,6 +101,7 @@ var authoringTour = new Tour({
 			}
 		}
 	},
+*/
 	{
 		orphan: true,
 		title: "<b>Handoffs</b>",
@@ -193,6 +195,7 @@ var authoringTour = new Tour({
 		+"click here to begin the team! ",
 		placement: "left"
 	},
+/*
 	{
 		orphan: true,
 		title: "<b>Hiring</b>",
@@ -206,6 +209,7 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>",
 	},
+*/
 	{
 		orphan: true,
 		title: "<b>Start the Team</b>",
