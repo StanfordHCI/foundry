@@ -136,7 +136,7 @@ window._foundry = {
     rowCoverSvg: undefined,
 
 
-    _svgSizeKeys: ["timelineSvg", "gridLayer", "selectionLayer", "eventLayer", "handoffLayer"],
+    _svgSizeKeys: ["timelineSvg", "gridLayer", "selectionLayer", "eventLayer", "handoffLayer", "collabLayer"],
     /**
      * Resizes the timeline SVG and all of its layers
      * @param number width
