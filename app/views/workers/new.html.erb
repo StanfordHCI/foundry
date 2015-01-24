@@ -10,14 +10,30 @@
 						<div class="row-fluid">
 							<p class="span5">Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 						</div>
+						<!-- Button trigger modal -->
+						<button type="button" class="btn btn-primary btn-lg" id="testButton" onclick="openModal()">
+						  Launch demo modal
+						</button>
+
+						<!-- Modal -->
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+						      </div>
+						      <div class="modal-body">
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						        <button type="button" class="btn btn-primary">Save changes</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+					</br>
 
 						<%= render partial: "new_content" %>
 
 				</div>
-
- 			</div><!-- /#container-fluid -->
-        </div><!-- /#page-content-wrapper -->
-
-    </div><!-- /#wrapper -->
-
-<%= render "panel_reg_sidebar_footer" %>
