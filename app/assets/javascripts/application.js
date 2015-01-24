@@ -20,7 +20,6 @@
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
 //= require ./authoring/load
-//= require ./authoring/training
 //= require ./authoring/timeline
 //= require ./authoring/events
 //= require ./authoring/members

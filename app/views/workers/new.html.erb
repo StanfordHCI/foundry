@@ -11,19 +11,86 @@
 							<p class="span5">Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 						</div>
 						<!-- Button trigger modal -->
-						<button type="button" class="btn btn-primary btn-lg" id="testButton" onclick="openModal()">
+						<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" id="testButton" onclick="openModal()">
 						  Launch demo modal
 						</button>
 
 						<!-- Modal -->
-						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal fade modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						  <div class="modal-dialog">
 						    <div class="modal-content">
 						      <div class="modal-header">
 						        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+						        <h4 class="modal-title" id="myModalLabel">Project Coordinator Training</h4>
 						      </div>
 						      <div class="modal-body">
+						      	<div class="container" id="myWizard">
+								   <div class="navbar">
+								      <div class="navbar-inner">
+								            <ul class="nav nav-pills">
+								               <li class="active"><a href="#step1" data-toggle="tab">Step 1</a></li>
+								               <li><a href="#step2" data-toggle="tab">Step 2</a></li>
+								               <li><a href="#step3" data-toggle="tab">Step 3</a></li>
+								               <li><a href="#step4" data-toggle="tab">Step 4</a></li>
+								               <li><a href="#step5" data-toggle="tab">Step 5</a></li>
+								               <li><a href="#step6" data-toggle="tab">Step 6</a></li>
+								               <li><a href="#step7" data-toggle="tab">Step 7</a></li>
+								               <li><a href="#step8" data-toggle="tab">Step 8</a></li>
+								               <li><a href="#step9" data-toggle="tab">Step 9</a></li>
+								               <li><a href="#step10" data-toggle="tab">Step 10</a></li>
+								               <li><a href="#step11" data-toggle="tab">Step 11</a></li>
+								            </ul>
+								      </div>
+								   </div>
+								   <div class="tab-content">
+								      <div class="tab-pane active" id="step1">
+								         <p>Please go through the following training sections to register for a panel. Once you are registered, you will be eligible to be hired for one of our projects!</p>
+
+										<p>The training will outline your roles, responsibilities, and the hiring process. We’re excited to have you onboard! </p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step2">
+								         <p>Here is the content for step 2...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step3">
+								         <p>Here is the content for step 3...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step4">
+								         <p>Here is the content for step 4...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step5">
+								         <p>This is the last step. You're done.</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step6">
+								         <p>Here is the content for step 2...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step7">
+								         <p>Here is the content for step 3...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step8">
+								         <p>Here is the content for step 4...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step9">
+								         <p>Here is the content for step 2...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step10">
+								         <p>Here is the content for step 3...</p>
+								         <a class="btn btn-default next" href="#">Continue</a>
+								      </div>
+								      <div class="tab-pane" id="step11">
+								         <p>Here is the content for step 4...</p>
+								         <a class="btn btn-success first" href="#">Start over</a>
+								      </div>
+								   </div>
+								</div>
 						      </div>
 						      <div class="modal-footer">
 						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -32,8 +99,8 @@
 						    </div>
 						  </div>
 						</div>
-					</br>
-
+				</br>
+					<div class = "formDiv">
 						<%= render partial: "new_content" %>
-
+					</div>
 				</div>
