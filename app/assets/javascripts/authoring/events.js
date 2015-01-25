@@ -1076,11 +1076,12 @@ function drawG(eventObj) {
     };
     
     // add group to timeline, based on the data object
-    timeline_svg.selectAll("g")
+    window._foundry.timeline.eventLayer.selectAll("g.event")
         .data(task_groups, function(d){ return d.groupNum; })
         .enter()
         .append("g")
         .attr("id", "g_" + groupNum)
+        .attr("class", "event")
         .style({cursor: "pointer"})
         .on("mousemove", showHandles)
         .on("mouseout", function() {
@@ -1343,6 +1344,7 @@ function drawMemberTabs(eventObj) {
         var attrs = {
             id: "mem_tab_" + memberId,
             class: "mem_tab",
+            "member-id": memberId,
             width: 24,
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
@@ -1359,9 +1361,9 @@ function drawMemberTabs(eventObj) {
             memberTab.attr(key, attrs[key]);
         }
         
-        (function () {
-          $("#mem_tab_" + memberId).tooltip()
-        })();
+        $(".mem_tab[member-id='" + memberId + "']").each(function() {
+          $(this).tooltip()
+        });
     }
 }
 
