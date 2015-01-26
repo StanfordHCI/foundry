@@ -1,32 +1,25 @@
 <%=render "panel_reg_sidebar" %>
 
+     
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <div class="container-fluid"  id="signupform">
-				<div class="row-fluid span12">
+<div class="span12">
+<div class="row span8">
+<h1>Panel Registration</h1>
+</div>
+<p class="row span7">Congratulations! You are qualified to join our panel of experts. We need the following information to be able to add you to the panel and notify you of job opportunities.</p>
 
-					<h1>Panel Registration</h1>
 
-						</br>
 
-						<div class="row-fluid">
-							<p class="span5" id="topText">Congratulations! You are qualified to join our panel of experts and be notified of job opportunities. In order to register, enter you access code, and open up the appropriate training module. Once you have completed training, you will be able to access the registration form.</p>
-						</div>
-						</br>
-						<div id = "launchDiv">
-							<b>To Launch Training, Enter your Panel Password</b></br>
-							<input type="text" id="password"></input></br>
-							<button type="button" class="btn btn-primary btn-lg" id="launchButton" onclick="openModal()">
-							  Launch 
-							</button>
-						</div>
 
-<!-- 						Modal Code
- -->					<%= render partial: "pc_modal" %>
-						<%= render partial: "worker_modal" %>
-						
-					<div class = "formDiv">
-						<p><b>Registration Form</b></p></br>
-						<%= render partial: "new_content" %>
-					</div>
-				</div>
+<%= render partial: "new_content" %>
+
+</div>
+
+ </div><!-- /#container-fluid -->
+        </div><!-- /#page-content-wrapper -->
+
+    </div><!-- /#wrapper -->
+
+  <%= render "panel_reg_sidebar_footer" %>
