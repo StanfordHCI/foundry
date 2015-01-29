@@ -8,6 +8,11 @@ function openModal(){
 			}
 	  		$('[href=#'+nextId+']').tab('show');
 		})
+		$('.prev').click(function(){
+			var prevId = $(this).parents('.tab-pane').prev().attr("id");
+			console.log(prevId)
+			$('[href=#'+prevId+']').tab('show');
+		})
 		$('.first').click(function(){
 	  		$('#pcWizard a:first').tab('show')
 		})
@@ -20,6 +25,11 @@ function openModal(){
 	  			document.getElementById("woCompleteBtn").disabled = false;	  		
 			}
 	  		$('[href=#'+nextId+']').tab('show');
+		})
+		$('.prev').click(function(){
+			var prevId = $(this).parents('.tab-pane').prev().attr("id");
+			console.log(prevId)
+			$('[href=#'+prevId+']').tab('show');
 		})
 		$('.first').click(function(){
 	  		$('#workerWizard a:first').tab('show')
