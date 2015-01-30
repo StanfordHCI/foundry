@@ -1,5 +1,6 @@
 function openModal(){
 	if ($("#password").val().indexOf("pc") == 0){
+		$("#pcModal").attr("style", "display: block;");
 		$('#pcModal').modal('show');
 		$('.next').click(function(){
 	  		var nextId = $(this).parents('.tab-pane').next().attr("id");
@@ -33,6 +34,7 @@ function openModal(){
 		});
 	}
 	else if ($("#password").val().indexOf("wo") == 0){
+		$("#workerModal").attr("style", "display: block;");
 		$('#workerModal').modal('show');
 		$('.next').click(function(){
 	  		var nextId = $(this).parents('.tab-pane').next().attr("id");

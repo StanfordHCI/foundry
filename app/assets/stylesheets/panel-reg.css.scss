@@ -133,6 +133,10 @@ a.logo span {
     color: #68dff0;
 }
 
+#pcModal, #workerModal{
+	//top: 100%;
+	display:none;
+}
 
 #user-icon{
 	padding-right: 15px;
