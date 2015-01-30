@@ -7,16 +7,22 @@ function openModal(){
 	  			document.getElementById("pcCompleteBtn").disabled = false;	  		
 			}
 	  		$('[href=#'+nextId+']').tab('show');
-	  		if($(this)[0].className.indexOf("vidButton") != -1){
-	  			$("#pcModal .tab-pane iframe").attr("src", $("#pcModal .tab-pane iframe").attr("src"));
+	  		if($(this)[0].className.indexOf("vidButton1") != -1){
+	  			$("#youtube1").attr("src", $("#youtube1").attr("src"));
+	  		}
+	  		else if($(this)[0].className.indexOf("vidButton2") != -1){
+	  			$("#youtube2").attr("src", $("#youtube2").attr("src"));
 	  		}
 		});
 		$('.prev').click(function(){
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
 			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
-			if($(this)[0].className.indexOf("vidButton") != -1){
-	  			$("#pcModal .tab-pane iframe").attr("src", $("#pcModal .tab-pane iframe").attr("src"));
+			if($(this)[0].className.indexOf("vidButton1") != -1){
+	  			$("#youtube1").attr("src", $("#youtube1").attr("src"));
+	  		}
+	  		else if($(this)[0].className.indexOf("vidButton2") != -1){
+	  			$("#youtube2").attr("src", $("#youtube2").attr("src"));
 	  		}
 		});
 		$('.first').click(function(){
@@ -34,16 +40,22 @@ function openModal(){
 	  			document.getElementById("woCompleteBtn").disabled = false;	  		
 			}
 	  		$('[href=#'+nextId+']').tab('show');
-	  		if($(this)[0].className.indexOf("vidButton") != -1){
-	  			$("#workerModal .tab-pane iframe").attr("src", $("#workerModal .tab-pane iframe").attr("src"));
+	  		if($(this)[0].className.indexOf("vidButton3") != -1){
+	  			$("#youtube3").attr("src", $("#youtube3").attr("src"));
+	  		}
+	  		else if($(this)[0].className.indexOf("vidButton4") != -1){
+	  			$("#youtube4").attr("src", $("#youtube4").attr("src"));
 	  		}
 		});
 		$('.prev').click(function(){
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
 			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
-			if($(this)[0].className.indexOf("vidButton") != -1){
-	  			$("#workerModal .tab-pane iframe").attr("src", $("#workerModal .tab-pane iframe").attr("src"));
+			if($(this)[0].className.indexOf("vidButton3") != -1){
+	  			$("#youtube3").attr("src", $("#youtube3").attr("src"));
+	  		}
+	  		else if($(this)[0].className.indexOf("vidButton4") != -1){
+	  			$("#youtube4").attr("src", $("#youtube4").attr("src"));
 	  		}
 		});
 		$("#workerModal").on('hidden.bs.modal', function (e) {
