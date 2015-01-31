@@ -13,8 +13,9 @@ $(document).ready(function() {
     // if the menu"s already extended, ignore
     if($(this).hasClass("active")) return;
     
-    leftSidebar.css("left", -(leftSidebar.width() - 20) + "px");
-    timelineWrapper.css("left", "20px");
+    var peekWidth = 20;
+    leftSidebar.css("left", -(leftSidebar.width() - peekWidth) + "px");
+    timelineWrapper.css("left", peekWidth + "px");
   });
   
   menuButton.mouseleave(function() {
@@ -27,7 +28,6 @@ $(document).ready(function() {
   
   // click listener for menu button
   menuButton.click(function() {
-    // var margin = 2 * parseFloat(timelineWrapper.css("margin-left"));
     var sidebarWidth = leftSidebar.width();
     if($(this).hasClass("active")) {
     
@@ -38,17 +38,18 @@ $(document).ready(function() {
           width: width + "px",
       });
       $(this).removeClass("active");
+      leftSidebar.removeClass("active");
     } else {
       leftSidebar.css("left", 0);
       var width = timelineWrapper.width()
                 - leftSidebar.width();
-                // - margin;
       
       timelineWrapper.css({
           left: leftSidebar.width() + "px",
           width: width + "px",
       });
       $(this).addClass("active");
+      leftSidebar.addClass("active");
     }
   });
   
