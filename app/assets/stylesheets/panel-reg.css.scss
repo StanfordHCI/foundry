@@ -140,15 +140,27 @@ a.logo span {
     color: #68dff0;
 }
 
+//by default don't show the modal and then change the display to block using JS
 #pcModal, #workerModal{
-	//top: 100%;
 	display:none;
 }
 
+/*
+#pcModal.modal-body{
+	max-height: 500px;
+	overflow-y: scroll;
+}
+*/
+
+/*
 #user-icon{
 	padding-right: 15px;
 }
+*/
 
+p.span12.prev-next-btn {
+	margin-left: 0px;
+}
 
 /*notification*/
 /*
