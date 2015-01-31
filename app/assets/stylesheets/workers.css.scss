@@ -27,6 +27,10 @@
 	display: none;
 }
 
+.tab-content ul li{
+	list-style-type: none;
+}
+
 .modal-body{
 	max-height: 500px;
 	//overflow-y: scroll;
