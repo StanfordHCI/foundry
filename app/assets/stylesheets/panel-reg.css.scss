@@ -6,6 +6,7 @@
 /* Import fonts */
 @import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
+
 body{
 	//background: #f2f2f2;
 }
@@ -91,6 +92,7 @@ p#confirmation-text.span12{
 .footer{
 	min-height: 40px;
 	background: #f2f2f2;
+	//position: relative;
 	position: fixed;
 	bottom: 0;
 	left: 0;

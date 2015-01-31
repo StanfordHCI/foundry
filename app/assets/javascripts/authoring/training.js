@@ -79,6 +79,7 @@ function showForm(){
 	console.log("Hits this");
 	$(".formDiv").attr("style", "display:inline");
 	$("#launchDiv").attr("style", "display:none");
-	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below <br /> to be added to the panel and start receiving job notifications!";
+	$(".footer").attr("style", "position: relative");
+	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below <br /> to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add stanfordhci.odesk@gmail.com to your address book <br /> to prevent job notifications from going to your spam folder.";
 	//$("#topText").attr("style", "padding-top:20px;");
 }
