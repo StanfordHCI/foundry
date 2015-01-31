@@ -17,3 +17,8 @@
 
 # Ignore file with client secrets from being uploaded to the repo
 config/initializers/app_env_vars.rb
+
+#Ignore O SX Files
+  /.DS_Store
+  /config/.DS_Store
+  /config/initializers/.DS_Store
