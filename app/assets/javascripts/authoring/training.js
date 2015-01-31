@@ -80,5 +80,5 @@ function showForm(){
 	$(".formDiv").attr("style", "display:inline");
 	$("#launchDiv").attr("style", "display:none");
 	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below <br /> to be added to the panel and start receiving job notifications!";
-	$("#topText").attr("style", "padding-top:20px;");
+	//$("#topText").attr("style", "padding-top:20px;");
 }

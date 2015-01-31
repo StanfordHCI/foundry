@@ -7,7 +7,7 @@
 @import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
 
 body{
-	background: #f2f2f2;
+	//background: #f2f2f2;
 }
 
 input, textarea, select, button{
@@ -62,6 +62,11 @@ input, textarea, select, button{
 
 
 /* MAIN CONTENT CONFIGURATION */
+p#topText.span12{
+	padding-top: 20px;
+}
+
+
 #main-content {
     /*
 margin-left: 210px;
@@ -74,16 +79,25 @@ margin-left: 210px;
 	padding-bottom: 7px;
 }
 
-.header, .footer {
+
+
+.header{
     min-height: 60px;
     padding: 0 15px;
-}
-
-.header {
-    position: fixed;
+	position: fixed;
     left: 0;
     right: 0;
     z-index: 1002;
+}
+
+.footer{
+	min-height: 40px;
+	background: #f2f2f2;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	line-height: 40px;
 }
 
 h3{
