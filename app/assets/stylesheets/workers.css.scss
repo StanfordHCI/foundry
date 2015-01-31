@@ -25,6 +25,7 @@
 
 .modal-body{
 	max-height: 500px;
+	overflow-y: scroll;
 }
 
 .prev{
@@ -32,5 +33,5 @@
 }
 
 .next{
-	float:right;
+	// float:right;
 }
