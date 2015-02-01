@@ -47,3 +47,4 @@
 //= require ./authoring/taskStatus
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
+//= require ./authoring/doc_modal
