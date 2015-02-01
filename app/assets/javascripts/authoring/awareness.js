@@ -288,12 +288,7 @@ function renderEverything(firstTime) {
             if (isUser || memberType == "pc"){
                 show_previous_doc();
             }
-            var modal_footer="tt";
-    var modal_body="eee";
 
-     $('#doc_modal').modal('show'); 
-     $('.doc-modal-footer').html(modal_footer);
-     $('.doc-modal-body').html(modal_body); 
             //startTeam(firstTime);
         } else {
             //console.log("flash team not in progress");
