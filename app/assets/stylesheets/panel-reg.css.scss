@@ -12,14 +12,14 @@ body{
 }
 
 input, textarea, select, button{
-	font-family: 'Ruda', sans-serif;
+	//font-family: 'Ruda', sans-serif;
 }
 
 #container{
     color: #797979;
 	//background: #f2f2f2;
 	background: white;
-    font-family: 'Ruda', sans-serif;
+    //font-family: 'Ruda', sans-serif;
     padding: 0px !important;
     margin: 0px !important;
     font-size:13px;
@@ -30,8 +30,8 @@ input, textarea, select, button{
 
 #panelregform{
 	//margin-left: 5px;
-	margin-left: 20%;
-	margin-right: 20%;
+	//margin-left: 20%;
+	//margin-right: 20%;
 }
 
 #panelregform input{
@@ -70,6 +70,8 @@ p#topText.span12{
 p#confirmation-text.span12{
 	padding-top: 30px;
 	font-size: 16px;
+	margin-left: 20px;
+	padding-left: 20px;
 }
 
 
@@ -123,10 +125,12 @@ h3{
 
 a.logo {
     font-size: 20px;
+    font-family: 'Ruda', sans-serif;
     text-transform: uppercase;
     color: #ffffff;
     margin: 0 auto;
     line-height: 60px;
+    margin-left: 20px;
     
 }
 
@@ -180,7 +184,7 @@ a.logo span {
 }
 
 .tab-content ul li{
-	list-style-type: none;
+	//list-style-type: none;
 }
 
 .modal-body{
