@@ -48,6 +48,9 @@ function openModal(){
 	  		else if($(this)[0].className.indexOf("vidButton4") != -1){
 	  			$("#youtube4").attr("src", $("#youtube4").attr("src"));
 	  		}
+	  		else if($(this)[0].className.indexOf("vidButton5") != -1){
+	  			$("#youtube5").attr("src", $("#youtube5").attr("src"));
+	  		}
 		});
 		$('.prev').click(function(){
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
@@ -58,6 +61,9 @@ function openModal(){
 	  		}
 	  		else if($(this)[0].className.indexOf("vidButton4") != -1){
 	  			$("#youtube4").attr("src", $("#youtube4").attr("src"));
+	  		}
+	  		else if($(this)[0].className.indexOf("vidButton5") != -1){
+	  			$("#youtube5").attr("src", $("#youtube5").attr("src"));
 	  		}
 		});
 		$("#workerModal").on('hidden.bs.modal', function (e) {
