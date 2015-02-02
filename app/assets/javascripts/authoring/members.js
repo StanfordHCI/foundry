@@ -309,7 +309,7 @@ function newMemberObject(memberName) {
     
     //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type 
     
-    return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": false};
+    return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
 };
 
 function addMember() {

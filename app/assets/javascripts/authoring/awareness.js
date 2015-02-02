@@ -287,6 +287,7 @@ function renderEverything(firstTime) {
             //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
                 show_previous_doc();
+                //updateStatus();
             }
 
             //startTeam(firstTime);
@@ -496,6 +497,13 @@ var poll = function(){
             } else {
                 drawStartedEvents();
                 //console.log("Flash team not updated and not ended");
+
+                 //show the documentation of the previous task for the workers and the PCs.
+                if (isUser || memberType == "pc"){
+                    show_previous_doc();
+                    //updateStatus();
+                }
+
             }
       });
     }, poll_interval); // every 5 seconds currently
