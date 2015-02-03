@@ -13,7 +13,7 @@ class UsersController < ApplicationController
 	end #end new 
 	
 	def create 
-		username = registration_params(params[:user])[:username]
+		username = registration_params(params[:user])[:username].downcase
 		
 		@user = User.new(:username => username)
 		@user.save()
