@@ -28,7 +28,7 @@
 			<th>Email</th>
 			<th>Skype Username</th>
 			<th>oDesk Profile URL</th>
-			<th>Timezone in UTC</th>
+			<th>Timezone in UTC/GMT</th>
 			<th>Additional Info</th>
 			<th>Panel</th>
 			<th>Select</th>
@@ -42,6 +42,7 @@
 			        <td><%= worker.skype_username %></td>
 			        <td><%= worker.odesk_url %></td>
 			        <td><%= worker.timezone_utc %></td>
+			        <!-- <td><%# ActiveSupport::TimeZone[worker.timezone_utc] %></td> -->
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
