@@ -74,16 +74,6 @@ function setCurrentMember() {
     }
 };
 
-/**
- * @param {string} name
- * @param {array} children
- */
-var MemberFolder = function(name, children) {
-    this.name = name || '';
-    this.children = children || [];
-    this.type = 'folder';
-}
-
 function createFolderHtml(entry) {
     return '' + 
     '<div class="role-folder">' +
@@ -119,26 +109,14 @@ function renderPills(members) {
     var membersWrap = $(".membersWrap");
     membersWrap.html("");
     
-    for(var i = 0; i < flashTeamsJSON.member_folders.length; i++) {
-        var entry = flashTeamsJSON.member_folders[i];
+    for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+        var entry = flashTeamsJSON.members[i];
         var html = entry.type === "folder" ?
             createFolderHtml(entry) : createRoleHtml(entry);
         
         membersWrap.append(html);
-        updateNumRolesDisplay(members.length);
     }
-    
-    /*
-    var membersWrap = $(".membersWrap");
-    membersWrap.html("");
-    
-    for (var i=members.length-1;i>=0;i--){
-        var html = createRoleHtml(members[i]);
-        membersWrap.prepend(html);
-    }
-    
     updateNumRolesDisplay(members.length);
-    */
 };
 
 
@@ -354,12 +332,12 @@ function addFolder(folderName) {
         return;
     }
 
-    // add folder to json
-    var memberEntries = flashTeamsJSON.member_folders;
-    var folder = new MemberFolder(folderName);
-    memberEntries.push(folder);
-    
-    renderPills(memberEntries);
+//    // add folder to json
+//    var memberEntries = flashTeamsJSON.member_folders;
+//    var folder = new MemberFolder(folderName);
+//    memberEntries.push(folder);
+//    
+//    renderPills(memberEntries);
     updateStatus(false);
 }
 
@@ -382,13 +360,9 @@ function addMember() {
 
     // add member to json
     var members = flashTeamsJSON.members;
-    var memberEntries = flashTeamsJSON.member_folders;
-    
     var member_obj = newMemberObject(member_name);
     members.push(member_obj);
     
-    memberEntries.push(member_obj);
-
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
    /* for(var i=0;i<events.length;i++){

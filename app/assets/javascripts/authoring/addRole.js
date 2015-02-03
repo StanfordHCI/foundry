@@ -76,7 +76,8 @@
 ((function() {
     var isValidFolder = function(str) {
         return str.length > 0;
-    }
+    };
+    
     var addFolderClickFn = function(e) {
         $(this).addClass('active');
         var $oldSpan = $(this).find('span');
