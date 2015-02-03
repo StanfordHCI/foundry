@@ -3,11 +3,12 @@
  *
  */
 
- var memberCounter = undefined;
- var colorToChange = "#ff0000";
- var current = undefined;
- var isUser = false;
- var memberType; 
+
+var memberCounter = undefined;
+var colorToChange = "#ff0000";
+var current = undefined;
+var isUser = false;
+var memberType; 
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
@@ -73,6 +74,24 @@ function setCurrentMember() {
     }
 };
 
+/**
+ * @param {string} name
+ * @param {array} children
+ */
+var MemberFolder = function(name, children) {
+    this.name = name || '';
+    this.children = children || [];
+    this.type = 'folder';
+}
+
+function createFolderHtml(entry) {
+    return '' + 
+    '<div class="role-folder">' +
+      '<div class="icon"></div>' +
+      '<span class="name">' + entry.name +
+        ' (' + entry.children.length + ')</span>' +
+    '</div>';
+}
 
 function createRoleHtml(member) {
   return '' +
@@ -83,7 +102,7 @@ function createRoleHtml(member) {
   '</div>';
 }
 
-/*
+/**
  * Updates the text for any display of the number of roles
  * (e.g. a span with the class "num-roles") with the value
  * passed as num
@@ -100,12 +119,26 @@ function renderPills(members) {
     var membersWrap = $(".membersWrap");
     membersWrap.html("");
     
+    for(var i = 0; i < flashTeamsJSON.member_folders.length; i++) {
+        var entry = flashTeamsJSON.member_folders[i];
+        var html = entry.type === "folder" ?
+            createFolderHtml(entry) : createRoleHtml(entry);
+        
+        membersWrap.append(html);
+        updateNumRolesDisplay(members.length);
+    }
+    
+    /*
+    var membersWrap = $(".membersWrap");
+    membersWrap.html("");
+    
     for (var i=members.length-1;i>=0;i--){
         var html = createRoleHtml(members[i]);
         membersWrap.prepend(html);
     }
     
     updateNumRolesDisplay(members.length);
+    */
 };
 
 
@@ -312,6 +345,24 @@ function newMemberObject(memberName) {
     return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":""};
 };
 
+/**
+ * @param {string} folderName
+ */
+function addFolder(folderName) {
+    if(folderName === "") {
+        alert("Please enter a folder name");
+        return;
+    }
+
+    // add folder to json
+    var memberEntries = flashTeamsJSON.member_folders;
+    var folder = new MemberFolder(folderName);
+    memberEntries.push(folder);
+    
+    renderPills(memberEntries);
+    updateStatus(false);
+}
+
 function addMember() {
     // retrieve member role
     var member_name = $("#addMemberInput").val();
@@ -331,8 +382,12 @@ function addMember() {
 
     // add member to json
     var members = flashTeamsJSON.members;
+    var memberEntries = flashTeamsJSON.member_folders;
+    
     var member_obj = newMemberObject(member_name);
     members.push(member_obj);
+    
+    memberEntries.push(member_obj);
 
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;

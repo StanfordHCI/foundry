@@ -4,16 +4,31 @@
 <div class="inner">
   <div class="content">
     <form name='newMemberForm' autocomplete="on" id="newMemberForm">
-        <input type="text" name="enterAndReloadBugFix" style="display: none;"> 
+      <input type="text" name="enterAndReloadBugFix" style="display: none;"> 
 
-        <div class="membersWrap">
+      <div class="roles-menu">
+        <div class="roles-search-wrap">
+          <input class="roles-search" type="text" placeholder="Search">
         </div>
+        <div class="buttons">
+          <div class="add-folder-button add-folder">
+            <span>Add folder</span>
+          </div>
 
-        <div class="add-role role">
-          <div class="indicator plus">+</div>
-          <span class="name">Add new role</span>
-          <div class="clear"></div>
+          <div class="grid-view-button icon"></div>
+          <div class="list-view-button icon"></div>
+          <div class="sort-az-button icon"></div>
         </div>
+      </div>
+      
+      <div class="membersWrap">
+      </div>
+
+      <div class="add-role role">
+        <div class="indicator plus">+</div>
+        <span class="name">Add new role</span>
+        <div class="clear"></div>
+      </div>
 
     </form>
   </div>

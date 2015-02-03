@@ -1,0 +1,100 @@
+@mixin align-items($str) {
+  -webkit-align-items: #{$str};
+     -moz-align-items: #{$str};
+      -ms-align-items: #{$str};
+          align-items: #{$str};
+}
+
+@mixin animation($str) {
+  -webkit-animation: #{$str};
+     -moz-animation: #{$str};
+      -ms-animation: #{$str};
+       -o-animation: #{$str};
+          animation: #{$str};      
+}
+
+@mixin animation-timing-function($str) {
+  -webkit-animation-timing-function: #{$str};
+     -moz-animation-timing-function: #{$str};
+      -ms-animation-timing-function: #{$str};
+       -o-animation-timing-function: #{$str};
+          animation-timing-function: #{$str};
+}
+
+@mixin border-radius($str) {
+  -webkit-border-radius: #{$str};
+     -moz-border-radius: #{$str};
+          border-radius: #{$str};
+}
+
+@mixin box-shadow($str) {
+  -webkit-box-shadow: #{$str};
+     -moz-box-shadow: #{$str};
+          box-shadow: #{$str};
+}
+
+/**
+ * Useful for flex and inline-flex
+ */
+@mixin display($str) {
+  display: -webkit-#{$str};
+  display:    -moz-#{$str};
+  display:     -ms-#{$str};
+  display:         #{$str};
+}
+
+@mixin filter($str) {
+  -webkit-filter: #{$str};
+          filter: #{$str};
+}
+
+@mixin flex-wrap($str) {
+  -webkit-flex-wrap: #{$str};
+     -moz-flex-wrap: #{$str};
+      -ms-flex-wrap: #{$str};
+          flex-wrap: #{$str};
+}
+
+@mixin justify-content($str) {
+  -webkit-justify-content: #{$str};
+     -moz-justify-content: #{$str};
+      -ms-justify-content: #{$str};
+          justify-content: #{$str};
+}
+
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes $animation-name {
+    @content;
+  }
+  @-moz-keyframes $animation-name {
+    @content;
+  }  
+  @-ms-keyframes $animation-name {
+    @content;
+  }
+  @-o-keyframes $animation-name {
+    @content;
+  }  
+  @keyframes $animation-name {
+    @content;
+  }
+}
+
+@mixin transform($str) {
+  -webkit-transform: $str;
+	 -moz-transform: $str;
+      -ms-transform: $str;
+	   -o-transform: $str;
+          transform: $str;
+}
+
+@mixin transition($str) {
+  -webkit-transition: #{$str};
+     -moz-transition: #{$str};
+       -o-transition: #{$str};
+          transition: #{$str};
+}
+
+@mixin translate($x, $y) {
+  @include transform(translate($x, $y));
+}

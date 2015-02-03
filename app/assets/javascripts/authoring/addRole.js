@@ -1,12 +1,19 @@
 (function() {
-  // validator
-  function isValidRole(str) {
-    return str.length > 0;
-  }
-
-  $('.add-role').click(addRoleClickFunction);
-
-  function addRoleClickFunction(e) {
+  var addRoleClickFunction = function(e) {
+    var createAddRole = function() {
+      return $(
+        '<div class="add-role role">' +
+          '<div class="indicator plus">+</div>' +
+          '<span class="name">Add new role</span>' +
+          '<div class="clear"></div>' +
+        '</div>');
+    };
+    
+    // validator
+    var isValidRole = function(str) {
+      return str.length > 0;
+    }
+    
     if($(this).hasClass('active')) {return};
     
     e.preventDefault();
@@ -58,24 +65,37 @@
       .focusout(function(){
           if($('.add-role').length === 1) { // just this one add role exists
             var newAddRole = createAddRole()
-              .click(addRoleClickFunction)
-              .hide()
-              .insertAfter(that);
-            that.remove();
-            newAddRole.show();
+              .click(addRoleClickFunction);
+            that.replaceWith(newAddRole);
           }
       });
-    
-    function createAddRole() {
-      return $(
-        '<div class="add-role role">' +
-          '<div class="indicator plus">+</div>' +
-          '<span class="name">Add new role</span>' +
-          '<div class="clear"></div>' +
-        '</div>');
-    }
-  }
-  
+  };
   $('.add-role').click(addRoleClickFunction);
-  
 })();
+
+((function() {
+    var isValidFolder = function(str) {
+        return str.length > 0;
+    }
+    var addFolderClickFn = function(e) {
+        $(this).addClass('active');
+        var $oldSpan = $(this).find('span');
+        var $input = $('<input type="text" id="addFolderInput" placeholder="Add folder">')
+            .focusout(function() {
+                $(this).parents('.add-folder').removeClass('active');
+                $(this).replaceWith($oldSpan);
+            })
+            .keypress(function(e) {
+              if(e.keyCode != 13 /* enter */) return;
+              
+              var name = $(this).val();
+              if(!isValidFolder(name)) return;
+              addFolder(name);
+              
+              $(this).focusout();
+            });
+        $(this).find('span').replaceWith($input);
+        $input.focus();
+    };
+    $('.add-folder').click(addFolderClickFn);
+})());
