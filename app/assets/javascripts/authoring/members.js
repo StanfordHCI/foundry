@@ -40,7 +40,7 @@ colorBox.replaceColor = function(color) {
 
  function renderMembersRequester() {
     var members = flashTeamsJSON.members;
-    renderPills(members);
+    renderCurrentFolderPills();
     renderMemberPopovers(members);
     renderDiagram(members);
     renderAllMemberCircles();
@@ -74,12 +74,17 @@ function setCurrentMember() {
     }
 };
 
+var folderClickFn = function(e) {
+    currentFolderId = $(this).attr('folder-id');
+    renderCurrentFolderPills();
+};
+
 function createFolderHtml(entry) {
     return '' + 
-    '<div class="role-folder">' +
+    '<div class="role-folder" folder-id="' + entry.id + '">' +
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
-        ' (' + entry.children.length + ')</span>' +
+        ' (' + entry.childIds.length + ')</span>' +
     '</div>';
 }
 
@@ -105,19 +110,22 @@ function updateNumRolesDisplay(num) {
   }
 }
 
-function renderPills(members) {
+function renderPills(pills) {
     var membersWrap = $(".membersWrap");
     membersWrap.html("");
-    
-    for(var i = 0; i < flashTeamsJSON.members.length; i++) {
-        var entry = flashTeamsJSON.members[i];
-        var html = entry.type === "folder" ?
-            createFolderHtml(entry) : createRoleHtml(entry);
-        
-        membersWrap.append(html);
+    for(var i = 0; i < pills.length; i++) {
+        var entry = pills[i];
+        var elem = entry.type === "folder" ?
+            $(createFolderHtml(entry)).click(folderClickFn) :
+            createRoleHtml(entry);
+        membersWrap.append(elem);
     }
-    updateNumRolesDisplay(members.length);
+    updateNumRolesDisplay(flashTeamsJSON.members.length);
 };
+
+function renderCurrentFolderPills() {
+    renderPills(getEntriesFromIds(getChildIdsById(currentFolderId)));
+}
 
 
 function renderMemberPopovers(members) {
@@ -310,17 +318,17 @@ function renderDiagram(members) {
     }
 };
 
+function newFolderObject(folderName) {
+    return {name: folderName, type: "folder", id: generateMemberId(), childIds: []};
+}
+
 function newMemberObject(memberName) {
-    if (memberCounter == undefined) {
-        memberCounter = initializeMemberCounter();
-    }
-    memberCounter++;
     var color = colorBox.grabColor();
     //return {"role":memberName, "id": memberCounter, "color":color, "skills":[], "category1":"", "category2":""};
     
     //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type 
     
-    return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":""};
+    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "category1":"", "category2":""};
 };
 
 /**
@@ -332,14 +340,70 @@ function addFolder(folderName) {
         return;
     }
 
-//    // add folder to json
-//    var memberEntries = flashTeamsJSON.member_folders;
-//    var folder = new MemberFolder(folderName);
-//    memberEntries.push(folder);
-//    
-//    renderPills(memberEntries);
+    var folderObject = newFolderObject(folderName);
+    addEntryToMemberData(folderObject);
+    
+    renderCurrentFolderPills();
     updateStatus(false);
 }
+
+var getChildIdsById = function(id) {
+    var memberData = flashTeamsJSON.member_data;
+    if(id === undefined) {
+        return memberData.root.childIds;
+    } else {
+        return memberData._entry_map[id].childIds;
+    }
+};
+
+var getEntriesFromIds = function(ids) {
+    var entries = [];
+    for(var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        var entry = flashTeamsJSON.member_data._entry_map[id];
+        if(!entry) {
+            ids.splice(i, 1);
+            i--;
+            continue;
+        }
+        entries.push(entry);
+    }
+    return entries;
+};
+
+var currentFolderId = undefined;
+/**
+ * @param {object} entry
+ * @param {string|number} folderId The id of the folder to add the entry to.
+ * Defaults to the current folder.
+ */
+var addEntryToFolder = function(entry, folderId) {
+    var memberData = flashTeamsJSON.member_data;
+    folderId = folderId || currentFolderId;
+    if(folderId === undefined) {
+        if(!memberData.root) {
+            memberData.root = {childIds:[]};
+        }
+        memberData.root.childIds.push(entry.id);
+    } else {
+        memberData._entry_map[currentFolderId].childIds.push(entry.id);
+    }
+    
+};
+
+/**
+ * @param {object} entry
+ * @param {string|number} folderId The id of the folder to add the entry to.
+ * Defaults to the current folder.
+ */
+var addEntryToMemberData = function(entry, folderId) {
+    var memberData = flashTeamsJSON.member_data;
+    if(!memberData._entry_map) {
+        memberData._entry_map = {};
+    }
+    memberData._entry_map[entry.id] = entry;
+    addEntryToFolder(entry, folderId);
+};
 
 function addMember() {
     // retrieve member role
@@ -361,7 +425,9 @@ function addMember() {
     // add member to json
     var members = flashTeamsJSON.members;
     var member_obj = newMemberObject(member_name);
+    
     members.push(member_obj);
+    addEntryToMemberData(member_obj);
     
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
@@ -369,11 +435,9 @@ function addMember() {
        drawPopover(events[i], true, false);
     }*/
 
-   renderPills(members);
+   renderCurrentFolderPills();
    renderMemberPopovers(members);
-
    updateStatus(false);
-
    inviteMember(member_obj.id);
 };
 
@@ -472,7 +536,7 @@ function deleteMember(pillId) {
     $("#mPill_" + memberId).popover('destroy');
 
     members.splice(indexOfJSON, 1);
-    renderPills(members);
+    renderCurrentFolderPills();
     renderMemberPopovers(members);
 
     // remove from members array with event object
@@ -647,6 +711,21 @@ function initializeMemberCounter() {
         }
         return highestId;
     }
+}
+
+function generateMemberId() {
+    if(!flashTeamsJSON.member_data.last_id) {
+        flashTeamsJSON.member_data.last_id = 0;
+    }
+    
+    // so nothing breaks
+    if(memberCounter == undefined) {
+        memberCounter = initializeMemberCounter();
+    }
+    memberCounter++;
+    
+    flashTeamsJSON.member_data.last_id++;
+    return flashTeamsJSON.member_data.last_id;
 }
 
 //Find the index of a member in the JSON object "members" array by using unique id
