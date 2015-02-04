@@ -74,8 +74,125 @@ function setCurrentMember() {
     }
 };
 
+var entryManager = {
+    currentFolderId: "root",
+    
+    getCurrentFolderChildren: function() {
+        return this.getEntriesFromIds(
+            this.getChildIdsById(
+                this.currentFolderId));
+    },
+    
+    _getEntryParentProp: function(entry, prop) {
+        var parentProps = [];
+
+        if(entry === undefined) return parentProps;
+
+        var e = entryManager.getEntryFromId(entry.parentId);
+        while(e !== undefined) {
+            parentProps.unshift(e[prop]);
+            e = entryManager.getEntryFromId(e.parentId);
+        }
+        return parentProps;
+    },
+    
+    /**
+     * Returns an array containing the ids of each of the passed in entry's
+     * ancestors, starting with the root folder and ending with the entry's
+     * direct parent
+     * @param {object} entry
+     */
+    getEntryParentIds: function(entry) {
+        return this._getEntryParentProp(entry, 'id');
+    },
+
+    /**
+     * @param {object} entry
+     * @returns an array containing the names of each of the passed in entry's
+     * ancestors, starting with the root folder and ending with the entry's
+     * direct parent
+     */
+    getEntryParentNames: function(entry) {
+        return this._getEntryParentProp(entry, 'name');
+    },
+    
+    /**
+     * @param {string|number} id
+     * @returns an array containing the ids of each of the children of the
+     * event with the given id
+     */
+    getChildIdsById: function(id) {
+        var memberData = flashTeamsJSON.member_data;
+        return memberData._entry_map[id].childIds;
+    },
+
+    /**
+     * @param {string|number} id
+     * @returns the entry with the given id
+     */
+    getEntryFromId: function(id) {
+        return flashTeamsJSON.member_data._entry_map[id];
+    },
+
+    /**
+     * @param {array.<string|number>} ids
+     * @returns an array containing the entries that correspond to the given
+     * ids
+     */
+    getEntriesFromIds: function(ids) {
+        var entries = [];
+        for(var i = 0; i < ids.length; i++) {
+            var id = ids[i];
+            var entry = this.getEntryFromId(id);
+            if(!entry) {
+                ids.splice(i, 1);
+                i--;
+                continue;
+            }
+            entries.push(entry);
+        }
+        return entries;
+    },
+    
+    /**
+     * @param {object} entry
+     * @param {string|number} folderId The id of the folder to add the entry to.
+     * Defaults to the current folder.
+     */
+    addEntryToFolder: function(entry, folderId) {
+        var memberData = flashTeamsJSON.member_data;
+        folderId = folderId || this.currentFolderId;
+
+        var folder = memberData._entry_map[folderId];
+        // special case the root folder
+        if(this.currentFolderId === "root" && !folder) {
+            memberData._entry_map["root"] = newFolderObject("root", undefined);
+            folder = memberData._entry_map["root"];
+        }
+        folder.childIds.push(entry.id);
+    },
+
+    /**
+     * Stores the member in the entries json
+     * @param {object} entry
+     */
+    addEntryToMemberData: function(entry) {
+        var memberData = flashTeamsJSON.member_data;
+        if(!memberData._entry_map) {
+            memberData._entry_map = {};
+        }
+
+        memberData._entry_map[entry.id] = entry;
+
+        // check parent id field and use that. If there is no parent id set,
+        // addEntryToFolder defaults to the current folder
+        var folderId = entry.parentId;
+        this.addEntryToFolder(entry, folderId);
+    },
+};
+
 var folderClickFn = function(e) {
-    currentFolderId = $(this).attr('folder-id');
+    entryManager.currentFolderId = $(this).attr('folder-id');
     renderCurrentFolderPills();
 };
 
@@ -124,7 +241,12 @@ function renderPills(pills) {
 };
 
 function renderCurrentFolderPills() {
-    renderPills(getEntriesFromIds(getChildIdsById(currentFolderId)));
+    var currentFolder = entryManager.getEntryFromId(entryManager.currentFolderId);
+    var names = entryManager.getEntryParentNames(currentFolder);
+    names.push(currentFolder.name);
+    $('.breadcrumbs').html(names.join(' › '));
+    renderPills(
+        entryManager.getCurrentFolderChildren());
 }
 
 
@@ -318,8 +440,8 @@ function renderDiagram(members) {
     }
 };
 
-function newFolderObject(folderName) {
-    return {name: folderName, type: "folder", id: generateMemberId(), childIds: []};
+function newFolderObject(folderName, parentId) {
+    return {name: folderName, parentId: parentId, type: "folder", id: generateMemberId(), childIds: []};
 }
 
 function newMemberObject(memberName) {
@@ -334,76 +456,22 @@ function newMemberObject(memberName) {
 /**
  * @param {string} folderName
  */
-function addFolder(folderName) {
+function addFolder(folderName, parentId) {
     if(folderName === "") {
         alert("Please enter a folder name");
         return;
     }
 
-    var folderObject = newFolderObject(folderName);
-    addEntryToMemberData(folderObject);
+    if(parentId === undefined) {
+        parentId = entryManager.currentFolderId;
+    }
+    
+    var folderObject = newFolderObject(folderName, parentId);
+    entryManager.addEntryToMemberData(folderObject);
     
     renderCurrentFolderPills();
     updateStatus(false);
 }
-
-var getChildIdsById = function(id) {
-    var memberData = flashTeamsJSON.member_data;
-    if(id === undefined) {
-        return memberData.root.childIds;
-    } else {
-        return memberData._entry_map[id].childIds;
-    }
-};
-
-var getEntriesFromIds = function(ids) {
-    var entries = [];
-    for(var i = 0; i < ids.length; i++) {
-        var id = ids[i];
-        var entry = flashTeamsJSON.member_data._entry_map[id];
-        if(!entry) {
-            ids.splice(i, 1);
-            i--;
-            continue;
-        }
-        entries.push(entry);
-    }
-    return entries;
-};
-
-var currentFolderId = undefined;
-/**
- * @param {object} entry
- * @param {string|number} folderId The id of the folder to add the entry to.
- * Defaults to the current folder.
- */
-var addEntryToFolder = function(entry, folderId) {
-    var memberData = flashTeamsJSON.member_data;
-    folderId = folderId || currentFolderId;
-    if(folderId === undefined) {
-        if(!memberData.root) {
-            memberData.root = {childIds:[]};
-        }
-        memberData.root.childIds.push(entry.id);
-    } else {
-        memberData._entry_map[currentFolderId].childIds.push(entry.id);
-    }
-    
-};
-
-/**
- * @param {object} entry
- * @param {string|number} folderId The id of the folder to add the entry to.
- * Defaults to the current folder.
- */
-var addEntryToMemberData = function(entry, folderId) {
-    var memberData = flashTeamsJSON.member_data;
-    if(!memberData._entry_map) {
-        memberData._entry_map = {};
-    }
-    memberData._entry_map[entry.id] = entry;
-    addEntryToFolder(entry, folderId);
-};
 
 function addMember() {
     // retrieve member role
@@ -427,7 +495,7 @@ function addMember() {
     var member_obj = newMemberObject(member_name);
     
     members.push(member_obj);
-    addEntryToMemberData(member_obj);
+    entryManager.addEntryToMemberData(member_obj);
     
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
