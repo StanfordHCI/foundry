@@ -115,7 +115,10 @@ function sendChatMessage() {
     uniq_u = 'Author';
   }
   
-  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
+  myDataRef.push({
+      name: chat_name, role: chat_role,
+      uniq: uniq_u, date: (new Date()).toUTCString(), text: text});
+    
   $('#messageInput').focus().val('');
 }
 
