@@ -17,8 +17,8 @@ namespace :notification do
    default_url = ENV['DEFAULT_URL']
    
    #script should be scheduled to run every 10 minutes
-   #call_period =  ENV['EMAIL_PERIOD'].to_i # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
-   call_period = 600 # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
+   call_period =  ENV['EMAIL_PERIOD'].to_i # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
+   #call_period = 150 # Fastforwarded: 600. Normal speed: 10. The call_period should be set to anything the flashTeamsJSON["events"][i].timer shows after 10 minutes. 
    puts "checking if a task is delayed..."
 
    
