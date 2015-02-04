@@ -51,7 +51,7 @@
 								  	<%end%>
 								   </select> 
 	
-								   role to work on the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4', :required => true) %> task as part of the <em><%=@flash_team_json['title']%></em> project.  As stated in the job description, you will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span5', :required => true)%> to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+								   role to work on the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4', :required => true) %> task as part of the <em><%=@flash_team_json['title']%></em> project.  As stated in the job description, you will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span5', :required => true)%> to complete this task and must start working within 30 minutes of receiving this email. Please make sure to track your working hours on oDesk. For your reference, we have included the job description along with instructions on how to get started below:
 								</p>	
 						</div>
 					</div>
@@ -102,16 +102,17 @@
 							</p>
 	
 							<p>
-								After you sign up, you will receive a unique link to the project, which you should use throughout the project. As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any remaining questions.
+								After you sign up, you will receive a unique link to the project, which you should use throughout the project. If you are still unfamiliar with Foundry, you can access the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the project page.  Feel free to contact us if you have any remaining questions.
 							</p>  
-	
-	
+						
+							<p>
+								To confirm acceptance of this task and to start working, please accept the oDesk contract, log in to Foundry and start your task. It is also good practice to announce yourself in the chat to let others know you have started working on your task.  							
+							</p>
+							
 							<p>
 								Thank you for involvement in this project and we look forward to receiving your work!
-								</p>														
-							<p>
-								If you are ready to start working on this task, reply to this email with your name in the content of the email as well as a confirmation that you can start within 30 minutes from when you are hired. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
-							</p>								
+							</p>
+								
 					
 					<p>
 						Best, <br />

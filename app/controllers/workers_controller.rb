@@ -66,7 +66,7 @@ class WorkersController < ApplicationController
   end
   
   def new
-  	if valid_user?
+  	if valid_user?(save_loc: false)
   		 #redirect_to :action => 'index'
   		 @worker = Worker.new
   	end	
@@ -109,7 +109,7 @@ class WorkersController < ApplicationController
   end
   
   def edit
-  	if valid_user?
+  	if valid_user?(save_loc: false)
   		@worker = Worker.find(params[:id])
   	end
   end

@@ -12,8 +12,8 @@
     <%= f.label :odesk_url, "oDesk Profile URL*: " %>
     <%= f.text_field :odesk_url, :required => :true %> <br />
     
-    <%= f.label :timezone_utc, "Your Timezone (in UTC)*: " %>
-    <%= f.text_field :timezone_utc, :required => :true %> <br />
+    <%= f.label :timezone_utc, "Your Timezone (in UTC/GMT)*: " %>
+    <%= f.time_zone_select(:timezone_utc, nil, {include_blank: "-- Select Timezone --"}, {:required => :true, style: "width: 315px;"}) %><br />
 
     <%= f.label :panel, "Panel Password*: " %>
     <%= f.text_field :panel, :required => :true %> <br />

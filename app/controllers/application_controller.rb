@@ -3,10 +3,15 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   
-  def valid_user?
-	  	  
-	  session.delete(:return_to)
-	  session[:return_to] ||= request.original_url
+  def valid_user?(options = {})
+  
+  	# methods could do something like "if valid_user?(save_loc: false)" if they don't want to save the location
+  	  save_loc = options[:save_loc]
+	  
+	  if save_loc != false	  
+	  	session.delete(:return_to)
+	  	session[:return_to] ||= request.original_url
+	  end
 	  
 	  redirect_to(:controller => :users, :action => :login) and return unless session[:member]
 		  
