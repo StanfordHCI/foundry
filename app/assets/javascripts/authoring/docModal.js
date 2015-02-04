@@ -45,11 +45,11 @@ function add_ev_seenDocQ(upcomingEvent_tmp){
  		console.log("error: current user is undefined!");
  		return;
  	}
+
  	for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
         if (parseInt(flashTeamsJSON["members"][i].id) == parseInt(current_user.id)) 
     		flashTeamsJSON["members"][i].seenDocQs.push(upcomingEvent_tmp);    	 
     }
-
 };
 
 function upcoming_ev_doc_seen(upcomingEvent_tmp){
@@ -57,7 +57,7 @@ function upcoming_ev_doc_seen(upcomingEvent_tmp){
   
   var curr_mem = getMemberById(current_user.id);
   
-  var seenDocQs = flashTeamsJSON["members"][0]["seenDocQs"];
+  var seenDocQs = curr_mem["seenDocQs"];
  
   if( (seenDocQs.indexOf(upcomingEvent_tmp)) == -1){
   	return false;
