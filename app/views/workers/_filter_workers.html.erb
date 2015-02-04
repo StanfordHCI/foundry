@@ -22,17 +22,17 @@
 
 <h4><b>Or Select Specific Workers:</b></h4>
 <div>
-	<table class="table table-bordered table-striped">
+	<table class="table table-bordered table-striped" style="word-break: break-word;">
 	    <thead>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Skype Username</th>
 			<th>oDesk Profile URL</th>
-			<th>Timezone in UTC</th>
+			<th>Timezone in UTC/GMT</th>
 			<th>Additional Info</th>
 			<th>Panel</th>
 			<th>Select</th>
-			<th>Edit/Delete</th>
+			<th>Edit / Delete</th>
 	    </thead>
 	    <tbody>
 			<% @workers.each do |worker| %>
@@ -42,6 +42,7 @@
 			        <td><%= worker.skype_username %></td>
 			        <td><%= worker.odesk_url %></td>
 			        <td><%= worker.timezone_utc %></td>
+			        <!-- <td><%# ActiveSupport::TimeZone[worker.timezone_utc] %></td> -->
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
