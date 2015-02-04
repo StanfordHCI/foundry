@@ -29,11 +29,15 @@
 			<th>Skype Username</th>
 			<th>oDesk Profile URL</th>
 			<th>Timezone in UTC/GMT</th>
+			<th>Worker Local Time</th>
 			<th>Additional Info</th>
 			<th>Panel</th>
 			<th>Select</th>
 			<th>Edit / Delete</th>
 	    </thead>
+	    
+	    <% t = Time.current %>
+	    
 	    <tbody>
 			<% @workers.each do |worker| %>
 			    <tr>
@@ -42,12 +46,15 @@
 			        <td><%= worker.skype_username %></td>
 			        <td><%= worker.odesk_url %></td>
 			        <td><%= worker.timezone_utc %></td>
+			        <td><%= t.in_time_zone(worker.timezone_utc) %></td>
+			         <td><%# I18n.l t.to_time.in_time_zone(worker.timezone_utc), format: :long %></td>
 			        <!-- <td><%# ActiveSupport::TimeZone[worker.timezone_utc] %></td> -->
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 					<td><a class="icon-edit" data-toggle="modal" href="#modal-window" data-remote-target="#modal-window .modal-body" data-load-remote="<%= edit_worker_path(worker) %> #panelregform"></a>
-			        | <%= link_to "", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %> </td> 
+			        | <a class="icon-remove" data-method="delete" href="<%=worker_path(worker)%>/destroy"></a>
+			        <%# link_to "", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %> </td> 
 			        
 			    </tr>
 			<% end %>

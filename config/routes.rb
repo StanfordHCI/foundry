@@ -132,6 +132,7 @@ Foundry::Application.routes.draw do
   
   resources :workers do
     member do
+	  delete :destroy
       post :create
     end
   end
