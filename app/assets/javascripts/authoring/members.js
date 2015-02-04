@@ -77,6 +77,12 @@ function setCurrentMember() {
 var entryManager = {
     currentFolderId: "root",
     
+    _generateRootFolder: function() {
+        return {
+            name: 'root', parentId: undefined, type: "folder",
+            id: 'root', childIds: []};
+    },
+    
     getCurrentFolderChildren: function() {
         return this.getEntriesFromIds(
             this.getChildIdsById(
@@ -166,7 +172,7 @@ var entryManager = {
         var folder = memberData._entry_map[folderId];
         // special case the root folder
         if(this.currentFolderId === "root" && !folder) {
-            memberData._entry_map["root"] = newFolderObject("root", undefined);
+            memberData._entry_map["root"] = this._generateRootFolder();
             folder = memberData._entry_map["root"];
         }
         folder.childIds.push(entry.id);
@@ -192,6 +198,7 @@ var entryManager = {
 };
 
 var folderClickFn = function(e) {
+    closeOpenPopovers();
     entryManager.currentFolderId = $(this).attr('folder-id');
     renderCurrentFolderPills();
 };
@@ -227,24 +234,40 @@ function updateNumRolesDisplay(num) {
   }
 }
 
-function renderPills(pills) {
+function renderPills(entries) {
     var membersWrap = $(".membersWrap");
     membersWrap.html("");
-    for(var i = 0; i < pills.length; i++) {
-        var entry = pills[i];
+    for(var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
         var elem = entry.type === "folder" ?
             $(createFolderHtml(entry)).click(folderClickFn) :
             createRoleHtml(entry);
         membersWrap.append(elem);
     }
+    
+    renderMemberPopovers(entries);
     updateNumRolesDisplay(flashTeamsJSON.members.length);
 };
 
 function renderCurrentFolderPills() {
     var currentFolder = entryManager.getEntryFromId(entryManager.currentFolderId);
+    
     var names = entryManager.getEntryParentNames(currentFolder);
     names.push(currentFolder.name);
-    $('.breadcrumbs').html(names.join(' › '));
+    var ids = entryManager.getEntryParentIds(currentFolder);
+    ids.push(currentFolder.id);
+    
+    var breadcrumbsHtml = [];
+    for(var i = 0; i < names.length; i++) {
+        breadcrumbsHtml.push(
+            $("<a>")
+                .attr("folder-id", ids[i])
+                .text(names[i])
+                .click(folderClickFn));
+        breadcrumbsHtml.push(" › ");
+    }
+    breadcrumbsHtml.pop();
+    $(".breadcrumbs").html(breadcrumbsHtml);
     renderPills(
         entryManager.getCurrentFolderChildren());
 }
@@ -254,6 +277,11 @@ function renderMemberPopovers(members) {
     var len = members.length;
     for (var i=0;i<len;i++){
         var member = members[i];
+        
+        if(member.type === "folder") {
+            return;
+        }
+        
         var member_id = member.id;
         var member_name = member.role;
         var invitation_link = member.invitation_link;
@@ -473,6 +501,14 @@ function addFolder(folderName, parentId) {
     updateStatus(false);
 }
 
+function closeOpenPopovers() {
+    //Close all open popovers
+    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
+        var idNum = flashTeamsJSON["members"][i].id;
+        $("#mPill_"+idNum).popover('hide');
+    }
+}
+
 function addMember() {
     // retrieve member role
     var member_name = $("#addMemberInput").val();
@@ -481,11 +517,7 @@ function addMember() {
         return;
     }
 
-    //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    closeOpenPopovers();
 
     // clear input
     $("#addMemberInput").val(this.placeholder);
