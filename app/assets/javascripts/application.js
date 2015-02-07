@@ -42,6 +42,7 @@
 //= require ./authoring/bootstrap-tagsinput
 //= require ./authoring/notifications
 //= require ./authoring/tour
+//= require ./authoring/eventTour
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
