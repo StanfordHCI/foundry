@@ -137,6 +137,12 @@ var entryManager = {
      * @returns the entry with the given id
      */
     getEntryFromId: function(id) {
+        if(!flashTeamsJSON.member_data) {
+            flashTeamsJSON.member_data = {
+                _entry_map: {},
+                
+            }
+        }
         return flashTeamsJSON.member_data._entry_map[id];
     },
 
@@ -195,6 +201,33 @@ var entryManager = {
         var folderId = entry.parentId;
         this.addEntryToFolder(entry, folderId);
     },
+    
+    /**
+     * Removes an entry from the entries json
+     * @param {object} id The id of the entry that should be removed
+     */
+    removeEntry: function(id) {
+        var memberData = flashTeamsJSON.member_data;
+        if(memberData._entry_map) {
+            var e = this.getEntryFromId(id);
+            if(e) {
+                // find a parent id and remove this entry's id from the
+                // parent's list of child entries
+                if(e.parentId) {
+                    var parent = this.getEntryFromId(e.parentId);
+                    if(parent && parent.children) {
+                        var i = parent.children.indexOf(id);
+                        if(id !== -1) {
+                            parent.children.splice(i, 1);
+                        }
+                    }
+                }
+                
+                // actually delete the entry map's reference to the entry
+                delete memberData._entry_map[id];
+            }
+        }
+    },
 };
 
 var folderClickFn = function(e) {
@@ -251,7 +284,6 @@ function renderPills(entries) {
 
 function renderCurrentFolderPills() {
     var currentFolder = entryManager.getEntryFromId(entryManager.currentFolderId);
-    
     var names = entryManager.getEntryParentNames(currentFolder);
     names.push(currentFolder.name);
     var ids = entryManager.getEntryParentIds(currentFolder);
@@ -536,7 +568,7 @@ function addMember() {
     }*/
 
    renderCurrentFolderPills();
-   renderMemberPopovers(members);
+   // renderMemberPopovers(members);
    updateStatus(false);
    inviteMember(member_obj.id);
 };
@@ -626,6 +658,9 @@ function confirmDeleteMember(pillId) {
 function deleteMember(pillId) {
     $('#confirmAction').modal('hide');
 
+    var memberId = pillId;
+    
+    /*
     // remove from members array
     var indexOfJSON = getMemberJSONIndex(pillId);
     var members = flashTeamsJSON["members"];
@@ -636,8 +671,11 @@ function deleteMember(pillId) {
     $("#mPill_" + memberId).popover('destroy');
 
     members.splice(indexOfJSON, 1);
+    */
+    
+    entryManager.removeEntry(memberId);
+    closeOpenPopovers();
     renderCurrentFolderPills();
-    renderMemberPopovers(members);
 
     // remove from members array with event object
     for(var i=0; i<flashTeamsJSON["events"].length; i++){
