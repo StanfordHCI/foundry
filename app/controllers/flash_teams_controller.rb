@@ -502,6 +502,7 @@ end
 
  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
+	   	@id_event = params[:event_id]
 	   	
 	   	@task_avail_active = "active";
 	   	
@@ -540,7 +541,8 @@ end
    		#@message = params[:message]
    		
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
-   		
+   		@url = '/flash_teams/' + @id_team + '/' + @id_event + '/hire_form/landing?task_member=' + @task_member
+
    		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
    
    end
@@ -730,5 +732,52 @@ end
    
   def flash_team_params params
     params.permit(:name, :author)
+  end
+
+  def landing
+    @id_team = params[:id]
+    @id_task = params[:event_id].to_i
+    @flash_team = FlashTeam.find(params[:id])
+    # Extract data from the JSON
+    flash_team_status = JSON.parse(@flash_team.status)
+    @flash_team_json = flash_team_status['flash_teams_json']
+    @flash_team_event = @flash_team_json['events'][@id_task]
+    @flash_team_name = @flash_team_json['title']
+    #tm = params[:task_member].split(',') role of recipient 
+    @task_member = params[:task_member]
+    @task_name = @flash_team_event['title']
+    @project_overview = @flash_team_json['projectoverview']
+    @task_description = @flash_team_event['notes']
+    @inputs = @flash_team_event['inputs']
+    #@input_link = params[:input_link]
+    @outputs = @flash_team_event['outputs']
+    #@output_description = params[:output_description]
+    minutes = @flash_team_event['duration']
+    hh, mm = minutes.divmod(60)
+    @task_duration = hh.to_s 
+    if hh==1
+      @task_duration += " hour"
+    else
+      @task_duration += " hours"
+    end
+    if mm>0
+      @task_duration += " and " + mm.to_s + " minutes"
+    end
+
+    @task_members = Array.new
+    @flash_team_event['members'].each do |task_member|
+      @task_members << getMemberById(@id_team, @id_task, task_member)
+    end
+
+    @invitationLink = ""
+    @uniq = ""
+
+    @task_members.each do |task_member|
+      if task_member['role'] == @task_member
+        @invitationLink = task_member['invitation_link']
+        @uniq = task_member['uniq']
+        break
+      end
+    end
   end
 end

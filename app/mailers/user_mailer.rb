@@ -67,7 +67,7 @@ class UserMailer < ActionMailer::Base
   	@outputs = outputs
   	@output_description = output_description
   	@task_duration = task_duration
-  		    	  
+    	  
   	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
   end
   
