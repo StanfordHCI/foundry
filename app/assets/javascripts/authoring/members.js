@@ -79,13 +79,13 @@ var entryManager = {
     
     _generateRootFolder: function() {
         return {
-            name: 'root', parentId: undefined, type: "folder",
-            id: 'root', childIds: []};
+            name: "root", parentId: undefined, type: "folder",
+            id: "root", childIds: [], numMembers: 0};
     },
     
     getCurrentFolderChildren: function() {
         return this.getEntriesFromIds(
-            this.getChildIdsById(
+            this._getChildIdsById(
                 this.currentFolderId));
     },
     
@@ -94,10 +94,10 @@ var entryManager = {
 
         if(entry === undefined) return parentProps;
 
-        var e = entryManager.getEntryFromId(entry.parentId);
+        var e = this.getEntryById(entry.parentId);
         while(e !== undefined) {
             parentProps.unshift(e[prop]);
-            e = entryManager.getEntryFromId(e.parentId);
+            e = this.getEntryById(e.parentId);
         }
         return parentProps;
     },
@@ -127,7 +127,7 @@ var entryManager = {
      * @returns an array containing the ids of each of the children of the
      * event with the given id
      */
-    getChildIdsById: function(id) {
+    _getChildIdsById: function(id) {
         var memberData = flashTeamsJSON.member_data;
         return memberData._entry_map[id].childIds;
     },
@@ -136,7 +136,7 @@ var entryManager = {
      * @param {string|number} id
      * @returns the entry with the given id
      */
-    getEntryFromId: function(id) {
+    getEntryById: function(id) {
         if(!flashTeamsJSON.member_data) {
             flashTeamsJSON.member_data = {
                 _entry_map: {},
@@ -155,7 +155,7 @@ var entryManager = {
         var entries = [];
         for(var i = 0; i < ids.length; i++) {
             var id = ids[i];
-            var entry = this.getEntryFromId(id);
+            var entry = this.getEntryById(id);
             if(!entry) {
                 ids.splice(i, 1);
                 i--;
@@ -171,7 +171,7 @@ var entryManager = {
      * @param {string|number} folderId The id of the folder to add the entry to.
      * Defaults to the current folder.
      */
-    addEntryToFolder: function(entry, folderId) {
+    _addEntryToFolder: function(entry, folderId) {
         var memberData = flashTeamsJSON.member_data;
         folderId = folderId || this.currentFolderId;
 
@@ -182,13 +182,18 @@ var entryManager = {
             folder = memberData._entry_map["root"];
         }
         folder.childIds.push(entry.id);
+        
+        // update the number of members in this folder
+        if(this.isMember(entry)) {
+            folder.numMembers++;
+        }
     },
 
     /**
      * Stores the member in the entries json
      * @param {object} entry
      */
-    addEntryToMemberData: function(entry) {
+    addEntry: function(entry) {
         var memberData = flashTeamsJSON.member_data;
         if(!memberData._entry_map) {
             memberData._entry_map = {};
@@ -197,9 +202,9 @@ var entryManager = {
         memberData._entry_map[entry.id] = entry;
 
         // check parent id field and use that. If there is no parent id set,
-        // addEntryToFolder defaults to the current folder
+        // _addEntryToFolder defaults to the current folder
         var folderId = entry.parentId;
-        this.addEntryToFolder(entry, folderId);
+        this._addEntryToFolder(entry, folderId);
     },
     
     /**
@@ -209,16 +214,19 @@ var entryManager = {
     removeEntry: function(id) {
         var memberData = flashTeamsJSON.member_data;
         if(memberData._entry_map) {
-            var e = this.getEntryFromId(id);
+            var e = this.getEntryById(id);
             if(e) {
                 // find a parent id and remove this entry's id from the
                 // parent's list of child entries
                 if(e.parentId) {
-                    var parent = this.getEntryFromId(e.parentId);
+                    var parent = this.getEntryById(e.parentId);
                     if(parent && parent.children) {
                         var i = parent.children.indexOf(id);
-                        if(id !== -1) {
+                        if(i !== -1) {
                             parent.children.splice(i, 1);
+                            if(this.isMember(e)) {
+                                parent.numMembers--;
+                            }
                         }
                     }
                 }
@@ -228,6 +236,26 @@ var entryManager = {
             }
         }
     },
+    
+    /**
+     * Assumes that the object passed in is an entry. Returns true if the entry
+     * is non null and a not a folder and false otherwise.
+     * @param {object} entry
+     * @returns true if the entry is non null and not a folder, false otherwise
+     */
+    isMember: function(entry) {
+        return entry && !this.isFolder(entry);
+    },
+    
+    /**
+     * Assumes that the object passed in is an entry. Returns true if the entry
+     * is a folder and false otherwise.
+     * @param {object} entry
+     * @returns true if the entry is a folder, false otherwise
+     */
+    isFolder: function(entry) {
+        return entry && entry.type === "folder";
+    }
 };
 
 var folderClickFn = function(e) {
@@ -283,7 +311,7 @@ function renderPills(entries) {
 };
 
 function renderCurrentFolderPills() {
-    var currentFolder = entryManager.getEntryFromId(entryManager.currentFolderId);
+    var currentFolder = entryManager.getEntryById(entryManager.currentFolderId);
     var names = entryManager.getEntryParentNames(currentFolder);
     names.push(currentFolder.name);
     var ids = entryManager.getEntryParentIds(currentFolder);
@@ -501,7 +529,9 @@ function renderDiagram(members) {
 };
 
 function newFolderObject(folderName, parentId) {
-    return {name: folderName, parentId: parentId, type: "folder", id: generateMemberId(), childIds: []};
+    return {
+        name: folderName, parentId: parentId, type: "folder",
+        id: generateMemberId(), childIds: [], numMembers: 0};
 }
 
 function newMemberObject(memberName) {
@@ -515,6 +545,7 @@ function newMemberObject(memberName) {
 
 /**
  * @param {string} folderName
+ * @param {string|number} [parentId]
  */
 function addFolder(folderName, parentId) {
     if(folderName === "") {
@@ -527,7 +558,7 @@ function addFolder(folderName, parentId) {
     }
     
     var folderObject = newFolderObject(folderName, parentId);
-    entryManager.addEntryToMemberData(folderObject);
+    entryManager.addEntry(folderObject);
     
     renderCurrentFolderPills();
     updateStatus(false);
@@ -559,7 +590,7 @@ function addMember() {
     var member_obj = newMemberObject(member_name);
     
     members.push(member_obj);
-    entryManager.addEntryToMemberData(member_obj);
+    entryManager.addEntry(member_obj);
     
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
@@ -655,28 +686,16 @@ function confirmDeleteMember(pillId) {
 
 
 //Delete team member from team list, JSON, diagram, and events
-function deleteMember(pillId) {
+function deleteMember(memberId) {
     $('#confirmAction').modal('hide');
-
-    var memberId = pillId;
     
-    /*
-    // remove from members array
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var member = members[indexOfJSON];
-    var memberId = members[indexOfJSON].id;
-    //console.log("deleting member " + memberId);
-    //console.log("clicked #mPill_", pillId);
-    $("#mPill_" + memberId).popover('destroy');
-
-    members.splice(indexOfJSON, 1);
-    */
+    for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+        var member = flashTeamsJSON.members[i];
+        if(member.id == memberId) {
+            flashTeamsJSON.members.splice(i, 1);
+        }
+    }
     
-    entryManager.removeEntry(memberId);
-    closeOpenPopovers();
-    renderCurrentFolderPills();
-
     // remove from members array with event object
     for(var i=0; i<flashTeamsJSON["events"].length; i++){
         var ev = flashTeamsJSON["events"][i];
@@ -684,7 +703,7 @@ function deleteMember(pillId) {
         
         // remove member
         if(member_event_index != -1){ // found member in the event
-            deleteEventMember(ev.id, memberId, member.role);
+            deleteEventMember(ev.id, memberId);
         }
 
         //remove dri if the member was a dri
@@ -692,33 +711,29 @@ function deleteMember(pillId) {
             ev.dri = "";
         }
     }
-
-    // update event popovers
-    //drawAllPopovers();
-
+    
+    entryManager.removeEntry(memberId);
+    closeOpenPopovers();
+    renderCurrentFolderPills();
     updateStatus(false);
-
 };
 
 //Calling this one
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
-function saveMemberInfo(popId) {
-    var indexOfJSON = getMemberJSONIndex(popId);
-
-    flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
-    flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
+function saveMemberInfo(memberId) {
+    var member = entryManager.getEntryById(memberId);
+    member.category1 = document.getElementById("member" + memberId + "_category1").value;
+    member.category2 = document.getElementById("member" + memberId + "_category2").value;
+    member.type = document.getElementById("member" + memberId + "_type").value;
     
-    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
+    var newColor = $("#color_" + memberId).spectrum("get").toHexString();
 
-    var newColor = $("#color_" + popId).spectrum("get").toHexString();
+    updateMemberPillColor(newColor, memberId);
+    renderMemberPillColor(memberId);
 
-    updateMemberPillColor(newColor, popId);
-    renderMemberPillColor(popId);
-    //updateMemberPopover(popId);
-
-    $("#mPill_" + popId).popover("hide");
+    $("#mPill_" + memberId).popover("hide");
     renderAllMemberCircles();
-    renderMemberPopovers(flashTeamsJSON["members"]);
+    renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 
 //Close the popover on a member to "cancel" the edit
@@ -729,49 +744,33 @@ function hideMemberPopover(memberId) {
 function inviteMember(pillId) {
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/invite';
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var data = {uniq: flashTeamsJSON["members"][indexOfJSON].uniq};
+    var member = entryManager.getEntryById(pillId);
+    var data = {uniq: member.uniq};
     $.get(url, data, function(data){
-        //console.log("INVITED MEMBER, NOT RERENDERING MEMBER POPOVER");
-        var members = flashTeamsJSON["members"];
-        members[indexOfJSON].uniq = data["uniq"];
-        members[indexOfJSON].invitation_link = data["url"];
-
-        renderMemberPopovers(members);
+        member.uniq = data["uniq"];
+        member.invitation_link = data["url"];
+        renderMemberPopovers(entryManager.getCurrentFolderChildren());
         updateStatus(false);
     });
-};
+}
 
 function reInviteMember(pillId) {
     $('#confirmAction').modal('hide');
 
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/reInvite';
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var uniq;
-  
-    var data = {uniq: flashTeamsJSON["members"][indexOfJSON].uniq };
+    var member = entryManager.getEntryById(pillId);
+    var data = {uniq: member.uniq };
     $.get(url, data, function(data){
-        //console.log("INVITED MEMBER, NOT RERENDERING MEMBER POPOVER");
-        var members = flashTeamsJSON["members"];
-        members[indexOfJSON].uniq = data["uniq"];
-        members[indexOfJSON].invitation_link = data["url"];
-        flashTeamsJSON["members"] = members;
-        //members[indexOfJSON].category1 = "";
-        //members[indexOfJSON].category2 = "";
-        //members[indexOfJSON].skills = [];
-
-
-
-        renderMemberPopovers(members);
+        member.uniq = data["uniq"];
+        member.invitation_link = data["url"];
+        renderMemberPopovers(entryManager.getCurrentFolderChildren());
         updateStatus();
     });
 };
 
 function confirmReplaceMember(pillId) {
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var memberToReplace = members[indexOfJSON].role;
+    var memberToReplace = entryManager.getEntryById(pillId).role;
 
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Replace Member?";
@@ -791,18 +790,20 @@ function confirmReplaceMember(pillId) {
 }
 
 function renderMemberPillColor(memberId) {
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    var color = flashTeamsJSON["members"][indexOfJSON].color;
+    // var indexOfJSON = getMemberJSONIndex(memberId);
+    // var color = flashTeamsJSON["members"][indexOfJSON].color;
 
+    var color = entryManager.getEntryById(memberId).color;
+    
     var pillLi = document.getElementById("mPill_" + memberId);
     pillLi.childNodes[0].style.backgroundColor = color;
 };
 
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    flashTeamsJSON["members"][indexOfJSON].color = color;
-
+    // var indexOfJSON = getMemberJSONIndex(memberId);
+    // flashTeamsJSON["members"][indexOfJSON].color = color;
+    entryManager.getEntryById(memberId).color = color;
     updateStatus(false);
 };
 
@@ -904,7 +905,7 @@ $(document).on('click', '.edit-mname', function(e) {
             updateRoleName($(target).attr('data-pk'), newValue);
 
             $(target).editable('destroy');
-            renderMemberPopovers(flashTeamsJSON["members"]);
+            renderMemberPopovers(entryManager.getCurrentFolderChildren());
         }
     });
     //Remove the editable-click attribute so no underline when you don't change the name
@@ -913,20 +914,11 @@ $(document).on('click', '.edit-mname', function(e) {
 });
 
 function updateRoleName(id, newValue) {
-    $.each(flashTeamsJSON['members'], function(index, value) {
-        if (value['id'] == id) {
-            flashTeamsJSON['members'][index]['role'] = newValue;
-            updateStatus(false);
-            //drawAllPopovers();
-            return false;
-        }
-    });
-    $('.memberPillName').each(function() {
-        if ($(this).attr('data-pk') == id) {
-            $(this).html(newValue);
-            return false;
-        }
-    });
+    var member = entryManager.getEntryById(id);
+    member.role = newValue;
+    renderMemberPopovers(entryManager.getCurrentFolderChildren());
+    updateStatus(false);
+    $('#mPill_' + id + ' .name').html(newValue);
 }
 
 //Populate the autocomplete function for the event members
