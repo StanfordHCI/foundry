@@ -117,7 +117,8 @@ function sendChatMessage() {
   
   myDataRef.push({
       name: chat_name, role: chat_role,
-      uniq: uniq_u, date: (new Date()).toUTCString(), text: text});
+      uniq: uniq_u, date: (new Date()).getTime(),
+      text: text});
     
   $('#messageInput').focus().val('');
 }
@@ -162,8 +163,8 @@ function displayChatMessage(name, uniq, role, date, text) {
         return;
     }
     
-    message_date = new Date(date);
-    dateform = message_date.toLocaleString();
+    var message_date = new Date(date);
+    var dateform = message_date.toLocaleString();
     
     // diff in milliseconds 
     var diff = Math.abs(new Date() - message_date);
@@ -174,6 +175,7 @@ function displayChatMessage(name, uniq, role, date, text) {
     //notification text   
     //notification title
     var notif_title = name+': '+ text;
+    
     //notification body
     var notif_body = dateform;
     
