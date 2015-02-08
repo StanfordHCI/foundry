@@ -73,16 +73,27 @@
             .focusout(function() {
                 $addFolderButton.removeClass('active');
                 $rolesMenu.removeClass('active');
+                $input.tooltip('destroy');
                 $(this).replaceWith($oldSpan);
             })
-            .keypress(function(e) {
-              if(e.keyCode != 13 /* enter */) return;
-              
-              var name = $(this).val();
-              if(!isValidFolder(name)) return;
-              addFolder(name);
-              
-              $(this).focusout();
+            .keyup(function(e) {
+                var name = $(this).val();
+                if(e.keyCode === 13 /* enter */) {
+                    if(!isValidFolder(name)) return;
+                    addFolder(name);
+                    $(this).focusout();
+                    $input.tooltip('destroy');
+                } else if(isValidFolder(name)) {
+                    $input.attr('data-toggle', 'tooltip').tooltip('destroy')
+                        .tooltip({
+                            placement: 'top',
+                            title: 'Press Enter to add \'' + name + '\'',
+                            trigger: 'manual',
+                            animation: false
+                        }).tooltip('show');
+                } else {
+                    $input.tooltip('destroy');
+                }
             });
         $(this).find('span').replaceWith($input);
         $input.focus();
