@@ -1,0 +1,232 @@
+$font-stack: Helvetica Neue, Helvetica, sans-serif;
+$font-color: rgba(0,0,0,0.7);
+$light-gray: rgba(0,0,0,0.5);
+$active-blue: #3792FA;
+$input-gray: gainsboro;  //#CCCCCC;
+
+$tags-blue: #87CEEB;
+
+$border-col: #e4e4e4;
+
+#task_modal {
+	width: 402px;
+	border-radius: 0;
+	overflow-x: hidden;
+
+  .modal-body {
+	  padding: 0;
+  }
+
+	.modal-container {
+		padding: 0 30px 0 30px;
+	}
+
+	.collapsible {
+		border-top: solid 1px $input-gray;
+	}
+
+	.small-text {
+		color: $light-gray;
+		font-size: 0.75em;
+		margin-bottom: 5px;
+		margin-right: 5px;
+	}
+
+	.value-text {
+		font-size: 1em;
+		color: $font-color;
+		font-family: $font-stack;
+		font-weight: 300;
+	}
+
+	form {
+		font-family: $font-stack;
+		width: 400px;
+		border: solid 1px $input-gray;
+
+		.input-label {
+			@extend .small-text;
+		}
+
+	  div.bootstrap-tagsinput, textarea, input[type="text"]{
+			@extend .value-text;
+			padding: 6px;
+			border: solid 1px $input-gray;
+			box-shadow: none;
+			border-radius: 0;
+			margin-bottom: 0;
+		}
+
+		div.bootstrap-tagsinput {
+			input[type="text"] {
+				border: 0;
+				padding: 0;
+			}
+		}
+
+		textarea {
+			width: 326px;
+		}
+
+		div.tags-input-active {
+			border: solid 1px $active-blue;
+		}
+
+		input.main-input:focus, textarea:focus {
+			outline: none;
+			border: solid 1px $active-blue;
+		}
+
+		.label-info {
+			background-color: $tags-blue;
+			text-shadow: none;
+			font-weight: 300;
+		}
+	}
+
+	#event-title-container {
+		border-bottom-style: solid;
+		border-bottom-color: $input-gray;
+		border-bottom-width: 1px;
+		background-color: #f7f7f7;
+
+		#event-title {
+		padding: 20px 0 20px 0;
+
+			input {
+				font-size: 1.3em;
+			}
+		}
+	}
+
+	#event-footer-container {
+		border-top-style: solid;
+		border-top-color: $input-gray;
+		border-top-width: 1px;
+		background-color: #f7f7f7;
+	}
+
+	.form-body {
+		max-height: 459px;
+		overflow-y: scroll;
+	}
+
+	.heading {
+		color: $light-gray;
+		width: 100%;
+		cursor: pointer;
+	}
+
+	.info {
+		margin: 20px 0 20px 0;
+	}
+
+	#time-info {
+		div {
+			display: inline-block;
+			margin-right: 20px;
+		}
+
+		input {
+			max-width: 60px;
+		}
+
+	}
+
+	.bootstrap-tagsinput {
+		width: 326px;
+	}
+
+
+	.top {
+		display: block;
+	}
+
+	.inline ~ .inline {
+		display: inline;
+		float: left;
+		margin-right: 20px;
+	}
+
+	.second .top, .third .top {
+		margin-top: 20px;
+	}
+
+	.collapsed {
+		display: none;
+	}
+
+	.tt-dropdown-menu {
+		border: solid 1px rgb(220, 220, 220);
+		background-color: white;
+		width: 180px;
+		max-height: 100px;
+		overflow-y: auto;
+	}
+
+	.tt-cursor {
+		background-color: $active-blue;
+		color: white;
+	}
+
+	.tt-hint {
+		color: $light-gray
+	}
+
+	.tt-suggestion {
+		@extend .value-text;
+		padding: 6px;
+		line-height: 1.5em;
+	}
+
+	.tt-suggestion p {
+		margin: 0;
+	}
+
+	#team-members {
+
+		.list-team-members {
+			@extend .value-text;
+			padding: 0;
+			margin-bottom: 10px;
+			list-style-type: none;
+
+			li {
+				padding: 6px 0 6px 0;
+
+				&:hover {
+					color: $active-blue;
+				}
+			}
+
+			.remove {
+				display: none;
+			}
+		}
+	}
+
+	.add-new-member, .add-new-question {
+		@extend .small-text;
+
+		&:hover {
+			color: $active-blue;
+		}
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.chevron {
+		width: 20px;
+		height: 18px;
+		margin-left: -20px;
+		background-image: url(chevron.png);
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		padding-right: 0;
+		display: inline-block;
+		opacity: 0.5;
+	}
+}

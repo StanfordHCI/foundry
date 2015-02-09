@@ -61,6 +61,103 @@ function showTaskOverview(groupNum){
 	}
 }
 
+function membersSetup (eventObj) {
+    var substringMatcher = function (strs) {
+        return function findMatches(q, cb) {
+            var matches, substringRegex;
+
+            // an array that will be populated with substring matches
+            matches = [];
+
+            // regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+            // iterate through the pool of strings and for any string that
+            // contains the substring `q`, add it to the `matches` array
+            $.each(strs, function (i, item) {
+                var str = item.role;
+                if (substrRegex.test(str)) {
+                    // the typeahead jQuery plugin expects suggestions to a
+                    // JavaScript object, refer to typeahead docs for more info
+                    matches.push({ value: item.id, role: str });
+                }
+            });
+
+            cb(matches);
+        };
+    };
+
+    var members = flashTeamsJSON["members"];
+
+    var sourceOptions = { name: 'members',
+        displayKey: 'role',
+        source: substringMatcher(members)
+    };
+
+    var typeaheadUIOptions = {
+        hint: true,
+        highlight: true,
+        minLength: 1,
+        autoselect: true
+    };
+
+    $("#pc-field, #dri-field").typeahead(typeaheadUIOptions, sourceOptions)
+        .bind('typeahead:selected', $.proxy(function (obj, datum) {
+            
+        });
+
+    var pcObject = getPCObject(eventObj);
+    console.log("pcobject")
+    console.log(pcObject);
+    if (pcObject != null)
+        $("pc-field").typeahead('val', getPCObject(eventObj).role);
+
+    var driObject = getDRIObject(eventObj);
+    if (driObject != null)
+        $("dri-field").typeahead('val', getDRIObject(eventObj).role);
+
+    // members field needs to be a typeahead too
+    $('#members-field').each(function (i, o) {
+        // grab the input inside of tagsinput
+        var taginput = $(o).tagsinput('input');
+
+        // ensure that a valid member is being entered
+        $(o).on('itemAdded', function (event) {
+            // error checking FAILURE 
+            // if (members.indexOf(event.item) < 0) {
+            //     $(o).tagsinput('remove', event.item);
+            //     alert(event.item + " is not a valid state");
+            // }
+        });
+
+        // initialize typeahead for the tag input
+        taginput.typeahead(typeaheadUIOptions, sourceOptions)
+            .bind('typeahead:selected', $.proxy(function (obj, datum) {
+                // if the member is clicked, add it to tagsinput and clear input
+                $(o).tagsinput('add', datum.role);
+                taginput.typeahead('val', '');
+            }));
+
+        // erase any entered text on blur
+        $(taginput).blur(function () {
+            taginput.typeahead('val', '');
+        });
+    });
+}
+
+function collapseSetup () {
+    $("#task_modal .collapsible .heading").click(function () {
+        var collapsedSection = $(this).next(".collapsed");
+        if (collapsedSection.is(":hidden")) {
+            collapsedSection.show();
+            $(".form-body").scrollTop($(this).offset().top);
+
+        } else {
+            collapsedSection.hide();
+        }
+    });
+}
+
 function editTaskOverview(popover,groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
@@ -76,13 +173,20 @@ function editTaskOverview(popover,groupNum){
         //content
         var taskOverviewForm = getTaskOverviewForm(groupNum);
 
+
 		$('#task-text').html(taskOverviewForm);
 		
+        collapseSetup();
+
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
-        
-        $("#inputs").tagsinput(); 
-        $("#outputs").tagsinput();
+
+        $("#input-field").tagsinput();
+        $("#deliv-field").tagsinput();
+        $("#members-field").tagsinput();
+
+        membersSetup(eventObj);
+
 
         //Adds the appropraiate documentation question field when 
         $("#outputs").change(function() {
@@ -140,7 +244,49 @@ function getTaskOverviewForm(groupNum){
     					+ '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
     					+'</form>';*/
 
-    var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
+    var form = '<form name="taskOverfiewForm" id="taskOverviewForm">'
+        + '<div class="modal-container" id="event-title-container"><div id="event-title">'
+        + '<input type="text" name="event-title" value="' + title + '" class="event_title">'
+        + '</div></div>'
+        + '<div class="form-body"><div class="modal-container"><div id="time-info" class="info">'
+        + '<div class="first"><span class="input-label side">START TIME</span>'
+        + '<input type="text" name="start_time" value="' + startHr + ':' + startMin + '"></div>'
+        + '<div class="second"><span class="input-label side">DURATION</span>'
+        + '<input type="text" name="duration" value="' + numHours + 'h' + minutesLeft + 'm' + '"></div></div>'
+
+        + '<div id="description-info" class="info"><div class="first">'
+        + '<span class="input-label top">DESCRIPTION</span>'
+        + '<textarea id="description-text" placeholder="Write a description of this event..." value="' + notes + '"></textarea>'
+        + '</div></div>'
+
+        + '<div id="materials-info" class="info"><div class="first">'
+        + '<span class="input-label top">INPUTS</span>'
+        + '<input type="text" name="inputs" value="" class="tagsy side_input" id="input-field">'
+        + '</div><div class="second"><span class="input-label top">DELIVERABLES</span>'
+        + '<input type="text" name="deliverables" value="" class="tagsy side_input" id="deliv-field">'
+        + '</div></div></div>'
+
+        + '<div class="modal-container collapsible" id="members-info-container"><div id="members-info" class="info">'
+        + '<span class="heading"> MEMBERS </span>'
+        + '<div class="collapsed info"><div class="first">'
+        + '<span class="input-label top">PROJECT COORDINATOR</span>'
+        + '<input type="text" name="pc" id="pc-field" value="" class="side_input typeahead">'
+        + '</div><div class="second"><span class="input-label top">DIRECTLY RESPONSIBLE INDIVIDUAL</span>'
+        + '<input type="text" name="dri" id="dri-field" value="" class="side_input typeahead">'
+        + '</div><div class="third"><span class="input-label top">TEAM MEMBERS</span>'
+        + '<input type="text" class="tagsy-typeahead" id="members-field"></input>'
+        + '</div></div></div></div>'
+
+        + '<div class="modal-container collapsible" id="documentation-info-container">'
+        + '<div id="documentation-info" class="info">'
+        + '<span class="heading"> DOCUMENTATION QUESTIONS </span>'
+        + '<div class="collapsed"><div class="question-box">'
+        + '<textarea placeholder="Write your question here..."></textarea>'
+        + '</div></div></div></div></div> <!-- end form-body --> </form>'
+
+        return form;
+
+    var oldForm = '<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
         + '<div class="event-table-wrapper">'
         + '<div class="row-fluid">' 
         + '<div class="span6">'
@@ -345,95 +491,98 @@ function saveTaskOverview(groupNum){
 	var task_index = getEventJSONIndex(groupNum); 
 	var ev = flashTeamsJSON["events"][task_index];
 
-    //Update title
-    if($("#eventName").val() != "")
-        ev.title = $("#eventName").val();
+    // //Update title
+    // if($("#eventName").val() != "")
+    //     ev.title = $("#eventName").val();
 
-    //Update start time if changed
-    var startHour = $("#startHr").val();    
-    if (startHour != "") startHour = parseInt($("#startHr").val());
-    else startHour = parseInt($("#startHr").attr("placeholder"));
+    // //Update start time if changed
+    // var startHour = $("#startHr").val();    
+    // if (startHour != "") startHour = parseInt($("#startHr").val());
+    // else startHour = parseInt($("#startHr").attr("placeholder"));
 
-    var startMin = $("#startMin").val();
-    if (startMin != "") startMin = parseInt($("#startMin").val());
-    else startMin = parseInt($("#startMin").attr("placeholder"));
+    // var startMin = $("#startMin").val();
+    // if (startMin != "") startMin = parseInt($("#startMin").val());
+    // else startMin = parseInt($("#startMin").attr("placeholder"));
 
-    var totalStartMin = (startHour*60) + startMin;
-    ev.startTime = totalStartMin;
-    ev.startHr = startHour;
-    ev.startMin = startMin;
-    //SHOULD WE BE UPDATING EV.X HERE??
+    // var totalStartMin = (startHour*60) + startMin;
+    // ev.startTime = totalStartMin;
+    // ev.startHr = startHour;
+    // ev.startMin = startMin;
+    // //SHOULD WE BE UPDATING EV.X HERE??
 
-    //Update duration if changed
-    var newHours = $("#hours").val();
-    if (newHours != "") newHours = parseInt($("#hours").val());
-    else newHours = parseInt($("#hours").attr("placeholder"));
+    // //Update duration if changed
+    // var newHours = $("#hours").val();
+    // if (newHours != "") newHours = parseInt($("#hours").val());
+    // else newHours = parseInt($("#hours").attr("placeholder"));
 
-    var newMin = $("#minutes").val();
-    if (newMin != "") newMin = parseInt($("#minutes").val());
-    else newMin = parseInt($("#minutes").attr("placeholder"));
-    newMin = Math.round(parseInt(newMin)/15) * 15;
+    // var newMin = $("#minutes").val();
+    // if (newMin != "") newMin = parseInt($("#minutes").val());
+    // else newMin = parseInt($("#minutes").attr("placeholder"));
+    // newMin = Math.round(parseInt(newMin)/15) * 15;
 
-    if (newHours == 0 && newMin == 15){    //cannot have events shorter than 30 minutes
-        newMin = 30;
-    }
-    ev.duration = (newHours * 60) + newMin;
+    // if (newHours == 0 && newMin == 15){    //cannot have events shorter than 30 minutes
+    //     newMin = 30;
+    // }
+    // ev.duration = (newHours * 60) + newMin;
 
     //Update PC if changed
-    var pcId = getPC(groupNum);
-    ev.pc = pcId;
+    // var pcId = getPC(groupNum);
+    // ev.pc = pcId;
+
+    var pcID = $('#pc-field').typeahead('val');
+    ev.pc = pcID;
 
     //Update DRI if changed
-    var driId = getDRI(groupNum);
-        ev.dri = driId;
+    // var driId = getDRI(groupNum);
+    //     ev.dri = driId;
 
-    //Update Members if changed
-    ev.members = [];
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var member = flashTeamsJSON["members"][i];
-        var memberId = member.id;
-        var checkbox = $("#event" + groupNum + "member" + i + "checkbox")[0];
-        if (checkbox == undefined) continue;
-        if (checkbox.checked == true) {
-            ev.members.push(memberId); //Update JSON
-        } 
-    }
+ //    //Update Members if changed
+ //    ev.members = [];
+ //    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
+ //        var member = flashTeamsJSON["members"][i];
+ //        var memberId = member.id;
+ //        var checkbox = $("#event" + groupNum + "member" + i + "checkbox")[0];
+ //        if (checkbox == undefined) continue;
+ //        if (checkbox.checked == true) {
+ //            ev.members.push(memberId); //Update JSON
+ //        } 
+ //    }
 
-    //Update description if changed
-    var eventNotes = $("#notes").val();
-    ev.notes = eventNotes;
+ //    //Update description if changed
+ //    var eventNotes = $("#notes").val();
+ //    ev.notes = eventNotes;
 
-    //Update inputs and outputs if changed
-    ev.inputs = $('#inputs').val();
-    ev.outputs = $('#outputs' ).val();
+ //    //Update inputs and outputs if changed
+ //    ev.inputs = $('#inputs').val();
+ //    ev.outputs = $('#outputs' ).val();
 
 
-    //Update documentation questions if changed
-	var genQs = [];
-    qString = $("#questions").val().split("\n");
-    for (i = 0; i < qString.length; i++){
-        if (qString[i] != ""){
-            genQs.push([qString[i],""]);
-        }
-    }
-    ev.docQs = genQs;
+ //    //Update documentation questions if changed
+	// var genQs = [];
+ //    qString = $("#questions").val().split("\n");
+ //    for (i = 0; i < qString.length; i++){
+ //        if (qString[i] != ""){
+ //            genQs.push([qString[i],""]);
+ //        }
+ //    }
+ //    ev.docQs = genQs;
 
-    //Save output questions
-    var outQs = {};
-    outputVals = ($("#outputs").val()).split(",");
-    for (i = 0; i < outputVals.length; i++){
-        output = outputVals[i];
-        if (output != ""){
-            outQs[output] = [];
-            questionArray = (document.getElementById("num" + outputVals[i]).value).split("\n");
-            for (j = 0; j < questionArray.length; j++){
-                if (questionArray[j] != ""){
-                    outQs[output].push([questionArray[j],""]);
-                }
-            } 
-        }
-    }
-    ev.outputQs = outQs;
+ //    //Save output questions
+ //    var outQs = {};
+ //    outputVals = ($("#outputs").val()).split(",");
+ //    for (i = 0; i < outputVals.length; i++){
+ //        output = outputVals[i];
+ //        if (output != ""){
+ //            outQs[output] = [];
+ //            questionArray = (document.getElementById("num" + outputVals[i]).value).split("\n");
+ //            for (j = 0; j < questionArray.length; j++){
+ //                if (questionArray[j] != ""){
+ //                    outQs[output].push([questionArray[j],""]);
+ //                }
+ //            } 
+ //        }
+ //    }
+ //    ev.outputQs = outQs;
 
     drawEvent(ev);
     updateStatus();

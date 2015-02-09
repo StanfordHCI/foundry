@@ -1,0 +1,125 @@
+#task_modal {
+  width: 402px;
+  border-radius: 0;
+  overflow-x: hidden; }
+  #task_modal .modal-body {
+    padding: 0; }
+  #task_modal .modal-container {
+    padding: 0 30px 0 30px; }
+  #task_modal .collapsible {
+    border-top: solid 1px gainsboro; }
+  #task_modal .small-text, #task_modal form .input-label, #task_modal .add-new-member, #task_modal .add-new-question {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.75em;
+    margin-bottom: 5px;
+    margin-right: 5px; }
+  #task_modal .value-text, #task_modal form div.bootstrap-tagsinput, #task_modal form textarea, #task_modal form input[type="text"], #task_modal .tt-suggestion, #task_modal #team-members .list-team-members {
+    font-size: 1em;
+    color: rgba(0, 0, 0, 0.7);
+    font-family: Helvetica Neue, Helvetica, sans-serif;
+    font-weight: 300; }
+  #task_modal form {
+    font-family: Helvetica Neue, Helvetica, sans-serif;
+    width: 400px;
+    border: solid 1px gainsboro; }
+    #task_modal form div.bootstrap-tagsinput, #task_modal form textarea, #task_modal form input[type="text"] {
+      padding: 6px;
+      border: solid 1px gainsboro;
+      box-shadow: none;
+      border-radius: 0;
+      margin-bottom: 0; }
+    #task_modal form div.bootstrap-tagsinput input[type="text"] {
+      border: 0;
+      padding: 0; }
+    #task_modal form textarea {
+      width: 326px; }
+    #task_modal form div.tags-input-active {
+      border: solid 1px #3792fa; }
+    #task_modal form input.main-input:focus, #task_modal form textarea:focus {
+      outline: none;
+      border: solid 1px #3792fa; }
+    #task_modal form .label-info {
+      background-color: skyblue;
+      text-shadow: none;
+      font-weight: 300; }
+  #task_modal #event-title-container {
+    border-bottom-style: solid;
+    border-bottom-color: gainsboro;
+    border-bottom-width: 1px;
+    background-color: #f7f7f7; }
+    #task_modal #event-title-container #event-title {
+      padding: 20px 0 20px 0; }
+      #task_modal #event-title-container #event-title input {
+        font-size: 1.3em; }
+  #task_modal #event-footer-container {
+    border-top-style: solid;
+    border-top-color: gainsboro;
+    border-top-width: 1px;
+    background-color: #f7f7f7; }
+  #task_modal .form-body {
+    max-height: 459px;
+    overflow-y: scroll; }
+  #task_modal .heading {
+    color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    cursor: pointer; }
+  #task_modal .info {
+    margin: 20px 0 20px 0; }
+  #task_modal #time-info div {
+    display: inline-block;
+    margin-right: 20px; }
+  #task_modal #time-info input {
+    max-width: 60px; }
+  #task_modal .bootstrap-tagsinput {
+    width: 326px; }
+  #task_modal .top {
+    display: block; }
+  #task_modal .inline ~ .inline {
+    display: inline;
+    float: left;
+    margin-right: 20px; }
+  #task_modal .second .top, #task_modal .third .top {
+    margin-top: 20px; }
+  #task_modal .collapsed {
+    display: none; }
+  #task_modal .tt-dropdown-menu {
+    border: solid 1px gainsboro;
+    background-color: white;
+    width: 180px;
+    max-height: 100px;
+    overflow-y: auto; }
+  #task_modal .tt-cursor {
+    background-color: #3792fa;
+    color: white; }
+  #task_modal .tt-hint {
+    color: rgba(0, 0, 0, 0.5); }
+  #task_modal .tt-suggestion {
+    padding: 6px;
+    line-height: 1.5em; }
+  #task_modal .tt-suggestion p {
+    margin: 0; }
+  #task_modal #team-members .list-team-members {
+    padding: 0;
+    margin-bottom: 10px;
+    list-style-type: none; }
+    #task_modal #team-members .list-team-members li {
+      padding: 6px 0 6px 0; }
+      #task_modal #team-members .list-team-members li:hover {
+        color: #3792fa; }
+    #task_modal #team-members .list-team-members .remove {
+      display: none; }
+  #task_modal .add-new-member:hover, #task_modal .add-new-question:hover {
+    color: #3792fa; }
+  #task_modal .hidden {
+    display: none; }
+  #task_modal .chevron {
+    width: 20px;
+    height: 18px;
+    margin-left: -20px;
+    background-image: url(chevron.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding-right: 0;
+    display: inline-block;
+    opacity: 0.5; }

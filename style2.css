@@ -1,0 +1,150 @@
+body {
+  font-family: Helvetica Neue, Helvetica, sans-serif; }
+
+.modal-container {
+  padding: 0 30px 0 30px; }
+
+.collapsible {
+  border-top: solid 1px #cccccc; }
+
+.small-text, form .input-label, .add-new-member, .add-new-question {
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 0.75em;
+  margin-bottom: 5px;
+  margin-right: 5px; }
+
+.value-text, form div.bootstrap-tagsinput, form textarea, form input, .tt-suggestion, #team-members .list-team-members {
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.7);
+  font-family: Helvetica Neue, Helvetica, sans-serif;
+  font-weight: 300; }
+
+form {
+  max-width: 400px;
+  margin: 50px;
+  border: solid 1px #cccccc; }
+  form div.bootstrap-tagsinput, form textarea, form input {
+    padding: 6px;
+    border: solid 1px #cccccc;
+    box-shadow: none;
+    border-radius: 0;
+    margin-bottom: 0; }
+  form textarea {
+    width: 340px; }
+  form div.tags-input-active {
+    border: solid 1px #3792fa; }
+  form input:focus, form textarea:focus {
+    outline: none;
+    border: solid 1px #3792fa; }
+  form .label-info {
+    background-color: skyblue; }
+
+#event-title-container {
+  border-bottom-style: solid;
+  border-bottom-color: #cccccc;
+  border-bottom-width: 1px;
+  background-color: #f7f7f7; }
+  #event-title-container #event-title {
+    padding: 20px 0 20px 0; }
+    #event-title-container #event-title input {
+      font-size: 1.3em; }
+
+#event-footer-container {
+  border-top-style: solid;
+  border-top-color: #cccccc;
+  border-top-width: 1px;
+  background-color: #f7f7f7; }
+
+.form-body {
+  max-height: 453px;
+  overflow: scroll; }
+
+.heading {
+  color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  cursor: pointer; }
+
+.info {
+  margin: 20px 0 20px 0; }
+
+#time-info div {
+  display: inline-block;
+  margin-right: 20px; }
+#time-info input {
+  max-width: 60px; }
+
+.label {
+  font-size: 80%;
+  line-height: 2;
+  font-weight: 300; }
+
+#materials-info .bootstrap-tagsinput {
+  width: 340px; }
+
+#members-info .bootstrap-tagsinput {
+  min-width: 200px;
+  max-width: 300px; }
+
+.top {
+  display: block; }
+
+.inline ~ .inline {
+  display: inline;
+  float: left;
+  margin-right: 20px; }
+
+.second .top, .third .top {
+  margin-top: 20px; }
+
+.collapsed {
+  display: none; }
+
+.tt-dropdown-menu {
+  border: solid 1px gainsboro;
+  background-color: white;
+  width: 180px;
+  max-height: 100px;
+  overflow-y: auto; }
+
+.tt-cursor {
+  background-color: #3792fa;
+  color: white; }
+
+.tt-hint {
+  color: rgba(0, 0, 0, 0.4); }
+
+.tt-suggestion {
+  padding: 6px;
+  line-height: 1.5em; }
+
+.tt-suggestion p {
+  margin: 0; }
+
+#team-members .list-team-members {
+  padding: 0;
+  margin-bottom: 10px;
+  list-style-type: none; }
+  #team-members .list-team-members li {
+    padding: 6px 0 6px 0; }
+    #team-members .list-team-members li:hover {
+      color: #3792fa; }
+  #team-members .list-team-members .remove {
+    display: none; }
+
+.add-new-member:hover, .add-new-question:hover {
+  color: #3792fa; }
+
+.hidden {
+  display: none; }
+
+.chevron {
+  width: 20px;
+  height: 18px;
+  margin-left: -20px;
+  background-image: url(chevron.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding-right: 0;
+  display: inline-block;
+  opacity: 0.5; }

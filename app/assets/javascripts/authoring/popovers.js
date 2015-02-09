@@ -422,6 +422,39 @@ function getPC(groupNum){
     return pcId;
 }
 
+function getEventMembers(eventObj) {
+    var members = [];
+    for (i = 0; i < eventObj.members.length; i++) {
+        var memberID = eventObj.members[i];
+        for (j = 0; j < flashTeamsJSON.members.length; j++) {
+            if (flashTeamsJSON.members[j].id == memberID) {
+                members.push(flashTeamsJSON.members[j]);
+                break;
+            }
+        }
+    }
+    return members;
+}
+
+function getPCObject(eventObj) {
+    var pcID = eventObj.pc;
+    for (i = 0; i < flashTeamsJSON.members.length; i++) {
+        if (flashTeamsJSON.members[i].id == pcID)
+            return flashTeamsJSON.members[i];
+    }
+    return null;
+}
+
+function getDRIObject(eventObj) {
+    var driID = eventObj.dri;
+    for (i = 0; i < flashTeamsJSON.members.length; i++) {
+        if (flashTeamsJSON.members[i].id == driID)
+            return flashTeamsJSON.members[i];
+    }
+    return null;
+}
+
+
 //Adds member checkboxes onto the popover of an event, checks if a member is involved in event
 function writeEventMembers(eventObj) {
     var memberString = "";

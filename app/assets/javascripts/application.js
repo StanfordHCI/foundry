@@ -19,6 +19,7 @@
 //= require ./bootstrap/bootstrap.min
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
+//= require ./authoring/typeahead
 //= require ./authoring/load
 //= require ./authoring/timeline
 //= require ./authoring/events
