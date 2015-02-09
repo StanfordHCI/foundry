@@ -225,15 +225,29 @@ function drawHandoff(handoffData) {
         trigger: "click",
         title: "Handoff",
         content: 'Description of Handoff Materials: '
-        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'+flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description
-        +'</textarea><br>'
-        + '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
-            +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
-        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
-        + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + handoffId + '"'
-            +' onclick="deleteInteraction(' + handoffId +');">Delete</button>',
+        + getHandoffInfo(handoffId),
         container: $("#timeline-container")
     });
+}
+
+function getHandoffInfo(handoffId){
+	
+	if(in_progress != true && (memberType =="author" || memberType == "pc" || memberType == "client") ) {
+		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
+		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
+		+ '</textarea><br />'
+		+ '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
+        +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
+        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
+        + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + handoffId + '"'
+        +' onclick="deleteInteraction(' + handoffId +');">Delete</button>';
+      } else{
+	      content = '<p id="interactionNotes_' + handoffId + '">'
+	      +flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
+	      + '</p><br />'
+      }
+	
+	return content;
 }
 
 //Route circuit-like paths for the handoffs
