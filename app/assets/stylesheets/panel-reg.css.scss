@@ -1,0 +1,214 @@
+// Place all the styles related to the flash_teams controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+/* Import fonts */
+@import url(http://fonts.googleapis.com/css?family=Ruda:400,700,900);
+
+
+body{
+	//background: #f2f2f2;
+}
+
+input, textarea, select, button{
+	//font-family: 'Ruda', sans-serif;
+}
+
+#container{
+    color: #797979;
+	//background: #f2f2f2;
+	background: white;
+    //font-family: 'Ruda', sans-serif;
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size:13px;
+}
+
+
+/* Panel Registration Form/Worker Edit Form Styles */
+
+#panelregform{
+	//margin-left: 5px;
+	//margin-left: 20%;
+	//margin-right: 20%;
+}
+
+#panelregform input{
+	width: 300px;
+}
+
+#panelregform textarea{
+	width: 500px;
+}
+
+#panelregform input.btn.btn-success{
+	width: 514px;
+	margin-top: 2px;
+}
+
+#panelregform label{
+	display: inline; font-weight: bold; padding-right: 5px; 
+}
+
+
+.mail-info, .mail-info:hover {
+    margin: -3px 6px 0 0;
+    font-size: 11px;
+}
+
+
+
+/* MAIN CONTENT CONFIGURATION */
+
+//text on the top of the launch and registration form page 
+p#topText.span12{
+	padding-top: 20px;
+}
+
+//text on the top of the confirmation page 
+p#confirmation-text.span12{
+	padding-top: 30px;
+	font-size: 16px;
+	margin-left: 20px;
+	padding-left: 20px;
+}
+
+
+#main-content p{
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+
+
+.header{
+    min-height: 60px;
+    padding: 0 15px;
+	position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1002;
+}
+
+.footer{
+	min-height: 40px;
+	background: #f2f2f2;
+	//position: relative;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	line-height: 40px;
+}
+
+h3{
+	margin-top: 5px;
+	padding-top: 5px;
+}
+
+.black-bg {
+    // background: #ffd777;
+    // background: #fcfcfc;
+    background: #dd5151;
+    border-bottom: 1px solid #dd5151;
+    //border-bottom: 1px solid #c9aa5f;
+}
+
+.wrapper {
+    display: inline-block;
+    margin-top: 60px;
+    padding-bottom: 15px;
+    padding-top: 0px;
+    width: 100%;
+}
+
+a.logo {
+    font-size: 20px;
+    font-family: 'Ruda', sans-serif;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 auto;
+    line-height: 60px;
+    margin-left: 20px;
+    
+}
+
+a.logo b {
+    font-weight: 900;
+}
+
+a.logo:hover, a.logo:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+a.logo span {
+    color: #68dff0;
+}
+
+//by default don't show the modal and then change the display to block using JS
+#pcModal, #workerModal{
+	display:none;
+}
+
+
+
+
+// modal styling
+
+.modal-lg{
+	width: 1000px;
+	//left: 25%;
+	margin-left: -500px;
+	left: 50%;
+	max-height: 520px;
+	overflow-y: scroll;
+}
+
+.formDiv{
+	display: none;
+}
+
+.tText{
+	font-size: 16px;
+}
+
+.infoText{
+	font-size: 12px;
+	text-align: right;
+}
+
+.wizTabs{
+	display: none;
+}
+
+.tab-content ul li{
+	//list-style-type: none;
+}
+
+.modal-body{
+	max-height: 500px;
+	//overflow-y: scroll;
+}
+
+p.span12.prev-next-btn {
+	margin-left: 0px;
+}
+
+/*
+.prev{
+
+}
+
+.next{
+	// float:right;
+}
+*/
+
+.pull-right {
+  float: right !important;
+}
+.pull-left {
+  float: left !important;
+}

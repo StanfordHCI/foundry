@@ -364,6 +364,9 @@ end
             #tmp_member= flash_team_members.detect{|m| m["role"] == member["role"]}
             #member_id= tmp_member["id"]
             uniq = member["uniq"]
+            
+            next if Member.where(:uniq => uniq)[0] == nil
+
             email = Member.where(:uniq => uniq)[0].email
             UserMailer.send_task_delayed_email(email,@delay_estimation,event_name,dri_role).deliver
          
@@ -503,7 +506,6 @@ end
  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
 	   	@id_event = params[:event_id]
-	   	
 	   	@task_avail_active = "active";
 	   	
 	   	@flash_team = FlashTeam.find(params[:id])
@@ -542,7 +544,7 @@ end
    		
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
    		@url = '/flash_teams/' + @id_team + '/' + @id_event + '/hire_form/landing?task_member=' + @task_member
-
+   	
    		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
    
    end
