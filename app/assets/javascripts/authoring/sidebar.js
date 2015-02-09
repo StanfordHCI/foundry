@@ -103,7 +103,7 @@ function saveProjectOverview(){
 
 var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 
-var currentdate = new Date(); 
+//var currentdate = new Date(); 
 
 var name;
 
@@ -115,7 +115,7 @@ function sendChatMessage() {
     uniq_u = 'Author';
   }
   
-  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
+  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: new Date().toUTCString(), text: text});
   $('#messageInput').focus().val('');
 }
 
@@ -159,8 +159,8 @@ function displayChatMessage(name, uniq, role, date, text) {
         return;
     }
     
-    message_date = new Date(date);
-    dateform = message_date.toLocaleString();
+    var message_date = new Date(date);
+    var dateform = message_date.toLocaleString();
     
     // diff in milliseconds 
     var diff = Math.abs(new Date() - message_date);
@@ -228,7 +228,7 @@ function displayChatMessage(name, uniq, role, date, text) {
     } else{
         var textP = $('<p/>').text(text);
         textP.appendTo($('#messageList #m' + lastMessage));
-        $('.date.m' + lastMessage).text(date);  // this date isn't updated
+        $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
     }
   
     lastWriter = name;
