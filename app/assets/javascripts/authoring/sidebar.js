@@ -159,8 +159,8 @@ function displayChatMessage(name, uniq, role, date, text) {
         return;
     }
     
-    message_date = new Date(date);
-    dateform = message_date.toLocaleString();
+    var message_date = new Date(date);
+    var dateform = message_date.toLocaleString();
     
     // diff in milliseconds 
     var diff = Math.abs(new Date() - message_date);
