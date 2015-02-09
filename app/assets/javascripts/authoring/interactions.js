@@ -225,7 +225,8 @@ function drawHandoff(handoffData) {
         trigger: "click",
         title: "Handoff",
         content: 'Description of Handoff Materials: '
-        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '"></textarea><br>'
+        +'<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'+flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description
+        +'</textarea><br>'
         + '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
             +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
         + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
@@ -290,6 +291,7 @@ function saveHandoff(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
+    updateStatus();
 
     //Hide Popover
     $("#interaction_" + intId).popover("hide");
@@ -370,7 +372,8 @@ function drawCollabPopover(collabId) {
         trigger: "click",
         title: "Collaboration",
         content: 'Description of Collaborative Work: '
-        +'<textarea rows="2.5" id="collabNotes_' + collabId + '"></textarea>'
+        +'<textarea rows="2.5" id="collabNotes_' + collabId + '">'+flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
+        +'</textarea>'
         + '<button type="button" class="btn btn-success" id="saveCollab' + collabId + '"'
             +' onclick="saveCollab(' + collabId +');">Save</button>          '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + collabId + '"'
@@ -393,6 +396,7 @@ function saveCollab(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
+    updateStatus();
 
     //Hide Popover
     $("#interaction_" + intId).popover("hide");
