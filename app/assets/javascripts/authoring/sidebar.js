@@ -103,7 +103,7 @@ function saveProjectOverview(){
 
 var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 
-var currentdate = new Date(); 
+//var currentdate = new Date(); 
 
 var name;
 
@@ -115,7 +115,9 @@ function sendChatMessage() {
     uniq_u = 'Author';
   }
   
-  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u, date: currentdate.toUTCString(), text: text});
+  myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u,
+                  date: new Date().toUTCString(), text: text});
+
   $('#messageInput').focus().val('');
 }
 
@@ -150,7 +152,7 @@ $('#sendChatButton').click(sendChatMessage);
     name = message.name;
 });
 */
-var lastMessage=0;
+var lastMessage = 0;
 var lastWriter;
 
 function displayChatMessage(name, uniq, role, date, text) {
@@ -159,8 +161,8 @@ function displayChatMessage(name, uniq, role, date, text) {
         return;
     }
     
-    message_date = new Date(date);
-    dateform = message_date.toLocaleString();
+    var message_date = new Date(date);
+    var dateform = message_date.toLocaleString();
     
     // diff in milliseconds 
     var diff = Math.abs(new Date() - message_date);
@@ -171,6 +173,7 @@ function displayChatMessage(name, uniq, role, date, text) {
     //notification text   
     //notification title
     var notif_title = name+': '+ text;
+    
     //notification body
     var notif_body = dateform;
     
@@ -193,11 +196,11 @@ function displayChatMessage(name, uniq, role, date, text) {
 
 	//revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
     if(lastWriter!=name){
-        lastMessage=(lastMessage+1)%2;
+        lastMessage = (lastMessage+1)%2;
       
         var dateDiv = $('<div/>').addClass("date").text(dateform);
         var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
-        var textDiv = $('<div/>', {"id": "m"+lastMessage}).addClass("text").text(text);
+        var textDiv = $('<div/>', {"id": "m"+lastMessage, user: chat_name}).addClass("text").text(text);
 
         var wrapperDiv = $('<div/>').addClass('message');
       
@@ -227,8 +230,10 @@ function displayChatMessage(name, uniq, role, date, text) {
         
     } else{
         var textP = $('<p/>').text(text);
-        textP.appendTo($('#messageList #m' + lastMessage));
-        $('.date.m' + lastMessage).text(date);  // this date isn't updated
+        
+        textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
+
+        $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
     }
   
     lastWriter = name;
