@@ -284,11 +284,11 @@ function renderEverything(firstTime) {
                 renderMembersUser();
             renderMembersUser();
 
-            //show the documentation of the previous task for the workers and the PCs.
+           /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
                 show_previous_doc();
                 //updateStatus();
-            }
+            }*/
 
             //startTeam(firstTime);
         } else {
@@ -499,10 +499,10 @@ var poll = function(){
                 //console.log("Flash team not updated and not ended");
 
                  //show the documentation of the previous task for the workers and the PCs.
-                if (isUser || memberType == "pc"){
+               /* if (isUser || memberType == "pc"){
                     show_previous_doc();
                     //updateStatus();
-                }
+                }*/
 
             }
       });

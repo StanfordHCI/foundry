@@ -80,7 +80,7 @@ function startTask(groupNum) {
     drawEvent(eventObj); //Will update color
 
     //Close the task modal
-    $("#task_modal").modal('hide');
+    //$("#task_modal").modal('hide');
 
     
     //chaning start button to complete button on the task modal
