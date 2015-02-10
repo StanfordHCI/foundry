@@ -117,6 +117,7 @@ function sendChatMessage() {
   
   myDataRef.push({name: chat_name, role: chat_role, uniq: uniq_u,
                   date: new Date().toUTCString(), text: text});
+
   $('#messageInput').focus().val('');
 }
 
@@ -229,7 +230,9 @@ function displayChatMessage(name, uniq, role, date, text) {
         
     } else{
         var textP = $('<p/>').text(text);
+        
         textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
+
         $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
     }
   
