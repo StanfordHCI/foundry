@@ -21,7 +21,7 @@
 
 @include keyframes(slight-slide-from-left) {
   0% {
-    @include transform(translateX(-24px));
+    @include transform(translateX(-11px));
   }
   100% {
     @include transform(translateX(0px));

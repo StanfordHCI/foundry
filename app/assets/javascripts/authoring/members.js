@@ -264,22 +264,37 @@ var folderClickFn = function(e) {
     renderCurrentFolderPills();
 };
 
-function createFolderHtml(entry) {
-    return '' + 
+function createFolderElem(entry) {
+    var elem = $( 
     '<div class="role-folder" folder-id="' + entry.id + '">' +
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
         ' (' + entry.childIds.length + ')</span>' +
-    '</div>';
+      '<span class="close-button"></span>' +
+    '</div>');
+    elem.click(folderClickFn);
+    elem.find('.close-button')
+        .click(function(e) {
+            e.stopPropagation();
+            confirmDeleteMember(entry.id);
+        })
+        .attr('data-toggle', 'tooltip')
+        .tooltip('destroy')
+        .tooltip({
+            placement: 'right',
+            title: 'Delete \'' +  entry.name + '\''
+        });
+    
+    return elem;
 }
 
-function createRoleHtml(member) {
-  return '' +
+function createRoleElem(member) {
+  return $(
   '<div class="role" id="mPill_' + member.id + '">' + 
     '<div class="indicator" style="background-color:' + member.color + '"></div>' +
     '<span class="name">' + member.role + '</span>' +
     '<div class="clear"></div>' +
-  '</div>';
+  '</div>');
 }
 
 /**
@@ -301,8 +316,8 @@ function renderPills(entries) {
     for(var i = 0; i < entries.length; i++) {
         var entry = entries[i];
         var elem = entry.type === "folder" ?
-            $(createFolderHtml(entry)).click(folderClickFn) :
-            createRoleHtml(entry);
+            createFolderElem(entry) :
+            createRoleElem(entry);
         membersWrap.append(elem);
     }
     
@@ -662,16 +677,15 @@ function saveMemberInfo(popId) {
 
 //Shows an alert asking to confirm delete member role
 function confirmDeleteMember(pillId) {
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var memberToDelete = members[indexOfJSON].role;
+    var member = entryManager.getEntryById(pillId);
+    var memberRole = entryManager.isFolder(member) ? member.name : member.role;
 
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Remove Member?";
 
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to remove " + memberToDelete + " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" 
-                + memberToDelete + " will be removed from all events on the timeline. </font>";
+    alertText.innerHTML = "<b>Are you sure you want to remove " + memberRole + " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" 
+                + memberRole + " will be removed from all events on the timeline. </font>";
 
     var deleteButton = document.getElementById("confirmButton");
     deleteButton.innerHTML = "Remove member";
@@ -684,31 +698,36 @@ function confirmDeleteMember(pillId) {
 
 }
 
-
 //Delete team member from team list, JSON, diagram, and events
 function deleteMember(memberId) {
-    $('#confirmAction').modal('hide');
-    
-    for(var i = 0; i < flashTeamsJSON.members.length; i++) {
-        var member = flashTeamsJSON.members[i];
-        if(member.id == memberId) {
-            flashTeamsJSON.members.splice(i, 1);
+    var entry = entryManager.getEntryById(memberId);
+    // recursively delete folders
+    if(entryManager.isFolder(entry)) {
+        for(var i = 0; i < entry.childIds.length; i++) {
+            deleteMember(entry.childIds[i]);
         }
-    }
-    
-    // remove from members array with event object
-    for(var i=0; i<flashTeamsJSON["events"].length; i++){
-        var ev = flashTeamsJSON["events"][i];
-        var member_event_index = ev.members.indexOf(memberId);
-        
-        // remove member
-        if(member_event_index != -1){ // found member in the event
-            deleteEventMember(ev.id, memberId);
+    } else {
+        $('#confirmAction').modal('hide');
+        for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+            var member = flashTeamsJSON.members[i];
+            if(member.id == memberId) {
+                flashTeamsJSON.members.splice(i, 1);
+            }
         }
 
-        //remove dri if the member was a dri
-        if (ev.dri == String(memberId)){
-            ev.dri = "";
+        // remove from members array with event object
+        for(var i=0; i<flashTeamsJSON["events"].length; i++){
+            var ev = flashTeamsJSON["events"][i];
+            var member_event_index = ev.members.indexOf(memberId);
+            // remove member
+            if(member_event_index != -1){ // found member in the event
+                deleteEventMember(ev.id, memberId);
+            }
+
+            //remove dri if the member was a dri
+            if (ev.dri == String(memberId)){
+                ev.dri = "";
+            }
         }
     }
     

@@ -20,6 +20,18 @@ $secondary-border: solid 1px rgba(239, 237, 237, 0.81);
   background-position: center;
 }
 
+.close-button {
+  &:after {
+    content: '✕';
+  }
+}
+
+/* Bootstrap tooltip */
+.tooltip-inner {
+    white-space: nowrap;
+    max-width: none;
+}
+
 $header-height: 64px;
 /* header styles */
 #foundry-header {
@@ -238,7 +250,7 @@ $left-sidebar-width: 251px;
 /* left-sidebar roles */
 
 .role, .role-folder {
-  padding: 2px 0 2px 8px;
+  padding: 2px 8px 2px 11px;
   cursor: pointer;
   margin-top: 2px;
   
@@ -248,8 +260,22 @@ $left-sidebar-width: 251px;
   @include display(flex);
   @include align-items(center);
   
+  .close-button {
+    display: none;
+    margin-left: auto;
+    
+    &:hover {
+      color: #c11414;
+    }
+  }
+  
   &:hover {
     background-color: rgba(236, 236, 236, 0.22);
+    
+    .close-button {
+      display: inline-block;
+      @include animation( (fade-in 0.2s, slight-slide-from-left 0.4s) );
+    }
   }
   
   .name {
@@ -796,27 +822,4 @@ a.button {
       }
     }
   }
-}
-
-/* animations */
-@-webkit-keyframes spin {
-  18% {
-    -webkit-transform: rotate(-40deg);
-  }
-  60% {
-    -webkit-transform: rotate(180deg);
-  }
-  85% {
-    -webkit-transform: rotate(370deg);
-  }
-  95% {
-    -webkit-transform: rotate(350deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-
-.spin-anim {
-  -webkit-animation: spin 1s;
 }
