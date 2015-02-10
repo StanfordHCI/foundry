@@ -677,9 +677,10 @@ if(!window._foundry) {
          */
         text: function(eventObj) {
             var time = eventObj.timer || eventObj.duration;
+            var sign = (time / Math.abs(time) < 0) ? "-" : "";
             
-            var hours = Math.floor(time / 60);
-            var minutes = time % 60;
+            var hours = Math.floor(Math.abs(time) / 60);
+            var minutes = Math.abs(time) % 60;
 
             var durationArray = [];
             if(hours !== 0) {
@@ -691,7 +692,7 @@ if(!window._foundry) {
                 durationArray.push(minutes + minStr);
             }
 
-            var timeStr = durationArray.join(" ");
+            var timeStr = sign + durationArray.join(" ");
             
             var clockAttrs = events.clock.attrs;
             
