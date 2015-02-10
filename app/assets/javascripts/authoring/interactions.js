@@ -244,7 +244,8 @@ function getHandoffInfo(handoffId){
       } else{
 	      content = '<p id="interactionNotes_' + handoffId + '">'
 	      +flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
-	      + '</p><br />';
+	      + '</p><br />'
+	      + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Close</button><br /> ';
       }
 	
 	return content;
@@ -407,6 +408,7 @@ function getCollabInfo(collabId){
 	      content = '<p id="collabNotes_' + collabId + '">'
 	      + flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
         +'</p><br />'
+        + '<button type="button" class="btn" onclick="hideCollabPopover(' + collabId +');">Close</button><br /> ';
       }
 	
 	return content;
