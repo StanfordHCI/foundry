@@ -4,7 +4,7 @@ function chatResize() {
   var entry = $("#right-sidebar .entry");
   var rightSidebarHeight = $("#right-sidebar").outerHeight();
   
-  var h = rightSidebarHeight - header.outerHeight() - entry.outerHeight() -20;
+  var h = rightSidebarHeight - header.outerHeight() - entry.outerHeight() - 20;
   
   messageList.css({
       height: h + "px",
