@@ -386,14 +386,28 @@ function drawCollabPopover(collabId) {
         trigger: "click",
         title: "Collaboration",
         content: 'Description of Collaborative Work: '
-        +'<textarea rows="2.5" id="collabNotes_' + collabId + '">'+flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
-        +'</textarea>'
-        + '<button type="button" class="btn btn-success" id="saveCollab' + collabId + '"'
-            +' onclick="saveCollab(' + collabId +');">Save</button>          '
-        + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + collabId + '"'
-            +' onclick="deleteInteraction(' + collabId +');">Delete</button>',
+        + getCollabInfo(collabId),
         container: $("#timeline-container")
     });
+}
+
+function getCollabInfo(collabId){
+	
+	if(in_progress != true && (memberType =="author" || memberType == "pc" || memberType == "client") ) {
+		content = '<textarea rows="2.5" id="collabNotes_' + collabId + '">'
+		+ flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
+        +'</textarea><br />'
+        + '<button type="button" class="btn btn-success" id="saveCollab' + collabId + '"'
+        +' onclick="saveCollab(' + collabId +');">Save</button>          '
+        + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + collabId + '"'
+        +' onclick="deleteInteraction(' + collabId +');">Delete</button>';
+      } else{
+	      content = '<p id="collabNotes_' + collabId + '">'
+	      + flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
+        +'</p><br />'
+      }
+	
+	return content;
 }
 
 //Saves the new notes text in the collab
