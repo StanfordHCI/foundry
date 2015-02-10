@@ -339,7 +339,7 @@ function renderMemberPopovers(members) {
         var member = members[i];
         
         if(member.type === "folder") {
-            return;
+            continue;
         }
         
         var member_id = member.id;
