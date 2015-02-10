@@ -232,19 +232,19 @@ function drawHandoff(handoffData) {
 
 function getHandoffInfo(handoffId){
 	
-	if(in_progress != true && (memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
 		+ '</textarea><br />'
 		+ '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
-        +' onclick="saveHandoff(' + handoffId +');">Save</button>                                 '
-        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button>    '
+        +' onclick="saveHandoff(' + handoffId +');">Save</button>'
+        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Cancel</button> '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + handoffId + '"'
         +' onclick="deleteInteraction(' + handoffId +');">Delete</button>';
       } else{
 	      content = '<p id="interactionNotes_' + handoffId + '">'
 	      +flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
-	      + '</p><br />'
+	      + '</p><br />';
       }
 	
 	return content;
@@ -296,9 +296,10 @@ function saveHandoff(intId) {
     //Update Popover Content
     var notes = $("#interactionNotes_" + intId).val()
     $("#interaction_" + intId).data('popover').options.content = 'Description of Handoff Materials: '
-        +'<textarea rows="2" id="interactionNotes_' + intId + '">' + notes + '</textarea>'
+        +'<textarea rows="2" id="interactionNotes_' + intId + '">' + notes + '</textarea><br />'
         + '<button type="button" class="btn btn-success" class="btn" id="saveHandoff' + intId + '"'
         +' onclick="saveHandoff(' + intId +');">Save</button>          '
+        + '<button type="button" class="btn" onclick="hideHandoffPopover(' + intId +');">Cancel</button> '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + intId + '"'
         +' onclick="deleteInteraction(' + intId +');">Delete</button>';
 
@@ -393,12 +394,13 @@ function drawCollabPopover(collabId) {
 
 function getCollabInfo(collabId){
 	
-	if(in_progress != true && (memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="collabNotes_' + collabId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
         +'</textarea><br />'
         + '<button type="button" class="btn btn-success" id="saveCollab' + collabId + '"'
         +' onclick="saveCollab(' + collabId +');">Save</button>          '
+        + '<button type="button" class="btn" onclick="hideCollabPopover(' + collabId +');">Cancel</button> '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + collabId + '"'
         +' onclick="deleteInteraction(' + collabId +');">Delete</button>';
       } else{
@@ -415,9 +417,10 @@ function saveCollab(intId) {
     //Update Popover's Content
     var notes = $("#collabNotes_" + intId).val()
     $("#interaction_" + intId).data('popover').options.content =   'Description of Collaborative Work: '
-        +'<textarea rows="2.5" id="collabNotes_' + intId + '">' + notes + '</textarea>'
+        +'<textarea rows="2.5" id="collabNotes_' + intId + '">' + notes + '</textarea><br />'
         + '<button type="button" class="btn btn-success" id="saveCollab' + intId + '"'
         +' onclick="saveCollab(' + intId +');">Save</button>          '
+        + '<button type="button" class="btn" onclick="hideCollabPopover(' + intId +');">Cancel</button> '
         + '<button type="button" class="btn btn-danger" id="deleteInteraction_' + intId + '"'
         +' onclick="deleteInteraction(' + intId +');">Delete</button>';
 
@@ -428,6 +431,10 @@ function saveCollab(intId) {
 
     //Hide Popover
     $("#interaction_" + intId).popover("hide");
+}
+
+function hideCollabPopover(intId){
+	 $("#interaction_" + intId).popover("hide");
 }
 
 //Deletes the interaction from the timeline and the JSON
