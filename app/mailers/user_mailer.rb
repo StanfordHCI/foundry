@@ -1,6 +1,9 @@
 class UserMailer < ActionMailer::Base
-  default from: ENV['DEFAULT_EMAIL'],
-          bcc: ENV['DEFAULT_EMAIL']
+  #default from: ENV['DEFAULT_EMAIL'],
+          #bcc: ENV['DEFAULT_EMAIL']
+          
+  default from: 'thefoundryapp@gmail.com',
+       bcc: 'thefoundryapp@gmail.com'
  
   def send_early_completion_email(email,minutes)
   	  @minutes=minutes
