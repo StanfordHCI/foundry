@@ -1,0 +1,85 @@
+.tab-links {
+	margin: 0;
+	position: relative;
+}
+
+.tab-links:after {
+	display:block;
+	clear: both;
+	content: '';
+	border-bottom: 1px solid rgba(239,237,237,0.81);
+	z-index: 1;
+}
+
+.tab-row:before {
+	z-index: 1;
+}
+
+.tab-links li {
+	margin: 0px 5px;
+	float: left;
+	list-style: none;
+	position: relative;
+	z-index: 0;
+	margin-bottom: -1px;
+	border: solid 1px rgba(239,237,237,0.81);
+}
+
+.tab-links a {
+	padding: 9px 15px;
+	display: inline-block;
+	border-radius: 3px 3px 0px 0px;
+	background:#ededed;
+  color:#4c4c4c;
+  transition:all linear 0.15s;
+  text-decoration: none;
+}
+
+.tab-links a:hover {
+	background: #f1f1f1;
+	text-decoration: none;
+}
+
+.tab-links li.active {
+	z-index: 2;
+	border-bottom-color: #fff;
+}
+
+.tab-links li.active a, li.active a:hover {
+	background: #fff;
+	color: #4c4c4c;
+}
+
+.tab-separator {
+	height: 0px;
+	background-color: white;
+}
+
+/*----- Content of Tabs -----*/
+.tab-content {
+		padding-top: 20px;
+    background:#fff;
+    border-left: solid 1px rgba(239,237,237,0.81);
+    border-right: solid 1px rgba(239,237,237,0.81);
+    border-bottom: solid 1px rgba(239,237,237,0.81);
+}
+ 
+.tab {
+    display:none;
+}
+
+.tab.active {
+    display:block;
+}
+
+/** overriding previous styling **/
+
+div.sidebar .chat-header {
+	padding: 0;
+	border: 0;
+}
+
+#right-sidebar > div.content {
+	background: rgba(0,0,0,0);
+	border: 0;
+}

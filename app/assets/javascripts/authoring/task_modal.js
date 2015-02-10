@@ -104,7 +104,7 @@ function membersSetup (eventObj) {
     $("#pc-field, #dri-field").typeahead(typeaheadUIOptions, sourceOptions)
         .bind('typeahead:selected', $.proxy(function (obj, datum) {
             
-        });
+        }));
 
     var pcObject = getPCObject(eventObj);
     console.log("pcobject")

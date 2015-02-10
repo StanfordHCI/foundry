@@ -1,27 +1,47 @@
-<div class="header chat-header">
-  <h5 class="main-header">Chat</h5>
-  <span id="show-online-button">See who's online (<span class="num-online">0</span>)</span>
-</div>
+<div class="tabs">
+  <ul class="tab-links">
+    <li class="active">
+      <a href="#tab1">
+      <div class="header chat-header">
+        <h5 class="main-header">Chat</h5>
+        <!-- <span id="show-online-button">See who's online (<span class="num-online">0</span>)</span> -->
+      </div>
+    </a>
+    </li>
+    <li><a href="#tab2">New Event</a></li>
+  </ul>
 
-<div id="sound"></div>
+  <div class="tab-separator"></div>
 
-<script src='https://cdn.firebase.com/v0/firebase.js'></script>
-<script> var flash_team_id=<%= @flash_team.id %>; </script>
+  <div class="tab-content">
 
-<div class="chat-content">
-  <div id="messageList"></div>
-  <div class="entry">
-    <textarea type="text" id="messageInput" placeholder="Type your message here..."></textarea>
-    <div style="padding-bottom: 8px; width: 100%;">
-      <div id="sendChatButton">Send</div>
-      <div class="clear"></div>
+    <div id="tab1" class="tab active">
+      <div id="sound"></div>
+
+      <script src='https://cdn.firebase.com/v0/firebase.js'></script>
+      <script> var flash_team_id=<%= @flash_team.id %>; </script>
+
+      <div class="chat-content">
+        <div id="messageList"></div>
+        <div class="entry">
+          <textarea type="text" id="messageInput" placeholder="Type your message here..."></textarea>
+          <div style="padding-bottom: 8px; width: 100%;">
+            <div id="sendChatButton">Send</div>
+            <div class="clear"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="online-users-box">
+        <div class="content">
+          <h5><span class="num-online">0</span> users online</h5>
+          <div id="presenceDiv"></div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<div id="online-users-box">
-  <div class="content">
-    <h5><span class="num-online">0</span> users online</h5>
-    <div id="presenceDiv"></div>
+    <div id="tab2" class="tab">
+      <p> tab2 content goes here! </p>
+    </div>
   </div>
 </div>
