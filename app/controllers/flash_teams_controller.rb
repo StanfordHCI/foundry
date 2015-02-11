@@ -77,8 +77,10 @@ class FlashTeamsController < ApplicationController
 	    # Then create a copy from the original data
 	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
 	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-	    copy.status = original.status
+	    copy.status = original.original_status
 	    copy.save
+	    
+	    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
 	
 	    # Redirect to the list of things
 	    redirect_to :action => 'index'   
