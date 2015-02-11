@@ -1,6 +1,6 @@
 <div class="tabs">
   <ul class="tab-links">
-    <li class="active">
+    <li>
       <a href="#tab1">
       <div class="header chat-header">
         <h5 class="main-header">Chat</h5>
@@ -8,14 +8,14 @@
       </div>
     </a>
     </li>
-    <li><a href="#tab2">New Event</a></li>
+    <li class="active"><a href="#tab2">New Event</a></li>
   </ul>
 
   <div class="tab-separator"></div>
 
   <div class="tab-content">
 
-    <div id="tab1" class="tab active">
+    <div id="tab1" class="tab">
       <div id="sound"></div>
 
       <script src='https://cdn.firebase.com/v0/firebase.js'></script>
@@ -40,8 +40,8 @@
       </div>
     </div>
 
-    <div id="tab2" class="tab">
-      <p> tab2 content goes here! </p>
+    <div id="tab2" class="tab active">
+      <%= render :partial => "edit_event" %>
     </div>
   </div>
 </div>

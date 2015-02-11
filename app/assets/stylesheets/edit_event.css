@@ -1,0 +1,36 @@
+#edit_event_form {
+  background-color: #f8f8f8;
+  box-sizing: border-box;
+  overflow-y: scroll; }
+  #edit_event_form .event_form_container {
+    padding: 15px;
+    box-sizing: border-box;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.15); }
+  #edit_event_form input[type="text"], #edit_event_form textarea {
+    border-radius: 0;
+    box-shadow: none;
+    width: 230px;
+    margin-bottom: 15px;
+    border-color: rgba(0, 0, 0, 0.15); }
+  #edit_event_form input[type="text"].small-input {
+    width: 50px; }
+  #edit_event_form #event_form_duration_cont, #edit_event_form #event_form_start_cont {
+    display: inline-block; }
+  #edit_event_form #event_form_duration_cont {
+    float: right; }
+  #edit_event_form .input-label {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.5);
+    display: block; }
+  #edit_event_form .input-label.side-label {
+    display: inline;
+    line-height: 30px;
+    margin-right: 5px; }
+  #edit_event_form #timings {
+    display: inline-block;
+    vertical-align: middle;
+    width: 244px; }
+  #edit_event_form h5.form-heading {
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.5); }

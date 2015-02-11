@@ -25,6 +25,10 @@
 	border: solid 1px rgba(239,237,237,0.81);
 }
 
+.tab-links li:first-of-type {
+	margin-left: 0px;
+}
+
 .tab-links a {
 	padding: 9px 15px;
 	display: inline-block;

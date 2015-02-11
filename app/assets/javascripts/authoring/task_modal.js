@@ -274,7 +274,7 @@ function getTaskOverviewForm(groupNum){
         + '</div><div class="second"><span class="input-label top">DIRECTLY RESPONSIBLE INDIVIDUAL</span>'
         + '<input type="text" name="dri" id="dri-field" value="" class="side_input typeahead">'
         + '</div><div class="third"><span class="input-label top">TEAM MEMBERS</span>'
-        + '<input type="text" class="tagsy-typeahead" id="members-field"></input>'
+        + '<input type="text" class="tagsy-typeahead" id="members-field" value="candy"></input>'
         + '</div></div></div></div>'
 
         + '<div class="modal-container collapsible" id="documentation-info-container">'
