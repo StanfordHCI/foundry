@@ -20,12 +20,6 @@ $secondary-border: solid 1px rgba(239, 237, 237, 0.81);
   background-position: center;
 }
 
-.close-button {
-  &:after {
-    content: '✕';
-  }
-}
-
 /* Bootstrap tooltip */
 .tooltip-inner {
     white-space: nowrap;
@@ -260,9 +254,13 @@ $left-sidebar-width: 251px;
   @include display(flex);
   @include align-items(center);
   
-  .close-button {
+  .delete-button {
     display: none;
     margin-left: auto;
+    
+    &:after {
+      content: '✕';
+    }
     
     &:hover {
       color: #c11414;
@@ -272,7 +270,7 @@ $left-sidebar-width: 251px;
   &:hover {
     background-color: rgba(236, 236, 236, 0.22);
     
-    .close-button {
+    .delete-button {
       display: inline-block;
       @include animation( (fade-in 0.2s, slight-slide-from-left 0.4s) );
     }

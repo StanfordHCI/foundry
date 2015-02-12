@@ -270,13 +270,13 @@ function createFolderElem(entry) {
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
         ' (' + entry.childIds.length + ')</span>' +
-      '<span class="close-button"></span>' +
+      '<span class="delete-button"></span>' +
     '</div>');
     elem.click(folderClickFn);
-    elem.find('.close-button')
+    elem.find('.delete-button')
         .click(function(e) {
             e.stopPropagation();
-            confirmDeleteMember(entry.id);
+            confirmDeleteFolder(entry.id);
         })
         .attr('data-toggle', 'tooltip')
         .tooltip('destroy')
@@ -579,6 +579,13 @@ function addFolder(folderName, parentId) {
     updateStatus(false);
 }
 
+/**
+ * @param {string|number} id
+ */
+function deletePopover(id) {
+    $("#mPill_" + id).popover("destroy");
+}
+
 function closeOpenPopovers() {
     //Close all open popovers
     for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
@@ -678,33 +685,61 @@ function saveMemberInfo(popId) {
 //Shows an alert asking to confirm delete member role
 function confirmDeleteMember(pillId) {
     var member = entryManager.getEntryById(pillId);
-    var memberRole = entryManager.isFolder(member) ? member.name : member.role;
-
-    var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Remove Member?";
-
-    var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to remove " + memberRole + " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" 
-                + memberRole + " will be removed from all events on the timeline. </font>";
-
-    var deleteButton = document.getElementById("confirmButton");
-    deleteButton.innerHTML = "Remove member";
-    $("#confirmButton").attr("class","btn btn-danger");
-
-    $('#confirmAction').modal('show');
-
+    
+    var labelHtml = "Remove Member?";
+    var alertHtml = "<b>Are you sure you want to remove " + member.role +
+        " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" +
+        member.role + " will be removed from all events on the timeline. </font>";
+    var deleteButtonHtml = "Remove member";
+    
     //Calls deleteMember function if user confirms the delete
-    document.getElementById("confirmButton").onclick=function(){deleteMember(pillId)};
+    var confirmFn = function(){
+      deleteEntry(pillId)
+    };
+    confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn);
+}
 
+function confirmDeleteFolder(folderId) {
+    var folder = entryManager.getEntryById(folderId);
+    var size = folder.childIds.length;
+    
+    var labelHtml = "Remove Folder?";
+    var alertHtml = "<b>Are you sure you want to remove " + folder.name +
+        " from " + flashTeamsJSON["title"]+ "? </b>" +
+        (size > 0 ? "This folder's contents will be removed as well.": "");
+    var deleteButtonHtml = "Remove folder";
+    var confirmFn = function() {
+        deleteEntry(folderId);
+    };
+    
+    confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn);
+}
+
+function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) {
+    // label
+    document.getElementById("confirmActionLabel")
+        .innerHTML = labelHtml;
+    
+    // alert text
+    document.getElementById("confirmActionText")
+        .innerHTML = alertHtml;
+    
+    // delete button 
+    $("#confirmButton").html(deleteButtonHtml)
+        .attr("class", "btn btn-danger")
+        .off()
+        .click(confirmFn);
+    
+    $("#confirmAction").modal("show");
 }
 
 //Delete team member from team list, JSON, diagram, and events
-function deleteMember(memberId) {
+function deleteEntry(memberId) {
     var entry = entryManager.getEntryById(memberId);
     // recursively delete folders
     if(entryManager.isFolder(entry)) {
         for(var i = 0; i < entry.childIds.length; i++) {
-            deleteMember(entry.childIds[i]);
+            deleteEntry(entry.childIds[i]);
         }
     } else {
         $('#confirmAction').modal('hide');
@@ -732,7 +767,9 @@ function deleteMember(memberId) {
     }
     
     entryManager.removeEntry(memberId);
-    closeOpenPopovers();
+    
+    deletePopover(memberId);
+    
     renderCurrentFolderPills();
     updateStatus(false);
 };
