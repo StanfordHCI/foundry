@@ -550,6 +550,7 @@ var loadData = function(){
     googleDriveLink();
 };
 
+/*
 var checkProjectFolder = function(){
 	if(!flashTeamsJSON.folder){
   	console.log("creating project folder");
@@ -558,6 +559,7 @@ var checkProjectFolder = function(){
 	//updateStatus();
   }
 };
+*/
 
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
@@ -572,8 +574,11 @@ var startTeam = function(firstTime){
         //checkProjectFolder();
         updateOriginalStatus();
 		recordStartTime();
-		checkProjectFolder();
-        addAllFolders();
+		//checkProjectFolder();
+        //addAllFolders();
+        createProjectFolder();
+        googleDriveLink();
+        //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
         //added next line to disable the ticker
         updateStatus(true);

@@ -244,10 +244,12 @@ function createEventObj(snapPoint, duration) {
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
-    if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
+    /*
+if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
         createNewFolder(document.getElementById("ft-name").innerHTML);
         //createNewFolder($("#flash_team_name").val());
     }
+*/
     flashTeamsJSON.events.push(newEvent);
     
     return newEvent;
