@@ -1,7 +1,18 @@
 //This is the events immediately before the upcoming event.
 var events_before =[];
 var events_before_index = 0;
+
 function confirm_show_docs(event_id){
+  
+  events_before_index = 0;
+   events_before = events_immediately_before(event_id);
+  if (events_before.length == 0)
+    show_previous_doc(event_id);
+  else
+    confirm_show_docs_modal(event_id);
+};
+
+function confirm_show_docs_modal(event_id){
   var bodyText = document.getElementById("confirmActionText");
     //updateStatus();
     $("#task_modal").modal('hide');
@@ -14,6 +25,7 @@ function confirm_show_docs(event_id){
     var confirmStartTeamBtn = document.getElementById("confirmButton");
     confirmStartTeamBtn.innerHTML = "OK";
     
+    $("#saveButton").css("display","none");
     $("#confirmButton").attr("class","btn btn-success");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Read The Previous Task(s) Info First!";
@@ -21,11 +33,11 @@ function confirm_show_docs(event_id){
 
     document.getElementById("confirmButton").onclick=function(){$('#confirmAction').modal('hide'); show_previous_doc(event_id)};    
 
-};
-
+}
 
 function show_previous_doc(event_id){
 	console.log("in show_previous_doc function");
+  console.log(event_id);
   var ev = flashTeamsJSON["events"][getEventJSONIndex(event_id)];
   
   if (!checkEventsBeforeCompleted(event_id))
@@ -51,8 +63,8 @@ function show_previous_doc(event_id){
 
     events_before = events_immediately_before(ev.id);
     if (events_before.length == 0) {
-      startTask(event_id);
-       $("#task_modal").modal('hide');
+      startTask(ev.id);
+      $("#task_modal").modal('hide');
       return;
     }
 
@@ -135,31 +147,64 @@ function showDocModal(ev_before, events_before, curr_event_id){
 
 
 	//alert(ev_tmp.docQs[0][0]);
-	var modal_footer= '<button class="btn btn-primary" id="next-doc-modal" onclick="nextDocModal()">Next</button>';
-	var modal_body=content;
+	var modal_footer;
+  modal_footer= '<button class="btn btn-primary" id="next-doc-modal" onclick="nextDocModal('+curr_event_id+')">Next</button>';
+	 //alert("first");
+   //alert(events_before_index);
+  if(events_before_index>0){
+       
+        modal_footer = '<button class="btn btn-primary" id="prev-doc-modal" onclick="prevDocModal('+curr_event_id+')">Previous</button>' + modal_footer;
+  }
+ 
+  var modal_body=content;
 	var modal_label= ev_before.title + " Documentation";
 
-	 $('#doc_modal').modal('show'); 
+	   $('#doc_modal').modal('show'); 
      $('.doc-modal-footer').html(modal_footer);
      $('.doc-modal-body').html(modal_body);	
      $('#doc_modal_Label').html(modal_label);
      $("#next-doc-modal").css('display', '');
-     if( (events_before_index + 1) >= (events_before.length) ){
+    
+    if( (events_before_index + 1) >= (events_before.length) ){
      	modal_footer = '<button class="btn btn-primary" data-dismiss="modal" onclick="startTask('+curr_event_id+')" aria-hidden="true">Start Task</button>';
-     	$('.doc-modal-footer').html(modal_footer);
+     	//alert("second");
+      //alert(events_before_index);
+      if(events_before_index>0){
+        modal_footer = '<button class="btn btn-primary" id="prev-doc-modal" onclick="prevDocModal()">Previous</button>' + modal_footer;
+      }
+      $('.doc-modal-footer').html(modal_footer);
+      events_before_index = events_before_index + 1;
 
  	 }
- 	 else
- 	 	events_before_index = events_before_index + 1;
+ 	 else{
+ 	  events_before_index = events_before_index + 1;
+  }
+   
 };
 
 //is called when next button on the modal is clicked.
-function nextDocModal(){
+function nextDocModal(curr_event_id){
 	if(events_before_index >= events_before.length )
 		return;
 	if (events_before.length == 0) return;
+  //alert(curr_event_id)
 	var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before[events_before_index])];
-	showDocModal(ev_before, events_before);
+	showDocModal(ev_before, events_before, curr_event_id);
 	
+};
+
+function prevDocModal(curr_event_id){
+  if(events_before_index > events_before.length )
+    return;
+  if (events_before.length == 0) return;
+  
+  if(events_before_index<=1) return;
+ 
+  events_before_index = events_before_index - 2;
+  
+  //alert(curr_event_id);
+  var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before[events_before_index])];
+  showDocModal(ev_before, events_before, curr_event_id);
+  
 };
 

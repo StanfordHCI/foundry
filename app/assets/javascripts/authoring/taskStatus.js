@@ -60,8 +60,8 @@ function checkEventsBeforeCompletedNoAlert(groupNum) {
 
 //Fires on "Start" button on task modal
 function startTask(groupNum) {
-    if (!checkEventsBeforeCompleted(groupNum))
-        return;
+     if (!checkEventsBeforeCompleted(groupNum))
+       return;
 
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];

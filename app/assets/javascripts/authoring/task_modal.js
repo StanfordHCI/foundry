@@ -32,7 +32,7 @@ function showTaskOverview(groupNum){
         }
         else{
            $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'show_previous_doc('+groupNum+')');
+            $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
