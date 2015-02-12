@@ -114,6 +114,7 @@ function startFlashTeam() {
     $("#flashTeamEndBtn").css('display','');
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
+    //$("a#gFolder.button").css('visibility','visible');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
     //console.log("here0");
@@ -550,6 +551,17 @@ var loadData = function(){
     googleDriveLink();
 };
 
+/*
+var checkProjectFolder = function(){
+	if(!flashTeamsJSON.folder){
+  	console.log("creating project folder");
+	createNewFolder(document.getElementById("ft-name").innerHTML);
+	console.log("flashTeamsJSON.folder: " + flashTeamsJSON.folder);
+	//updateStatus();
+  }
+};
+*/
+
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
     //console.log("STARTING TEAM");
@@ -560,9 +572,14 @@ var startTeam = function(firstTime){
         //console.log("flashTeamsJSON['original_json']: " + flashTeamsJSON["original_json"]);
         //console.log("flashTeamsJSON['original_status']: " + flashTeamsJSON["original_status"]);
         //updateStatus();
+        //checkProjectFolder();
         updateOriginalStatus();
 		recordStartTime();
-        addAllFolders();
+		//checkProjectFolder();
+        //addAllFolders();
+        createProjectFolder();
+        googleDriveLink();
+        //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
         //added next line to disable the ticker
         updateStatus(true);
@@ -612,6 +629,7 @@ var drawEvents = function(editable){
         drawEvent(ev);
         //drawPopover(ev, editable, false);
     }
+    //checkProjectFolder();
 };
 
 var drawStartedEvents = function(){
