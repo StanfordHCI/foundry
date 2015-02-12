@@ -550,6 +550,15 @@ var loadData = function(){
     googleDriveLink();
 };
 
+var checkProjectFolder = function(){
+	if(!flashTeamsJSON.folder){
+  	console.log("creating project folder");
+	createNewFolder(document.getElementById("ft-name").innerHTML);
+	console.log("flashTeamsJSON.folder: " + flashTeamsJSON.folder);
+	updateStatus();
+  }
+};
+
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
     //console.log("STARTING TEAM");
@@ -560,8 +569,10 @@ var startTeam = function(firstTime){
         //console.log("flashTeamsJSON['original_json']: " + flashTeamsJSON["original_json"]);
         //console.log("flashTeamsJSON['original_status']: " + flashTeamsJSON["original_status"]);
         //updateStatus();
+        //checkProjectFolder();
         updateOriginalStatus();
 		recordStartTime();
+		checkProjectFolder();
         addAllFolders();
         in_progress = true; // TODO: set before this?
         //added next line to disable the ticker

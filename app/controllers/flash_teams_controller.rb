@@ -109,6 +109,7 @@ class FlashTeamsController < ApplicationController
     end
     
     # update the google drive folder
+    original_status['flash_teams_json'].except!("folder")
 
 	return original_status.to_json
 
