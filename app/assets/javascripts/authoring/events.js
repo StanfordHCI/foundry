@@ -227,14 +227,14 @@ function getDuration(leftX, rightX) {
 
 //task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
-    event_counter++;
+    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
     
     duration = duration || 60;
     
     var startTimeObj = getStartTime(snapPoint[0]);
   
     var newEvent = {
-        "title":"New Event", "id":event_counter, 
+        "title":"New Event", "id":createEventId(), 
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
@@ -254,6 +254,13 @@ if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
     
     return newEvent;
 };
+
+function createEventId(){
+	var timestamp = new Date();
+	event_timestamp = Math.floor(timestamp.getTime()/ 1000);
+	//console.log("eventId: " + event_timestamp);
+	return event_timestamp;
+}
 
 function getEventFromId(id) {
     var events = flashTeamsJSON.events;
