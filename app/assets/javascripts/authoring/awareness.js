@@ -114,6 +114,7 @@ function startFlashTeam() {
     $("#flashTeamEndBtn").css('display','');
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
+    //$("a#gFolder.button").css('visibility','visible');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
     //console.log("here0");
