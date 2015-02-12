@@ -555,7 +555,7 @@ var checkProjectFolder = function(){
   	console.log("creating project folder");
 	createNewFolder(document.getElementById("ft-name").innerHTML);
 	console.log("flashTeamsJSON.folder: " + flashTeamsJSON.folder);
-	updateStatus();
+	//updateStatus();
   }
 };
 
@@ -623,6 +623,7 @@ var drawEvents = function(editable){
         drawEvent(ev);
         //drawPopover(ev, editable, false);
     }
+    //checkProjectFolder();
 };
 
 var drawStartedEvents = function(){
