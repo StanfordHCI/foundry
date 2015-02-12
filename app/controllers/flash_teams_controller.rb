@@ -77,15 +77,44 @@ class FlashTeamsController < ApplicationController
 	    # Then create a copy from the original data
 	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
 	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-	    copy.status = original.status
+	    #copy.status = original.original_status
+	    copy.status = createDupTeamStatus(copy.id, original.original_status)
+	    
+	    # new_status = createDupTeamStatus(copy.id, original.original_status)
+# 	    new_status_json = new_status.to_s
+# 	    copy.status = new_status_json
 	    copy.save
+	    
+	    
+	    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
 	
 	    # Redirect to the list of things
 	    redirect_to :action => 'index'   
     end #end if session not nil
   end
 
+  
+  def createDupTeamStatus(dup_id, orig_status)
+	original_status = JSON.parse(orig_status)
+	
+	# update the member invite links  
+	flash_team_members = original_status['flash_teams_json']['members']
+        
+    flash_team_members.each do |member|
+    	uniq = SecureRandom.uuid
+    	url = url_for :controller => 'members', :action => 'invited', :id => dup_id, :uniq => uniq
+    	
+    	member['uniq'] = uniq
+		member['invitation_link'] = url 		
+    end
+    
+    # update the google drive folder
+    original_status['flash_teams_json'].except!("folder")
 
+	return original_status.to_json
+
+  end
+  
   def index
   		# check to see if the user id exists in the database 
 		if session[:user].nil?
