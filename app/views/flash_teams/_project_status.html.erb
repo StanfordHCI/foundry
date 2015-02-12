@@ -1,12 +1,8 @@
 <div style="padding: 0 11px;">
   
-  <% json_stat = JSON.parse(@flash_team.status)
-	 in_prog = json_stat["flash_team_in_progress"]%>
-<% if !in_prog.nil? %>	 
+ 
 	<a target="_blank" id="gFolder" class="button">
-<% else %>
-  <a target="_blank" id="gFolder" class="button" style="visibility:hidden">
-<% end %>
+  <!-- <a target="_blank" id="gFolder" class="button" style="visibility:hidden"> -->
     <div class="google-drive-button">
       <span class="text">Google Drive™ folder</span>
     </div>
