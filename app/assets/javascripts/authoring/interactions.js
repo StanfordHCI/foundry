@@ -214,16 +214,11 @@ function drawHandoff(handoffData) {
             else return handoffData["color"];
         })
         .attr("stroke-width", 3)
-        .attr("stroke-opacity", ".65")
+        .attr("stroke-opacity", ".55")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)")
-        .on("mouseover", function() {
-            d3.select(this).style("stroke-opacity", 1);
-        })
-        .on("mouseout", function() {
-            d3.select(this).style("stroke-opacity", .65);
-        });
-
+        .on("mouseover", function() { d3.select(this).style("stroke-opacity", .95)})
+        .on("mouseout", function() { d3.select(this).style("stroke-opacity", .55)});
 
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -380,12 +375,8 @@ function drawCollaboration(collabData, overlap) {
         .attr("width", overlap) //START HERE, FIND REAL OVERLAP
         .attr("fill", "gray")
         .attr("fill-opacity", .7)
-        .on("mouseover", function() {
-            d3.select(this).style("fill-opacity", .9);
-        })
-        .on("mouseout", function() {
-            d3.select(this).style("fill-opacity", .7);
-        });
+        .on("mouseover", function() { d3.select(this).style("fill-opacity", .9)})
+        .on("mouseout", function() { d3.select(this).style("fill-opacity", .7)});
 
     drawCollabPopover(collabId);
 }
