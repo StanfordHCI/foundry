@@ -218,6 +218,9 @@ function renderEverything(firstTime) {
         url: url,
         type: 'get'
     }).done(function(data){
+
+       
+
         // firstTime will also be true in the case that flashTeamEndedorStarted, so
         // we make sure that it is false (i.e. true firstTime, upon page reload for user
         // before the team starts)
@@ -284,6 +287,13 @@ function renderEverything(firstTime) {
             else
                 renderMembersUser();
             renderMembersUser();
+
+           /* //show the documentation of the previous task for the workers and the PCs.
+            if (isUser || memberType == "pc"){
+                show_previous_doc();
+                //updateStatus();
+            }*/
+
             //startTeam(firstTime);
         } else {
             //console.log("flash team not in progress");
@@ -308,6 +318,7 @@ function renderEverything(firstTime) {
             if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
+
         }
     });
 
@@ -490,6 +501,13 @@ var poll = function(){
             } else {
                 drawStartedEvents();
                 //console.log("Flash team not updated and not ended");
+
+                 //show the documentation of the previous task for the workers and the PCs.
+               /* if (isUser || memberType == "pc"){
+                    show_previous_doc();
+                    //updateStatus();
+                }*/
+
             }
       });
     }, poll_interval); // every 5 seconds currently

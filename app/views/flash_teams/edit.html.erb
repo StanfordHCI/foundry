@@ -10,6 +10,10 @@
        
     <!-- task modal shows up after clicking on a task -->
     <%= render :partial => "task_modal" %>
+
+    <!-- documentation modal shows up the first time the user logs in --> 
+    <%= render :partial => "doc_modal" %>
+  
 	
 	<!-- render header -->
 	<%= render :partial => "header", :locals => {:in_author_view => @in_author_view} %>

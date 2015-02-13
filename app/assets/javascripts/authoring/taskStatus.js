@@ -60,8 +60,8 @@ function checkEventsBeforeCompletedNoAlert(groupNum) {
 
 //Fires on "Start" button on task modal
 function startTask(groupNum) {
-    if (!checkEventsBeforeCompleted(groupNum))
-        return;
+     if (!checkEventsBeforeCompleted(groupNum))
+       return;
 
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
@@ -80,7 +80,7 @@ function startTask(groupNum) {
     drawEvent(eventObj); //Will update color
 
     //Close the task modal
-    $("#task_modal").modal('hide');
+    //$("#task_modal").modal('hide');
 
     
     //chaning start button to complete button on the task modal

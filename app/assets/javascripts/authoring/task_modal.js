@@ -32,7 +32,7 @@ function showTaskOverview(groupNum){
         }
         else{
            $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'startTask('+groupNum+')');
+            $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
@@ -57,7 +57,6 @@ function showTaskOverview(groupNum){
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
-        
 	}
 }
 
