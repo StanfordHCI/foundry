@@ -370,13 +370,8 @@ function newMemberObject(memberName) {
     var color = colorBox.grabColor();
     //return {"role":memberName, "id": memberCounter, "color":color, "skills":[], "category1":"", "category2":""};
     
-    //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type 
-<<<<<<< HEAD
+    //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type
     return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
-=======
-    
-    return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
->>>>>>> 80e841a06e64c51e87ea4aae2419711b4b891ab4
 };
 
 /**
