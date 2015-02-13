@@ -248,7 +248,10 @@ function renderEverything(firstTime) {
 
         in_progress = loadedStatus.flash_team_in_progress;
         flashTeamsJSON = loadedStatus.flash_teams_json;
-
+        
+        // initialize the entry manager after flashTeamsJSON has been loaded
+        window.entryManager = new window.EntryManager(flashTeamsJSON);
+        
         if(firstTime) {
             setCurrentMember();
             initializeTimelineDuration();
