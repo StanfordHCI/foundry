@@ -86,6 +86,61 @@ function startTask(groupNum) {
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
+
+/*
+//chaning start button to complete button on the task modal
+    $("#start-end-task").attr('onclick', 'pauseTask('+groupNum+')');
+    $("#start-end-task").html('Pause'); 
+*/
+    
+}
+
+//Fires on "Pause" button on task modal
+function pauseTask(groupNum) {
+	
+	//Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+	var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "paused";
+    //eventObj.timer = eventObj.duration;
+    eventObj.task_pauseBtn_time = (new Date).getTime();
+    
+    updateStatus(true);
+    drawEvent(eventObj); //Will update color
+    
+    //alert(eventObj.status);
+	
+
+	//chaning start button to complete button on the task modal
+    $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
+    $("#pause-resume-task").html('Resume Task'); 
+	
+}
+
+//Fires on "Pause" button on task modal
+function resumeTask(groupNum) {
+	
+	//Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+	var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "started";
+    //eventObj.timer = eventObj.duration;
+    eventObj.task_resumeBtn_time = (new Date).getTime();
+    
+    updateStatus(true);
+    drawEvent(eventObj); //Will update color
+    
+    //alert(eventObj.status);
+	
+
+	//chaning start button to complete button on the task modal
+    $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
+    $("#pause-resume-task").html('Pause'); 
+	
 }
 
 //Alert firing on event complete buttons

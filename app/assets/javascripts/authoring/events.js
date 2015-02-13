@@ -1177,6 +1177,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_COLOR;
+                case "paused":
+                    return "pink";
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -1465,6 +1467,30 @@ function drawTimer(eventObj){
             delayed_tasks.push(groupNum);
             drawEvent(eventObj);
         }
+
+        eventObj["timer"] = remaining_time;
+        updateStatus(true);
+    }
+    else if( eventObj.status == "paused" ){
+    
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
+        
+        /*
+if(remaining_time < 0){
+            eventObj.status = "delayed";
+             
+            var groupNum = parseInt(eventObj["id"]);
+            
+            var idx = live_tasks.indexOf(groupNum);
+            if (idx != -1) { // delayed task
+                live_tasks.splice(idx, 1);
+            }
+            delayed_tasks.push(groupNum);
+            drawEvent(eventObj);
+        }
+*/
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
