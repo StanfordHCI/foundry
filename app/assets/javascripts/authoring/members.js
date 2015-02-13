@@ -127,14 +127,15 @@ function updateNumRolesDisplay(num) {
 }
 
 function renderPills(entries) {
+    var foldersWrap = $(".foldersWrap");
     var membersWrap = $(".membersWrap");
+    foldersWrap.html("");
     membersWrap.html("");
     for(var i = 0; i < entries.length; i++) {
         var entry = entries[i];
         var elem = entry.type === "folder" ?
-            createFolderElem(entry) :
-            createRoleElem(entry);
-        membersWrap.append(elem);
+            foldersWrap.append(createFolderElem(entry)) :
+            membersWrap.append(createRoleElem(entry));
     }
     
     renderMemberPopovers(entries);

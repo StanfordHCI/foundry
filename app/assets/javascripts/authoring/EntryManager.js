@@ -20,7 +20,7 @@
 
     EntryManager.prototype._generateRootFolder = function() {
         return {
-            name: "root", parentId: undefined, type: "folder",
+            name: "All Roles", parentId: undefined, type: "folder",
             id: "root", childIds: [], numMembers: 0};
     };
 
