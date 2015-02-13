@@ -68,6 +68,10 @@ function startTask(groupNum) {
     eventObj.status = "started";
     eventObj.timer = eventObj.duration;
     eventObj.task_startBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_startBtn_time;
+    eventObj.latest_remaining_time = eventObj["timer"];
+
+	//alert(eventObj.latest_remaining_time);
     
     //remove task from remaining and add to live task array
     var idx = remaining_tasks.indexOf(groupNum);
@@ -106,9 +110,17 @@ function pauseTask(groupNum) {
     eventObj.status = "paused";
     //eventObj.timer = eventObj.duration;
     eventObj.task_pauseBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
+    
+    eventObj.latest_remaining_time = eventObj["timer"];
+    
+    alert(eventObj.latest_remaining_time);
+
     
     updateStatus(true);
     drawEvent(eventObj); //Will update color
+    
+    //alert(eventObj.task_pauseBtn_time);
     
     //alert(eventObj.status);
 	
@@ -130,6 +142,12 @@ function resumeTask(groupNum) {
     eventObj.status = "started";
     //eventObj.timer = eventObj.duration;
     eventObj.task_resumeBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
+    eventObj.latest_remaining_time = eventObj["timer"];
+
+	alert(eventObj.latest_remaining_time);
+    
+    //alert(eventObj.task_resumeBtn_time);
     
     updateStatus(true);
     drawEvent(eventObj); //Will update color
