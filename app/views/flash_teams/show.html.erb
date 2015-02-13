@@ -15,26 +15,10 @@
 </div>
 
 <div>	
-<video id="localVideo" autoplay style="height:200px; width: 200px;"></video>
+<video id="localVideo" autoplay></video>
 <script type="text/javascript" src="http://cdn.icecomm.io/icecomm.js"></script>
+
 
 </div>
 
-<script>
-var comm = new Icecomm('47SZFqOPw46qw5PrJxOWDSUrQYix/aoeRodBwfIPecrGHzkY');
-
-comm.connect('custom room', {audio: false});
-
-comm.on('connected', function(options) {
-   document.body.appendChild(options.video);
-});
-
-comm.on('local', function(options) {
-  localVideo.src = options.stream;
-});
-
-comm.on('disconnect', function(options) {
-  document.getElementById(options.callerID).remove();
-});	
-
-</script>
+<%= javascript_include_tag "authoring/video_chat" %>

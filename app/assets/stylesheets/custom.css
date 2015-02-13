@@ -1,3 +1,16 @@
+#videoChatModal{
+	width: 1000px;
+	//left: 25%;
+	margin-left: -500px;
+	left: 50%;
+	max-height: 520px;
+	overflow-y: scroll;
+}
+
+video{
+	width: 300px;
+	height: 300px;
+}
 
 #confirmEnd {
 	color: black;
