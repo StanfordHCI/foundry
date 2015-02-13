@@ -85,7 +85,7 @@ function eventMousedown(task2idNum) {
         var task1End = ev1.startTime + ev1.duration;
         
         if (task1End <= ev2.startTime) {
-            var color = colorBox.grabColor();
+            var color = "gray";
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
@@ -210,13 +210,20 @@ function drawHandoff(handoffData) {
 
         })
         .attr("stroke", function() {
-            if (handoffData["color"] == undefined) return colorBox.grabColor(); 
+            if (handoffData["color"] == undefined) return "gray"; //AT - START HERE
             else return handoffData["color"];
         })
         .attr("stroke-width", 3)
-        .attr("stroke-opacity", ".7")
+        .attr("stroke-opacity", ".65")
         .attr("fill", "none")
-        .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
+        .attr("marker-end", "url(#arrowhead)")
+        .on("mouseover", function() {
+            d3.select(this).style("stroke-opacity", 1);
+        })
+        .on("mouseout", function() {
+            d3.select(this).style("stroke-opacity", .65);
+        });
+
 
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -231,7 +238,6 @@ function drawHandoff(handoffData) {
 }
 
 function getHandoffInfo(handoffId){
-	
 	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
@@ -247,7 +253,6 @@ function getHandoffInfo(handoffId){
 	      + '</p><br />'
 	      + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Close</button><br /> ';
       }
-	
 	return content;
 }
 
@@ -374,7 +379,13 @@ function drawCollaboration(collabData, overlap) {
         .attr("height", taskDistance)
         .attr("width", overlap) //START HERE, FIND REAL OVERLAP
         .attr("fill", "gray")
-        .attr("fill-opacity", .7);
+        .attr("fill-opacity", .7)
+        .on("mouseover", function() {
+            d3.select(this).style("fill-opacity", .9);
+        })
+        .on("mouseout", function() {
+            d3.select(this).style("fill-opacity", .7);
+        });
 
     drawCollabPopover(collabId);
 }
@@ -455,7 +466,7 @@ function deleteInteraction(intId) {
 
 //Returns the event that begins first
 function firstEvent(task1idNum, task2idNum) {
-    console.log(arguments);
+    //console.log(arguments);
     var task1Rect = $("#rect_" + task1idNum)[0];
     var x1 = task1Rect.x.animVal.value + 3;
     var task2Rect = $("#rect_" + task2idNum)[0];
