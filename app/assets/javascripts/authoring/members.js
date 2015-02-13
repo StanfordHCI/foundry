@@ -725,18 +725,7 @@ function initializeMemberCounter() {
 }
 
 function generateMemberId() {
-    if(!flashTeamsJSON.member_data.last_id) {
-        flashTeamsJSON.member_data.last_id = 0;
-    }
-    
-    // so nothing breaks
-    if(memberCounter == undefined) {
-        memberCounter = initializeMemberCounter();
-    }
-    memberCounter++;
-    
-    flashTeamsJSON.member_data.last_id++;
-    return flashTeamsJSON.member_data.last_id;
+    return (new Date()).getTime();
 }
 
 //Find the index of a member in the JSON object "members" array by using unique id
