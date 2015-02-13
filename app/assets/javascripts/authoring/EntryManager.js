@@ -76,6 +76,7 @@
      * @returns the entry with the given id
      */
     EntryManager.prototype.getEntryById = function(id) {
+        if(id === undefined) {return undefined;}
         return this.memberData._entry_map[id];
     };
 
