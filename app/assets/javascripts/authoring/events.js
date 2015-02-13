@@ -281,7 +281,7 @@ function getWidth(ev) {
     var durationInMinutes = ev.duration;
     var hrs = parseFloat(durationInMinutes)/parseFloat(60);
     var width = parseFloat(hrs)*parseFloat(RECTANGLE_WIDTH);
-    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH)) * STEP_WIDTH;
+    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH))*STEP_WIDTH;
     return roundedWidth;
 };
 
@@ -523,8 +523,8 @@ function drawEachCollabForEvent(eventObj){
                 else var startX = x1;
                 $("#interaction_" + inter["id"])
                     .attr("x", startX)
-                    .attr("y", firstTaskY)
-                    .attr("height", taskDistance)
+                    .attr("y", firstTaskY-9)
+                    .attr("height", taskDistance+9)
                     .attr("width", overlap);
             }
         }

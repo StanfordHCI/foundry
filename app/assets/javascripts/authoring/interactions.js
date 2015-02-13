@@ -214,11 +214,11 @@ function drawHandoff(handoffData) {
             else return handoffData["color"];
         })
         .attr("stroke-width", 3)
-        .attr("stroke-opacity", ".55")
+        .attr("stroke-opacity", ".45")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)")
         .on("mouseover", function() { d3.select(this).style("stroke-opacity", .95)})
-        .on("mouseout", function() { d3.select(this).style("stroke-opacity", .55)});
+        .on("mouseout", function() { d3.select(this).style("stroke-opacity", .45)});
 
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -370,8 +370,8 @@ function drawCollaboration(collabData, overlap) {
             return "interaction_" + collabId;
         })
         .attr("x", x2)
-        .attr("y", firstTaskY)
-        .attr("height", taskDistance)
+        .attr("y", firstTaskY-9)
+        .attr("height", taskDistance+9)
         .attr("width", overlap) //START HERE, FIND REAL OVERLAP
         .attr("fill", "gray")
         .attr("fill-opacity", .7)
