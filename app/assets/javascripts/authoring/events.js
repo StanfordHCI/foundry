@@ -523,7 +523,7 @@ function drawEachCollabForEvent(eventObj){
                 else var startX = x1;
                 $("#interaction_" + inter["id"])
                     .attr("x", startX)
-                    .attr("y", firstTaskY-9)
+                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
                     .attr("height", taskDistance+9)
                     .attr("width", overlap);
             }

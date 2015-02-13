@@ -370,10 +370,10 @@ function drawCollaboration(collabData, overlap) {
             return "interaction_" + collabId;
         })
         .attr("x", x2)
-        .attr("y", firstTaskY-9)
+        .attr("y", firstTaskY-9) //AT hack to fix overlap w/ tab members
         .attr("height", taskDistance+9)
         .attr("width", overlap) //START HERE, FIND REAL OVERLAP
-        .attr("fill", "gray")
+        .attr("fill", "#B0BBBF")
         .attr("fill-opacity", .7)
         .on("mouseover", function() { d3.select(this).style("fill-opacity", .9)})
         .on("mouseout", function() { d3.select(this).style("fill-opacity", .7)});
