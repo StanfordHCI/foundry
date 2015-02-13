@@ -1528,7 +1528,7 @@ function addEventMember(eventId, memberIndex) {
 }
 
 //Remove a team member from an event
-function deleteEventMember(eventId, memberNum, memberName) {
+function deleteEventMember(eventId, memberNum) {
     if (memberNum == current){
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }

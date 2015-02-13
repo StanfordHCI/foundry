@@ -274,6 +274,7 @@ function addMemberFromEvent(member) {
 //Adds new member to Flash Teams JSON Object
    var newMember = {"role":memberName, "id": memberCounter, "color":"rgb(0, 168, 0)", "skills":[], "category1":"", "category2":""};
    flashTeamsJSON.members.push(newMember);
+   entryManager.addEntry(newMember);
    addMemberNode(memberName, memberCounter, "#808080");
 
    //Adds the drop-down for two-tiered oDesk job posting categories on popover and populates member attribute values
