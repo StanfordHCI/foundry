@@ -7,6 +7,7 @@ function createVideoConf(room_name){
 
 	//$("#vc").html('<video id="localVideo" autoplay></video>');
 	$("#videoChatModal").modal('show');
+	
 }
 
 
