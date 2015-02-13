@@ -85,7 +85,7 @@ function createFolderElem(entry) {
     '<div class="role-folder" folder-id="' + entry.id + '">' +
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
-        ' (' + entry.childIds.length + ')</span>' +
+        ' (' + entry.numMembers + ')</span>' +
       '<span class="delete-button"></span>' +
     '</div>');
     elem.click(folderClickFn);
