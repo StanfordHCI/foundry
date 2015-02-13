@@ -24,7 +24,9 @@ comm.on('disconnect', function(options) {
 
 function disconnectVC(){
 	comm.close();
+	$("video").remove();
 	$("#videoChatModal").modal('hide');
+	
 }
 
 function createRemoteVideo(stream, key) {
