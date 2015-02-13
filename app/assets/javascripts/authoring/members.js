@@ -181,11 +181,17 @@ var entryManager = {
             memberData._entry_map["root"] = this._generateRootFolder();
             folder = memberData._entry_map["root"];
         }
-        folder.childIds.push(entry.id);
         
-        // update the number of members in this folder
-        if(this.isMember(entry)) {
-            folder.numMembers++;
+        // only push and increment the number of members if this entry isn't
+        // already in this folder
+        var notInFolder = folder.childIds.indexOf(entry.id) < 0;
+        if(notInFolder) {
+            folder.childIds.push(entry.id);
+
+            // update the number of members in this folder
+            if(this.isMember(entry)) {
+                folder.numMembers++;
+            }
         }
     },
 
