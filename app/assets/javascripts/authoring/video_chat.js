@@ -25,7 +25,7 @@ comm.on('disconnect', function(options) {
 
 function disconnectVC(){
 	comm.close();
-	$("#localVideo").remove();
+	$("video").remove();
 	$("#videoChatModal").modal('hide');
 	
 }
