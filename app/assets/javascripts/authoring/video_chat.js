@@ -25,10 +25,14 @@ comm.on('disconnect', function(options) {
 
 function disconnectVC(){
 	comm.close();
-	$("video").remove();
+	//$("video").remove();
 	$("#videoChatModal").modal('hide');
 	
 }
+
+$("#videoChatModal").on('hide', function () {
+        window.location.reload();
+    });
 
 function createRemoteVideo(stream, key) {
   var remoteVideo = document.createElement('video');
