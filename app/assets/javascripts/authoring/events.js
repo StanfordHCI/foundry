@@ -1458,8 +1458,8 @@ function drawTimer(eventObj){
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         
         var duration = eventObj["duration"];
+        
         //var remaining_time = duration - time_passed;
-        //var remaining_time = eventObj["timer"] - time_passed;
         
 		var remaining_time = eventObj.latest_remaining_time - time_passed;
 
@@ -1483,15 +1483,14 @@ function drawTimer(eventObj){
 
     else if( eventObj.status == "delayed" ){
     
-        /*
-var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        /* //OLD WAY
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
-*/
+		*/
 
 		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
-        //var remaining_time = eventObj["timer"] - time_passed;
         var remaining_time = eventObj.latest_remaining_time - time_passed;
 
 

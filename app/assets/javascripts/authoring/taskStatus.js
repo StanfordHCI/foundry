@@ -94,12 +94,6 @@ function startTask(groupNum) {
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
-
-/*
-//chaning start button to complete button on the task modal
-    $("#start-end-task").attr('onclick', 'pauseTask('+groupNum+')');
-    $("#start-end-task").html('Pause'); 
-*/
     
 }
 
@@ -112,23 +106,16 @@ function pauseTask(groupNum) {
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "paused";
-    //eventObj.timer = eventObj.duration;
     eventObj.task_pauseBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
     
     eventObj.latest_remaining_time = eventObj["timer"];
     
     paused_tasks.push(groupNum);
-    
-    //alert(eventObj.latest_remaining_time);
 
     
     updateStatus(true);
     drawEvent(eventObj); //Will update color
-    
-    //alert(eventObj.task_pauseBtn_time);
-    
-    //alert(eventObj.status);
 	
 
 	//chaning start button to complete button on the task modal
@@ -146,7 +133,6 @@ function resumeTask(groupNum) {
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "started";
-    //eventObj.timer = eventObj.duration;
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
@@ -156,16 +142,9 @@ function resumeTask(groupNum) {
     if (idx != -1) { // delayed task
         paused_tasks.splice(idx, 1);
     }
-
-	//alert(eventObj.latest_remaining_time);
-    
-    //alert(eventObj.task_resumeBtn_time);
-    
+   
     updateStatus(true);
-    drawEvent(eventObj); //Will update color
-    
-    //alert(eventObj.status);
-	
+    drawEvent(eventObj); //Will update color	
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
