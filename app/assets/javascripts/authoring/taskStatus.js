@@ -114,6 +114,8 @@ function pauseTask(groupNum) {
     
     eventObj.latest_remaining_time = eventObj["timer"];
     
+    paused_tasks.push(groupNum);
+    
     //alert(eventObj.latest_remaining_time);
 
     
@@ -144,6 +146,12 @@ function resumeTask(groupNum) {
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
+    
+    //remove task from remaining and add to live task array
+    var idx = paused_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        paused_tasks.splice(idx, 1);
+    }
 
 	//alert(eventObj.latest_remaining_time);
     

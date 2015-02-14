@@ -19,6 +19,7 @@ var remaining_tasks = [];
 
 var live_tasks = [];
 var delayed_tasks = [];
+var paused_tasks = [];
 //tasks that are completed before being delayed
 var drawn_blue_tasks = [];
 //tasks that are completed after being delayed
@@ -424,7 +425,8 @@ var flashTeamEndedorStarted = function(){
 var flashTeamUpdated = function(){
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
-    var updated_live_tasks = loadedStatus.live_tasks
+    var updated_live_tasks = loadedStatus.live_tasks;
+    var updated_paused_tasks = loadedStatus.paused_tasks;
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         /*console.log("drawn_blue_tasks not same length");
@@ -462,6 +464,14 @@ var flashTeamUpdated = function(){
 
     if(updated_live_tasks.sort().join(',') !== live_tasks.sort().join(',')){
         //console.log("live_tasks not same content");
+        return true;
+    }
+    
+    if (updated_paused_tasks.length != paused_tasks.length) {
+        return true;
+    }
+
+    if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
         return true;
     }
     return false;
@@ -545,6 +555,7 @@ var loadData = function(){
    // cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
     live_tasks = loadedStatus.live_tasks;
+    paused_tasks = loadedStatus.paused_tasks;
     remaining_tasks = loadedStatus.remaining_tasks;
     delayed_tasks = loadedStatus.delayed_tasks;
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
@@ -1508,6 +1519,7 @@ var constructStatusObj = function(){
     var localStatus = {};
 
     localStatus.live_tasks = live_tasks;
+    localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;
     localStatus.delayed_tasks = delayed_tasks;
     localStatus.drawn_blue_tasks = drawn_blue_tasks;
