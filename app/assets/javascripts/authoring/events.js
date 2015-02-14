@@ -257,7 +257,7 @@ if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
 
 function createEventId(){
 	var timestamp = new Date();
-	event_timestamp = Math.floor(timestamp.getTime()/ 1000);
+	event_timestamp = Math.floor(timestamp.getTime());
 	//console.log("eventId: " + event_timestamp);
 	return event_timestamp;
 }
