@@ -1178,7 +1178,7 @@ function drawMainRect(eventObj) {
                 case "started":
                     return TASK_START_COLOR;
                 case "paused":
-                    return "pink";
+                    return TASK_PAUSED_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -1216,6 +1216,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_BORDER_COLOR;
+                case "paused":
+                    return TASK_PAUSED_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
