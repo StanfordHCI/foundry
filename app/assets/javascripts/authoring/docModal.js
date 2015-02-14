@@ -207,4 +207,3 @@ function prevDocModal(curr_event_id){
   showDocModal(ev_before, events_before, curr_event_id);
   
 };
-

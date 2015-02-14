@@ -209,6 +209,10 @@ var chat_name;
 var presname; // name of user shown in the presence box
 var currentStatus; //the status of the user shown in the presence box
 
+if(flashTeamsJSON) {
+    entryManager = new EntryManager(flashTeamsJSON);
+}
+
 // firstTime=true means page is reloaded
 function renderEverything(firstTime) {
     colorBox();
@@ -251,7 +255,10 @@ function renderEverything(firstTime) {
 
         in_progress = loadedStatus.flash_team_in_progress;
         flashTeamsJSON = loadedStatus.flash_teams_json;
-
+        
+        // initialize the entry manager after flashTeamsJSON has been loaded
+        window.entryManager = new window.EntryManager(flashTeamsJSON);
+        
         if(firstTime) {
             setCurrentMember();
             initializeTimelineDuration();

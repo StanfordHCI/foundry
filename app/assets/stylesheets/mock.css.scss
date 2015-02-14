@@ -1,4 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Quicksand:300);
+@import 'mixins';
+@import 'animations';
 
 h1,h2,h3,h4,h5,p,form {
   margin: 0;
@@ -6,27 +8,6 @@ h1,h2,h3,h4,h5,p,form {
 
 a {
   cursor: pointer;
-}
-
-@mixin border-radius($radius) {
-  -webkit-border-radius: $radius;
-     -moz-border-radius: $radius;
-      -ms-border-radius: $radius;
-       -o-border-radius: $radius;
-          border-radius: $radius;
-}
-
-@mixin transition($t) {
-  -webkit-transition: $t;
-     -moz-transition: $t;
-      -ms-transition: $t;
-       -o-transition: $t;
-          transition: $t;
-}
-
-@mixin box-shadow($s) {
-  -webkit-box-shadow: $s;
-     -moz-box-shadow: $s;
 }
 
 $primary-border: solid 1px rgba(232, 232, 232, 0.79);
@@ -37,6 +18,12 @@ $secondary-border: solid 1px rgba(239, 237, 237, 0.81);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* Bootstrap tooltip */
+.tooltip-inner {
+    white-space: nowrap;
+    max-width: none;
 }
 
 $header-height: 64px;
@@ -256,61 +243,112 @@ $left-sidebar-width: 251px;
 
 /* left-sidebar roles */
 
-.role {
-  padding: 2px 0 2px 8px;
+.role, .role-folder {
+  padding: 2px 8px 2px 11px;
   cursor: pointer;
   margin-top: 2px;
   
   font-size: 13px;
   
   @include transition( (background-color 0.2s, border 0.2s) );
-}
-
-.role:hover .indicator.plus {
-  transition: background 0.5s;
-}
-
-.role.valid .indicator.plus {
-  color: rgba(0,0,0,0);
-  border-color: black;
-  border-size: 11px;
+  @include display(flex);
+  @include align-items(center);
   
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-image: url('../assets/icons/check/check_black.svg');
-}
-
-.role .indicator {
-  display: inline-block;
-  border-radius: 40px;
-  float: right;
-  margin-top: 4px;
-  height: 16px;
-  width: 16px;
+  .delete-button {
+    display: none;
+    margin-left: auto;
+    
+    &:after {
+      content: '✕';
+    }
+    
+    &:hover {
+      color: #c11414;
+    }
+  }
   
-  border: solid 2px rgba(0,0,0,0);
-  @include transition( (border-color 0.2s) );
-}
-
-.role .indicator.plus {
-  /* background-color: rgba(233,233,233,0.18); */
-  text-align: center;
-  line-height: 14px;
-  font-weight: bold;
-  border: solid 2px;
-}
-
-.role .name {
-  font-size: 13px;
-  line-height: 30px;
-  float: left;
+  &:hover {
+    background-color: rgba(236, 236, 236, 0.22);
+    
+    .delete-button {
+      display: inline-block;
+      @include animation( (fade-in 0.2s, slight-slide-from-left 0.4s) );
+    }
+  }
   
-  @include transition( (margin-left 0.4s) );
+  .name {
+    font-size: 13px;
+    line-height: 30px;
+    font-weight: 300;
+    @include transition(margin-left 0.4s);
+  }
+}
+
+.role-folder {
+  .icon {
+    background-image: url('../assets/icons/folder/folder.svg');
+    margin-top: 4px;
+    height: 24px;
+    width: 16px;
+    padding: 2px;
+    background-position: center;
+    background-size: 26px;
+    background-position: -2px -2px;
+    margin-right: 10px;
+  }
+}
+
+.role {
+  &.active.valid {
+    .indicator {
+      display: inline-block;
+      border-radius: 40px;
+      float: right;
+      height: 16px;
+      width: 16px;
+
+      border: solid 2px rgba(0,0,0,0);
+      @include transition( (border-color 0.2s) );
+      
+      &.plus {
+        color: rgba(0,0,0,0);
+        border-color: black;
+        border-size: 11px;
+
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url('../assets/icons/check/check_black.svg');
+      }
+    }
+  }
+  
+  .indicator {
+    display: inline-block;
+    border-radius: 40px;
+    height: 16px;
+    width: 16px;
+    margin-right: 10px;
+
+    border: solid 2px rgba(0,0,0,0);
+    transition: border-color 0.2s;
+    
+    &.plus {
+      text-align: center;
+      line-height: 14px;
+      font-weight: bold;
+      border: solid 2px;
+    }
+  }
+  
+  &:hover {
+    .indicator.plus {
+      transition: background 0.5s;
+    }
+  }
 }
 
 .role.add-role input[type="text"],
 .role.add-role textarea {
-  float: left;
   background: none;
   margin: 0;
   border: 0;
@@ -318,7 +356,6 @@ $left-sidebar-width: 251px;
   padding: 0;
   font: inherit;
   border: none;
-  border-bottom: solid 1px rgba(255, 255, 255, 0.38);
   height: 30px;
   width: 80%;
 }
@@ -649,25 +686,139 @@ a.button {
   clear: both;
 }
 
-/* animations */
-@-webkit-keyframes spin {
-  18% {
-    -webkit-transform: rotate(-40deg);
+.roles-menu {
+  padding-bottom: 11px;
+  border-bottom: solid 1px rgba(221, 221, 221, 0.17);
+  margin-bottom: 11px;
+  position: relative;
+  
+  &.active {
+    .buttons .grid-view-button,
+    .buttons .list-view-button,
+    .buttons .sort-az-button {
+      display: none;
+    }
   }
-  60% {
-    -webkit-transform: rotate(180deg);
-  }
-  85% {
-    -webkit-transform: rotate(370deg);
-  }
-  95% {
-    -webkit-transform: rotate(350deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
+  
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-left: 2px;
+    box-sizing: border-box;
 
-.spin-anim {
-  -webkit-animation: spin 1s;
+    .icon {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      border-radius: 2px;
+      padding: 4px;
+      
+      &:hover {
+        background-color: rgba(231, 231, 231, 0.32);
+      }
+      
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+    
+    .grid-view-button {
+      background-image: url('../assets/icons/grid_view/grid_view.svg');
+      background-size: 12px;
+      margin-left: auto;
+    }
+    
+    .list-view-button {
+      background-image: url('../assets/icons/list_view/list_view.svg');
+      background-size: 16px;
+    }
+    
+    .sort-az-button {
+      background-image: url('../assets/icons/atoz/atoz.svg');
+      background-size: 18px;
+      background-position: center;
+    }
+    
+    .add-folder-button {
+      display: inline-flex;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px;
+      padding-right: 8px;
+      @include border-radius(2px);
+      
+      #addFolderInput {
+        border: none;
+        outline: none;
+        @include box-shadow(none);
+        background: transparent;
+        line-height: inherit;
+        height: inherit;
+        padding: 0;
+        margin: 0;
+        font-size: inherit;
+      }
+      
+      &.active,
+      &:hover {
+        background-color: rgba(231, 231, 231, 0.32);
+      }
+      
+      &:before {
+        content: '';
+        background-image: url('../assets/icons/folder/folder.svg');
+        background-size: 22px;
+        background-position: -2px -2px;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        
+        flex-shrink: 0;
+      }
+      
+      span {
+        font-weight: 400;
+      }
+    }
+  }
+  
+  .roles-search-wrap {
+    &:after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      background-image: url('../assets/icons/search/search.svg');
+      background-size: contain;
+      position: absolute;
+      top: 7px;
+      left: 7px;
+      opacity: 0.4;
+    }
+    
+    input.roles-search {
+      margin: 0;
+      outline: none;
+
+      border: solid 1px rgb(236, 236, 236);
+      padding: 7px;
+      padding-left: 24px;
+      font-family: Helvetica Neue, Arial;
+      font-weight: 200;
+      font-size: 11px;
+      line-height: 13px;
+      margin-bottom: 11px;
+      margin-right: 8px;
+      box-sizing: border-box;
+      width: 100%;
+
+      @include border-radius(0);
+      @include box-shadow(none);
+      height: auto;
+
+      &:focus {
+        border-color: rgba(64, 147, 230, 0.64);
+      }
+    }
+  }
 }
