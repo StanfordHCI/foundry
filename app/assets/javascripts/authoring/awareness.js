@@ -1472,7 +1472,7 @@ var trackUpcomingEvent = function(){
         
         if( ev.status == "paused"){
             overallTime = "Your task is paused.";
-            statusText.style("color", "pink");
+            statusText.style("color", "#006699");
         }
         
         if( ev.status == "delayed"){
