@@ -1458,6 +1458,12 @@ var trackUpcomingEvent = function(){
                 statusText.style("color", "black");
             }
         }
+        
+        if( ev.status == "paused"){
+            overallTime = "Your task is paused.";
+            statusText.style("color", "pink");
+        }
+        
         if( ev.status == "delayed"){
             overallTime = "Your task is delayed.";
             statusText.style("color", "#f52020");

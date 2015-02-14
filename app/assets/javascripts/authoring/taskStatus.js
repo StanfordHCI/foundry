@@ -114,7 +114,7 @@ function pauseTask(groupNum) {
     
     eventObj.latest_remaining_time = eventObj["timer"];
     
-    alert(eventObj.latest_remaining_time);
+    //alert(eventObj.latest_remaining_time);
 
     
     updateStatus(true);
@@ -145,7 +145,7 @@ function resumeTask(groupNum) {
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
 
-	alert(eventObj.latest_remaining_time);
+	//alert(eventObj.latest_remaining_time);
     
     //alert(eventObj.task_resumeBtn_time);
     
