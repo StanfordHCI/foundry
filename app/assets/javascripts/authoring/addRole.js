@@ -1,81 +1,102 @@
 (function() {
-  // validator
-  function isValidRole(str) {
-    return str.length > 0;
-  }
-
-  $('.add-role').click(addRoleClickFunction);
-
-  function addRoleClickFunction(e) {
-    if($(this).hasClass('active')) {return};
+    var $role = $('.add-role');
+    var $input = $role.find('input');
+    var $nameSpan = $role.find('.name');
+    var $indicator = $role.find('.indicator');
     
-    e.preventDefault();
+    var isValidRole = function(str) {
+        return str.length > 0;
+    };
     
-    var input = $('<input id="addMemberInput" type="text" placeholder="Add new role">')
-      .css({
-        'border-bottom': 'none',
-      });
-    
-    // Replace the 'add new role' text with an input
-    $(this)
-      .addClass('active')
-      .find('.name')
-      .replaceWith(input);
-    
-    var that = $(this);
-    var indicator = $(this).find('.indicator');
-
-    // focus on the input
-    input.focus()
-      .keypress(function() {
-        if(isValidRole($(this).val())) {
-          indicator.addClass('spin-anim');
-          that.addClass('valid');
+    var submitRole = function() {
+        if(isValidRole($input.val())) {
+            addMember();
+            $input.val('');
+            $indicator.removeClass('spin-anim').tooltip('destroy');
+            $role.removeClass('valid');
         }
-      })
-      .keypress(function(e) {
-        if(e.keyCode != 13 /* enter */) return;
-        
-        // not valid
-        if(!isValidRole($(this).val())) return;
-        
-        // adds member to JSON data
-        addMember();
-        
-        // Creates a new add role field and triggers
-        // its click function (can add multiple roles
-        // quickly one after the other)
-        var a = createAddRole()
-          .click(addRoleClickFunction)
-          .hide()
-          .insertAfter(that);
-        
-        // remove the old add role field and
-        // set the focus on the new one
-        that.remove();
-        a.show().click();
-      })
-      .focusout(function(){
-          if($('.add-role').length === 1) { // just this one add role exists
-            var newAddRole = createAddRole()
-              .click(addRoleClickFunction)
-              .hide()
-              .insertAfter(that);
-            that.remove();
-            newAddRole.show();
-          }
-      });
+    };
     
-    function createAddRole() {
-      return $(
-        '<div class="add-role role">' +
-          '<div class="indicator plus">+</div>' +
-          '<span class="name">Add new role</span>' +
-          '<div class="clear"></div>' +
-        '</div>');
-    }
-  }
-  
-  $('.add-role').click(addRoleClickFunction);
-  
+    $role.click(function() {
+        $role.addClass('active');
+        if(isValidRole($input.val())) {
+            $role.addClass('valid');
+        }
+        $nameSpan.hide();
+        $input.show().focus();
+    });
+    
+    $indicator.click(function() {
+        if(isValidRole($input.val())) {
+            submitRole();
+        }
+    });
+    
+    $input.keyup(function(e) {
+        if(e.keyCode === 13) {
+            submitRole();
+        } else if(isValidRole($input.val())) {
+            $indicator.addClass('spin-anim')
+                .attr('data-toggle', 'tooltip')
+                .tooltip('destroy').tooltip({
+                    title: 'Add \'' + $input.val() + '\'',
+                    placement: 'bottom'
+                });
+            $role.addClass('valid');
+        } else {
+            $indicator.tooltip('destroy');
+            $indicator.removeClass('spin-anim').tooltip('destroy');
+            $role.removeClass('valid');
+        }
+    }).focusout(function() {
+        $role
+            .removeClass('active')
+            .removeClass('valid');
+        $indicator.removeClass('spin-anim').tooltip('destroy');
+        $nameSpan.show();
+        $input.hide();
+    });
+})();
+
+(function() {
+    var isValidFolder = function(str) {
+        return str.length > 0;
+    };
+    
+    var addFolderClickFn = function(e) {
+        var $addFolderButton = $(this).addClass('active');
+        var $rolesMenu = $(this).parents('.roles-menu').addClass('active');
+        
+        var $oldSpan = $(this).find('span');
+        var $input = $('<input type="text" id="addFolderInput" ' +
+                       'placeholder="Add folder">')
+            .focusout(function() {
+                $addFolderButton.removeClass('active');
+                $rolesMenu.removeClass('active');
+                $input.tooltip('destroy');
+                $(this).replaceWith($oldSpan);
+            })
+            .keyup(function(e) {
+                var name = $(this).val();
+                if(e.keyCode === 13 /* enter */) {
+                    if(!isValidFolder(name)) return;
+                    addFolder(name);
+                    $(this).focusout();
+                    $input.tooltip('destroy');
+                } else if(isValidFolder(name)) {
+                    $input.attr('data-toggle', 'tooltip').tooltip('destroy')
+                        .tooltip({
+                            placement: 'top',
+                            title: 'Press Enter to add \'' + name + '\'',
+                            trigger: 'manual',
+                            animation: false
+                        }).tooltip('show');
+                } else {
+                    $input.tooltip('destroy');
+                }
+            });
+        $(this).find('span').replaceWith($input);
+        $input.focus();
+    };
+    $('.add-folder').click(addFolderClickFn);
 })();

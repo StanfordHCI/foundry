@@ -227,14 +227,14 @@ function getDuration(leftX, rightX) {
 
 //task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
-    event_counter++;
+    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
     
     duration = duration || 60;
     
     var startTimeObj = getStartTime(snapPoint[0]);
   
     var newEvent = {
-        "title":"New Event", "id":event_counter, 
+        "title":"New Event", "id":createEventId(), 
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
@@ -254,6 +254,13 @@ if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
     
     return newEvent;
 };
+
+function createEventId(){
+	var timestamp = new Date();
+	event_timestamp = Math.floor(timestamp.getTime());
+	//console.log("eventId: " + event_timestamp);
+	return event_timestamp;
+}
 
 function getEventFromId(id) {
     var events = flashTeamsJSON.events;
@@ -1177,6 +1184,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_COLOR;
+                case "paused":
+                    return TASK_PAUSED_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -1214,6 +1223,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_BORDER_COLOR;
+                case "paused":
+                    return TASK_PAUSED_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
@@ -1443,15 +1454,22 @@ function drawEvent(eventObj) {
 
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
         return;
     }
     
     if( eventObj.status == "started" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        //var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        
         var duration = eventObj["duration"];
-        var remaining_time = duration - time_passed;
+        
+        //var remaining_time = duration - time_passed;
+        
+		var remaining_time = eventObj.latest_remaining_time - time_passed;
+
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
@@ -1469,11 +1487,19 @@ function drawTimer(eventObj){
         eventObj["timer"] = remaining_time;
         updateStatus(true);
     }
+
     else if( eventObj.status == "delayed" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        /* //OLD WAY
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
+		*/
+
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        var duration = eventObj["duration"];
+        var remaining_time = eventObj.latest_remaining_time - time_passed;
+
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
@@ -1528,7 +1554,7 @@ function addEventMember(eventId, memberIndex) {
 }
 
 //Remove a team member from an event
-function deleteEventMember(eventId, memberNum, memberName) {
+function deleteEventMember(eventId, memberNum) {
     if (memberNum == current){
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
