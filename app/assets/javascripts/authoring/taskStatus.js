@@ -26,6 +26,10 @@ var TASK_DELAY_BORDER_COLOR = "#c84d4d";
 var TASK_COMPLETE_COLOR = "#3fb53f";
 var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 
+//darker blue/grey
+var TASK_PAUSED_COLOR = "#006699"; //note: we might decide to just keep the in progress blue and lower the opacity 
+var TASK_PAUSED_BORDER_COLOR = "#006699";
+
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
@@ -68,6 +72,10 @@ function startTask(groupNum) {
     eventObj.status = "started";
     eventObj.timer = eventObj.duration;
     eventObj.task_startBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_startBtn_time;
+    eventObj.latest_remaining_time = eventObj["timer"];
+
+	//alert(eventObj.latest_remaining_time);
     
     //remove task from remaining and add to live task array
     var idx = remaining_tasks.indexOf(groupNum);
@@ -86,6 +94,62 @@ function startTask(groupNum) {
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');         
+    
+}
+
+//Fires on "Pause" button on task modal
+function pauseTask(groupNum) {
+	
+	//Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+	var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "paused";
+    eventObj.task_pauseBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
+    
+    eventObj.latest_remaining_time = eventObj["timer"];
+    
+    paused_tasks.push(groupNum);
+
+    
+    updateStatus(true);
+    drawEvent(eventObj); //Will update color
+	
+
+	//chaning start button to complete button on the task modal
+    $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
+    $("#pause-resume-task").html('Resume Task'); 
+	
+}
+
+//Fires on "Pause" button on task modal
+function resumeTask(groupNum) {
+	
+	//Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+	var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "started";
+    eventObj.task_resumeBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
+    eventObj.latest_remaining_time = eventObj["timer"];
+    
+    //remove task from remaining and add to live task array
+    var idx = paused_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        paused_tasks.splice(idx, 1);
+    }
+   
+    updateStatus(true);
+    drawEvent(eventObj); //Will update color	
+
+	//chaning start button to complete button on the task modal
+    $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
+    $("#pause-resume-task").html('Pause'); 
+	
 }
 
 //Alert firing on event complete buttons

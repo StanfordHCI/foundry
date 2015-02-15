@@ -1184,6 +1184,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_COLOR;
+                case "paused":
+                    return TASK_PAUSED_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -1221,6 +1223,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_BORDER_COLOR;
+                case "paused":
+                    return TASK_PAUSED_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
@@ -1450,15 +1454,22 @@ function drawEvent(eventObj) {
 
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
         return;
     }
     
     if( eventObj.status == "started" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        //var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        
         var duration = eventObj["duration"];
-        var remaining_time = duration - time_passed;
+        
+        //var remaining_time = duration - time_passed;
+        
+		var remaining_time = eventObj.latest_remaining_time - time_passed;
+
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
@@ -1476,11 +1487,19 @@ function drawTimer(eventObj){
         eventObj["timer"] = remaining_time;
         updateStatus(true);
     }
+
     else if( eventObj.status == "delayed" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        /* //OLD WAY
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
+		*/
+
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        var duration = eventObj["duration"];
+        var remaining_time = eventObj.latest_remaining_time - time_passed;
+
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
