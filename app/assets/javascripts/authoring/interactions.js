@@ -210,7 +210,7 @@ function drawHandoff(handoffData) {
 
         })
         .attr("stroke", function() {
-            if (handoffData["color"] == undefined) return "gray"; //AT - START HERE
+            if (handoffData["color"] == undefined) return "gray"; 
             else return handoffData["color"];
         })
         .attr("stroke-width", 3)

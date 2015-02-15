@@ -1422,7 +1422,6 @@ function drawEvent(eventObj) {
       window._foundry.timeline.updateNumRows(eventObj.row + 2);
     }
     
-    
     drawG(eventObj);
     
     drawMemberTabs(eventObj);
