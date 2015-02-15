@@ -35,6 +35,7 @@ function eventMousedown(task2idNum) {
 
        var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        '<button class="btn " id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
+       '<button class="btn " id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Pause</button>'+
        '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
        '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
      
