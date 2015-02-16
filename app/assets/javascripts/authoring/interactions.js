@@ -218,8 +218,14 @@ function drawHandoff(handoffData) {
         .attr("stroke-opacity", ".45")
         .attr("fill", "none")
         .attr("marker-end", "url(#arrowhead)")
-        .on("mouseover", function() { d3.select(this).style("stroke-opacity", .95)})
-        .on("mouseout", function() { d3.select(this).style("stroke-opacity", .45)});
+        .on("mouseover", function() { 
+            d3.select(this).style("stroke-opacity", .95);
+            d3.select(this).style("stroke", TASK_START_BORDER_COLOR);
+        })
+        .on("mouseout", function() { 
+            d3.select(this).style("stroke-opacity", .45);
+            d3.select(this).style("stroke", "gray");
+        });
 
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
