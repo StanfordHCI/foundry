@@ -1,5 +1,5 @@
 <% member = Member.where(:uniq => @uniq)[0]
-if (member!=nil and member.email_confirmed) %>
+if (member!=nil) %>
 <%= render partial: "task_rejection_email_content_landing", layout: "task_hiring_email" %>
 <% else %>
 <%= render partial: "task_acceptance_email_content_landing", layout: "task_hiring_email" %>
