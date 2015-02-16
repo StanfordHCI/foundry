@@ -73,6 +73,79 @@ function pickerCallback(data){
   }
 };
 
+function createProjectFolder(){
+	
+	gapi.client.load('drive', 'v2', function() {
+		console.log("inside create project folder after load");
+		var req;
+		req = gapi.client.request({
+        'path': '/drive/v2/files',
+        'method': 'POST',
+        'body':{
+            "title" : flashTeamsJSON.title,
+            "mimeType" : "application/vnd.google-apps.folder",
+            "description" : "Overall Shared Folder"
+         }
+      });
+      
+      req.execute(function(resp) { 
+      	var folderArray = [resp.id, resp.alternateLink];
+      	
+        insertPermission(folderArray[0], "me", "anyone", "writer");
+        flashTeamsJSON.folder = folderArray;
+        
+		updateStatus(); // don't put true or false here
+		
+		console.log("flashTeamsJSON.folder: " + flashTeamsJSON.folder);
+		
+		addAllTaskFolders(flashTeamsJSON.folder[0])
+    });
+		
+		
+	}); //end gapi.client.load
+	
+}
+
+function createTaskFolder(eventName, JSONId, parent_folder){
+	
+	gapi.client.load('drive', 'v2', function() {
+		console.log("inside create task folder after load");
+		var req;
+		req = gapi.client.request({
+        'path': '/drive/v2/files',
+        'method': 'POST',
+        'body':{
+            "title" : eventName,
+            "mimeType" : "application/vnd.google-apps.folder",
+            "description" : "Shared Folder",
+            "parents": [{"id": parent_folder}]
+         }
+      });
+      
+      req.execute(function(resp) { 
+      	var folderArray = [resp.id, resp.alternateLink];
+      	
+        flashTeamsJSON["events"][JSONId].gdrive = folderArray;
+        insertPermission(folderArray[0], "me", "anyone", "writer");
+        folderIds.push(folderArray);
+
+		updateStatus(); // don't put true or false here
+    });
+		
+		
+	}); //end gapi.client.load
+	
+}
+
+function addAllTaskFolders(parent_folder){
+  for (var i = 0; i<flashTeamsJSON["events"].length; i++){
+    createTaskFolder(flashTeamsJSON["events"][i].title, i, parent_folder);
+  }
+  //console.log("isAddingFolders");
+};
+
+
+/*
 function createNewFolder(eventName, JSONId){
   //console.log(eventName);
   //console.log(folderIds);
@@ -127,6 +200,7 @@ function addAllFolders(){
   }
   //console.log("isAddingFolders");
 };
+*/
 
 function createNewFile(eventName) {
 

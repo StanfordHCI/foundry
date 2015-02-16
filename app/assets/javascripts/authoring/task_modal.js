@@ -18,27 +18,65 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        if(eventObj.status == "started" || eventObj.status == "delayed"){
+        
+
+
+	
+	if(eventObj.status == "started" || eventObj.status == "delayed"){
+	            $("#start-end-task").addClass('btn-success');
+	            $("#start-end-task").css('display', '');
+	            $("#pause-resume-task").addClass('btn-default');
+	            $("#pause-resume-task").css('display', '');
+	            
+	            
+	            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+	            $("#start-end-task").html('Complete');
+	        } 
+ 
+
+
+		/*
+if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
-            $("#start-end-task").addClass('btn-success');
-            $("#start-end-task").html('Complete');
-        }  
+            $("#start-end-task").attr('onclick', 'pauseTask('+groupNum+')');
+            $("#start-end-task").addClass('btn-default');
+            $("#start-end-task").html('Pause');
+        } 
+*/
+        
+        else if(eventObj.status == "paused"){
+            $("#start-end-task").css('display', 'none');
+            $("#pause-resume-task").addClass('btn-primary');
+            $("#pause-resume-task").css('display', '');
+            $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
+            
+            $("#pause-resume-task").html('Resume Task');
+            
+             /*
+ $("#start-end-task").html('Complete');
+              $("#start-end-task").addClass('btn-success');
+              $("#start-end-task").prop('disabled', true);
+*/
+        } 
+        
         else if(eventObj.status == "completed"){
+             $("#pause-resume-task").css('display', 'none'); 
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
               $("#start-end-task").addClass('btn-success');
               $("#start-end-task").prop('disabled', true)
         }
         else{
+           $("#pause-resume-task").css('display', 'none'); 
            $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'startTask('+groupNum+')');
+            $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
     }
     else{
             $("#start-end-task").css('display', 'none');   
+            $("#pause-resume-task").css('display', 'none');  
     }
 
     if(uniq_u == "" || memberType == "pc" || memberType == "client"){
@@ -57,7 +95,6 @@ function showTaskOverview(groupNum){
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
-        
 	}
 }
 
