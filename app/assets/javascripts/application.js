@@ -50,3 +50,4 @@
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
+//= require ./authoring/jquery.cookie
