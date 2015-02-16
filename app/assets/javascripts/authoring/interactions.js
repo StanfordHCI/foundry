@@ -211,8 +211,8 @@ function drawHandoff(handoffData) {
 
         })
         .attr("stroke", function() {
-            if (handoffData["color"] == undefined) return "gray"; 
-            else return handoffData["color"];
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR;
+            else return "gray";
         })
         .attr("stroke-width", 3)
         .attr("stroke-opacity", ".45")
@@ -224,7 +224,8 @@ function drawHandoff(handoffData) {
         })
         .on("mouseout", function() { 
             d3.select(this).style("stroke-opacity", .45);
-            d3.select(this).style("stroke", "gray");
+            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_COLOR);
+            else d3.select(this).style("stroke", "gray");
         });
 
     $("#interaction_" + handoffId).popover({
@@ -522,6 +523,26 @@ function initializeInteractionCounter() {
         }
         return highestId;
     }
+}
+
+function isWorkerInteraction(id) {
+    //Get all events related to a worker
+    var events = window._foundry.events;
+    var workerEvents = []; 
+    for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
+        var eventObj = flashTeamsJSON["events"][i];
+        if (events.isWorkerTask(eventObj)) {
+            workerEvents.push(eventObj["id"]);
+        }
+    }
+    
+    for (var i = 0; i<workerEvents.length; i++) {
+        if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event1 == workerEvents[i]) return true;
+        else if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event2 == workerEvents[i]) return true;
+    }
+    return false;
+
+
 }
 
 
