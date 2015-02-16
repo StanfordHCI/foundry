@@ -211,7 +211,7 @@ function drawHandoff(handoffData) {
 
         })
         .attr("stroke", function() {
-            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR;
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR; //highlight for workers
             else return "gray";
         })
         .attr("stroke-width", 3)
@@ -535,15 +535,12 @@ function isWorkerInteraction(id) {
             workerEvents.push(eventObj["id"]);
         }
     }
-    
+    //Find out if a worker's events are linked to the specified handoff
     for (var i = 0; i<workerEvents.length; i++) {
         if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event1 == workerEvents[i]) return true;
         else if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event2 == workerEvents[i]) return true;
     }
     return false;
-
-
 }
-
 
 
