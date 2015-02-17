@@ -13,11 +13,11 @@ var memberType;
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
     colorBox.colors = [
-      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#f39c12", "#f1c40f", "#8e44ad",
-      "#9b59b6", "#3498db", "#2980b9", "#34495e", "#27ae60", "#2ecc71", "#1abc9c", "#39607c",
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#f39c12", "#f1c40f", "#b175ca",
+      "#9b59b6", "#3498db", "#2980b9", "#34495e", "#4f8e6a", "#2ecc71", "#f7d85c", "#39607c",
       "#e08283", "#e26a6a", "#674172", "#913d88", "#8e44ad", "#446cb3", "#81cfe0", "#22a7f0",
-      "#336e7b", "#3a539b", "#2574a9", "#5c97bf", "#4ecdc4", "#87d37c", "#26a65b", "#03c9a9",
-      "#68c3a3", "#1bbc9b", "#1ba39c", "#2ecc72", "#16a085", "#3fc380", "#2abb9b", "#049372",
+      "#336e7b", "#3a539b", "#2574a9", "#5c97bf", "#4ecdc4", "#87d37c", "#26a65b", "#3d8b5e",
+      "#68c3a3", "#1bbc9b", "#1ba39c", "#2ecc72", "#16a085", "#3fc380", "#938ee2", "#049372",
       "#f2784b", "#d64541"
     ];
     
@@ -36,7 +36,7 @@ colorBox.replaceColor = function(color) {
     // colorBox.colors.push(color);
 };
 
- function renderMembersRequester() {
+function renderMembersRequester() {
     var members = flashTeamsJSON.members;
     renderCurrentFolderPills();
     renderMemberPopovers(members);
