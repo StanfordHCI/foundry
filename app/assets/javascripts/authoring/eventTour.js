@@ -7,11 +7,16 @@ isWorkerTask = function(eventObj) {
 window.onload = function(){
 	//Initialize the tour
 	if (!$.cookie('first')){
-		console.log("make sure this works");
+		pOverview = flashTeamsJSON['projectoverview']
+		if (!pOverview){
+			pOverview = "<b>This project has no project description</b>"
+		}
 		for (i = 0; i < flashTeamsJSON["events"].length; i++){
 	    	if (isWorkerTask(flashTeamsJSON["events"][i])){
-	    		elemId = i+1;
-	    		prevElem = i;
+	    		elemId = flashTeamsJSON["events"][i]["id"];
+	    		if(i > 0){
+	    			prevElem = flashTeamsJSON["events"][i-1]["id"]
+	    		}
 	    		console.log(elemId);
 	    		break;
 	    	}
@@ -27,7 +32,7 @@ window.onload = function(){
 			content: "<div class='tour-content-wrapper'>Welcome to Foundry. We're here to help you get started!</br>"
 			+ "Read the Project Description below, and follow the next few steps in order to start your project."
 			+ "<hr></hr>" 
-			+ flashTeamsJSON['projectoverview']
+			+ pOverview
 			+"</div>"
 			+"<nav class='popover-navigation'><div class='btn-group'>"
 			+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
@@ -40,8 +45,8 @@ window.onload = function(){
 			// backdrop: true,
 			html: true,
 			content: "This is the task right before yours."
-			+ " You can click on the task to read about the details of the task, and the documentation information"
-			+ " that the worker has left for you."
+			+ " <b>Click on the task</b> to read about the details of the task, and the documentation information"
+			+ " that the previous worker has left for you."
 		},
 		{	element: "#g_" + elemId,
 			title: "<b>Your Task</b>",
