@@ -234,7 +234,7 @@ function createEventObj(snapPoint, duration) {
     var startTimeObj = getStartTime(snapPoint[0]);
   
     var newEvent = {
-        "title":"New Event", "id":event_counter, 
+        "title":"New Event", "id":createEventId(), 
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
@@ -252,6 +252,13 @@ function createEventObj(snapPoint, duration) {
     
     return newEvent;
 };
+
+function createEventId(){
+	var timestamp = new Date();
+	event_timestamp = Math.floor(timestamp.getTime());
+	//console.log("eventId: " + event_timestamp);
+	return event_timestamp;
+}
 
 function getEventFromId(id) {
     var events = flashTeamsJSON.events;
