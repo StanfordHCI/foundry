@@ -1,4 +1,5 @@
 elemId = null;
+prevElem = null;
 isWorkerTask = function(eventObj) {
 	return current_user && eventObj.members.indexOf(current_user.id) > - 1;
 }
@@ -47,6 +48,7 @@ window.onload = function(){
 			content: "This is the task right before yours."
 			+ " <b>Click on the task</b> to read about the details of the task, and the documentation information"
 			+ " that the previous worker has left for you."
+			+ "</br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
 		},
 		{	element: "#g_" + elemId,
 			title: "<b>Your Task</b>",
