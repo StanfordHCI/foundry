@@ -12,31 +12,41 @@ var memberType;
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
-    colorBox.colors = ["#00ffff","#f0ffff","#f5f5dc","#000000","#0000ff","#a52a2a","#00ffff",
-    "#00008b","#008b8b","#a9a9a9","#006400","#bdb76b","#8b008b","#556b2f","#ff8c00","#9932cc",
-    "#8b0000","#e9967a","#9400d3","#ff00ff","#ffd700","#008000","#4b0082","#f0e68c","#add8e6",
-    "#e0ffff","#90ee90","#d3d3d3","#ffb6c1","#ffffe0","#00ff00","#ff00ff","#800000","#000080",
-    "#808000","#ffa500","#ffc0cb","#800080","#800080","#ff0000","#c0c0c0","#ffff00"];
-    for (var i = 0; i < flashTeamsJSON.members.length; i++){
-        var ind = $.inArray(flashTeamsJSON.members[i].color, colorBox.colors);
-        if (ind != 0) { //if found, remove from possible colors array
-            colorBox.colors.splice(ind,1);
-        }
-    }
+    colorBox.colors = [
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#f39c12", "#f1c40f", "#8e44ad",
+      "#9b59b6", "#3498db", "#2980b9", "#34495e", "#27ae60", "#2ecc71", "#1abc9c", "#39607c",
+      "#e08283", "#e26a6a", "#674172", "#913d88", "#8e44ad", "#446cb3", "#81cfe0", "#22a7f0",
+      "#336e7b", "#3a539b", "#2574a9", "#5c97bf", "#4ecdc4", "#87d37c", "#26a65b", "#03c9a9",
+      "#68c3a3", "#1bbc9b", "#1ba39c", "#2ecc72", "#16a085", "#3fc380", "#2abb9b", "#049372",
+      "#f2784b", "#d64541"
+    ];
+    
+    colorBox.index = Math.floor(Math.random() * (colorBox.colors.length - 1));
 }
 
 //grabColor returns a hex code not currently used by any member
 colorBox.grabColor = function() {
-    var ind = Math.floor(Math.random()*colorBox.colors.length);
-    var color = colorBox.colors[ind];
-    colorBox.colors.splice(ind,1);
+    var color = colorBox.colors[colorBox.index];
+    colorBox.index = (colorBox.index + 1) % colorBox.colors.length;
     return color;
 };
 
 //replaceColor adds a color back into possible space
 colorBox.replaceColor = function(color) {
-    colorBox.colors.push(color);
+    // colorBox.colors.push(color);
 };
+
+function go() {
+    
+    $('body').html('');
+    for(var i = 0; i < colorBox.colors.length; i++) {
+        $('body').append($('<div>')
+                         .css({backgroundColor: colorBox.grabColor(),
+                              width: "40px",
+                              height: "40px",
+                              display: "inline-block"}));
+    }
+}
 
  function renderMembersRequester() {
     var members = flashTeamsJSON.members;
