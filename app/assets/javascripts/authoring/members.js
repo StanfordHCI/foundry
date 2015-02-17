@@ -36,18 +36,6 @@ colorBox.replaceColor = function(color) {
     // colorBox.colors.push(color);
 };
 
-function go() {
-    
-    $('body').html('');
-    for(var i = 0; i < colorBox.colors.length; i++) {
-        $('body').append($('<div>')
-                         .css({backgroundColor: colorBox.grabColor(),
-                              width: "40px",
-                              height: "40px",
-                              display: "inline-block"}));
-    }
-}
-
  function renderMembersRequester() {
     var members = flashTeamsJSON.members;
     renderCurrentFolderPills();
