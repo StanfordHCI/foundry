@@ -49,3 +49,4 @@
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
+//= require ./authoring/video_chat
