@@ -46,7 +46,7 @@ window.onload = function(){
 			// backdrop: true,
 			html: true,
 			content: "This is the task right before yours."
-			+ " <b>Click on the task</b> to read about the details of the task, and the documentation information"
+			+ " Before working, <b>click on the task</b> to read about the details of the task, and the documentation information"
 			+ " that the previous worker has left for you."
 			+ "</br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
 		},
