@@ -51,3 +51,4 @@
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
 //= require ./authoring/jquery.cookie
+//= require ./authoring/video_chat
