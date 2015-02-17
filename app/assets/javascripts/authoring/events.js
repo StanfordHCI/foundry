@@ -288,7 +288,7 @@ function getWidth(ev) {
     var durationInMinutes = ev.duration;
     var hrs = parseFloat(durationInMinutes)/parseFloat(60);
     var width = parseFloat(hrs)*parseFloat(RECTANGLE_WIDTH);
-    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH)) * STEP_WIDTH;
+    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH))*STEP_WIDTH;
     return roundedWidth;
 };
 
@@ -489,6 +489,10 @@ function drawEachHandoffForEvent(eventObj){
                 $("#interaction_" + inter["id"])
                     .attr("d", function(d) {
                         return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+                    })
+                    .attr("stroke", function() {
+                        if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR;
+                        else return "gray";
                     });
             }
         }
@@ -530,8 +534,8 @@ function drawEachCollabForEvent(eventObj){
                 else var startX = x1;
                 $("#interaction_" + inter["id"])
                     .attr("x", startX)
-                    .attr("y", firstTaskY)
-                    .attr("height", taskDistance)
+                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                    .attr("height", taskDistance+9)
                     .attr("width", overlap);
             }
         }
@@ -1432,7 +1436,6 @@ function drawEvent(eventObj) {
     if(eventObj.row >= window._foundry.timeline.numRows - 2) {
       window._foundry.timeline.updateNumRows(eventObj.row + 2);
     }
-    
     
     drawG(eventObj);
     
