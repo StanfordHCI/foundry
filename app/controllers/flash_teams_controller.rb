@@ -120,7 +120,7 @@ end
 		else 
 			@flash_team = FlashTeam.find(params[:id])
 			
-			if @flash_team.user_id != session[:user].id 
+			if @flash_team.user_id != session[:user].id && session[:user].username != ENV['ADMIN_USERNAME']
 				flash[:notice] = 'You cannot access this flash team.' 
 				redirect_to(flash_teams_path) and return 
 			end
