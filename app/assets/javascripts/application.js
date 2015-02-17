@@ -43,9 +43,12 @@
 //= require ./authoring/bootstrap-tagsinput
 //= require ./authoring/notifications
 //= require ./authoring/tour
+//= require ./authoring/eventTour
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
+//= require ./authoring/jquery.cookie
+//= require ./authoring/video_chat
