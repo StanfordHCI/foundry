@@ -182,9 +182,13 @@ function newEvent(point, duration) {
         return;
     } 
 
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
+       return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
+
     createEvent(point, duration);
 };
 
@@ -202,7 +206,7 @@ function createEvent(point, duration) {
     drawEvent(eventObj, true);
 
     // save
-    updateStatus(false);
+    updateStatus();
 };
 
 function checkWithinTimelineBounds(snapPoint) {
