@@ -39,7 +39,7 @@ colorBox.replaceColor = function(color) {
 };
 
 function renderMembersRequester() {
-    var members = flashTeamsJSON.members;
+    var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
     renderDiagram(members);
@@ -192,6 +192,8 @@ function renderMemberPopovers(members) {
 
         var newColor = "'"+member.color+"'";
 
+        console.log(newColor);
+        
         var category1 = member.category1;
         var category2 = member.category2;
        
@@ -723,11 +725,7 @@ function getMemberJSONIndex(idNum) {
 };
 
 function getMemberById(id) {
-    var idx = getMemberJSONIndex(id);
-    if(idx != -1){
-        return flashTeamsJSON["members"][idx];
-    }
-    return null;
+    return entryManager.getEntryById(id);
 };
 
 function searchById (arr, id) {
