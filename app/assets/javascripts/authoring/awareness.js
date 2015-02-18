@@ -27,6 +27,7 @@ var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
 var in_progress = false;
+var paused = false;
 var delayed_tasks_time = [];
 var dri_responded = [];
 var project_status_handler;
@@ -113,6 +114,8 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
+    $("#flashTeamPauseBtn").css('display', '');
+  
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
     //$("a#gFolder.button").css('visibility','visible');
@@ -280,17 +283,29 @@ function renderEverything(firstTime) {
 
 
         if(in_progress){
+
+
             colorBox();
             //console.log("flash team in progress");
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
             
+             if(flashTeamsJSON["paused"]){
+                $("#flashTeamResumeBtn").css('display','');
+                $("#flashTeamPauseBtn").css('display','none');
+            }
+            else{
+                $("#flashTeamPauseBtn").css('display','');
+                $("#flashTeamResumeBtn").css('display','none');
+            }
+
             loadData();
             if(!isUser || memberType == "pc" || memberType == "client")
                 renderMembersRequester();
             else
                 renderMembersUser();
+
             renderMembersUser();
 
            /* //show the documentation of the previous task for the workers and the PCs.
@@ -300,6 +315,9 @@ function renderEverything(firstTime) {
             }*/
 
             //startTeam(firstTime);
+
+
+           
         } else {
             //console.log("flash team not in progress");
             
