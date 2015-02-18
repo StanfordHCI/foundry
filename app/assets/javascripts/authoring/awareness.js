@@ -1072,9 +1072,6 @@ var getDataIndexFromGroupNum = function(groupNum){
 // if you need to delete an event from the timeline, should call deleteEvent
 // in events.js, which in turn calls this function
 var removeTask = function(groupNum){
-    // destroy popover
-    //destroyPopover(groupNum);
-
     // remove from data array
     var idx = null;
     for(var i=0;i<task_groups.length;i++){
