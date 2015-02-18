@@ -12,34 +12,34 @@ var memberType;
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
-    colorBox.colors = ["#00ffff","#f0ffff","#f5f5dc","#000000","#0000ff","#a52a2a","#00ffff",
-    "#00008b","#008b8b","#a9a9a9","#006400","#bdb76b","#8b008b","#556b2f","#ff8c00","#9932cc",
-    "#8b0000","#e9967a","#9400d3","#ff00ff","#ffd700","#008000","#4b0082","#f0e68c","#add8e6",
-    "#e0ffff","#90ee90","#d3d3d3","#ffb6c1","#ffffe0","#00ff00","#ff00ff","#800000","#000080",
-    "#808000","#ffa500","#ffc0cb","#800080","#800080","#ff0000","#c0c0c0","#ffff00"];
-    for (var i = 0; i < flashTeamsJSON.members.length; i++){
-        var ind = $.inArray(flashTeamsJSON.members[i].color, colorBox.colors);
-        if (ind != 0) { //if found, remove from possible colors array
-            colorBox.colors.splice(ind,1);
-        }
-    }
+    colorBox.colors = [
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#e26a6a", //reds
+      "#f39c12", "#f1c40f", "#f7d85c", //yellows
+        "#87d37c", "#4f8e6a", "#2ecc71",  "#26a65b", "#2e762c", //greens
+        "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad", //aquas
+        "#81cfe0", "#22a7f0","#5c97bf", "#4ecdc4", "#446cb3", //light blues
+        "#39607c","#3498db", "#2980b9", "#34495e", "#336e7b", "#3a539b", "#2574a9", "#3f63c3", //blues
+        "#674172", "#913d88", "#8e44ad", "#52201c", //purples
+         "#938ee2", "#b175ca","#9b59b6", "#f82c8a","#f2784b", "#d64541", "#e08283", //pinks
+    ];
+    
+    colorBox.index = Math.floor(Math.random() * (colorBox.colors.length - 1));
 }
 
 //grabColor returns a hex code not currently used by any member
 colorBox.grabColor = function() {
-    var ind = Math.floor(Math.random()*colorBox.colors.length);
-    var color = colorBox.colors[ind];
-    colorBox.colors.splice(ind,1);
+    var color = colorBox.colors[colorBox.index];
+    colorBox.index = (colorBox.index + 1) % colorBox.colors.length;
     return color;
 };
 
 //replaceColor adds a color back into possible space
 colorBox.replaceColor = function(color) {
-    colorBox.colors.push(color);
+    // colorBox.colors.push(color);
 };
 
- function renderMembersRequester() {
-    var members = flashTeamsJSON.members;
+function renderMembersRequester() {
+    var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
     renderDiagram(members);
@@ -192,6 +192,8 @@ function renderMemberPopovers(members) {
 
         var newColor = "'"+member.color+"'";
 
+        console.log(newColor);
+        
         var category1 = member.category1;
         var category2 = member.category2;
        
@@ -686,25 +688,11 @@ function updateMemberPopover(idNum) {
 
 //Draws the color picker on a member popover
 function initializeColorPicker(newColor) {
-
     $(".full-spectrum").spectrum({
         showPaletteOnly: true,
         showPalette: true,
         color: newColor,
-        palette: [
-        ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
-        "rgb(204, 204, 204)", "rgb(217, 217, 217)","rgb(255, 255, 255)"],
-        ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(0, 255, 0)",
-        "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], 
-        ["rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(182, 215, 168)", 
-        "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)"], 
-        ["rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(100, 196, 100)", 
-        "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)"],
-        ["rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(0, 168, 0)",
-        "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)"],
-        ["rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)",  "rgb(39, 78, 19)", 
-        "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
-        ],
+        palette: colorBox.colors,
         change: function(color) {
             colorToChange = color.toHexString();
         }
@@ -737,11 +725,7 @@ function getMemberJSONIndex(idNum) {
 };
 
 function getMemberById(id) {
-    var idx = getMemberJSONIndex(id);
-    if(idx != -1){
-        return flashTeamsJSON["members"][idx];
-    }
-    return null;
+    return entryManager.getEntryById(id);
 };
 
 function searchById (arr, id) {
