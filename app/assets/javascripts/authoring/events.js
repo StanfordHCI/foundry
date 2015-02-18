@@ -1617,17 +1617,12 @@ function deleteEvent(eventId){
             var inter = flashTeamsJSON["interactions"][i];
             if (inter.event1 == eventId || inter.event2 == eventId) {
                 intersToDel.push(inter.id);
-                //console.log("# of intersToDel: " + intersToDel.length);
             }
         }
       
     for (var i = 0; i < intersToDel.length; i++) {
-        // take it out of interactions array
-        var intId = intersToDel[i];
-        var indexOfJSON = getIntJSONIndex(intId);
-        flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
-
         // remove from timeline
+        var intId = intersToDel[i];
         deleteInteraction(intId);
     }
 
