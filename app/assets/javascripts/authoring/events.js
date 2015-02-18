@@ -491,7 +491,7 @@ function drawEachHandoffForEvent(eventObj){
                         return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
                     })
                     .attr("stroke", function() {
-                        if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR;
+                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
                         else return "gray";
                     });
             }
