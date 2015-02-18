@@ -13,12 +13,14 @@ var memberType;
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
     colorBox.colors = [
-      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#f39c12", "#f1c40f", "#b175ca",
-      "#9b59b6", "#3498db", "#2980b9", "#34495e", "#4f8e6a", "#2ecc71", "#f7d85c", "#39607c",
-      "#e08283", "#e26a6a", "#674172", "#913d88", "#8e44ad", "#446cb3", "#81cfe0", "#22a7f0",
-      "#336e7b", "#3a539b", "#2574a9", "#5c97bf", "#4ecdc4", "#87d37c", "#26a65b", "#2e762c",
-      "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad", "#52201c", "#3f63c3", "#938ee2", "#f82c8a",
-      "#f2784b", "#d64541"
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#e26a6a", //reds
+      "#f39c12", "#f1c40f", "#f7d85c", //yellows
+        "#87d37c", "#4f8e6a", "#2ecc71",  "#26a65b", "#2e762c", //greens
+        "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad", //aquas
+        "#81cfe0", "#22a7f0","#5c97bf", "#4ecdc4", "#446cb3", //light blues
+        "#39607c","#3498db", "#2980b9", "#34495e", "#336e7b", "#3a539b", "#2574a9", "#3f63c3", //blues
+        "#674172", "#913d88", "#8e44ad", "#52201c", //purples
+         "#938ee2", "#b175ca","#9b59b6", "#f82c8a","#f2784b", "#d64541", "#e08283", //pinks
     ];
     
     colorBox.index = Math.floor(Math.random() * (colorBox.colors.length - 1));
