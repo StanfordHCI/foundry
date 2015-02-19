@@ -482,7 +482,7 @@ function drawEachHandoffForEvent(eventObj){
             
             if (draw){
                 var task1end = ev1.startTime + ev1.duration;
-                if (task1end <= ev2.startTime) { //AT START HERE
+                if (task1end <= ev2.startTime) { 
                     //Reposition an existing handoff
                     var x1 = handoffStart(ev1);
                     var y1 = ev1.y + 50;
@@ -496,7 +496,7 @@ function drawEachHandoffForEvent(eventObj){
                             if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
                             else return "gray";
                         });
-                } else {
+                } else { //Out of range
                     $("#interaction_" + inter["id"]).fadeOut();
                     setTimeout(function() {
                         deleteInteraction(inter["id"]);
@@ -547,7 +547,7 @@ function drawEachCollabForEvent(eventObj){
                         .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
                         .attr("height", taskDistance+9)
                         .attr("width", overlap);
-                } else {
+                } else { //Out of range
                     $("#interaction_" + inter["id"]).fadeOut();
                     setTimeout(function() {
                         deleteInteraction(inter["id"]);
