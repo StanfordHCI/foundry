@@ -797,7 +797,20 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
-            "class": "num-members-icon"
+            "class": "num-members-icon",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: function(d) {
+                var id = d.id.substr("task_g_".length);
+                var event = getEventFromId(id);
+                var str = event.members.length +
+                    (event.members.length === 1 ? " member" : " members");
+                return str;
+            }
         },
         
         style: {
@@ -870,7 +883,14 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
-            "class": "upload"
+            "class": "upload",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Upload files"
         },
         style: {
             cursor: "pointer",
@@ -891,7 +911,7 @@ if(!window._foundry) {
                 var iconWidth = events.collabIcon.attrs.width(d);
                 return events.handoffIcon.attrs.x(d) - iconWidth;
             },
-            y: function(d) {return d.y + events.bodyHeight - 19},
+            y: function(d) {return d.y + events.bodyHeight - 18},
             width: function(d) {
                 var iconWidth = 14;
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -913,7 +933,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw collaboration"
         },
         
         style: {
@@ -969,7 +996,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw handoff"
         },
         
         style: {
@@ -1326,6 +1360,14 @@ function drawBottom(eventObj) {
     // handoff icon
     var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
     handoffIconSvg.on("click", startWriteHandoff);
+    
+    var selector = ".event " + events.numMembersIcon.selector + ", " +
+                   ".event " + events.uploadIcon.selector + ", " +
+                   ".event " + events.collabIcon.selector + ", " +
+                   ".event " + events.handoffIcon.selector;
+    $(selector).each(function() {
+          $(this).tooltip('destroy').tooltip();
+    });
 }
 
 function drawMemberTabs(eventObj) {
