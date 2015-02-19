@@ -19,6 +19,7 @@ var remaining_tasks = [];
 
 var live_tasks = [];
 var delayed_tasks = [];
+var paused_tasks = [];
 //tasks that are completed before being delayed
 var drawn_blue_tasks = [];
 //tasks that are completed after being delayed
@@ -209,6 +210,10 @@ var chat_name;
 var presname; // name of user shown in the presence box
 var currentStatus; //the status of the user shown in the presence box
 
+if(flashTeamsJSON) {
+    entryManager = new EntryManager(flashTeamsJSON);
+}
+
 // firstTime=true means page is reloaded
 function renderEverything(firstTime) {
     colorBox();
@@ -218,6 +223,9 @@ function renderEverything(firstTime) {
         url: url,
         type: 'get'
     }).done(function(data){
+
+       
+
         // firstTime will also be true in the case that flashTeamEndedorStarted, so
         // we make sure that it is false (i.e. true firstTime, upon page reload for user
         // before the team starts)
@@ -248,7 +256,10 @@ function renderEverything(firstTime) {
 
         in_progress = loadedStatus.flash_team_in_progress;
         flashTeamsJSON = loadedStatus.flash_teams_json;
-
+        
+        // initialize the entry manager after flashTeamsJSON has been loaded
+        window.entryManager = new window.EntryManager(flashTeamsJSON);
+        
         if(firstTime) {
             setCurrentMember();
             initializeTimelineDuration();
@@ -281,6 +292,13 @@ function renderEverything(firstTime) {
             else
                 renderMembersUser();
             renderMembersUser();
+
+           /* //show the documentation of the previous task for the workers and the PCs.
+            if (isUser || memberType == "pc"){
+                show_previous_doc();
+                //updateStatus();
+            }*/
+
             //startTeam(firstTime);
         } else {
             //console.log("flash team not in progress");
@@ -305,6 +323,7 @@ function renderEverything(firstTime) {
             if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
+
         }
     });
 
@@ -413,7 +432,8 @@ var flashTeamEndedorStarted = function(){
 var flashTeamUpdated = function(){
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
-    var updated_live_tasks = loadedStatus.live_tasks
+    var updated_live_tasks = loadedStatus.live_tasks;
+    var updated_paused_tasks = loadedStatus.paused_tasks;
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         /*console.log("drawn_blue_tasks not same length");
@@ -453,6 +473,14 @@ var flashTeamUpdated = function(){
         //console.log("live_tasks not same content");
         return true;
     }
+    
+    if (updated_paused_tasks.length != paused_tasks.length) {
+        return true;
+    }
+
+    if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
+        return true;
+    }
     return false;
 };
 
@@ -487,6 +515,13 @@ var poll = function(){
             } else {
                 drawStartedEvents();
                 //console.log("Flash team not updated and not ended");
+
+                 //show the documentation of the previous task for the workers and the PCs.
+               /* if (isUser || memberType == "pc"){
+                    show_previous_doc();
+                    //updateStatus();
+                }*/
+
             }
       });
     }, poll_interval); // every 5 seconds currently
@@ -527,6 +562,7 @@ var loadData = function(){
    // cursor_details = positionCursor(flashTeamsJSON, latest_time);
 
     live_tasks = loadedStatus.live_tasks;
+    paused_tasks = loadedStatus.paused_tasks;
     remaining_tasks = loadedStatus.remaining_tasks;
     delayed_tasks = loadedStatus.delayed_tasks;
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
@@ -1036,9 +1072,6 @@ var getDataIndexFromGroupNum = function(groupNum){
 // if you need to delete an event from the timeline, should call deleteEvent
 // in events.js, which in turn calls this function
 var removeTask = function(groupNum){
-    // destroy popover
-    //destroyPopover(groupNum);
-
     // remove from data array
     var idx = null;
     for(var i=0;i<task_groups.length;i++){
@@ -1440,6 +1473,12 @@ var trackUpcomingEvent = function(){
                 statusText.style("color", "black");
             }
         }
+        
+        if( ev.status == "paused"){
+            overallTime = "Your task is paused.";
+            statusText.style("color", "#006699");
+        }
+        
         if( ev.status == "delayed"){
             overallTime = "Your task is delayed.";
             statusText.style("color", "#f52020");
@@ -1484,6 +1523,7 @@ var constructStatusObj = function(){
     var localStatus = {};
 
     localStatus.live_tasks = live_tasks;
+    localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;
     localStatus.delayed_tasks = delayed_tasks;
     localStatus.drawn_blue_tasks = drawn_blue_tasks;

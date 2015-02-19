@@ -3,43 +3,44 @@
  *
  */
 
- var memberCounter = undefined;
- var colorToChange = "#ff0000";
- var current = undefined;
- var isUser = false;
- var memberType; 
+
+var memberCounter = undefined;
+var colorToChange = "#ff0000";
+var current = undefined;
+var isUser = false;
+var memberType; 
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
-    colorBox.colors = ["#00ffff","#f0ffff","#f5f5dc","#000000","#0000ff","#a52a2a","#00ffff",
-    "#00008b","#008b8b","#a9a9a9","#006400","#bdb76b","#8b008b","#556b2f","#ff8c00","#9932cc",
-    "#8b0000","#e9967a","#9400d3","#ff00ff","#ffd700","#008000","#4b0082","#f0e68c","#add8e6",
-    "#e0ffff","#90ee90","#d3d3d3","#ffb6c1","#ffffe0","#00ff00","#ff00ff","#800000","#000080",
-    "#808000","#ffa500","#ffc0cb","#800080","#800080","#ff0000","#c0c0c0","#ffff00"];
-    for (var i = 0; i < flashTeamsJSON.members.length; i++){
-        var ind = $.inArray(flashTeamsJSON.members[i].color, colorBox.colors);
-        if (ind != 0) { //if found, remove from possible colors array
-            colorBox.colors.splice(ind,1);
-        }
-    }
+    colorBox.colors = [
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#e26a6a", //reds
+      "#f39c12", "#f1c40f", "#f7d85c", //yellows
+        "#87d37c", "#4f8e6a", "#2ecc71",  "#26a65b", "#2e762c", //greens
+        "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad", //aquas
+        "#81cfe0", "#22a7f0","#5c97bf", "#4ecdc4", "#446cb3", //light blues
+        "#39607c","#3498db", "#2980b9", "#34495e", "#336e7b", "#3a539b", "#2574a9", "#3f63c3", //blues
+        "#674172", "#913d88", "#8e44ad", "#52201c", //purples
+         "#938ee2", "#b175ca","#9b59b6", "#f82c8a","#f2784b", "#d64541", "#e08283", //pinks
+    ];
+    
+    colorBox.index = Math.floor(Math.random() * (colorBox.colors.length - 1));
 }
 
 //grabColor returns a hex code not currently used by any member
 colorBox.grabColor = function() {
-    var ind = Math.floor(Math.random()*colorBox.colors.length);
-    var color = colorBox.colors[ind];
-    colorBox.colors.splice(ind,1);
+    var color = colorBox.colors[colorBox.index];
+    colorBox.index = (colorBox.index + 1) % colorBox.colors.length;
     return color;
 };
 
 //replaceColor adds a color back into possible space
 colorBox.replaceColor = function(color) {
-    colorBox.colors.push(color);
+    // colorBox.colors.push(color);
 };
 
- function renderMembersRequester() {
-    var members = flashTeamsJSON.members;
-    renderPills(members);
+function renderMembersRequester() {
+    var members = entryManager.getCurrentFolderChildren();
+    renderCurrentFolderPills();
     renderMemberPopovers(members);
     renderDiagram(members);
     renderAllMemberCircles();
@@ -73,17 +74,46 @@ function setCurrentMember() {
     }
 };
 
+var folderClickFn = function(e) {
+    closeOpenPopovers();
+    entryManager.currentFolderId = $(this).attr('folder-id');
+    renderCurrentFolderPills();
+};
 
-function createRoleHtml(member) {
-  return '' +
+function createFolderElem(entry) {
+    var elem = $( 
+    '<div class="role-folder" folder-id="' + entry.id + '">' +
+      '<div class="icon"></div>' +
+      '<span class="name">' + entry.name +
+        ' (' + entry.numMembers + ')</span>' +
+      '<span class="delete-button"></span>' +
+    '</div>');
+    elem.click(folderClickFn);
+    elem.find('.delete-button')
+        .click(function(e) {
+            e.stopPropagation();
+            confirmDeleteFolder(entry.id);
+        })
+        .attr('data-toggle', 'tooltip')
+        .tooltip('destroy')
+        .tooltip({
+            placement: 'right',
+            title: 'Delete \'' +  entry.name + '\''
+        });
+    
+    return elem;
+}
+
+function createRoleElem(member) {
+  return $(
   '<div class="role" id="mPill_' + member.id + '">' + 
     '<div class="indicator" style="background-color:' + member.color + '"></div>' +
     '<span class="name">' + member.role + '</span>' +
     '<div class="clear"></div>' +
-  '</div>';
+  '</div>');
 }
 
-/*
+/**
  * Updates the text for any display of the number of roles
  * (e.g. a span with the class "num-roles") with the value
  * passed as num
@@ -96,23 +126,54 @@ function updateNumRolesDisplay(num) {
   }
 }
 
-function renderPills(members) {
+function renderPills(entries) {
+    var foldersWrap = $(".foldersWrap");
     var membersWrap = $(".membersWrap");
+    foldersWrap.html("");
     membersWrap.html("");
-    
-    for (var i=members.length-1;i>=0;i--){
-        var html = createRoleHtml(members[i]);
-        membersWrap.prepend(html);
+    for(var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+        var elem = entry.type === "folder" ?
+            foldersWrap.append(createFolderElem(entry)) :
+            membersWrap.append(createRoleElem(entry));
     }
     
-    updateNumRolesDisplay(members.length);
+    renderMemberPopovers(entries);
+    updateNumRolesDisplay(flashTeamsJSON.members.length);
 };
+
+function renderCurrentFolderPills() {
+    var currentFolder = entryManager.getEntryById(entryManager.currentFolderId);
+    var names = entryManager.getEntryParentNames(currentFolder);
+    names.push(currentFolder.name);
+    var ids = entryManager.getEntryParentIds(currentFolder);
+    ids.push(currentFolder.id);
+    
+    var breadcrumbsHtml = [];
+    for(var i = 0; i < names.length; i++) {
+        breadcrumbsHtml.push(
+            $("<a>")
+                .attr("folder-id", ids[i])
+                .text(names[i])
+                .click(folderClickFn));
+        breadcrumbsHtml.push(" › ");
+    }
+    breadcrumbsHtml.pop();
+    $(".breadcrumbs").html(breadcrumbsHtml);
+    renderPills(
+        entryManager.getCurrentFolderChildren());
+}
 
 
 function renderMemberPopovers(members) {
     var len = members.length;
     for (var i=0;i<len;i++){
         var member = members[i];
+        
+        if(member.type === "folder") {
+            continue;
+        }
+        
         var member_id = member.id;
         var member_name = member.role;
         var invitation_link = member.invitation_link;
@@ -131,6 +192,8 @@ function renderMemberPopovers(members) {
 
         var newColor = "'"+member.color+"'";
 
+        console.log(newColor);
+        
         var category1 = member.category1;
         var category2 = member.category2;
        
@@ -299,18 +362,55 @@ function renderDiagram(members) {
     }
 };
 
+function newFolderObject(folderName, parentId) {
+    return {
+        name: folderName, parentId: parentId, type: "folder",
+        id: generateMemberId(), childIds: [], numMembers: 0};
+}
+
 function newMemberObject(memberName) {
-    if (memberCounter == undefined) {
-        memberCounter = initializeMemberCounter();
-    }
-    memberCounter++;
     var color = colorBox.grabColor();
     //return {"role":memberName, "id": memberCounter, "color":color, "skills":[], "category1":"", "category2":""};
     
-    //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type 
-    
-    return {"role":memberName, "id": memberCounter, "color":color, "type": "worker", "skills":[], "category1":"", "category2":""};
+    //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type
+    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
 };
+
+/**
+ * @param {string} folderName
+ * @param {string|number} [parentId]
+ */
+function addFolder(folderName, parentId) {
+    if(folderName === "") {
+        alert("Please enter a folder name");
+        return;
+    }
+
+    if(parentId === undefined) {
+        parentId = entryManager.currentFolderId;
+    }
+    
+    var folderObject = newFolderObject(folderName, parentId);
+    entryManager.addEntry(folderObject);
+    
+    renderCurrentFolderPills();
+    updateStatus(false);
+}
+
+/**
+ * @param {string|number} id
+ */
+function deletePopover(id) {
+    $("#mPill_" + id).popover("destroy");
+}
+
+function closeOpenPopovers() {
+    //Close all open popovers
+    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
+        var idNum = flashTeamsJSON["members"][i].id;
+        $("#mPill_"+idNum).popover('hide');
+    }
+}
 
 function addMember() {
     // retrieve member role
@@ -320,11 +420,7 @@ function addMember() {
         return;
     }
 
-    //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    closeOpenPopovers();
 
     // clear input
     $("#addMemberInput").val(this.placeholder);
@@ -332,19 +428,19 @@ function addMember() {
     // add member to json
     var members = flashTeamsJSON.members;
     var member_obj = newMemberObject(member_name);
+    
     members.push(member_obj);
-
+    entryManager.addEntry(member_obj);
+    
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
    /* for(var i=0;i<events.length;i++){
        drawPopover(events[i], true, false);
     }*/
 
-   renderPills(members);
-   renderMemberPopovers(members);
-
+   renderCurrentFolderPills();
+   // renderMemberPopovers(members);
    updateStatus(false);
-
    inviteMember(member_obj.id);
 };
 
@@ -406,88 +502,112 @@ function saveMemberInfo(popId) {
 
 //Shows an alert asking to confirm delete member role
 function confirmDeleteMember(pillId) {
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var memberToDelete = members[indexOfJSON].role;
-
-    var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Remove Member?";
-
-    var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to remove " + memberToDelete + " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" 
-                + memberToDelete + " will be removed from all events on the timeline. </font>";
-
-    var deleteButton = document.getElementById("confirmButton");
-    deleteButton.innerHTML = "Remove member";
-    $("#confirmButton").attr("class","btn btn-danger");
-
-    $('#confirmAction').modal('show');
-
+    var member = entryManager.getEntryById(pillId);
+    
+    var labelHtml = "Remove Member?";
+    var alertHtml = "<b>Are you sure you want to remove " + member.role +
+        " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" +
+        member.role + " will be removed from all events on the timeline. </font>";
+    var deleteButtonHtml = "Remove member";
+    
     //Calls deleteMember function if user confirms the delete
-    document.getElementById("confirmButton").onclick=function(){deleteMember(pillId)};
-
+    var confirmFn = function(){
+      deleteEntry(pillId)
+    };
+    confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn);
 }
 
+function confirmDeleteFolder(folderId) {
+    var folder = entryManager.getEntryById(folderId);
+    var size = folder.childIds.length;
+    
+    var labelHtml = "Remove Folder?";
+    var alertHtml = "<b>Are you sure you want to remove " + folder.name +
+        " from " + flashTeamsJSON["title"]+ "? </b>" +
+        (size > 0 ? "This folder's contents will be removed as well.": "");
+    var deleteButtonHtml = "Remove folder";
+    var confirmFn = function() {
+        deleteEntry(folderId);
+    };
+    
+    confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn);
+}
+
+function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) {
+    // label
+    document.getElementById("confirmActionLabel")
+        .innerHTML = labelHtml;
+    
+    // alert text
+    document.getElementById("confirmActionText")
+        .innerHTML = alertHtml;
+    
+    // delete button 
+    $("#confirmButton").html(deleteButtonHtml)
+        .attr("class", "btn btn-danger")
+        .off()
+        .click(confirmFn);
+    
+    $("#confirmAction").modal("show");
+}
 
 //Delete team member from team list, JSON, diagram, and events
-function deleteMember(pillId) {
-    $('#confirmAction').modal('hide');
-
-    // remove from members array
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var member = members[indexOfJSON];
-    var memberId = members[indexOfJSON].id;
-    //console.log("deleting member " + memberId);
-    //console.log("clicked #mPill_", pillId);
-    $("#mPill_" + memberId).popover('destroy');
-
-    members.splice(indexOfJSON, 1);
-    renderPills(members);
-    renderMemberPopovers(members);
-
-    // remove from members array with event object
-    for(var i=0; i<flashTeamsJSON["events"].length; i++){
-        var ev = flashTeamsJSON["events"][i];
-        var member_event_index = ev.members.indexOf(memberId);
-        
-        // remove member
-        if(member_event_index != -1){ // found member in the event
-            deleteEventMember(ev.id, memberId, member.role);
+function deleteEntry(memberId) {
+    var entry = entryManager.getEntryById(memberId);
+    // recursively delete folders
+    if(entryManager.isFolder(entry)) {
+        for(var i = 0; i < entry.childIds.length; i++) {
+            deleteEntry(entry.childIds[i]);
+        }
+    } else {
+        $('#confirmAction').modal('hide');
+        for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+            var member = flashTeamsJSON.members[i];
+            if(member.id == memberId) {
+                flashTeamsJSON.members.splice(i, 1);
+            }
         }
 
-        //remove dri if the member was a dri
-        if (ev.dri == String(memberId)){
-            ev.dri = "";
+        // remove from members array with event object
+        for(var i=0; i<flashTeamsJSON["events"].length; i++){
+            var ev = flashTeamsJSON["events"][i];
+            var member_event_index = ev.members.indexOf(memberId);
+            // remove member
+            if(member_event_index != -1){ // found member in the event
+                deleteEventMember(ev.id, memberId);
+            }
+
+            //remove dri if the member was a dri
+            if (ev.dri == String(memberId)){
+                ev.dri = "";
+            }
         }
     }
-
-    // update event popovers
-    //drawAllPopovers();
-
+    
+    entryManager.removeEntry(memberId);
+    
+    deletePopover(memberId);
+    
+    renderCurrentFolderPills();
     updateStatus(false);
-
 };
 
 //Calling this one
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
-function saveMemberInfo(popId) {
-    var indexOfJSON = getMemberJSONIndex(popId);
-
-    flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
-    flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
+function saveMemberInfo(memberId) {
+    var member = entryManager.getEntryById(memberId);
+    member.category1 = document.getElementById("member" + memberId + "_category1").value;
+    member.category2 = document.getElementById("member" + memberId + "_category2").value;
+    member.type = document.getElementById("member" + memberId + "_type").value;
     
-    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
+    var newColor = $("#color_" + memberId).spectrum("get").toHexString();
 
-    var newColor = $("#color_" + popId).spectrum("get").toHexString();
+    updateMemberPillColor(newColor, memberId);
+    renderMemberPillColor(memberId);
 
-    updateMemberPillColor(newColor, popId);
-    renderMemberPillColor(popId);
-    //updateMemberPopover(popId);
-
-    $("#mPill_" + popId).popover("hide");
+    $("#mPill_" + memberId).popover("hide");
     renderAllMemberCircles();
-    renderMemberPopovers(flashTeamsJSON["members"]);
+    renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 
 //Close the popover on a member to "cancel" the edit
@@ -498,49 +618,33 @@ function hideMemberPopover(memberId) {
 function inviteMember(pillId) {
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/invite';
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var data = {uniq: flashTeamsJSON["members"][indexOfJSON].uniq};
+    var member = entryManager.getEntryById(pillId);
+    var data = {uniq: member.uniq};
     $.get(url, data, function(data){
-        //console.log("INVITED MEMBER, NOT RERENDERING MEMBER POPOVER");
-        var members = flashTeamsJSON["members"];
-        members[indexOfJSON].uniq = data["uniq"];
-        members[indexOfJSON].invitation_link = data["url"];
-
-        renderMemberPopovers(members);
+        member.uniq = data["uniq"];
+        member.invitation_link = data["url"];
+        renderMemberPopovers(entryManager.getCurrentFolderChildren());
         updateStatus(false);
     });
-};
+}
 
 function reInviteMember(pillId) {
     $('#confirmAction').modal('hide');
 
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/reInvite';
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var uniq;
-  
-    var data = {uniq: flashTeamsJSON["members"][indexOfJSON].uniq };
+    var member = entryManager.getEntryById(pillId);
+    var data = {uniq: member.uniq };
     $.get(url, data, function(data){
-        //console.log("INVITED MEMBER, NOT RERENDERING MEMBER POPOVER");
-        var members = flashTeamsJSON["members"];
-        members[indexOfJSON].uniq = data["uniq"];
-        members[indexOfJSON].invitation_link = data["url"];
-        flashTeamsJSON["members"] = members;
-        //members[indexOfJSON].category1 = "";
-        //members[indexOfJSON].category2 = "";
-        //members[indexOfJSON].skills = [];
-
-
-
-        renderMemberPopovers(members);
+        member.uniq = data["uniq"];
+        member.invitation_link = data["url"];
+        renderMemberPopovers(entryManager.getCurrentFolderChildren());
         updateStatus();
     });
 };
 
 function confirmReplaceMember(pillId) {
-    var indexOfJSON = getMemberJSONIndex(pillId);
-    var members = flashTeamsJSON["members"];
-    var memberToReplace = members[indexOfJSON].role;
+    var memberToReplace = entryManager.getEntryById(pillId).role;
 
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Replace Member?";
@@ -560,18 +664,20 @@ function confirmReplaceMember(pillId) {
 }
 
 function renderMemberPillColor(memberId) {
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    var color = flashTeamsJSON["members"][indexOfJSON].color;
+    // var indexOfJSON = getMemberJSONIndex(memberId);
+    // var color = flashTeamsJSON["members"][indexOfJSON].color;
 
+    var color = entryManager.getEntryById(memberId).color;
+    
     var pillLi = document.getElementById("mPill_" + memberId);
     pillLi.childNodes[0].style.backgroundColor = color;
 };
 
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    flashTeamsJSON["members"][indexOfJSON].color = color;
-
+    // var indexOfJSON = getMemberJSONIndex(memberId);
+    // flashTeamsJSON["members"][indexOfJSON].color = color;
+    entryManager.getEntryById(memberId).color = color;
     updateStatus(false);
 };
 
@@ -582,25 +688,11 @@ function updateMemberPopover(idNum) {
 
 //Draws the color picker on a member popover
 function initializeColorPicker(newColor) {
-
     $(".full-spectrum").spectrum({
         showPaletteOnly: true,
         showPalette: true,
         color: newColor,
-        palette: [
-        ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)",
-        "rgb(204, 204, 204)", "rgb(217, 217, 217)","rgb(255, 255, 255)"],
-        ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(0, 255, 0)",
-        "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"], 
-        ["rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(182, 215, 168)", 
-        "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)"], 
-        ["rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(100, 196, 100)", 
-        "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)"],
-        ["rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(0, 168, 0)",
-        "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)"],
-        ["rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)",  "rgb(39, 78, 19)", 
-        "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
-        ],
+        palette: colorBox.colors,
         change: function(color) {
             colorToChange = color.toHexString();
         }
@@ -620,6 +712,10 @@ function initializeMemberCounter() {
     }
 }
 
+function generateMemberId() {
+    return (new Date()).getTime();
+}
+
 //Find the index of a member in the JSON object "members" array by using unique id
 function getMemberJSONIndex(idNum) {
     for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
@@ -629,11 +725,7 @@ function getMemberJSONIndex(idNum) {
 };
 
 function getMemberById(id) {
-    var idx = getMemberJSONIndex(id);
-    if(idx != -1){
-        return flashTeamsJSON["members"][idx];
-    }
-    return null;
+    return entryManager.getEntryById(id);
 };
 
 function searchById (arr, id) {
@@ -658,7 +750,7 @@ $(document).on('click', '.edit-mname', function(e) {
             updateRoleName($(target).attr('data-pk'), newValue);
 
             $(target).editable('destroy');
-            renderMemberPopovers(flashTeamsJSON["members"]);
+            renderMemberPopovers(entryManager.getCurrentFolderChildren());
         }
     });
     //Remove the editable-click attribute so no underline when you don't change the name
@@ -667,20 +759,11 @@ $(document).on('click', '.edit-mname', function(e) {
 });
 
 function updateRoleName(id, newValue) {
-    $.each(flashTeamsJSON['members'], function(index, value) {
-        if (value['id'] == id) {
-            flashTeamsJSON['members'][index]['role'] = newValue;
-            updateStatus(false);
-            //drawAllPopovers();
-            return false;
-        }
-    });
-    $('.memberPillName').each(function() {
-        if ($(this).attr('data-pk') == id) {
-            $(this).html(newValue);
-            return false;
-        }
-    });
+    var member = entryManager.getEntryById(id);
+    member.role = newValue;
+    renderMemberPopovers(entryManager.getCurrentFolderChildren());
+    updateStatus(false);
+    $('#mPill_' + id + ' .name').html(newValue);
 }
 
 //Populate the autocomplete function for the event members
