@@ -491,7 +491,7 @@ function drawEachHandoffForEvent(eventObj){
                         return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
                     })
                     .attr("stroke", function() {
-                        if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR;
+                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
                         else return "gray";
                     });
             }
@@ -1659,17 +1659,12 @@ function deleteEvent(eventId){
             var inter = flashTeamsJSON["interactions"][i];
             if (inter.event1 == eventId || inter.event2 == eventId) {
                 intersToDel.push(inter.id);
-                //console.log("# of intersToDel: " + intersToDel.length);
             }
         }
       
     for (var i = 0; i < intersToDel.length; i++) {
-        // take it out of interactions array
-        var intId = intersToDel[i];
-        var indexOfJSON = getIntJSONIndex(intId);
-        flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
-
         // remove from timeline
+        var intId = intersToDel[i];
         deleteInteraction(intId);
     }
 
