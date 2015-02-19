@@ -502,8 +502,6 @@ function drawEachHandoffForEvent(eventObj){
                         deleteInteraction(inter["id"]);
                     }, 1000);
                 }
-
-               
             }
         }
     }
@@ -533,20 +531,28 @@ function drawEachCollabForEvent(eventObj){
                 var firstTaskY = 0;
                 var taskDistance = 0;
                 var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
-                if (y1 < y2) {
-                    firstTaskY = y1 + RECTANGLE_HEIGHT;
-                    taskDistance = y2 - firstTaskY;
+
+                if (overlap > 0) {
+                    if (y1 < y2) {
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
+                        taskDistance = y2 - firstTaskY;
+                    } else {
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
+                        taskDistance = y1 - firstTaskY;
+                    }
+                    if (x1 <= x2) var startX = x2;
+                    else var startX = x1;
+                    $("#interaction_" + inter["id"])
+                        .attr("x", startX)
+                        .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                        .attr("height", taskDistance+9)
+                        .attr("width", overlap);
                 } else {
-                    firstTaskY = y2 + RECTANGLE_HEIGHT;
-                    taskDistance = y1 - firstTaskY;
+                    $("#interaction_" + inter["id"]).fadeOut();
+                    setTimeout(function() {
+                        deleteInteraction(inter["id"]);
+                    }, 1000);
                 }
-                if (x1 <= x2) var startX = x2;
-                else var startX = x1;
-                $("#interaction_" + inter["id"])
-                    .attr("x", startX)
-                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
-                    .attr("height", taskDistance+9)
-                    .attr("width", overlap);
             }
         }
     }
