@@ -481,19 +481,29 @@ function drawEachHandoffForEvent(eventObj){
             }  
             
             if (draw){
-                //Reposition an existing handoff
-                var x1 = handoffStart(ev1);
-                var y1 = ev1.y + 50;
-                var x2 = ev2.x + 3;
-                var y2 = ev2.y + 50;
-                $("#interaction_" + inter["id"])
-                    .attr("d", function(d) {
-                        return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
-                    })
-                    .attr("stroke", function() {
-                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
-                        else return "gray";
-                    });
+                var task1end = ev1.startTime + ev1.duration;
+                if (task1end <= ev2.startTime) { //AT START HERE
+                    //Reposition an existing handoff
+                    var x1 = handoffStart(ev1);
+                    var y1 = ev1.y + 50;
+                    var x2 = ev2.x + 3;
+                    var y2 = ev2.y + 50;
+                    $("#interaction_" + inter["id"])
+                        .attr("d", function(d) {
+                            return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+                        })
+                        .attr("stroke", function() {
+                            if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                            else return "gray";
+                        });
+                } else {
+                    $("#interaction_" + inter["id"]).fadeOut();
+                    setTimeout(function() {
+                        deleteInteraction(inter["id"]);
+                    }, 1000);
+                }
+
+               
             }
         }
     }
