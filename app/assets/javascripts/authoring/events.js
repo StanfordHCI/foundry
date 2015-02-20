@@ -52,7 +52,7 @@ var drag = d3.behavior.drag()
         } else {
             // click
             eventMousedown(d.groupNum);
-        }
+        } //AT - START HERE, IF BAD, POP BACK to original spot
     });
 
 // leftResize: resize the rectangle by dragging the left handle
@@ -497,10 +497,12 @@ function drawEachHandoffForEvent(eventObj){
                             else return "gray";
                         });
                 } else { //Out of range
+                    //alert("Bag drag");
                     $("#interaction_" + inter["id"]).fadeOut();
                     setTimeout(function() {
                         deleteInteraction(inter["id"]);
                     }, 1000);
+                    //bootstrap alert, put back in original space
                 }
             }
         }
