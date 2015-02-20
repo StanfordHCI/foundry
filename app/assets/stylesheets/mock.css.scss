@@ -247,12 +247,20 @@ $left-sidebar-width: 251px;
   padding: 2px 8px 2px 11px;
   cursor: pointer;
   margin-top: 2px;
-  
+  box-sizing: border-box;
   font-size: 13px;
   
   @include transition( (background-color 0.2s, border 0.2s) );
   @include display(flex);
   @include align-items(center);
+  
+  &.copy {
+    pointer-events: none;
+  }
+  
+  &.accepting {
+    background-color: #b2ddf4;
+  }
   
   .delete-button {
     display: none;

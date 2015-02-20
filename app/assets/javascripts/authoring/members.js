@@ -97,7 +97,7 @@ var folderClickFn = function(e) {
 
 function createFolderElem(entry) {
     var elem = $( 
-    '<div class="role-folder" folder-id="' + entry.id + '">' +
+    '<div class="role-folder" role-id="' + entry.id +'" folder-id="' + entry.id + '">' +
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
         ' (' + entry.numMembers + ')</span>' +
@@ -119,11 +119,11 @@ function createFolderElem(entry) {
     return elem;
 }
 
-function createRoleElem(member) {
+function createRoleElem(entry) {
   return $(
-  '<div class="role" id="mPill_' + member.id + '">' + 
-    '<div class="indicator" style="background-color:' + member.color + '"></div>' +
-    '<span class="name">' + member.role + '</span>' +
+  '<div class="role" id="mPill_' + entry.id + '" role-id="' + entry.id + '">' + 
+    '<div class="indicator" style="background-color:' + entry.color + '"></div>' +
+    '<span class="name">' + entry.role + '</span>' +
     '<div class="clear"></div>' +
   '</div>');
 }
@@ -141,16 +141,91 @@ function updateNumRolesDisplay(num) {
   }
 }
 
+/**
+ * @param {jQuery} $elem
+ * @param {jQuery} $folderElems
+ */
+function addPillDragFns($elem, $folderElems) {
+    var dragging = false;
+    var $copy = undefined;
+    var $mouseOverElem = undefined;
+    
+    $elem.mousedown(function(e) {
+        dragging = true;
+        $copy = $elem.clone()
+            .hide()
+            .css({
+                position: "absolute",
+                width: $elem.width() + "px",
+                background: "rgba(255,255,255,0.4"
+            })
+            .addClass("copy")
+            .appendTo("body");
+    });
+    
+    $(window).mousemove(function(e) {
+        if(!dragging) {return;}
+        e.preventDefault();
+        $copy.show().css({
+            left: e.pageX + "px",
+            top: e.pageY + "px",
+            zIndex: 99
+        });
+    });
+    
+    $(window).mouseup(function(e) {
+        dragging = false;
+        if($copy) { $copy.remove(); }
+        
+        if($mouseOverElem) {
+            e.preventDefault();
+            
+            var entryId = $elem.attr("role-id");
+            var destId = $mouseOverElem.attr("role-id");
+            
+            entryManager.moveEntry(entryId, destId);
+            $elem.remove();
+            $mouseOverElem.removeClass("accepting");
+            $mouseOverElem = undefined;
+            
+            renderCurrentFolderPills();
+            updateStatus(false);
+        }
+    });
+    
+    $folderElems.mouseover(function(e) {
+        if(dragging && $(this)[0] != $elem[0]) {
+            $mouseOverElem = $(this).addClass("accepting");
+        }
+    });
+    
+    $folderElems.mouseleave(function(e) {
+        if($mouseOverElem && $mouseOverElem[0] == $(this)[0]) {
+            $mouseOverElem = undefined;
+            $(this).removeClass("accepting");
+        }
+    });
+}
+
 function renderPills(entries) {
-    var foldersWrap = $(".foldersWrap");
-    var membersWrap = $(".membersWrap");
-    foldersWrap.html("");
-    membersWrap.html("");
+    var $foldersWrap = $(".foldersWrap");
+    var $membersWrap = $(".membersWrap");
+    $foldersWrap.html("");
+    $membersWrap.html("");
+    var elems = [];
     for(var i = 0; i < entries.length; i++) {
         var entry = entries[i];
-        var elem = entry.type === "folder" ?
-            foldersWrap.append(createFolderElem(entry)) :
-            membersWrap.append(createRoleElem(entry));
+        var $elem = entry.type === "folder" ?
+            createFolderElem(entry).appendTo($foldersWrap) :
+            createRoleElem(entry).appendTo($membersWrap);
+        elems.push($elem);
+    }
+    
+    for(var i = 0; i < elems.length; i++) {
+        var $elem = elems[i];
+        // we wait until after every role-folder's been added
+        // before adding the listeners
+        addPillDragFns($elem, $(".role-folder"));
     }
     
     renderMemberPopovers(entries);
@@ -207,8 +282,6 @@ function renderMemberPopovers(members) {
 
         var newColor = "'"+member.color+"'";
 
-        console.log(newColor);
-        
         var category1 = member.category1;
         var category2 = member.category2;
        
