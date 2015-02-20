@@ -33,14 +33,14 @@ $("#flashTeamResumeBtn").click(function(){
     
  	var bodyText = document.getElementById("confirmActionText");
     //updateStatus();
-    bodyText.innerHTML = "Are you sure you want to resume the team?";
+    bodyText.innerHTML = "Are you sure you want to save the changes?";
     
     var confirmStartTeamBtn = document.getElementById("confirmButton");
-    confirmStartTeamBtn.innerHTML = "Resume";
+    confirmStartTeamBtn.innerHTML = "Save";
     
     $("#confirmButton").attr("class","btn btn-success");
     var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Resume Team?";
+    label.innerHTML = "Save Team?";
     $('#confirmAction').modal('show');
 
     document.getElementById("confirmButton").onclick=function(){resumeFlashTeam()};    
