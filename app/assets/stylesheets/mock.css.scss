@@ -242,6 +242,21 @@ $left-sidebar-width: 251px;
 
 
 /* left-sidebar roles */
+.breadcrumb, .breadcrumb.role-folder {
+    /* override bootstrap styles */
+    padding: 4px;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+    display: inline;
+    text-decoration: none;
+    
+    @include border-radius(2px);
+    
+    &.accepting {
+        background-color: #b2ddf4;
+    }
+}
 
 .role, .role-folder {
   padding: 2px 8px 2px 11px;
@@ -250,7 +265,7 @@ $left-sidebar-width: 251px;
   box-sizing: border-box;
   font-size: 13px;
   
-  @include transition( (background-color 0.2s, border 0.2s) );
+  @include transition( (background-color 0.2s, border 0.2s, opacity 0.4s) );
   @include display(flex);
   @include align-items(center);
   
@@ -260,6 +275,10 @@ $left-sidebar-width: 251px;
   
   &.accepting {
     background-color: #b2ddf4;
+  }
+  
+  &.dragging {
+    opacity: 0.24;  
   }
   
   .delete-button {

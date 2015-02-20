@@ -152,6 +152,7 @@ function addPillDragFns($elem, $folderElems) {
     
     $elem.mousedown(function(e) {
         dragging = true;
+        $elem.addClass('dragging');
         $copy = $elem.clone()
             .hide()
             .css({
@@ -176,6 +177,7 @@ function addPillDragFns($elem, $folderElems) {
     $(window).mouseup(function(e) {
         dragging = false;
         if($copy) { $copy.remove(); }
+        $elem.removeClass('dragging');
         
         if($mouseOverElem) {
             e.preventDefault();
@@ -207,7 +209,7 @@ function addPillDragFns($elem, $folderElems) {
     });
 }
 
-function renderPills(entries) {
+function renderPills(folder, entries) {
     var $foldersWrap = $(".foldersWrap");
     var $membersWrap = $(".membersWrap");
     $foldersWrap.html("");
@@ -220,6 +222,26 @@ function renderPills(entries) {
             createRoleElem(entry).appendTo($membersWrap);
         elems.push($elem);
     }
+    
+    var names = entryManager.getEntryParentNames(folder);
+    names.push(folder.name);
+    var ids = entryManager.getEntryParentIds(folder);
+    ids.push(folder.id);
+    
+    var breadcrumbsHtml = [];
+    for(var i = 0; i < names.length; i++) {
+        var $breadcrumb = $("<a>")
+                .addClass("breadcrumb")
+                .addClass("role-folder")
+                .attr("folder-id", ids[i])
+                .attr("role-id", ids[i])
+                .text(names[i])
+                .click(folderClickFn);
+        breadcrumbsHtml.push($breadcrumb);
+        breadcrumbsHtml.push(" › ");
+    }
+    breadcrumbsHtml.pop();
+    $(".breadcrumbs").html(breadcrumbsHtml);
     
     for(var i = 0; i < elems.length; i++) {
         var $elem = elems[i];
@@ -234,24 +256,7 @@ function renderPills(entries) {
 
 function renderCurrentFolderPills() {
     var currentFolder = entryManager.getEntryById(entryManager.currentFolderId);
-    var names = entryManager.getEntryParentNames(currentFolder);
-    names.push(currentFolder.name);
-    var ids = entryManager.getEntryParentIds(currentFolder);
-    ids.push(currentFolder.id);
-    
-    var breadcrumbsHtml = [];
-    for(var i = 0; i < names.length; i++) {
-        breadcrumbsHtml.push(
-            $("<a>")
-                .attr("folder-id", ids[i])
-                .text(names[i])
-                .click(folderClickFn));
-        breadcrumbsHtml.push(" › ");
-    }
-    breadcrumbsHtml.pop();
-    $(".breadcrumbs").html(breadcrumbsHtml);
-    renderPills(
-        entryManager.getCurrentFolderChildren());
+    renderPills(currentFolder, entryManager.getCurrentFolderChildren());
 }
 
 
