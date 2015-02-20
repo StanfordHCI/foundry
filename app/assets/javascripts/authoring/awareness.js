@@ -27,7 +27,7 @@ var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
 var in_progress = false;
-var paused = false;
+//var paused = false;
 var delayed_tasks_time = [];
 var dri_responded = [];
 var project_status_handler;

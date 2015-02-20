@@ -2,14 +2,14 @@ $("#flashTeamPauseBtn").click(function(){
     
  	var bodyText = document.getElementById("confirmActionText");
     //updateStatus();
-    bodyText.innerHTML = "Are you sure you want to pause the team?";
+    bodyText.innerHTML = "Are you sure you want to edit the team?";
     
     var confirmStartTeamBtn = document.getElementById("confirmButton");
-    confirmStartTeamBtn.innerHTML = "Pause";
+    confirmStartTeamBtn.innerHTML = "Edit";
     
     $("#confirmButton").attr("class","btn btn-success");
     var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Pause Team?";
+    label.innerHTML = "Edit Team?";
     $('#confirmAction').modal('show');
 
     document.getElementById("confirmButton").onclick=function(){pauseFlashTeam()};    
