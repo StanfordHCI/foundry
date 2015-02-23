@@ -775,6 +775,15 @@ a.button {
       padding-right: 8px;
       @include border-radius(2px);
       
+      &.disabled {
+        opacity: 0.48;
+        cursor: default;
+        background: none;
+        &:hover {
+          background: none;
+        }
+      }
+      
       #addFolderInput {
         border: none;
         outline: none;

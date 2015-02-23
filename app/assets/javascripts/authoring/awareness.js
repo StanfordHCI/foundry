@@ -118,6 +118,10 @@ function startFlashTeam() {
     //$("a#gFolder.button").css('visibility','visible');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
+    
+    $(".add-folder-button").addClass("disabled");
+    
+    
     //console.log("here0");
     removeColabBtns();
     removeHandoffBtns();
@@ -293,6 +297,7 @@ function renderEverything(firstTime) {
                 renderMembersUser();
             renderMembersUser();
 
+            $(".add-folder-button").addClass("disabled");
            /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
                 show_previous_doc();
