@@ -1334,6 +1334,7 @@ function drawBottom(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
+    var ev = getEventFromId(groupNum);
     
     // icon for the number of members
     addToTaskFromData(events.numMembersIcon, eventObj, task_g);
@@ -1345,8 +1346,8 @@ function drawBottom(eventObj) {
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
     uploadIcon.on("click", function(){
         d3.event.stopPropagation();
-        if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
-            window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
+        if (ev.gdrive.length > 0){
+            window.open(ev.gdrive[1])
         }
         else{
             alert("The flash team must be running for you to upload a file!");
