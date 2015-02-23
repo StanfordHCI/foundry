@@ -18,10 +18,7 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        
-
-
-	
+  	
 	if(eventObj.status == "started" || eventObj.status == "delayed"){
 	            $("#start-end-task").addClass('btn-success');
 	            $("#start-end-task").css('display', '');
@@ -92,6 +89,12 @@ if(eventObj.status == "started" || eventObj.status == "delayed"){
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	}
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
+        $("#edit-save-task").css('display', '');
+        
+        $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+        $("#edit-save-task").html('Edit');
+    }
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
