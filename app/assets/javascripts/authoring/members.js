@@ -806,7 +806,7 @@ function initializeMemberCounter() {
 }
 
 function generateMemberId() {
-    return (new Date()).getTime();
+    return String((new Date()).getTime());
 }
 
 //Find the index of a member in the JSON object "members" array by using unique id

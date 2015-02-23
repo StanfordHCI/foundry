@@ -70,7 +70,7 @@
      * event with the given id
      */
     EntryManager.prototype._getChildIdsById = function(id) {
-        return this.memberData._entry_map[id].childIds;
+        return this.memberData._entry_map[String(id)].childIds;
     };
 
     /**
@@ -79,7 +79,7 @@
      */
     EntryManager.prototype.getEntryById = function(id) {
         if(id === undefined) {return undefined;}
-        return this.memberData._entry_map[id];
+        return this.memberData._entry_map[String(id)];
     };
 
     /**
@@ -144,6 +144,9 @@
      * to the current folder.
      */
     EntryManager.prototype.addEntry = function(entry, folderId) {
+        // any entry added to the EntryManager must have a String id, so we
+        // make sure that's the case before we add anything
+        entry.id = String(entry.id);
         this.memberData._entry_map[entry.id] = entry;
 
         // check parent id field and use that. If there is no parent id set,
