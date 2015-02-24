@@ -256,7 +256,7 @@ function getTaskOverviewContent(groupNum){
 	
 	var content = '<div class="row-fluid" >';
 	
-		content += '<div class="span9">';
+		content += '<div class="span8">';
 		
 			content += '<h4>The goal of this task is to: </h4>';
 		
@@ -269,7 +269,7 @@ function getTaskOverviewContent(groupNum){
 			
 		content += '</div>';
 		
-		content += '<div class="span3"><b>Duration: </b>' + hrs+':'+mins +'<br />'
+		content += '<div class="span4"><b>Duration: </b>' + hrs+':'+mins +'<br />'
 				+ '<b>Status: </b>'; 
 				
 				if(ev.status == "not_started"){
@@ -286,7 +286,7 @@ function getTaskOverviewContent(groupNum){
 		
 		if(ev.outputs) {
 			//content += '<b>Deliverables:</b><br>';
-			content +=  '<br /><h5>Specifically, you are expected produce the following deliverables: </h5>';
+			content +=  '<br /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
 			var outputs = ev.outputs.split(",");
 			for(var i=0;i<outputs.length;i++){
 				
