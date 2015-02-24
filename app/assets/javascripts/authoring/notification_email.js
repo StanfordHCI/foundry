@@ -82,7 +82,7 @@ function early_completion_helper(remaining_tasks,early_minutes){
 	            //TODO actual emails instead of roles
 	            for(var m_i=0;m_i<event_tmp["members"].length;m_i++){
 	                var memberId = parseInt(event_tmp["members"][m_i]);
-                    var member = flashTeamsJSON["members"][getMemberJSONIndex(memberId)];
+                    var member = entryManager.getEntryById(memberId);
                     var uniq=member["uniq"];	
                                    
                     console.log("uniq: " + uniq);
@@ -117,7 +117,7 @@ function DelayedTaskFinished_helper(tasks_after,title){
 	            //TODO actual emails instead of roles
 	            for( var m_i=0;m_i<event_tmp["members"].length;m_i++ ){
                         var memberId = parseInt(event_tmp["members"][m_i]);
-	            	    var member = flashTeamsJSON["members"][getMemberJSONIndex(memberId)];
+	            	    var member = entryManager.getEntryById(memberId);
                     	var uniq=member["uniq"];
 	             		
                         //var member_role=event_tmp["members"][m_i];
@@ -197,6 +197,5 @@ function getUserNextTaskStartTime(input_id){
 };       
 
 function isCurrent2(element) {
-    //var memberName = flashTeamsJSON["members"][notified_user].role;
   	return element.members.indexOf(memberId) != -1;
 };

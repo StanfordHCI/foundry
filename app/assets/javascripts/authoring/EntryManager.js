@@ -1,27 +1,65 @@
 (function(window) {
-    var EntryManager = function(flashTeamsJSON) {
-        this.currentFolderId = "root";
-        this.memberData = flashTeamsJSON.member_data;
-
-        // Backwards compatability check. If the member data field doesn't exist,
-        // then we'll create it and populate it with the data from the members
-        // field
-        if(!this.memberData) {
-            flashTeamsJSON.member_data = {
-                _entry_map: {}
-            }
-            this.memberData = flashTeamsJSON.member_data;
-            var members = flashTeamsJSON.members;
-            for(var i = 0; i < members.length; i++) {
-                this.addEntry(members[i]);
+    /**
+     * Removes all instances of an object from an array
+     * @param needle
+     * @param {array} haystack
+     */
+    var removeFromList = function(needle, haystack) {
+        for(var i = 0; i < haystack.length; i++) {
+            if(haystack[i] === needle) {
+                haystack.splice(i, 1);
+                i--;
             }
         }
     };
+    
+    /**
+     * Removes all instances of an object with the same value for the attribute
+     * as the needle from an array
+     * @param {string} attr
+     * @param needle
+     * @param {array} haystack
+     */
+    var removeAttrFromList = function(attr, needle, haystack) {
+        for(var i = 0; i < haystack.length; i++) {
+            if(haystack[i][attr] === needle[attr]) {
+                haystack.splice(i, 1);
+                i--;
+            }
+        }
+    };
+    
+    var EntryManager = function(flashTeamsJSON) {
+        this.currentFolderId = this._rootId;
+        this.memberData = {
+            _entry_map: {}
+        };
+        
+        this.folders = [];
+        this.members = [];
 
+        if(flashTeamsJSON.folders) {
+            for(var i = 0; i < flashTeamsJSON.folders.length; i++) {
+                this.addEntry(flashTeamsJSON.folders[i]);
+            }
+        }
+        
+        if(flashTeamsJSON.members) {
+            for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+                this.addEntry(flashTeamsJSON.members[i]);
+            }
+        }
+        
+        flashTeamsJSON.members = this.members;
+        flashTeamsJSON.folders = this.folders;
+    };
+    
+    EntryManager.prototype._rootId = "root";
+    
     EntryManager.prototype._generateRootFolder = function() {
         return {
             name: "All Roles", parentId: undefined, type: "folder",
-            id: "root", childIds: [], numMembers: 0};
+            id: EntryManager.prototype._rootId, childIds: [], numMembers: 0};
     };
 
     EntryManager.prototype.getCurrentFolderChildren = function() {
@@ -32,7 +70,7 @@
     EntryManager.prototype._getEntryParentProp = function(entry, prop) {
         var parentProps = [];
 
-        if(entry === undefined) return parentProps;
+        if(entry === undefined) {return parentProps;}
 
         var e = this.getEntryById(entry.parentId);
         while(e !== undefined) {
@@ -68,7 +106,7 @@
      * event with the given id
      */
     EntryManager.prototype._getChildIdsById = function(id) {
-        return this.memberData._entry_map[id].childIds;
+        return this.memberData._entry_map[String(id)].childIds;
     };
 
     /**
@@ -77,7 +115,41 @@
      */
     EntryManager.prototype.getEntryById = function(id) {
         if(id === undefined) {return undefined;}
-        return this.memberData._entry_map[id];
+        return this.memberData._entry_map[String(id)];
+    };
+    
+    /**
+     * @param {string} uniq
+     * @returns the member with the given uniq
+     */
+    EntryManager.prototype.getEntryByUniq = function(uniq) {
+        for(var i = 0; i < this.members.length; i++) {
+            var member = this.getEntryById(this.members[i]);
+            if(member.uniq === uniq) {
+                return member;
+            }
+        }
+    };
+    
+    /**
+     * Calls the passed in function on every stored member's ID
+     * @param {function} callback
+     */
+    EntryManager.prototype.eachMemberId = function(callback) {
+        var that = this;
+        this.eachMember(function(member, i) {
+            return callback(member.id, new Number(i));
+        });
+    };
+    
+    /**
+     * Calls the passed in function on every stored member object
+     * @param {function} callback
+     */
+    EntryManager.prototype.eachMember = function(callback) {
+        for(var i = 0; i < this.members.length; i++) {
+            if(callback(this.members[i], new Number(i)) === true) { break; }
+        }
     };
 
     /**
@@ -110,15 +182,23 @@
 
         var folder = this.memberData._entry_map[folderId];
         // special case the root folder
-        if(this.currentFolderId === "root" && !folder) {
-            this.memberData._entry_map["root"] = this._generateRootFolder();
-            folder = this.memberData._entry_map["root"];
+        if(this.currentFolderId === this._rootId && !folder) {
+            this.memberData._entry_map[this._rootId] = this._generateRootFolder();
+            folder = this.memberData._entry_map[this._rootId];
         }
 
         // only push and increment the number of members if this entry isn't
         // already in this folder
-        var notInFolder = folder.childIds.indexOf(entry.id) < 0;
+        var notInFolder = true;
+        for(var i = 0; i < folder.childIds.length; i++) {
+            if(folder.childIds[i] == entry.id) {
+                notInFolder = false;
+            }
+        }
+        
         if(notInFolder) {
+            // set the parentId member
+            entry.parentId = folderId;
             folder.childIds.push(entry.id);
 
             // update the number of members in this folder
@@ -131,45 +211,125 @@
     /**
      * Stores the member in the entries json
      * @param {object} entry
+     * @param {object} [folderId] If specified, adds the folder with this id.
+     * Otherwise, adds it to the entry's set parentId or, if that's not set,
+     * to the current folder.
      */
-    EntryManager.prototype.addEntry = function(entry) {
+    EntryManager.prototype.addEntry = function(entry, folderId) {
+        
+        // update the number of stored items before we actually add it to
+        // the store
+        if(this.isFolder(entry)) {
+            if(this.folderExists(entry.id)) {
+                removeAttrFromList('id', entry, this.folders);
+            }
+            this.folders.push(entry);
+            
+        } else if(this.isMember(entry)) {
+            if(this.memberExists(entry.id)) {
+                removeAttrFromList('id', entry, this.members);
+            }
+            this.members.push(entry);
+        }
+        
+        // any entry added to the EntryManager must have a String id, so we
+        // make sure that's the case before we add anything
+        entry.id = String(entry.id);
         this.memberData._entry_map[entry.id] = entry;
-
+        
         // check parent id field and use that. If there is no parent id set,
         // _addEntryToFolder defaults to the current folder
-        var folderId = entry.parentId;
+        folderId = folderId || entry.parentId;
+        
         this._addEntryToFolder(entry, folderId);
     };
 
     /**
      * Removes an entry from the entries json
      * @param {object} id The id of the entry that should be removed
+     * @param {boolean} [recursive] If the entry is a folder, recursively
+     * delete all of its child elements. Defaults to true.
      */
-    EntryManager.prototype.removeEntry = function(id) {
+    EntryManager.prototype.removeEntry = function(id, recursive) {
+        if(recursive === undefined) recursive = true;
         if(this.memberData._entry_map) {
             var e = this.getEntryById(id);
             if(e) {
+                // if this is a folder, recursively delete all children
+                if(this.isFolder(e) && recursive) {
+                    for(var i = e.childIds.length-1; i >= 0; i--) {
+                        this.removeEntry(e.childIds[i]);
+                    }
+                }
+                
                 // find a parent id and remove this entry's id from the
                 // parent's list of child entries
-                if(e.parentId) {
-                    var parent = this.getEntryById(e.parentId);
-                    if(parent && parent.children) {
-                        var i = parent.children.indexOf(id);
-                        if(i !== -1) {
-                            parent.children.splice(i, 1);
-                            if(this.isMember(e)) {
-                                parent.numMembers--;
-                            }
+                // if there's no parentId set, assume it's in the root
+                var parentId = e.parentId || this._rootId;
+                var parent = this.getEntryById(parentId);
+                
+                if(parent && parent.childIds) {
+                    for(var i = 0; i < parent.childIds.length; i++) {
+                        if(parent.childIds[i] == id) {
+                            parent.childIds.splice(i, 1);
+                            if(this.isMember(e)) { parent.numMembers--; }
+                            break;
                         }
                     }
                 }
-
+                
+                if(this.isFolder(e)) {
+                    removeAttrFromList('id', e, this.folders);
+                } else if(this.isMember(e)) {
+                    removeAttrFromList('id', e, this.members);
+                }
+                
                 // actually delete the entry map's reference to the entry
                 delete this.memberData._entry_map[id];
             }
         }
     };
-
+    
+    /**
+     * Moves an entry from its current folder to a new one
+     * @param {number|string} entryId
+     * @param {number|string} destId A folder's ID
+     */
+    EntryManager.prototype.moveEntry = function(entryId, destId) {
+        if(entryId == destId ||
+           !this.entryExists(entryId) || !this.folderExists(destId)) {
+            return;
+        }
+        
+        var entry = this.getEntryById(entryId);
+        this.removeEntry(entryId, false);
+        this.addEntry(entry, destId);
+    };
+    
+    /**
+     * Returns true if there's an entry stored with the given ID
+     * @param {number|string} id
+     */
+    EntryManager.prototype.entryExists = function(id) {
+        return this.getEntryById(id) !== undefined;
+    };
+    
+    /**
+     * Returns true if there's a member stored with the given ID
+     * @param {number|string} memberId
+     */
+    EntryManager.prototype.memberExists = function(memberId) {
+        return this.isMember(this.getEntryById(memberId));
+    };
+    
+    /**
+     * Returns true if there's a folder stored with the given ID
+     * @param {number|string} folderId
+     */
+    EntryManager.prototype.folderExists = function(folderId) {
+        return this.isFolder(this.getEntryById(folderId));
+    };
+    
     /**
      * Assumes that the object passed in is an entry. Returns true if the entry
      * is non null and a not a folder and false otherwise.
@@ -188,6 +348,27 @@
      */
     EntryManager.prototype.isFolder = function(entry) {
         return entry && entry.type === "folder";
+    };
+    
+    /**
+     * @returns the number of entries stored in the EntryManager
+     */
+    EntryManager.prototype.size = function() {
+        return this.numFolders() + this.numMembers();
+    };
+    
+    /**
+     * @returns the number of members stored in the EntryManager
+     */
+    EntryManager.prototype.numMembers = function() {
+        return this.members.length;
+    };
+    
+    /**
+     * @returns the number of folders stored in the EntryManager
+     */
+    EntryManager.prototype.numFolders = function() {
+        return this.folders.length;
     };
     
     window.EntryManager = EntryManager;
