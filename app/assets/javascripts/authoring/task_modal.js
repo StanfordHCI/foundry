@@ -303,7 +303,7 @@ function getTaskOverviewContent(groupNum){
     content += '<div class="row-fluid" >';	
 				
 				if(ev.inputs) {
-					content += '<br /><h5>You should review the following deliverables from previous tasks: </h5>';
+					content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
 					//content += '<b>Inputs:</b><br>';
 					var inputs = ev.inputs.split(",");
 					for(var i=0;i<inputs.length;i++){
