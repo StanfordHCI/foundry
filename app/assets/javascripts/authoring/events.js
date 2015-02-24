@@ -44,6 +44,7 @@ var drag = d3.behavior.drag()
     .origin(Object)
     .on("drag", dragEventBlock)
     .on("dragend", function(d){
+        console.log("DONE DRAGGING");
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
