@@ -13,7 +13,13 @@
         }
     };
     
-    
+    /**
+     * Removes all instances of an object with the same value for the attribute
+     * as the needle from an array
+     * @param {string} attr
+     * @param needle
+     * @param {array} haystack
+     */
     var removeAttrFromList = function(attr, needle, haystack) {
         for(var i = 0; i < haystack.length; i++) {
             if(haystack[i][attr] === needle[attr]) {
