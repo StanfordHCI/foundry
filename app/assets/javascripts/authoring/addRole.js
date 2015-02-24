@@ -18,6 +18,7 @@
     };
     
     $role.click(function() {
+        if($(this).hasClass('disabled')) { return; }
         $role.addClass('active');
         if(isValidRole($input.val())) {
             $role.addClass('valid');
@@ -64,7 +65,13 @@
     };
     
     var addFolderClickFn = function(e) {
-        var $addFolderButton = $(this).addClass('active');
+        var $addFolderButton = $(this);
+        
+        // check if the team is currently in progress
+        if(in_progress) { $addFolderButton.addClass('disabled'); }
+        if($addFolderButton.hasClass('disabled')) { return; }
+        
+        $addFolderButton.addClass('active');
         var $rolesMenu = $(this).parents('.roles-menu').addClass('active');
         
         var $oldSpan = $(this).find('span');

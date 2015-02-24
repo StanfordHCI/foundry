@@ -452,50 +452,34 @@ function getTaskOverviewContentOld(groupNum){
         + '</div>';
         + '</div>';
 
-            if (ev.pc != "" && ev.pc != undefined){
+    if (ev.pc != "" && ev.pc != undefined){
         var pc_id = parseInt (ev.pc);
         var mem = null;
 
-        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
-           
-            if(flashTeamsJSON["members"][i].id == pc_id){
-                mem = flashTeamsJSON["members"][i].role;
-                break;
+        if(entryManager.memberExists(pc_id)) {
+            mem = entryManager.getEntryById(pc_id).role;
+            if(mem && mem != undefined){
+                content += '<div class=row-fluid> <div class="span6">'
+                content += '<b>Project Coordinator:</b><br>';
+                content += mem;
+                content += "</div>";
             }
         }
-          if(mem && mem != undefined){
-            content += '<div class=row-fluid> <div class="span6">'
-            content += '<b>Project Coordinator:</b><br>';
-            content += mem;
-            content += "</div>"
-            
-        }
-    }
-    else{
-
     }
 
      if (ev.dri != "" && ev.dri != undefined){
         var dri_id = parseInt (ev.dri);
         var mem = null;
-
-        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
-           
-            if(flashTeamsJSON["members"][i].id == dri_id){
-                mem = flashTeamsJSON["members"][i].role;
-                break;
+        
+        if(entryManager.memberExists(pc_id)) {
+            mem = entryManager.getEntryById(pc_id).role;
+            if(mem && mem != undefined){
+                content += '<div class="span6">';
+                content += '<b>Directly-Responsible Individual:</b><br>';
+                content += mem;
+                content += '</div> </div>'
             }
         }
-
-        if(mem && mem != undefined){
-            content += '<div class="span6">';
-            content += '<b>Directly-Responsible Individual:</b><br>';
-            content += mem;
-            content += '</div> </div>'
-        }
-    }
-    else{
-
     }
 
     if(ev.inputs) {
@@ -613,15 +597,14 @@ function saveTaskOverview(groupNum){
 
     //Update Members if changed
     ev.members = [];
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var member = flashTeamsJSON["members"][i];
+    entryManager.eachMember(function(member, i) {
         var memberId = member.id;
         var checkbox = $("#event" + groupNum + "member" + i + "checkbox")[0];
-        if (checkbox == undefined) continue;
+        if (checkbox == undefined) return false;
         if (checkbox.checked == true) {
             ev.members.push(memberId); //Update JSON
         } 
-    }
+    });
 
     //Update description if changed
     var eventNotes = $("#notes").val();
