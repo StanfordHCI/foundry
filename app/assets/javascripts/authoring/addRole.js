@@ -18,6 +18,7 @@
     };
     
     $role.click(function() {
+        if($(this).hasClass('disabled')) { return; }
         $role.addClass('active');
         if(isValidRole($input.val())) {
             $role.addClass('valid');
