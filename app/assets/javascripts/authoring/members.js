@@ -655,15 +655,9 @@ function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) 
 
 //Delete team member from team list, JSON, diagram, and events
 function deleteEntry(entryId) {
+    $('#confirmAction').modal('hide');
     var entry = entryManager.getEntryById(entryId);
-    // recursively delete folders
-    if(entryManager.isFolder(entry)) {
-        for(var i = 0; i < entry.childIds.length; i++) {
-            deleteEntry(entry.childIds[i]);
-        }
-    } else {
-        $('#confirmAction').modal('hide');
-        
+    if(entryManager.isMember(entry)) {
         // remove from members array with event object
         for(var i=0; i<flashTeamsJSON["events"].length; i++){
             var ev = flashTeamsJSON["events"][i];
