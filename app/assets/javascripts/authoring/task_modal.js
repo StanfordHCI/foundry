@@ -269,7 +269,16 @@ function getTaskOverviewContent(groupNum){
 			
 		content += '</div>';
 		
-		content += '<div class="span3"><b>Duration: ' + hrs+':'+mins +'</b></div>';
+		content += '<div class="span3"><b>Duration: </b>' + hrs+':'+mins +'<br />'
+				+ '<b>Status: </b>'; 
+				
+				if(ev.status == "not_started"){
+					content += "not started";
+				}
+				else{
+					content += ev.status;
+				}
+		content += '</div>';
 		
 	content += '</div>';
 		
@@ -294,7 +303,7 @@ function getTaskOverviewContent(groupNum){
     content += '<div class="row-fluid" >';	
 				
 				if(ev.inputs) {
-					content += '<br /><h5>You will be provided with the following inputs: </h5>';
+					content += '<br /><h5>You will be provided with the following inputs, which you should review: </h5>';
 					//content += '<b>Inputs:</b><br>';
 					var inputs = ev.inputs.split(",");
 					for(var i=0;i<inputs.length;i++){
@@ -345,9 +354,7 @@ function getTaskOverviewContent(groupNum){
             content += '</div>'
         }
     }
-    else{
-
-    }
+   
 		
 		  if (ev.pc != "" && ev.pc != undefined){
 	        var pc_id = parseInt (ev.pc);
@@ -368,12 +375,8 @@ function getTaskOverviewContent(groupNum){
             
         }
     }
-    else{
+    
 
-    }
-
-     
-		
 	content += '</div>';
 		
 	content += "<hr/>";
@@ -382,7 +385,7 @@ function getTaskOverviewContent(groupNum){
 		
 	content += '<div class="row-fluid" >';	
 		
-		//content += "<hr/>";
+	//content += "<hr/>";
     content += "<h4>You will need to answer the following questions: <br /><br /></h4>";
 
     //Add output documentation questions to task modal    
@@ -416,6 +419,7 @@ function getTaskOverviewContent(groupNum){
 }
 
 
+//this was the previous task overview content that used the old modal layout 
 function getTaskOverviewContentOld(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_id];
