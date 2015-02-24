@@ -10,7 +10,9 @@ var flashTeamsJSON = {
     "events": [],        //{"title", "id", "startTime", "duration", "notes", "members": [], "dri", "yPosition", inputs”:[], “outputs”:[]}
     "members": [],       //{"id", "role", "skills":[], "color", "category1", "category2"}
     "member_data": {
-        _entry_map: {}
+        _entry_map: {},
+        _member_ids: [],
+        _folder_ids: []
     },
     "interactions" : [],  //{"event1", "event2", "type", "description", "id"}
     "author": "defaultAuthor",

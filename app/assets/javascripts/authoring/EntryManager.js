@@ -1,23 +1,42 @@
 (function(window) {
+    /**
+     * Removes all instances of an object from an array
+     * @param needle
+     * @param {array} haystack
+     */
+    var removeFromList = function(needle, haystack) {
+        for(var i = 0; i < haystack.length; i++) {
+            if(haystack[i] === needle) {
+                haystack.splice(i, 1);
+                i--;
+            }
+        }
+    };
+    
     var EntryManager = function(flashTeamsJSON) {
         this.currentFolderId = this._rootId;
         this.memberData = flashTeamsJSON.member_data;
-
+        
         // Backwards compatability check. If the member data field doesn't exist,
         // then we'll create it and populate it with the data from the members
         // field
         if(!this.memberData) {
             flashTeamsJSON.member_data = {
-                _entry_map: {}
+                _entry_map: {},
+                _member_ids: [],
+                _folder_ids: []
             };
+            
             this.memberData = flashTeamsJSON.member_data;
-            var members = flashTeamsJSON.members;
-            for(var i = 0; i < members.length; i++) {
-                this.addEntry(members[i]);
+            if(flashTeamsJSON.members) {
+                var members = flashTeamsJSON.members;
+                for(var i = 0; i < members.length; i++) {
+                    this.addEntry(members[i]);
+                }
             }
         }
     };
-
+    
     EntryManager.prototype._rootId = "root";
     
     EntryManager.prototype._generateRootFolder = function() {
@@ -80,6 +99,43 @@
     EntryManager.prototype.getEntryById = function(id) {
         if(id === undefined) {return undefined;}
         return this.memberData._entry_map[String(id)];
+    };
+    
+    /**
+     * @param {string} uniq
+     * @returns the member with the given uniq
+     */
+    EntryManager.prototype.getEntryByUniq = function(uniq) {
+        var memberIds = this.memberData._member_ids;
+        for(var i = 0; i < memberIds.length; i++) {
+            var member = this.getEntryById(memberIds[i]);
+            if(member.uniq === uniq) {
+                return member;
+            }
+        }
+    };
+    
+    /**
+     * Calls the passed in function on every stored member's ID
+     * @param {function} callback
+     */
+    EntryManager.prototype.eachMemberId = function(callback) {
+        var memberIds = this.memberData._member_ids;
+        for(var i = 0; i < memberIds.length; i++) {
+            if(callback(memberIds[i], new Number(i)) === true) { break; }
+        }
+    };
+    
+    /**
+     * Calls the passed in function on every stored member object
+     * @param {function} callback
+     */
+    EntryManager.prototype.eachMember = function(callback) {
+        var that = this;
+        this.eachMemberId(function(id, i) {
+            var member = that.getEntryById(id);
+            return callback(member, new Number(i));
+        });
     };
 
     /**
@@ -144,6 +200,15 @@
      * to the current folder.
      */
     EntryManager.prototype.addEntry = function(entry, folderId) {
+        
+        // update the number of stored items before we actually add it to
+        // the store
+        if(this.isFolder(entry) && !this.folderExists(entry.id)) {
+            this.memberData._folder_ids.push(entry.id);
+        } else if(this.isMember(entry) && !this.memberExists(entry.id)) {
+            this.memberData._member_ids.push(entry.id);
+        }
+        
         // any entry added to the EntryManager must have a String id, so we
         // make sure that's the case before we add anything
         entry.id = String(entry.id);
@@ -180,7 +245,13 @@
                         }
                     }
                 }
-
+                
+                if(this.isFolder(e)) {
+                    removeFromList(e.id, this.memberData._folder_ids);
+                } else if(this.isMember(e)) {
+                    removeFromList(e.id, this.memberData._member_ids);
+                }
+                
                 // actually delete the entry map's reference to the entry
                 delete this.memberData._entry_map[id];
             }
@@ -238,6 +309,27 @@
      */
     EntryManager.prototype.isFolder = function(entry) {
         return entry && entry.type === "folder";
+    };
+    
+    /**
+     * @returns the number of entries stored in the EntryManager
+     */
+    EntryManager.prototype.size = function() {
+        return this.numFolders() + this.numMembers();
+    };
+    
+    /**
+     * @returns the number of members stored in the EntryManager
+     */
+    EntryManager.prototype.numMembers = function() {
+        return this.memberData._member_ids.length;
+    };
+    
+    /**
+     * @returns the number of folders stored in the EntryManager
+     */
+    EntryManager.prototype.numFolders = function() {
+        return this.memberData._folder_ids.length;
     };
     
     window.EntryManager = EntryManager;

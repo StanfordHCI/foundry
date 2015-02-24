@@ -310,16 +310,6 @@ function startMinForX(X){
     return mins;
 };
 
-
-function getMemberIndexFromName(name) {
-    for (var j = 0; j < flashTeamsJSON["members"].length; j++) { // go through all members
-        if (flashTeamsJSON["members"][j].role == name){
-            return j;
-        }
-    }
-    return -1;
-}
-
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
@@ -1454,7 +1444,6 @@ function drawShade(eventObj) {
     //if they are the CURRENT member
     for (var i=0; i<members.length; i++) {
         var member_id = members[i];
-        //var idx = getMemberIndexFromName(member["name"]);
         //debugger;
         if (current_user.id == member_id){
             if (currentUserIds.indexOf(groupNum) < 0){

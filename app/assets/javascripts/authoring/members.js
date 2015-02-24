@@ -72,6 +72,16 @@ function setCurrentMember() {
     
     if (uniq){
         $("#uniq").value = uniq;
+        
+        var member = entryManager.getEntryByUniq(uniq);
+        if(member) {
+            current = member.id;
+            current_user = member;
+            isUser = true;
+            memberType = member.type;
+        }
+        
+        /*
         flash_team_members = flashTeamsJSON["members"];
         //console.log(flash_team_members[0].uniq);
         for(var i=0;i<flash_team_members.length;i++){            
@@ -81,7 +91,8 @@ function setCurrentMember() {
                 isUser = true;
                 memberType = flash_team_members[i].type;
             }
-        }
+        }*/
+        
     } else {
         current = undefined;
         isUser = false;
@@ -251,7 +262,7 @@ function renderPills(folder, entries) {
     }
     
     renderMemberPopovers(entries);
-    updateNumRolesDisplay(flashTeamsJSON.members.length);
+    updateNumRolesDisplay(entryManager.numMembers());
 };
 
 function renderCurrentFolderPills() {
@@ -421,11 +432,12 @@ function generateMemberCategoryChangeFunction(mem_id) {
 
 function memberPillClick(mem_id) {
     //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        if (idNum == mem_id) continue;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    entryManager.eachMemberId(function(id) {
+        if(id != mem_id) {
+            $("#mPill_"+id).popover("hide");
+        }
+    });
+    
     $("#member" + mem_id + "_category1").off('change', generateMemberCategoryChangeFunction(mem_id));
     $("#member" + mem_id + "_category1").on('change', generateMemberCategoryChangeFunction(mem_id));
 }
@@ -499,10 +511,9 @@ function deletePopover(id) {
 
 function closeOpenPopovers() {
     //Close all open popovers
-    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    entryManager.eachMemberId(function(id) {
+        $("#mPill_"+id).popover('hide');
+    });
 }
 
 function addMember() {
@@ -519,10 +530,8 @@ function addMember() {
     $("#addMemberInput").val(this.placeholder);
 
     // add member to json
-    var members = flashTeamsJSON.members;
     var member_obj = newMemberObject(member_name);
     
-    members.push(member_obj);
     entryManager.addEntry(member_obj);
     
     //update event popovers to show the new member
@@ -547,10 +556,10 @@ function addSkill(memberId) {
     }
 
     //Update JSON
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    flashTeamsJSON["members"][indexOfJSON].skills.push(skillName);
-
-    var memberSkillNumber = flashTeamsJSON["members"][indexOfJSON].skills.length;
+    var member = entryManager.getEntryById(memberId);
+    member.skills.push(skillName);
+    var memberSkillNumber = members.skills.length;
+    
     $("#skillPills_" + memberId).append('<li class="active" id="sPill_mem' + memberId + '_skill' + memberSkillNumber + '"><a>' + skillName 
         + '<div class="close" onclick="deleteSkill(' + memberId + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>');
     $("#addSkillInput_" + memberId).val(this.placeholder);
@@ -560,10 +569,10 @@ function deleteSkill(memberId, pillId, skillName) {
     //Remove skill pill
     $("#sPill_mem" + memberId + '_skill' + pillId).remove();
     //Update JSON
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    for (var i = 0; i < flashTeamsJSON["members"][indexOfJSON].skills.length; i++) {
-        if (flashTeamsJSON["members"][indexOfJSON].skills[i] == skillName) {
-            flashTeamsJSON["members"][indexOfJSON].skills.splice(i, 1);
+    var member = entryManager.getEntryById(memberId);
+    for (var i = 0; i < member.skills.length; i++) {
+        if (member.skills[i] == skillName) {
+            member.skills.splice(i, 1);
             break;
         }
     }
@@ -645,8 +654,8 @@ function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) 
 }
 
 //Delete team member from team list, JSON, diagram, and events
-function deleteEntry(memberId) {
-    var entry = entryManager.getEntryById(memberId);
+function deleteEntry(entryId) {
+    var entry = entryManager.getEntryById(entryId);
     // recursively delete folders
     if(entryManager.isFolder(entry)) {
         for(var i = 0; i < entry.childIds.length; i++) {
@@ -654,32 +663,26 @@ function deleteEntry(memberId) {
         }
     } else {
         $('#confirmAction').modal('hide');
-        for(var i = 0; i < flashTeamsJSON.members.length; i++) {
-            var member = flashTeamsJSON.members[i];
-            if(member.id == memberId) {
-                flashTeamsJSON.members.splice(i, 1);
-            }
-        }
-
+        
         // remove from members array with event object
         for(var i=0; i<flashTeamsJSON["events"].length; i++){
             var ev = flashTeamsJSON["events"][i];
-            var member_event_index = ev.members.indexOf(memberId);
+            var member_event_index = ev.members.indexOf(entryId);
             // remove member
             if(member_event_index != -1){ // found member in the event
-                deleteEventMember(ev.id, memberId);
+                deleteEventMember(ev.id, entryId);
             }
 
             //remove dri if the member was a dri
-            if (ev.dri == String(memberId)){
+            if (ev.dri == String(entryId)){
                 ev.dri = "";
             }
         }
     }
     
-    entryManager.removeEntry(memberId);
+    entryManager.removeEntry(entryId);
     
-    deletePopover(memberId);
+    deletePopover(entryId);
     
     renderCurrentFolderPills();
     updateStatus(false);
@@ -757,9 +760,6 @@ function confirmReplaceMember(pillId) {
 }
 
 function renderMemberPillColor(memberId) {
-    // var indexOfJSON = getMemberJSONIndex(memberId);
-    // var color = flashTeamsJSON["members"][indexOfJSON].color;
-
     var color = entryManager.getEntryById(memberId).color;
     
     var pillLi = document.getElementById("mPill_" + memberId);
@@ -768,8 +768,6 @@ function renderMemberPillColor(memberId) {
 
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
-    // var indexOfJSON = getMemberJSONIndex(memberId);
-    // flashTeamsJSON["members"][indexOfJSON].color = color;
     entryManager.getEntryById(memberId).color = color;
     updateStatus(false);
 };
@@ -792,34 +790,13 @@ function initializeColorPicker(newColor) {
     });
 }
 
-function initializeMemberCounter() {
-    if (flashTeamsJSON["members"].length == 0) return 0; 
-    else {
-        var highestId = 0;
-        for (i = 0; i < flashTeamsJSON["members"].length; i++) {
-            if (flashTeamsJSON["members"][i].id > highestId) {
-                highestId = flashTeamsJSON["members"][i].id;
-            }
-        }
-        return highestId;
-    }
-}
-
 function generateMemberId() {
     return String((new Date()).getTime());
 }
 
-//Find the index of a member in the JSON object "members" array by using unique id
-function getMemberJSONIndex(idNum) {
-    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
-        if (parseInt(flashTeamsJSON["members"][i].id) == parseInt(idNum)) return i; 
-    }
-    return -1;
-};
-
 function getMemberById(id) {
     return entryManager.getEntryById(id);
-};
+}
 
 function searchById (arr, id) {
     for (var i = 0; i < arr.length; i++) {
@@ -862,11 +839,11 @@ function updateRoleName(id, newValue) {
 //Populate the autocomplete function for the event members
 //TO BE DELETED, WILL BE CHANGING TO A CHECKBOX SYSTEM
 function addMemAuto() {
-    var memberArray = new Array(flashTeamsJSON["members"].length);
-    for (i = 0; i < flashTeamsJSON["members"].length; i++) {
-        memberArray[i] = flashTeamsJSON["members"][i].role;
-    }
-
+    var memberArray = [];
+    entryManager.eachMemberId(function(id) {
+        memberArray.push(entryManager.getEntryById(id).role);
+    });
+    
     $(".eventMemberInput").each(function() {
         $(this).autocomplete({
             source: memberArray
