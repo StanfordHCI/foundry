@@ -38,12 +38,16 @@
         this.folders = [];
         this.members = [];
 
-        for(var i = 0; i < flashTeamsJSON.folders.length; i++) {
-            this.addEntry(flashTeamsJSON.folders[i]);
+        if(flashTeamsJSON.folders) {
+            for(var i = 0; i < flashTeamsJSON.folders.length; i++) {
+                this.addEntry(flashTeamsJSON.folders[i]);
+            }
         }
         
-        for(var i = 0; i < flashTeamsJSON.members.length; i++) {
-            this.addEntry(flashTeamsJSON.members[i]);
+        if(flashTeamsJSON.members) {
+            for(var i = 0; i < flashTeamsJSON.members.length; i++) {
+                this.addEntry(flashTeamsJSON.members[i]);
+            }
         }
         
         flashTeamsJSON.members = this.members;
