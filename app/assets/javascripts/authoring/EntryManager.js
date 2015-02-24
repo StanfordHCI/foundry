@@ -302,7 +302,7 @@
         }
         
         var entry = this.getEntryById(entryId);
-        this.removeEntry(entry, false);
+        this.removeEntry(entryId, false);
         this.addEntry(entry, destId);
     };
     
