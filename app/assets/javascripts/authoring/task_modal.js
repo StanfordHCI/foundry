@@ -233,7 +233,190 @@ function getTaskOverviewForm(groupNum){
 
 }
 
+
 function getTaskOverviewContent(groupNum){
+	var task_id = getEventJSONIndex(groupNum);
+	var ev = flashTeamsJSON["events"][task_id];
+	
+	var hrs = Math.floor(ev.duration/60);
+    var mins = ev.duration % 60;
+    
+    // if the minutes are < 10, you need to add a zero before
+    if(mins < 10){
+	    mins = '0' + mins;
+    }
+    
+    var evStartHr = ev.startHr; 
+	var evStartMin = ev.startMin.toFixed(0); 
+	
+	// if the minutes are < 10, you need to add a zero before
+	if(evStartMin < 10){
+	    evStartMin = '0' + evStartMin;
+    }
+	
+	var content = '<div class="row-fluid" >';
+	
+		content += '<div class="span9">';
+		
+			content += '<h4>The goal of this task is to: </h4>';
+		
+			if (ev.notes != ""){
+				content += ev.notes;	
+			}
+			else{
+				content += "No task description has been provided yet."
+			}
+			
+		content += '</div>';
+		
+		content += '<div class="span3"><b>Duration: ' + hrs+':'+mins +'</b></div>';
+		
+	content += '</div>';
+		
+	content += '<div class="row-fluid" >';
+		
+		if(ev.outputs) {
+			//content += '<b>Deliverables:</b><br>';
+			content +=  '<br /><h5>Specifically, you must produce the following deliverables: </h5>';
+			var outputs = ev.outputs.split(",");
+			for(var i=0;i<outputs.length;i++){
+				
+				content += outputs[i];
+				
+				//content += outputs[i] + ': ';
+				//content += 'insert description here';
+				content += "<br />";
+			}
+		}
+    			
+    content += '</div>';
+    
+    content += '<div class="row-fluid" >';	
+				
+				if(ev.inputs) {
+					content += '<br /><h5>You will be provided with the following inputs: </h5>';
+					//content += '<b>Inputs:</b><br>';
+					var inputs = ev.inputs.split(",");
+					for(var i=0;i<inputs.length;i++){
+						content += inputs[i];
+					content += "<br />";
+        		}
+    }
+		content +=  '</div>'; 
+		
+		content += "<hr/>";
+		
+	content += '<div class="row-fluid" >';		
+				
+		content += '<b>Members assigned to this task: </b>';
+		
+		var num_members = ev.members.length;
+	    if(num_members > 0){
+	        //content += '<b>Members:</b><br>';
+	        for (var j=0;j<num_members-1;j++){
+	            var member = getMemberById(ev.members[j]);
+	            content += member.role;
+	            content += ', ';
+	        }
+	        var member = getMemberById(ev.members[num_members-1]);
+	        content += member.role;
+	        content += '<br/>';
+	    }
+	    else{
+		    content += "No members have been assigned yet."
+	    }
+    
+    if (ev.dri != "" && ev.dri != undefined){
+        var dri_id = parseInt (ev.dri);
+        var mem = null;
+
+        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
+           
+            if(flashTeamsJSON["members"][i].id == dri_id){
+                mem = flashTeamsJSON["members"][i].role;
+                break;
+            }
+        }
+
+        if(mem && mem != undefined){
+            content += '<div class=row-fluid>';
+            content += '<b>Directly-Responsible Individual: </b>';
+            content += mem;
+            content += '</div>'
+        }
+    }
+    else{
+
+    }
+		
+		  if (ev.pc != "" && ev.pc != undefined){
+	        var pc_id = parseInt (ev.pc);
+	        var mem = null;
+	
+	        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
+	           
+	            if(flashTeamsJSON["members"][i].id == pc_id){
+	                mem = flashTeamsJSON["members"][i].role;
+	                break;
+	            }
+	        }
+          if(mem && mem != undefined){
+            content += '<div class=row-fluid>'
+            content += '<b>Project Coordinator: </b>';
+            content += mem;
+            content += "</div>"
+            
+        }
+    }
+    else{
+
+    }
+
+     
+		
+	content += '</div>';
+		
+	content += "<hr/>";
+		
+		
+		
+	content += '<div class="row-fluid" >';	
+		
+		//content += "<hr/>";
+    content += "<h4>You will need to answer the following questions: <br /><br /></h4>";
+
+    //Add output documentation questions to task modal    
+    for (var key in ev.outputQs){
+        if (key != ""){
+            content += "<b><i>" + key + "</i></b></br>";
+            keyArray = ev.outputQs[key];
+            for (i = 0; i < keyArray.length; i++){
+                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
+            }
+            content += "<br />";
+        }
+    }
+    //content += "<hr/>";
+    
+
+    //Add general documentation questions to task modal
+    if (ev.docQs.length > 0){
+        docQs = ev.docQs;
+        for (i = 0; i < docQs.length; i++){
+            if (docQs[i][1] != null){
+                content += "<b><i>" + docQs[i][0] + " </i></b>";
+                content += "<p>" + docQs[i][1] + "</p><br />";
+            }
+        }
+    }
+    
+    content += '</div>';
+	
+	return content;
+}
+
+
+function getTaskOverviewContentOld(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_id];
 
