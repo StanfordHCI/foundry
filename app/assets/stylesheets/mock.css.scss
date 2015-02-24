@@ -374,22 +374,29 @@ $left-sidebar-width: 251px;
   }
 }
 
-.role.add-role input[type="text"],
-.role.add-role textarea {
-  background: none;
-  margin: 0;
-  border: 0;
-  outline: 0;
-  padding: 0;
-  font: inherit;
-  border: none;
-  height: 30px;
-  width: 80%;
-}
-
-.role.add-role input[type="text"]:focus,
-.role.add-role textarea:focus {
-  box-shadow: none;
+.role.add-role {
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+    &:hover {
+      background: none;
+    }
+  }
+  
+  input[type="text"], textarea {
+    background: none;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    font: inherit;
+    border: none;
+    height: 30px;
+    width: 80%;
+    &:focus {
+      box-shadow: none;
+    }
+  }
 }
 
 /* right sidebar */

@@ -109,6 +109,8 @@ $("#flashTeamStartBtn").click(function(){
 
 function disableTeamEditing() {
     $(".add-folder-button").addClass("disabled");
+    $(".add-role").addClass("disabled");
+    
     // assemble selector for event buttons
     var selectorPrefix = ".event-layer .event ";
     var selector = selectorPrefix + ".collab_btn, " +
