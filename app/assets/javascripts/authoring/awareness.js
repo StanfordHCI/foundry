@@ -111,8 +111,7 @@ function disableTeamEditing() {
     $(".add-folder-button").addClass("disabled");
     // assemble selector for event buttons
     var selectorPrefix = ".event-layer .event ";
-    var selector = selectorPrefix + ".upload, " +
-                   selectorPrefix + ".collab_btn, " +
+    var selector = selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).hide();
 }
