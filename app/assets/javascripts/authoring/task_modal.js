@@ -286,7 +286,7 @@ function getTaskOverviewContent(groupNum){
 		
 		if(ev.outputs) {
 			//content += '<b>Deliverables:</b><br>';
-			content +=  '<br /><h5>Specifically, you must produce the following deliverables: </h5>';
+			content +=  '<br /><h5>Specifically, you are expected produce the following deliverables: </h5>';
 			var outputs = ev.outputs.split(",");
 			for(var i=0;i<outputs.length;i++){
 				
@@ -303,7 +303,7 @@ function getTaskOverviewContent(groupNum){
     content += '<div class="row-fluid" >';	
 				
 				if(ev.inputs) {
-					content += '<br /><h5>You will be provided with the following inputs, which you should review: </h5>';
+					content += '<br /><h5>You should review the following deliverables from previous tasks: </h5>';
 					//content += '<b>Inputs:</b><br>';
 					var inputs = ev.inputs.split(",");
 					for(var i=0;i<inputs.length;i++){
@@ -419,7 +419,7 @@ function getTaskOverviewContent(groupNum){
 }
 
 
-//this was the previous task overview content that used the old modal layout 
+//this was the previous task overview content that used the old modal layout (can be erased once we confirm we like new modal)
 function getTaskOverviewContentOld(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_id];
