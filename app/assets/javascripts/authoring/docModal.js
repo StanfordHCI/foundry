@@ -112,6 +112,92 @@ function upcoming_ev_doc_seen(upcomingEvent_tmp){
 };
 
 function showDocModal(ev_before, events_before, curr_event_id){
+  //body of the modal
+    //hides the current task modal
+ 
+    $("#task_modal").modal('hide');
+    var outputs = ev_before.outputs.split(",");
+
+
+    var content = '<div class="row-fluid" >' ;
+    content += "<p><b>The goal of this input task was to:</b><br>";
+    content += ev_before.notes + "</p><br>";
+    content += "<p><b>Specifically, the deliverables of the task were:</b><p>";
+    content +="<p>"
+    for(var i =0;i<outputs.length; i++){
+      content += outputs[i] ;
+      if(i < outputs.length - 1)
+        content +="<br>";      
+    }
+    content+="</p><hr>"
+
+    content += "<p><b>Please review the deliverables of the "+ ev_before.title +" task here:</b></br>";
+    content += "<a href=" + ev_before.gdrive[1] + " target='_blank'>"+ev_before["gdrive"][1] +"</a></p>";
+    content += "<hr>"
+
+
+    content += "<b><p> Below are the questions answered by the DRI of the "+ ev_before.title +" task. Please review them since they are related to your upcoming task:</p></b>";
+
+    //Add output documentation questions to task modal    
+    for (var key in ev_before.outputQs){
+        if (key != ""){
+            content +=   "<br>" + key.split(":")[0] + ":" ;
+            keyArray = ev_before.outputQs[key];
+            for (i = 0; i < keyArray.length; i++){
+                content += "<p><i>- " + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
+            }
+        }
+    }
+    //Add general documentation questions to task modal
+    if (ev_before.docQs.length > 0){
+        docQs = ev_before.docQs;
+        for (i = 0; i < docQs.length; i++){
+            if (docQs[i][1] != null){
+                content += "<br>-" +  docQs[i][0] ;
+                content += "<p>" + docQs[i][1] + "</br></p>";
+            }
+        }
+    }
+
+      content += "</div>"; 
+
+
+  //alert(ev_tmp.docQs[0][0]);
+  var modal_footer;
+  modal_footer= '<button class="btn btn-primary" id="next-doc-modal" onclick="nextDocModal('+curr_event_id+')">Next</button>';
+   //alert("first");
+   //alert(events_before_index);
+  if(events_before_index>0){
+       
+        modal_footer = '<button class="btn btn-primary" id="prev-doc-modal" onclick="prevDocModal('+curr_event_id+')">Previous</button>' + modal_footer;
+  }
+ 
+  var modal_body=content;
+  var modal_label= "Input Task: "+ ev_before.title ;
+
+     $('#doc_modal').modal('show'); 
+     $('.doc-modal-footer').html(modal_footer);
+     $('.doc-modal-body').html(modal_body); 
+     $('#doc_modal_Label').html(modal_label);
+     $("#next-doc-modal").css('display', '');
+    
+    if( (events_before_index + 1) >= (events_before.length) ){
+      modal_footer = '<button class="btn btn-primary" data-dismiss="modal" onclick="startTask('+curr_event_id+')" aria-hidden="true">Start Task</button>';
+      //alert("second");
+      //alert(events_before_index);
+      if(events_before_index>0){
+        modal_footer = '<button class="btn btn-primary" id="prev-doc-modal" onclick="prevDocModal()">Previous</button>' + modal_footer;
+      }
+      $('.doc-modal-footer').html(modal_footer);
+      events_before_index = events_before_index + 1;
+
+   }
+   else{
+    events_before_index = events_before_index + 1;
+  }
+   
+};
+function showDocModal_main(ev_before, events_before, curr_event_id){
 	//body of the modal
     //hides the current task modal
  
