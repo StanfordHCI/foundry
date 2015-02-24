@@ -243,13 +243,16 @@
     /**
      * Removes an entry from the entries json
      * @param {object} id The id of the entry that should be removed
+     * @param {boolean} [recursive] If the entry is a folder, recursively
+     * delete all of its child elements. Defaults to true.
      */
-    EntryManager.prototype.removeEntry = function(id) {
+    EntryManager.prototype.removeEntry = function(id, recursive) {
+        if(recursive === undefined) recursive = true;
         if(this.memberData._entry_map) {
             var e = this.getEntryById(id);
             if(e) {
                 // if this is a folder, recursively delete all children
-                if(this.isFolder(e)) {
+                if(this.isFolder(e) && recursive) {
                     for(var i = e.childIds.length-1; i >= 0; i--) {
                         this.removeEntry(e.childIds[i]);
                     }
@@ -290,14 +293,21 @@
      */
     EntryManager.prototype.moveEntry = function(entryId, destId) {
         if(entryId == destId ||
-           !this.memberExists(entryId) || !this.folderExists(destId)) {
+           !this.entryExists(entryId) || !this.folderExists(destId)) {
             return;
         }
         
         var entry = this.getEntryById(entryId);
-        
-        this.removeEntry(entryId);
+        this.removeEntry(entry, false);
         this.addEntry(entry, destId);
+    };
+    
+    /**
+     * Returns true if there's an entry stored with the given ID
+     * @param {number|string} id
+     */
+    EntryManager.prototype.entryExists = function(id) {
+        return this.getEntryById(id) !== undefined;
     };
     
     /**
