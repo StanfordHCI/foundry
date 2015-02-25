@@ -114,7 +114,7 @@
      */
     EntryManager.prototype.getEntryByUniq = function(uniq) {
         for(var i = 0; i < this.members.length; i++) {
-            var member = this.getEntryById(this.members[i]);
+            var member = this.members[i];
             if(member.uniq === uniq) {
                 return member;
             }
