@@ -273,7 +273,8 @@ function addMemberFromEvent(member) {
 
 //Adds new member to Flash Teams JSON Object
    var newMember = {"role":memberName, "id": memberCounter, "color":"rgb(0, 168, 0)", "skills":[], "category1":"", "category2":""};
-   flashTeamsJSON.members.push(newMember);
+   // flashTeamsJSON.members.push(newMember);
+   entryManager.addEntry(newMember);
    addMemberNode(memberName, memberCounter, "#808080");
 
    //Adds the drop-down for two-tiered oDesk job posting categories on popover and populates member attribute values
@@ -299,11 +300,11 @@ $("#member" + memberCounter + "_category2").append("<option>" + oDeskCategories[
    var skillName;
 var indexOfJSON = getMemberJSONIndex(memberCounter);
 for (j = 0; j < member["skills"].length; j++) {
-skillName = member["skills"][j];
-flashTeamsJSON["members"][indexOfJSON].skills.push(skillName);
-$("#skillPills_" + memberCounter).append('<li class="active" id="sPill_mem' + memberCounter + '_skill' + j + '"><a>' + skillName
-       + '<div class="close" onclick="deleteSkill(' + memberCounter + ', ' + j + ', &#39' + skillName + '&#39)">  X</div></a></li>');
-$("#addSkillInput_" + memberCounter).val(this.placeholder);
+    skillName = member["skills"][j];
+    // flashTeamsJSON["members"][indexOfJSON].skills.push(skillName);
+    $("#skillPills_" + memberCounter).append('<li class="active" id="sPill_mem' + memberCounter + '_skill' + j + '"><a>' + skillName
+           + '<div class="close" onclick="deleteSkill(' + memberCounter + ', ' + j + ', &#39' + skillName + '&#39)">  X</div></a></li>');
+    $("#addSkillInput_" + memberCounter).val(this.placeholder);
 }
 
    //Enables skills to be submitted by Enter key

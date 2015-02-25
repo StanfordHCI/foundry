@@ -34,7 +34,8 @@ function eventMousedown(task2idNum) {
        '<p><span id="task-edit-link"></span></p>';
 
        var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
-       '<button class="btn " id="start-end-task" style="float :right " onclick="startTask('+task2idNum+')">Start</button>'+
+       '<button class="btn " id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
+       '<button class="btn " id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Pause</button>'+
        '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
        '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
      
@@ -85,7 +86,7 @@ function eventMousedown(task2idNum) {
         var task1End = ev1.startTime + ev1.duration;
         
         if (task1End <= ev2.startTime) {
-            var color = colorBox.grabColor();
+            var color = "gray";
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
@@ -210,13 +211,22 @@ function drawHandoff(handoffData) {
 
         })
         .attr("stroke", function() {
-            if (handoffData["color"] == undefined) return colorBox.grabColor(); 
-            else return handoffData["color"];
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR; //highlight for workers
+            else return "gray";
         })
         .attr("stroke-width", 3)
-        .attr("stroke-opacity", ".7")
+        .attr("stroke-opacity", ".45")
         .attr("fill", "none")
-        .attr("marker-end", "url(#arrowhead)"); //FOR ARROW
+        .attr("marker-end", "url(#arrowhead)")
+        .on("mouseover", function() { 
+            d3.select(this).style("stroke-opacity", .95);
+            d3.select(this).style("stroke", TASK_START_BORDER_COLOR);
+        })
+        .on("mouseout", function() { 
+            d3.select(this).style("stroke-opacity", .45);
+            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_COLOR);
+            else d3.select(this).style("stroke", "gray");
+        });
 
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -231,7 +241,6 @@ function drawHandoff(handoffData) {
 }
 
 function getHandoffInfo(handoffId){
-	
 	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
@@ -247,7 +256,6 @@ function getHandoffInfo(handoffId){
 	      + '</p><br />'
 	      + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Close</button><br /> ';
       }
-	
 	return content;
 }
 
@@ -370,11 +378,13 @@ function drawCollaboration(collabData, overlap) {
             return "interaction_" + collabId;
         })
         .attr("x", x2)
-        .attr("y", firstTaskY)
-        .attr("height", taskDistance)
+        .attr("y", firstTaskY-9) //AT hack to fix overlap w/ tab members
+        .attr("height", taskDistance+9)
         .attr("width", overlap) //START HERE, FIND REAL OVERLAP
-        .attr("fill", "gray")
-        .attr("fill-opacity", .7);
+        .attr("fill", "#B0BBBF")
+        .attr("fill-opacity", .7)
+        .on("mouseover", function() { d3.select(this).style("fill-opacity", .9)})
+        .on("mouseout", function() { d3.select(this).style("fill-opacity", .7)});
 
     drawCollabPopover(collabId);
 }
@@ -455,7 +465,7 @@ function deleteInteraction(intId) {
 
 //Returns the event that begins first
 function firstEvent(task1idNum, task2idNum) {
-    console.log(arguments);
+    //console.log(arguments);
     var task1Rect = $("#rect_" + task1idNum)[0];
     var x1 = task1Rect.x.animVal.value + 3;
     var task2Rect = $("#rect_" + task2idNum)[0];
@@ -515,5 +525,22 @@ function initializeInteractionCounter() {
     }
 }
 
+function isWorkerInteraction(id) {
+    //Get all events related to a worker
+    var events = window._foundry.events;
+    var workerEvents = []; 
+    for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
+        var eventObj = flashTeamsJSON["events"][i];
+        if (events.isWorkerTask(eventObj)) {
+            workerEvents.push(eventObj["id"]);
+        }
+    }
+    //Find out if a worker's events are linked to the specified handoff
+    for (var i = 0; i<workerEvents.length; i++) {
+        if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event1 == workerEvents[i]) return true;
+        else if (flashTeamsJSON["interactions"][getIntJSONIndex(id)].event2 == workerEvents[i]) return true;
+    }
+    return false;
+}
 
 

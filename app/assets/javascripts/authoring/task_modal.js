@@ -18,27 +18,65 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        if(eventObj.status == "started" || eventObj.status == "delayed"){
+        
+
+
+	
+	if(eventObj.status == "started" || eventObj.status == "delayed"){
+	            $("#start-end-task").addClass('btn-success');
+	            $("#start-end-task").css('display', '');
+	            $("#pause-resume-task").addClass('btn-default');
+	            $("#pause-resume-task").css('display', '');
+	            
+	            
+	            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+	            $("#start-end-task").html('Complete');
+	        } 
+ 
+
+
+		/*
+if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
-            $("#start-end-task").addClass('btn-success');
-            $("#start-end-task").html('Complete');
-        }  
+            $("#start-end-task").attr('onclick', 'pauseTask('+groupNum+')');
+            $("#start-end-task").addClass('btn-default');
+            $("#start-end-task").html('Pause');
+        } 
+*/
+        
+        else if(eventObj.status == "paused"){
+            $("#start-end-task").css('display', 'none');
+            $("#pause-resume-task").addClass('btn-primary');
+            $("#pause-resume-task").css('display', '');
+            $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
+            
+            $("#pause-resume-task").html('Resume Task');
+            
+             /*
+ $("#start-end-task").html('Complete');
+              $("#start-end-task").addClass('btn-success');
+              $("#start-end-task").prop('disabled', true);
+*/
+        } 
+        
         else if(eventObj.status == "completed"){
+             $("#pause-resume-task").css('display', 'none'); 
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
               $("#start-end-task").addClass('btn-success');
               $("#start-end-task").prop('disabled', true)
         }
         else{
+           $("#pause-resume-task").css('display', 'none'); 
            $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'startTask('+groupNum+')');
+            $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
     }
     else{
             $("#start-end-task").css('display', 'none');   
+            $("#pause-resume-task").css('display', 'none');  
     }
 
 	$("#hire-task").css('display','none');
@@ -60,7 +98,6 @@ if(uniq_u == "" || memberType == "pc" || memberType == "client"){
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
-        
 	}
 }
 
@@ -195,11 +232,12 @@ function getTaskOverviewForm(groupNum){
 
 }
 
+
 function getTaskOverviewContent(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_id];
-
-    var hrs = Math.floor(ev.duration/60);
+	
+	var hrs = Math.floor(ev.duration/60);
     var mins = ev.duration % 60;
     
     // if the minutes are < 10, you need to add a zero before
@@ -214,45 +252,89 @@ function getTaskOverviewContent(groupNum){
 	if(evStartMin < 10){
 	    evStartMin = '0' + evStartMin;
     }
-
-    var content = '<div class="row-fluid" >' 
-        + '<div class="span6">'
-        + '<b>Event Start:  </b>'
-        + evStartHr + ':'
-        + evStartMin + '<br>'
-        + '</div>'
-        + '<div class="span6">'
-        +'<b>Total Runtime:  </b>' 
-        + hrs+':'+mins
-        + '</div>';
-        + '</div>';
-
-            if (ev.pc != "" && ev.pc != undefined){
-        var pc_id = parseInt (ev.pc);
-        var mem = null;
-
-        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
-           
-            if(flashTeamsJSON["members"][i].id == pc_id){
-                mem = flashTeamsJSON["members"][i].role;
-                break;
-            }
-        }
-          if(mem && mem != undefined){
-            content += '<div class=row-fluid> <div class="span6">'
-            content += '<b>Project Coordinator:</b><br>';
-            content += mem;
-            content += "</div>"
-            
-        }
+	
+	var content = '<div class="row-fluid" >';
+	
+		content += '<div class="span8">';
+		
+			content += '<h4>The goal of this task is to: </h4>';
+		
+			if (ev.notes != ""){
+				content += ev.notes;	
+			}
+			else{
+				content += "No task description has been provided yet."
+			}
+			
+		content += '</div>';
+		
+		content += '<div class="span4"><b>Duration: </b>' + hrs+':'+mins +'<br />'
+				+ '<b>Status: </b>'; 
+				
+				if(ev.status == "not_started"){
+					content += "not started";
+				}
+				else{
+					content += ev.status;
+				}
+		content += '</div>';
+		
+	content += '</div>';
+		
+	content += '<div class="row-fluid" >';
+		
+		if(ev.outputs) {
+			//content += '<b>Deliverables:</b><br>';
+			content +=  '<br /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
+			var outputs = ev.outputs.split(",");
+			for(var i=0;i<outputs.length;i++){
+				
+				content += outputs[i];
+				
+				//content += outputs[i] + ': ';
+				//content += 'insert description here';
+				content += "<br />";
+			}
+		}
+    			
+    content += '</div>';
+    
+    content += '<div class="row-fluid" >';	
+				
+				if(ev.inputs) {
+					content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
+					//content += '<b>Inputs:</b><br>';
+					var inputs = ev.inputs.split(",");
+					for(var i=0;i<inputs.length;i++){
+						content += inputs[i];
+					content += "<br />";
+        		}
     }
-    else{
-
-    }
-
-content += '<div class="row-fluid">';
-
-     if (ev.dri != "" && ev.dri != undefined){
+		content +=  '</div>'; 
+		
+		content += "<hr/>";
+		
+	content += '<div class="row-fluid" >';		
+				
+		content += '<b>Members assigned to this task: </b>';
+		
+		var num_members = ev.members.length;
+	    if(num_members > 0){
+	        //content += '<b>Members:</b><br>';
+	        for (var j=0;j<num_members-1;j++){
+	            var member = getMemberById(ev.members[j]);
+	            content += member.role;
+	            content += ', ';
+	        }
+	        var member = getMemberById(ev.members[num_members-1]);
+	        content += member.role;
+	        content += '<br/>';
+	    }
+	    else{
+		    content += "No members have been assigned yet."
+	    }
+    
+    if (ev.dri != "" && ev.dri != undefined){
         var dri_id = parseInt (ev.dri);
         var mem = null;
 
@@ -265,92 +347,78 @@ content += '<div class="row-fluid">';
         }
 
         if(mem && mem != undefined){
-            //content += '<div class="span6">';
-            content += '<div class="span6">';
-            content += '<b>Directly-Responsible Individual:</b><br>';
+            content += '<div class=row-fluid>';
+            content += '<b>Directly-Responsible Individual: </b>';
             content += mem;
-            //content += '</div> </div>'
             content += '</div>'
         }
     }
-    else{
-
-    }
-    
-     var num_members = ev.members.length;
-    if(num_members > 0){
-        content += '<div class="span6"><b>Members:</b><br>';
-        for (var j=0;j<num_members-1;j++){
-            var member = getMemberById(ev.members[j]);
-            content += member.role;
-            content += ', ';
-        }
-        var member = getMemberById(ev.members[num_members-1]);
-        content += member.role;
-        content += '<br/></div>';
-    }
-
-content += '</div>';
-
-content += '<div class="row-fluid">';
-    if(ev.inputs) {
-	    content += '<div class="span6">';
-        content += '<b>Inputs:</b><br>';
-        var inputs = ev.inputs.split(",");
-        for(var i=0;i<inputs.length;i++){
-            content += inputs[i];
-            content += "<br>"
-            content += '</div>';
-        }
-    }
-    
-    if(ev.outputs) {
-        content += '<div class="span6"><b>Deliverables:</b><br>';
-        var outputs = ev.outputs.split(",");
-        for(var i=0;i<outputs.length;i++){
-            content += outputs[i];
-            content += "<br>"
-            content += '</div>';
-        }
-    }
-content += '</div>';
    
-
-    if (ev.notes != ""){
-        content += '</br><b>Description:</b><br>';
-        content += ev.notes;
-        content += '<br>';
+		
+/*
+		  if (ev.pc != "" && ev.pc != undefined){
+	        var pc_id = parseInt (ev.pc);
+	        var mem = null;
+	
+	        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
+	           
+	            if(flashTeamsJSON["members"][i].id == pc_id){
+	                mem = flashTeamsJSON["members"][i].role;
+	                break;
+	            }
+	        }
+          if(mem && mem != undefined){
+            content += '<div class=row-fluid>'
+            content += '<b>Project Coordinator: </b>';
+            content += mem;
+            content += "</div>"
+            
+        }
     }
+*/
+    
 
-
-    content += "<hr/>";
-    content += "<b>Documentation Questions</b><hr/>";
+	content += '</div>';
+		
+	content += "<hr/>";
+		
+		
+		
+	content += '<div class="row-fluid" >';	
+		
+	//content += "<hr/>";
+    content += "<h4>You will need to answer the following questions: <br /><br /></h4>";
 
     //Add output documentation questions to task modal    
     for (var key in ev.outputQs){
         if (key != ""){
-            content += "<b>" + key + "</b></br>";
+            content += "<b><i>" + key + "</i></b></br>";
             keyArray = ev.outputQs[key];
             for (i = 0; i < keyArray.length; i++){
                 content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
             }
+            content += "<br />";
         }
     }
-    content += "<hr/>";
+    //content += "<hr/>";
+    
 
     //Add general documentation questions to task modal
     if (ev.docQs.length > 0){
         docQs = ev.docQs;
         for (i = 0; i < docQs.length; i++){
             if (docQs[i][1] != null){
-                content += "<b>" + docQs[i][0] + " </b>";
-                content += "<p>" + docQs[i][1] + "</p>";
+                content += "<b><i>" + docQs[i][0] + " </i></b>";
+                content += "<p>" + docQs[i][1] + "</p><br />";
             }
         }
     }
-   
-    return content;
+    
+    content += '</div>';
+	
+	return content;
 }
+
 
 function saveTaskOverview(groupNum){
 	var task_index = getEventJSONIndex(groupNum); 
@@ -400,15 +468,14 @@ function saveTaskOverview(groupNum){
 
     //Update Members if changed
     ev.members = [];
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var member = flashTeamsJSON["members"][i];
+    entryManager.eachMember(function(member, i) {
         var memberId = member.id;
         var checkbox = $("#event" + groupNum + "member" + i + "checkbox")[0];
-        if (checkbox == undefined) continue;
+        if (checkbox == undefined) return false;
         if (checkbox.checked == true) {
             ev.members.push(memberId); //Update JSON
         } 
-    }
+    });
 
     //Update description if changed
     var eventNotes = $("#notes").val();

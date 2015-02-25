@@ -227,7 +227,7 @@ function getDuration(leftX, rightX) {
 
 //task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
-    event_counter++;
+    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
     
     duration = duration || 60;
     
@@ -244,10 +244,12 @@ function createEventObj(snapPoint, duration) {
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
       //add new event to flashTeams database
-    if (flashTeamsJSON.events.length == 0){
+    /*
+if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
         createNewFolder(document.getElementById("ft-name").innerHTML);
         //createNewFolder($("#flash_team_name").val());
     }
+*/
     flashTeamsJSON.events.push(newEvent);
     
     return newEvent;
@@ -286,7 +288,7 @@ function getWidth(ev) {
     var durationInMinutes = ev.duration;
     var hrs = parseFloat(durationInMinutes)/parseFloat(60);
     var width = parseFloat(hrs)*parseFloat(RECTANGLE_WIDTH);
-    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH)) * STEP_WIDTH;
+    var roundedWidth = Math.round(parseFloat(width)/parseFloat(STEP_WIDTH))*STEP_WIDTH;
     return roundedWidth;
 };
 
@@ -307,16 +309,6 @@ function startMinForX(X){
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
     return mins;
 };
-
-
-function getMemberIndexFromName(name) {
-    for (var j = 0; j < flashTeamsJSON["members"].length; j++) { // go through all members
-        if (flashTeamsJSON["members"][j].role == name){
-            return j;
-        }
-    }
-    return -1;
-}
 
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
@@ -487,6 +479,10 @@ function drawEachHandoffForEvent(eventObj){
                 $("#interaction_" + inter["id"])
                     .attr("d", function(d) {
                         return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+                    })
+                    .attr("stroke", function() {
+                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                        else return "gray";
                     });
             }
         }
@@ -528,8 +524,8 @@ function drawEachCollabForEvent(eventObj){
                 else var startX = x1;
                 $("#interaction_" + inter["id"])
                     .attr("x", startX)
-                    .attr("y", firstTaskY)
-                    .attr("height", taskDistance)
+                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                    .attr("height", taskDistance+9)
                     .attr("width", overlap);
             }
         }
@@ -791,7 +787,20 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
-            "class": "num-members-icon"
+            "class": "num-members-icon",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: function(d) {
+                var id = d.id.substr("task_g_".length);
+                var event = getEventFromId(id);
+                var str = event.members.length +
+                    (event.members.length === 1 ? " member" : " members");
+                return str;
+            }
         },
         
         style: {
@@ -864,7 +873,14 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
-            "class": "upload"
+            "class": "upload",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Upload files"
         },
         style: {
             cursor: "pointer",
@@ -885,7 +901,7 @@ if(!window._foundry) {
                 var iconWidth = events.collabIcon.attrs.width(d);
                 return events.handoffIcon.attrs.x(d) - iconWidth;
             },
-            y: function(d) {return d.y + events.bodyHeight - 19},
+            y: function(d) {return d.y + events.bodyHeight - 18},
             width: function(d) {
                 var iconWidth = 14;
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -907,7 +923,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw collaboration"
         },
         
         style: {
@@ -963,7 +986,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw handoff"
         },
         
         style: {
@@ -1182,6 +1212,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_COLOR;
+                case "paused":
+                    return TASK_PAUSED_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -1219,6 +1251,8 @@ function drawMainRect(eventObj) {
                     }
                 case "started":
                     return TASK_START_BORDER_COLOR;
+                case "paused":
+                    return TASK_PAUSED_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
@@ -1317,6 +1351,14 @@ function drawBottom(eventObj) {
     // handoff icon
     var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
     handoffIconSvg.on("click", startWriteHandoff);
+    
+    var selector = ".event " + events.numMembersIcon.selector + ", " +
+                   ".event " + events.uploadIcon.selector + ", " +
+                   ".event " + events.collabIcon.selector + ", " +
+                   ".event " + events.handoffIcon.selector;
+    $(selector).each(function() {
+          $(this).tooltip('destroy').tooltip();
+    });
 }
 
 function drawMemberTabs(eventObj) {
@@ -1403,7 +1445,6 @@ function drawShade(eventObj) {
     //if they are the CURRENT member
     for (var i=0; i<members.length; i++) {
         var member_id = members[i];
-        //var idx = getMemberIndexFromName(member["name"]);
         //debugger;
         if (current_user.id == member_id){
             if (currentUserIds.indexOf(groupNum) < 0){
@@ -1428,7 +1469,6 @@ function drawEvent(eventObj) {
       window._foundry.timeline.updateNumRows(eventObj.row + 2);
     }
     
-    
     drawG(eventObj);
     
     drawMemberTabs(eventObj);
@@ -1449,15 +1489,22 @@ function drawEvent(eventObj) {
 
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
         return;
     }
     
     if( eventObj.status == "started" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        //var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        
         var duration = eventObj["duration"];
-        var remaining_time = duration - time_passed;
+        
+        //var remaining_time = duration - time_passed;
+        
+		var remaining_time = eventObj.latest_remaining_time - time_passed;
+
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
@@ -1475,11 +1522,19 @@ function drawTimer(eventObj){
         eventObj["timer"] = remaining_time;
         updateStatus(true);
     }
+
     else if( eventObj.status == "delayed" ){
     
-        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        /* //OLD WAY
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
         var duration = eventObj["duration"];
         var remaining_time = duration - time_passed;
+		*/
+
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        var duration = eventObj["duration"];
+        var remaining_time = eventObj.latest_remaining_time - time_passed;
+
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
@@ -1534,7 +1589,7 @@ function addEventMember(eventId, memberIndex) {
 }
 
 //Remove a team member from an event
-function deleteEventMember(eventId, memberNum, memberName) {
+function deleteEventMember(eventId, memberNum) {
     if (memberNum == current){
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
@@ -1594,13 +1649,11 @@ function deleteEvent(eventId){
             var inter = flashTeamsJSON["interactions"][i];
             if (inter.event1 == eventId || inter.event2 == eventId) {
                 intersToDel.push(inter.id);
-                //console.log("# of intersToDel: " + intersToDel.length);
             }
         }
       
     for (var i = 0; i < intersToDel.length; i++) {
-
-		// remove from timeline
+        // remove from timeline
         var intId = intersToDel[i];
         deleteInteraction(intId);
     }
