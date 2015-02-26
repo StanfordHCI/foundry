@@ -661,15 +661,3 @@ function saveTaskOverview(groupNum){
     $('#task_modal').modal('hide'); 
 }
 
-function UpdateInputs(groupNum){
-    var events_before = events_immediately_before(groupNum);
-    var task_id = getEventJSONIndex(groupNum);
-    var ev = flashTeamsJSON["events"][task_id];
-
-    for(var i = 0; i<events_before.length; i++){
-        var outputs = events_before["outputs"];
-        for(var j = 0; j<outputs.length; j++ ){
-            ev["inputs"].append(outputs[j]);
-        }
-    }
-}
