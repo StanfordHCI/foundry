@@ -301,15 +301,28 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
     
     content += '<div class="row-fluid" >';	
-				
-				if(ev.inputs) {
-					content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
-					//content += '<b>Inputs:</b><br>';
-					var inputs = ev.inputs.split(",");
-					for(var i=0;i<inputs.length;i++){
-						content += inputs[i];
-					content += "<br />";
-        		}
+	var events_before_ids = events_immediately_before(groupNum);
+	
+    if(ev.inputs || (events_before_ids.length!=0)) { //todo here
+
+		content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
+		//content += '<b>Inputs:</b><br>';
+		var inputs = ev.inputs.split(",");
+		for(var i=0;i<inputs.length;i++){
+			content += "<a href=" + ev["gdrive"][1] + " target='_blank'>"+ inputs[i] +"</a></br>";
+        }
+        //content +="</br>"
+
+        for(var i=0;i<events_before_ids.length;i++){
+           
+            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            var outputs = ev_before["outputs"].split(",");
+           
+            for(var j=0;j<outputs.length;j++){   
+                content += "<a href=" + ev_before["gdrive"][1] + " target='_blank'>"+ outputs[j] + "</a></br>";
+            }					
+	    }
+      
     }
 		content +=  '</div>'; 
 		
@@ -646,4 +659,17 @@ function saveTaskOverview(groupNum){
     updateStatus();
 
     $('#task_modal').modal('hide'); 
+}
+
+function UpdateInputs(groupNum){
+    var events_before = events_immediately_before(groupNum);
+    var task_id = getEventJSONIndex(groupNum);
+    var ev = flashTeamsJSON["events"][task_id];
+
+    for(var i = 0; i<events_before.length; i++){
+        var outputs = events_before["outputs"];
+        for(var j = 0; j<outputs.length; j++ ){
+            ev["inputs"].append(outputs[j]);
+        }
+    }
 }
