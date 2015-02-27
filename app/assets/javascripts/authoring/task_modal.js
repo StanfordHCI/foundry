@@ -692,7 +692,10 @@ function saveTaskOverview(groupNum){
             } 
         }
     }
-    ev.outputQs = outQs;
+    ev.outputQs = outQs;    
+
+    //everytime a modal is saved all_inputs of all events on the timeline are updated
+    update_all_inputs_string();
 
     drawEvent(ev);
     updateStatus();
@@ -700,3 +703,23 @@ function saveTaskOverview(groupNum){
     $('#task_modal').modal('hide'); 
 }
 
+
+//this function updates all the inputs of all tasks based on previous tasks' outputs
+function update_all_inputs_string(){
+    var events = flashTeamsJSON["events"];
+    var all_inputs_array=[];
+    
+    for (var i =0; i<events.length; i++){
+        var all_inputs_string="";
+        all_inputs_array = getAllInputs(events[i].id);
+        for( var j=0; j<all_inputs_array.length; j++){
+            if (j==0)
+                all_inputs_string +=String(all_inputs_array[j][1]);
+            else
+                all_inputs_string +=','+ String(all_inputs_array[j][1]);
+
+            flashTeamsJSON["events"][i]["all_inputs"] = all_inputs_string;
+        }
+        
+    }
+}
