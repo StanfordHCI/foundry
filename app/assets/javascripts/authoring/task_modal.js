@@ -436,40 +436,7 @@ function getTaskOverviewContent(groupNum){
 	return content;
 }
 
-//returns an array of inputs of the task including the current task inputs and the previous tasks' outputs.
-// getAllInputs returns: [[task_id, input]]
-function getAllInputs(groupNum){
-   var task_id = getEventJSONIndex(groupNum);
-   var ev = flashTeamsJSON["events"][task_id];
 
-   var events_before_ids = events_immediately_before(groupNum);
-    
-   var all_inputs=[];
-
-   if(ev.inputs) { 
-
-        var inputs = ev.inputs.split(",");
-        for(var i=0;i<inputs.length;i++){
-            all_inputs.push([groupNum, inputs[i] ]);    
-        }
-    }
-
-    if(events_before_ids.length!=0){
-        for(var i=0;i<events_before_ids.length;i++){
-           
-            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
-            if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
-                continue;
-
-            var outputs = ev_before["outputs"].split(",");
-            
-            for(var j=0;j<outputs.length;j++){   
-               all_inputs.push([ev_before.id , outputs[j] ])
-            }                   
-        }    
-    }
-    return all_inputs;
-}
 
 //this was the previous task overview content that used the old modal layout (can be erased once we confirm we like new modal)
 function getTaskOverviewContentOld(groupNum){
@@ -722,4 +689,55 @@ function update_all_inputs_string(){
         }
         
     }
+}
+
+//returns an array of inputs of the task including the current task inputs and the previous tasks' outputs.
+// getAllInputs returns: [[task_id, input]]
+function getAllInputs(groupNum){
+   var task_id = getEventJSONIndex(groupNum);
+   var ev = flashTeamsJSON["events"][task_id];
+
+   var events_before_ids = events_immediately_before(groupNum);
+   var collaboration_ids = events_in_collaboration(groupNum);
+   var all_inputs=[];
+
+   if(ev.inputs) { 
+
+        var inputs = ev.inputs.split(",");
+        for(var i=0;i<inputs.length;i++){
+            all_inputs.push([groupNum, inputs[i] ]);    
+        }
+    }
+
+    if(events_before_ids.length!=0){
+        for(var i=0;i<events_before_ids.length;i++){
+           
+            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_before["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               all_inputs.push([ev_before.id , outputs[j] ])
+            }                   
+        }    
+    }
+
+    if(collaboration_ids.length!=0){
+        for(var i=0;i<collaboration_ids.length;i++){
+           
+            var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
+            if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_collab["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               all_inputs.push([ev_collab.id , outputs[j] ])
+            }                   
+        }   
+    }
+
+    return all_inputs;
 }
