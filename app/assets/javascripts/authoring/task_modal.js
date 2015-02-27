@@ -306,7 +306,7 @@ function getTaskOverviewContent(groupNum){
     var all_inputs = getAllInputs(groupNum);
 
     if(all_inputs.length!=0) {
-		content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
+		content += '<br /><h5>Review the following deliverables: </h5>';
 		for(var i=0; i<all_inputs.length; i++){
                 input_ev_id = all_inputs[i][0];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
