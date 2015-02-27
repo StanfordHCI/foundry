@@ -94,7 +94,6 @@ function eventMousedown(task2idNum) {
             drawHandoff(handoffData);
             DRAWING_HANDOFF = false;
             $(".task_rectangle").popover("hide");
-            //d3.event.stopPropagation();
             INTERACTION_TASK_ONE_IDNUM = 0; // back to 0
         } else {
             alert("Sorry, the second task must begin after the first task ends.");
@@ -543,7 +542,7 @@ function isWorkerInteraction(id) {
     return false;
 }
 
-function retHandoffsForEvent(id) {
+function getHandoffsForEvent(id) {
     var interactions = flashTeamsJSON["interactions"];
     var eventHandoffs = [];
     for (var i = 0; i < interactions.length; i++){
@@ -561,7 +560,10 @@ function retHandoffsForEvent(id) {
     return eventHandoffs;
 }
 
-function handoffOutOfRange() {
-
-
+function handoffOutOfRange(ev1, ev2) {
+    var event1 = flashTeamsJSON["events"][getEventJSONIndex(ev1)];
+    var event2 = flashTeamsJSON["events"][getEventJSONIndex(ev2)];
+     var task1End = event1.startTime + event1.duration;
+     if (task1End > event2.startTime) return true;
+     else return false;
 }

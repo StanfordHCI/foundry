@@ -48,16 +48,26 @@ var drag = d3.behavior.drag()
     })
     .on("drag", dragEventBlock)
     .on("dragend", function(d){
-        console.log("original", originalEV);
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
 
             //Check if handoffs will make this a bag drag
             var outOfRange = false;
-            
+            var eventHandoffs = getHandoffsForEvent(d.groupNum);
+            for (var i = 0; i<eventHandoffs.length; i++) {
+                var handoff = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
+                if (handoffOutOfRange(handoff["event1"], handoff["event2"]) == true) {
+                    outOfRange = true;
+                    break;
+                }
+            } 
+            if (outOfRange) {
+                alert("Sorry, an upstream event cannot end before a downstream event begins.");
+                flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                drawEvent(originalEV, false);
+            }
             updateStatus(false);
-            console.log("current", ev);
         } else {
             // click
             eventMousedown(d.groupNum);
@@ -464,7 +474,7 @@ function findCurrentUserNextEvent(currentUserEvents){
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
-    var eventHandoffs = retHandoffsForEvent(eventObj["id"]);
+    var eventHandoffs = getHandoffsForEvent(eventObj["id"]);
     for (var i = 0; i < eventHandoffs.length; i++){
         var inter = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
         var draw = false;
@@ -479,29 +489,19 @@ function drawEachHandoffForEvent(eventObj){
             ev2 = eventObj;
         }  
         
-        var task1end = ev1.startTime + ev1.duration;
-        if (task1end <= ev2.startTime) { 
-            //Reposition an existing handoff
-            var x1 = handoffStart(ev1);
-            var y1 = ev1.y + 50;
-            var x2 = ev2.x + 3;
-            var y2 = ev2.y + 50;
-            $("#interaction_" + inter["id"])
-                .attr("d", function(d) {
-                    return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
-                })
-                .attr("stroke", function() {
-                    if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
-                    else return "gray";
-                });
-        } else { //Out of range
-            //alert("Bag drag");
-            $("#interaction_" + inter["id"]).fadeOut();
-            setTimeout(function() {
-                deleteInteraction(inter["id"]);
-            }, 1000);
-            //bootstrap alert, put back in original space
-        }
+        //Reposition an existing handoff
+        var x1 = handoffStart(ev1);
+        var y1 = ev1.y + 50;
+        var x2 = ev2.x + 3;
+        var y2 = ev2.y + 50;
+        $("#interaction_" + inter["id"])
+            .attr("d", function(d) {
+                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+            })
+            .attr("stroke", function() {
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                else return "gray";
+            });
     }
 }
 
