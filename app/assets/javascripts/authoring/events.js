@@ -42,18 +42,26 @@ var drag_left = d3.behavior.drag()
 //Called when task rectangles are dragged
 var drag = d3.behavior.drag()
     .origin(Object)
+    .on("dragstart", function(d) {
+        var ev = getEventFromId(d.groupNum);
+        originalEV = JSON.parse(JSON.stringify(ev)); //deep copy orig position
+    })
     .on("drag", dragEventBlock)
     .on("dragend", function(d){
-        console.log("DONE DRAGGING");
+        console.log("original", originalEV);
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
-            //drawPopover(ev, true, false);
+
+            //Check if handoffs will make this a bag drag
+            var outOfRange = false;
+            
             updateStatus(false);
+            console.log("current", ev);
         } else {
             // click
             eventMousedown(d.groupNum);
-        } //AT - START HERE, IF BAD, POP BACK to original spot
+        } 
     });
 
 // leftResize: resize the rectangle by dragging the left handle
@@ -456,46 +464,43 @@ function findCurrentUserNextEvent(currentUserEvents){
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
-    for (var i = 0; i < interactions.length; i++){
-        var inter = interactions[i];
+    var eventHandoffs = retHandoffsForEvent(eventObj["id"]);
+    for (var i = 0; i < eventHandoffs.length; i++){
+        var inter = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
         var draw = false;
-        if (inter["type"] == "handoff"){
-            if (inter["event1"] == eventObj["id"]){
-                draw = true;
-                var ev1 = eventObj;
-                var ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
-            }
-            else if (inter["event2"] == eventObj["id"]){
-                draw = true;
-                var ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
-                var ev2 = eventObj;
-            }  
-            
-            if (draw){
-                var task1end = ev1.startTime + ev1.duration;
-                if (task1end <= ev2.startTime) { 
-                    //Reposition an existing handoff
-                    var x1 = handoffStart(ev1);
-                    var y1 = ev1.y + 50;
-                    var x2 = ev2.x + 3;
-                    var y2 = ev2.y + 50;
-                    $("#interaction_" + inter["id"])
-                        .attr("d", function(d) {
-                            return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
-                        })
-                        .attr("stroke", function() {
-                            if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
-                            else return "gray";
-                        });
-                } else { //Out of range
-                    //alert("Bag drag");
-                    $("#interaction_" + inter["id"]).fadeOut();
-                    setTimeout(function() {
-                        deleteInteraction(inter["id"]);
-                    }, 1000);
-                    //bootstrap alert, put back in original space
-                }
-            }
+        var ev1;
+        var ev2;
+        if (inter["event1"] == eventObj["id"]){
+            ev1 = eventObj;
+            ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
+        }
+        else if (inter["event2"] == eventObj["id"]){
+            ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
+            ev2 = eventObj;
+        }  
+        
+        var task1end = ev1.startTime + ev1.duration;
+        if (task1end <= ev2.startTime) { 
+            //Reposition an existing handoff
+            var x1 = handoffStart(ev1);
+            var y1 = ev1.y + 50;
+            var x2 = ev2.x + 3;
+            var y2 = ev2.y + 50;
+            $("#interaction_" + inter["id"])
+                .attr("d", function(d) {
+                    return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+                })
+                .attr("stroke", function() {
+                    if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                    else return "gray";
+                });
+        } else { //Out of range
+            //alert("Bag drag");
+            $("#interaction_" + inter["id"]).fadeOut();
+            setTimeout(function() {
+                deleteInteraction(inter["id"]);
+            }, 1000);
+            //bootstrap alert, put back in original space
         }
     }
 }

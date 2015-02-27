@@ -543,4 +543,25 @@ function isWorkerInteraction(id) {
     return false;
 }
 
+function retHandoffsForEvent(id) {
+    var interactions = flashTeamsJSON["interactions"];
+    var eventHandoffs = [];
+    for (var i = 0; i < interactions.length; i++){
+        var inter = interactions[i];
+        var belongs = false;
+        if (inter["type"] == "handoff"){
+            if (inter["event1"] == id) belongs = true;
+            else if (inter["event2"] == id) belongs = true;
+            
+            if (belongs){
+                eventHandoffs.push(inter["id"]);
+            }
+        }
+    }
+    return eventHandoffs;
+}
 
+function handoffOutOfRange() {
+
+
+}
