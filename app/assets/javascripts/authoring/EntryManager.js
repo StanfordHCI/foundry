@@ -52,6 +52,11 @@
         
         flashTeamsJSON.members = this.members;
         flashTeamsJSON.folders = this.folders;
+        
+        // add the root folder if it doesn't exist
+        if(!this.folderExists(this._rootId)) {
+            this.memberData._entry_map[this._rootId] = this._generateRootFolder();
+        }
     };
     
     EntryManager.prototype._rootId = "root";
@@ -181,11 +186,6 @@
         folderId = folderId || this.currentFolderId;
 
         var folder = this.memberData._entry_map[folderId];
-        // special case the root folder
-        if(this.currentFolderId === this._rootId && !folder) {
-            this.memberData._entry_map[this._rootId] = this._generateRootFolder();
-            folder = this.memberData._entry_map[this._rootId];
-        }
 
         // only push and increment the number of members if this entry isn't
         // already in this folder
