@@ -561,7 +561,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -573,7 +573,7 @@ end
    		
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
    		
-   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration).deliver
    
    end
    
@@ -655,7 +655,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -664,7 +664,7 @@ end
    		@foundry_url = params[:foundry_url]
 
    		
-   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
+   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
    
    end
    
