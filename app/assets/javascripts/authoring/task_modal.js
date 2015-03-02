@@ -301,13 +301,19 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
     
     content += '<div class="row-fluid" >';	
-	var events_before_ids = events_immediately_before(groupNum);
+	//var events_before_ids = events_immediately_before(groupNum);
 	
-    if(ev.inputs || (events_before_ids.length!=0)) { //todo here
+    var all_inputs = getAllInputs(groupNum);
 
-		content += '<br /><h5>Review the following deliverables from previous tasks: </h5>';
-		//content += '<b>Inputs:</b><br>';
-		var inputs = ev.inputs.split(",");
+    if(all_inputs.length!=0) {
+		content += '<br /><h5>Review the following deliverables: </h5>';
+		for(var i=0; i<all_inputs.length; i++){
+                input_ev_id = all_inputs[i][0];
+                var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+                content += "<a href=" + input_ev["gdrive"][1] + " target='_blank'>"+ all_inputs[i][1] +"</a></br>";
+        }
+        //content += '<b>Inputs:</b><br>';
+		/*var inputs = ev.inputs.split(",");
 		for(var i=0;i<inputs.length;i++){
 			content += "<a href=" + ev["gdrive"][1] + " target='_blank'>"+ inputs[i] +"</a></br>";
         }
@@ -321,8 +327,7 @@ function getTaskOverviewContent(groupNum){
             for(var j=0;j<outputs.length;j++){   
                 content += "<a href=" + ev_before["gdrive"][1] + " target='_blank'>"+ outputs[j] + "</a></br>";
             }					
-	    }
-      
+	    } */   
     }
 		content +=  '</div>'; 
 		
@@ -430,6 +435,7 @@ function getTaskOverviewContent(groupNum){
 	
 	return content;
 }
+
 
 
 //this was the previous task overview content that used the old modal layout (can be erased once we confirm we like new modal)
@@ -653,7 +659,10 @@ function saveTaskOverview(groupNum){
             } 
         }
     }
-    ev.outputQs = outQs;
+    ev.outputQs = outQs;    
+
+    //everytime a modal is saved all_inputs of all events on the timeline are updated
+    update_all_inputs_string();
 
     drawEvent(ev);
     updateStatus();
@@ -661,3 +670,74 @@ function saveTaskOverview(groupNum){
     $('#task_modal').modal('hide'); 
 }
 
+
+//this function updates all the inputs of all tasks based on previous tasks' outputs
+function update_all_inputs_string(){
+    var events = flashTeamsJSON["events"];
+    var all_inputs_array=[];
+    
+    for (var i =0; i<events.length; i++){
+        var all_inputs_string="";
+        all_inputs_array = getAllInputs(events[i].id);
+        for( var j=0; j<all_inputs_array.length; j++){
+            if (j==0)
+                all_inputs_string +=String(all_inputs_array[j][1]);
+            else
+                all_inputs_string +=','+ String(all_inputs_array[j][1]);
+
+            flashTeamsJSON["events"][i]["all_inputs"] = all_inputs_string;
+        }
+        
+    }
+}
+
+//returns an array of inputs of the task including the current task inputs and the previous tasks' outputs.
+// getAllInputs returns: [[task_id, input]]
+function getAllInputs(groupNum){
+   var task_id = getEventJSONIndex(groupNum);
+   var ev = flashTeamsJSON["events"][task_id];
+
+   var events_before_ids = events_immediately_before(groupNum);
+   var collaboration_ids = events_in_collaboration(groupNum);
+   var all_inputs=[];
+
+   if(ev.inputs) { 
+
+        var inputs = ev.inputs.split(",");
+        for(var i=0;i<inputs.length;i++){
+            all_inputs.push([groupNum, inputs[i] ]);    
+        }
+    }
+
+    if(events_before_ids.length!=0){
+        for(var i=0;i<events_before_ids.length;i++){
+           
+            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_before["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               all_inputs.push([ev_before.id , outputs[j] ])
+            }                   
+        }    
+    }
+
+    if(collaboration_ids.length!=0){
+        for(var i=0;i<collaboration_ids.length;i++){
+           
+            var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
+            if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_collab["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               all_inputs.push([ev_collab.id , outputs[j] ])
+            }                   
+        }   
+    }
+
+    return all_inputs;
+}
