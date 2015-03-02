@@ -35,6 +35,9 @@
             _entry_map: {}
         };
         
+        // create root folder before adding entries
+        this.memberData._entry_map[this._rootId] = this._generateRootFolder();
+        
         this.folders = [];
         this.members = [];
 
@@ -52,11 +55,6 @@
         
         flashTeamsJSON.members = this.members;
         flashTeamsJSON.folders = this.folders;
-        
-        // add the root folder if it doesn't exist
-        if(!this.folderExists(this._rootId)) {
-            this.memberData._entry_map[this._rootId] = this._generateRootFolder();
-        }
     };
     
     EntryManager.prototype._rootId = "root";
