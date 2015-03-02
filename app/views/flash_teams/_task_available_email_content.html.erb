@@ -20,7 +20,7 @@
 						<p><b>Task description:</b> <%=@task_description.html_safe%></p>
 						
 						<p>
-							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
 						
 						<%if !@input_link.empty?%>
 							You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
