@@ -67,6 +67,10 @@ var drag = d3.behavior.drag()
                 flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                 drawEvent(originalEV, false);
             }
+
+            //Check if collabs will make this a bad drag
+            
+            
             updateStatus(false);
         } else {
             // click
