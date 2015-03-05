@@ -148,3 +148,37 @@ window.dependencyAPI = {
 		return false;
 	}
 };
+
+
+
+//this function returns the ids of the events immidiately before the current event (groupNum).
+function events_immediately_before(groupNum){
+ var ids_immediately_before=[];
+ var interactions = flashTeamsJSON["interactions"];
+ for(var i = 0; i<interactions.length; i++){
+ 	if(interactions[i].type != "handoff")
+ 		continue;
+ 	if (parseInt(interactions[i].event2) == groupNum){
+ 		ids_immediately_before.push(parseInt(interactions[i].event1));
+ 	}	
+ }
+ return ids_immediately_before;
+}
+
+function events_in_collaboration(groupNum){
+	var collab_ids=[];
+	var interactions = flashTeamsJSON["interactions"];
+	for(var i = 0; i<interactions.length; i++){
+		if(interactions[i].type != "collaboration")
+			continue;
+
+	 	if (parseInt(interactions[i].event2) == groupNum){
+	 		collab_ids.push(parseInt(interactions[i].event1));
+	 	}
+	 	
+	 	else if (parseInt(interactions[i].event1) == groupNum){
+	 		collab_ids.push(parseInt(interactions[i].event2));
+	 	}	
+ 	}
+ 	return collab_ids;
+}

@@ -20,7 +20,7 @@
 						<p><b>Task description:</b> <%=@task_description.html_safe%></p>
 						
 						<p>
-							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
 						
 						<%if !@input_link.empty?%>
 							You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
@@ -35,18 +35,9 @@
 						
 						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
 						
-						<p>
-							As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work.  If you have not already done so, please familiarize yourself with Foundry by visiting <a href="http://bit.ly/foundryexample">http://bit.ly/foundryexample</a> and clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any questions regarding the use of Foundry.
-						</p>
 						
-						<p>
-							If you are hired, you must start working on the task within 30 minutes. You should confirm that you have started working on the task by accepting the contract on oDesk and signing in to Foundry via the link that will be sent to you.
-						</p>
-						
-						<p>
-							If you are ready to start working on this task, click on the URL at the end of this message. If you are hired, you will be assigned to the <%=@task_name%> task.  We will hire you as soon as possible if the task is still available. If not, you will be notified for future opportunities.
-						</p>
-						<p> URL: <%=link_to "I accept", @url%>. </p>
+						<p> If you are available and ready to start working on this task within 30 minutes of being hired, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
+							<p><p> URL: <%=link_to "I accept", @url%>. </p>
 						<p>
 							Best, <br />
 							Stanford HCI Research Team
@@ -59,3 +50,4 @@
 		</div><!-- /span7 -->
   		  			
   	</div><!-- /row -->
+</div>

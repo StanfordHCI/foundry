@@ -1,0 +1,42 @@
+@import 'mixins';
+
+/* animations */
+@include keyframes(spin) {
+  18% {
+    @include transform(rotate(-40deg));
+  }
+  60% {
+    @include transform(rotate(180deg));
+  }
+  85% {
+    @include transform(rotate(370deg));
+  }
+  95% {
+    @include transform(rotate(350deg));
+  }
+  100% {
+    @include transform(rotate(360deg));
+  }
+}
+
+@include keyframes(slight-slide-from-left) {
+  0% {
+    @include transform(translateX(-4px));
+  }
+  100% {
+    @include transform(translateX(0px));
+  }
+}
+
+@include keyframes(fade-in) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.spin-anim {
+  @include animation(spin 1s);
+}

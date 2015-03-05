@@ -77,15 +77,44 @@ class FlashTeamsController < ApplicationController
 	    # Then create a copy from the original data
 	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
 	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-	    copy.status = original.status
+	    #copy.status = original.original_status
+	    copy.status = createDupTeamStatus(copy.id, original.original_status)
+	    
+	    # new_status = createDupTeamStatus(copy.id, original.original_status)
+# 	    new_status_json = new_status.to_s
+# 	    copy.status = new_status_json
 	    copy.save
+	    
+	    
+	    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
 	
 	    # Redirect to the list of things
 	    redirect_to :action => 'index'   
     end #end if session not nil
   end
 
+  
+  def createDupTeamStatus(dup_id, orig_status)
+	original_status = JSON.parse(orig_status)
+	
+	# update the member invite links  
+	flash_team_members = original_status['flash_teams_json']['members']
+        
+    flash_team_members.each do |member|
+    	uniq = SecureRandom.uuid
+    	url = url_for :controller => 'members', :action => 'invited', :id => dup_id, :uniq => uniq
+    	
+    	member['uniq'] = uniq
+		member['invitation_link'] = url 		
+    end
+    
+    # update the google drive folder
+    original_status['flash_teams_json'].except!("folder")
 
+	return original_status.to_json
+
+  end
+  
   def index
   		# check to see if the user id exists in the database 
 		if session[:user].nil?
@@ -505,7 +534,7 @@ end
 
  		@id_team = params[:id]
 	   	@id_task = params[:event_id].to_i
-	   	@id_event = params[:event_id]
+	   	
 	   	@task_avail_active = "active";
 	   	
 	   	@flash_team = FlashTeam.find(params[:id])
@@ -532,7 +561,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -544,8 +573,8 @@ end
    		
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
    		@url = '/landings/' + @id_team + '/' + @id_event + '/view?task_member=' + @task_member + '&email=' + @recipient_email
-   	
-   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration, @url).deliver
+   		
+   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @url).deliver
    
    end
    
@@ -627,7 +656,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -636,7 +665,7 @@ end
    		@foundry_url = params[:foundry_url]
 
    		
-   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
+   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
    
    end
    
@@ -734,52 +763,5 @@ end
    
   def flash_team_params params
     params.permit(:name, :author)
-  end
-
-  def landing
-    @id_team = params[:id]
-    @id_task = params[:event_id].to_i
-    @flash_team = FlashTeam.find(params[:id])
-    # Extract data from the JSON
-    flash_team_status = JSON.parse(@flash_team.status)
-    @flash_team_json = flash_team_status['flash_teams_json']
-    @flash_team_event = @flash_team_json['events'][@id_task]
-    @flash_team_name = @flash_team_json['title']
-    #tm = params[:task_member].split(',') role of recipient 
-    @task_member = params[:task_member]
-    @task_name = @flash_team_event['title']
-    @project_overview = @flash_team_json['projectoverview']
-    @task_description = @flash_team_event['notes']
-    @inputs = @flash_team_event['inputs']
-    #@input_link = params[:input_link]
-    @outputs = @flash_team_event['outputs']
-    #@output_description = params[:output_description]
-    minutes = @flash_team_event['duration']
-    hh, mm = minutes.divmod(60)
-    @task_duration = hh.to_s 
-    if hh==1
-      @task_duration += " hour"
-    else
-      @task_duration += " hours"
-    end
-    if mm>0
-      @task_duration += " and " + mm.to_s + " minutes"
-    end
-
-    @task_members = Array.new
-    @flash_team_event['members'].each do |task_member|
-      @task_members << getMemberById(@id_team, @id_task, task_member)
-    end
-
-    @invitationLink = ""
-    @uniq = ""
-
-    @task_members.each do |task_member|
-      if task_member['role'] == @task_member
-        @invitationLink = task_member['invitation_link']
-        @uniq = task_member['uniq']
-        break
-      end
-    end
   end
 end

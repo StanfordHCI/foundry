@@ -22,6 +22,7 @@
 //= require ./authoring/load
 //= require ./authoring/timeline
 //= require ./authoring/events
+//= require ./authoring/EntryManager
 //= require ./authoring/members
 //= require ./authoring/popovers
 //= require ./authoring/helper
@@ -29,7 +30,7 @@
 //= require ./authoring/awareness
 //= require ./authoring/interactions
 //= require ./authoring/left-sidebar
-//= require ./authoring/addRole.js
+//= require ./authoring/addRole
 //= require ./authoring/sidebar
 //= require ./authoring/odeskArrays
 //= require ./authoring/spectrum
@@ -42,8 +43,12 @@
 //= require ./authoring/bootstrap-tagsinput
 //= require ./authoring/notifications
 //= require ./authoring/tour
+//= require ./authoring/eventTour
 //= require ./authoring/task_modal
 //= require ./authoring/hiring
 //= require ./authoring/taskStatus
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
+//= require ./authoring/docModal
+//= require ./authoring/jquery.cookie
+//= require ./authoring/video_chat
