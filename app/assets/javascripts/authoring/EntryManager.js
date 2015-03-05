@@ -35,6 +35,9 @@
             _entry_map: {}
         };
         
+        // create root folder before adding entries
+        this.memberData._entry_map[this._rootId] = this._generateRootFolder();
+        
         this.folders = [];
         this.members = [];
 
@@ -181,11 +184,6 @@
         folderId = folderId || this.currentFolderId;
 
         var folder = this.memberData._entry_map[folderId];
-        // special case the root folder
-        if(this.currentFolderId === this._rootId && !folder) {
-            this.memberData._entry_map[this._rootId] = this._generateRootFolder();
-            folder = this.memberData._entry_map[this._rootId];
-        }
 
         // only push and increment the number of members if this entry isn't
         // already in this folder

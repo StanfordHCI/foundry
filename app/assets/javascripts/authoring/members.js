@@ -655,6 +655,9 @@ function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) 
 
 //Delete team member from team list, JSON, diagram, and events
 function deleteEntry(entryId) {
+    // ensure that entry id is a string before using it to search
+    // through event members
+    entryId = String(entryId);
     $('#confirmAction').modal('hide');
     var entry = entryManager.getEntryById(entryId);
     if(entryManager.isMember(entry)) {
