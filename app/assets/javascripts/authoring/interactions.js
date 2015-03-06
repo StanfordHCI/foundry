@@ -560,6 +560,24 @@ function getHandoffsForEvent(id) {
     return eventHandoffs;
 }
 
+function getCollabsForEvent(id) {
+    var interactions = flashTeamsJSON["interactions"];
+    var eventCollabs = [];
+    for (var i = 0; i < interactions.length; i++){
+        var inter = interactions[i];
+        var belongs = false;
+        if (inter["type"] == "collaboration"){
+            if (inter["event1"] == id) belongs = true;
+            else if (inter["event2"] == id) belongs = true;
+            
+            if (belongs){
+                eventCollabs.push(inter["id"]);
+            }
+        }
+    }
+    return eventCollabs;
+}
+
 function handoffOutOfRange(ev1, ev2) {
     var event1 = flashTeamsJSON["events"][getEventJSONIndex(ev1)];
     var event2 = flashTeamsJSON["events"][getEventJSONIndex(ev2)];

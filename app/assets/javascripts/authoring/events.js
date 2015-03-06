@@ -69,7 +69,20 @@ var drag = d3.behavior.drag()
             }
 
             //Check if collabs will make this a bad drag
-            
+            outOfRange = false;
+            var eventCollabs = getCollabsForEvent(d.groupNum);
+            for (var i = 0; i<eventCollabs.length; i++) {
+                var collab = flashTeamsJSON["interactions"][getIntJSONIndex(eventCollabs[i])];
+                var event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
+                var event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
+                var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
+                
+                if (overlap <= 0) {
+                    alert("Sorry, the events must overlap to have a collaboration.");
+                    flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                    drawEvent(originalEV, false);
+                }
+            }
             
             updateStatus(false);
         } else {
@@ -549,12 +562,7 @@ function drawEachCollabForEvent(eventObj){
                         .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
                         .attr("height", taskDistance+9)
                         .attr("width", overlap);
-                } else { //Out of range
-                    $("#interaction_" + inter["id"]).fadeOut();
-                    setTimeout(function() {
-                        deleteInteraction(inter["id"]);
-                    }, 1000);
-                }
+                }      
             }
         }
     }
