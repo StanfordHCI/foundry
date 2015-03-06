@@ -94,19 +94,20 @@ class LandingsController < ApplicationController
     end
 
     if @queuePosition == 1
-      @wait_time = 0
+      wait_time = @relevantLanding[@queuePosition-1].end_date_time-Time.now
     else
       wait_time = @relevantLanding[@queuePosition-2].end_date_time-Time.now
-      hh, mm = wait_time.divmod(60)
-      @wait_time = hh.to_s 
-      if hh==1
-        @wait_time += " minute"
-      else
-        @wait_time += " minutes"
-      end
-      if mm>0
-        @wait_time += " and " + mm.to_i.to_s + " seconds"
-      end
+    end
+
+    hh, mm = wait_time.divmod(60)
+    @wait_time = hh.to_s 
+    if hh==1
+      @wait_time += " minute"
+    else
+      @wait_time += " minutes"
+    end
+    if mm>0
+      @wait_time += " and " + mm.to_i.to_s + " seconds"
     end
 
     if alreadyPresent == 0 
