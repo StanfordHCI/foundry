@@ -15,7 +15,7 @@
 				
 				<div class="row-fluid span11">
 					<p>
-						Congratulations!  You are at No. <%=@queuePosition%> position in the hiring queue for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. Your expected wait time (for the final decision) is <%=@wait_time%>. Please do not close this page; this page will automatically refresh every 60 seconds with the updated status. In the meanwhile, we recommend that you read the following task description carefully. If you are selected for hiring, you will have 10 minutes from the time you receive that notification to complete the entire registration process. Good luck!</p>
+						Congratulations!  You are at No. <%=@queuePosition%> position in the hiring queue for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. Your expected wait time (for the final decision) is <%=@wait_time%>. Please do not close this page; this page will automatically refresh every 60 seconds with the updated status. In the meanwhile, we recommend that you read the following task description carefully. If you are selected for hiring, you will have 10 minutes from the time you receive that notification to complete the entire registration process. Further, if at any time you would like to opt out of this hiring process, we ask that you <%=link_to "Click here", @removalURL%>.Good luck!</p>
 <p> As stated in the job description, you will have <b><em><%=@task_duration%></em></b> to complete this task and must start working within 30 minutes from hiring notification. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
 					</p>
 						
@@ -44,7 +44,9 @@
 						<p>
 							After you sign up, you will receive a unique link to the project, which you should use throughout the project. As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any remaining questions.
 						</p>  
-						
+										
+			<p>Again, if you would not like to work on this project any more, <%=link_to "click here to give up your spot in the hiring queue", @removalURL%> so that others can be offered the job.</p>
+
 						
 						<p>
 							We hope that you can work on this project. Good luck! </p>

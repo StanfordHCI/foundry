@@ -16,6 +16,7 @@ class LandingsController < ApplicationController
     @queuePosition = 0
     @wait_time = ""
     wait_time = 0
+    @removalURL = url_for :controller=>'landings', :action=>'remove', :id=>@id_team, :event_id=>@id_task, :task_member=>@task_member, :email=>@email
     @task_name = @flash_team_event['title']
     @project_overview = @flash_team_json['projectoverview']
     @task_description = @flash_team_event['notes']
@@ -38,6 +39,11 @@ class LandingsController < ApplicationController
     @task_members = Array.new
     @flash_team_event['members'].each do |task_member|
       @task_members << getMemberById(@id_team, @id_task, task_member)
+    end
+
+    if @id_team.nil? or @id_team<=0 or @id_task.nil? or @id_task<0 or @email=="" or @email.nil? or @task_member.nil? or @task_member==""
+      @queuePosition = -1
+      return
     end
 
     @invitationLink = ""
@@ -93,7 +99,9 @@ class LandingsController < ApplicationController
       @queuePosition = count
     end
 
-    if @queuePosition == 1
+    if @queuePosition == 1 and @relevantLanding.length == 0
+      wait_time = 0
+    elsif @queuePosition == 1 
       wait_time = @relevantLanding[@queuePosition-1].end_date_time-Time.now
     else
       wait_time = @relevantLanding[@queuePosition-2].end_date_time-Time.now
@@ -108,6 +116,10 @@ class LandingsController < ApplicationController
     end
     if mm>0
       @wait_time += " and " + mm.to_i.to_s + " seconds"
+    end
+
+    if @queuePosition == 1 and @relevantLanding.length == 0 then
+      @wait_time = '10 minutes'
     end
 
     if alreadyPresent == 0 
@@ -125,5 +137,23 @@ class LandingsController < ApplicationController
       return
     end
   @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+  end
+
+  def remove
+    @id_team = params[:id]
+    @id_task = params[:event_id].to_i
+    @task_member = params[:task_member]
+    @email = params[:email]
+    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :email => @email)
+    for l in r
+      l.destroy
+      l.save
+    end
+
+    s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member)
+    if s.length>0
+      s[0].end_date_time = Time.now+600
+      s[0].save
+    end
   end
 end
