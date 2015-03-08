@@ -151,15 +151,20 @@ class LandingsController < ApplicationController
     @id_task = params[:event_id].to_i
     @task_member = params[:task_member]
     @email = params[:email]
-    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :email => @email, :status => 'p')
+    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
+    index = 0
     for l in r
-      l.destroy
-      l.save
+      if l.email == @email
+        l.destroy
+        l.save
+        break
+      end
+      index = index+1
     end
 
     s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
     if s.length>0
-      if s[0].end_date_time>Time.now+600
+      if index==0 
         s[0].end_date_time = Time.now+600
         s[0].save
       end
