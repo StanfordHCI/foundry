@@ -46,6 +46,18 @@ class LandingsController < ApplicationController
       return
     end
 
+    emails = Array.new
+    emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
+    if emails.empty?
+      @queuePosition = -1
+      return
+    else
+      for l in emails
+        l.destroy
+        l.save
+      end
+    end
+
     @invitationLink = ""
     @uniq = ""
 
@@ -58,12 +70,12 @@ class LandingsController < ApplicationController
     end
 
     @relevantLanding1 = Array.new
-    @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+    @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
     for l in @relevantLanding1
       if m = Member.find_by_email(l.email) then
         if m.email_confirmed
-          l.status = 'd'
+          l.status = 'p'
           l.save
           return
         elsif Time.now>l.end_date_time
@@ -77,7 +89,7 @@ class LandingsController < ApplicationController
     end
 
     @relevantLanding = Array.new
-    @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+    @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
     alreadyPresent = 0
 
@@ -136,7 +148,7 @@ class LandingsController < ApplicationController
     else
       return
     end
-  @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+  @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
   end
 
   def remove
@@ -144,13 +156,13 @@ class LandingsController < ApplicationController
     @id_task = params[:event_id].to_i
     @task_member = params[:task_member]
     @email = params[:email]
-    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :email => @email)
+    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :email => @email, :status => 'p')
     for l in r
       l.destroy
       l.save
     end
 
-    s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member)
+    s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
     if s.length>0
       s[0].end_date_time = Time.now+600
       s[0].save

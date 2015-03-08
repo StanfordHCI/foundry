@@ -574,6 +574,13 @@ end
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
    		emails = @recipient_email.split(',')
    		for email in emails
+   			newLanding = Landing.new
+   			newLanding.id_team = @id_team
+   			newLanding.id_event = @id_task
+   			newLanding.email = email
+   			newLanding.task_member = @task_member
+   			newLanding.status = 's'
+   			newLanding.save
    			@url = url_for :controller => 'landings', :action => 'view', :id => @id_team, :event_id => @id_task.to_s, :task_member => @task_member, :email => email.strip
    			UserMailer.send_task_hiring_email(@sender_email, email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @url).deliver
    		end
