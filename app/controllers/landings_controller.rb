@@ -147,6 +147,7 @@ class LandingsController < ApplicationController
   end
 
   def remove
+    timeDifference = 0
     @id_team = params[:id]
     @id_task = params[:event_id].to_i
     @task_member = params[:task_member]
@@ -155,6 +156,7 @@ class LandingsController < ApplicationController
     index = 0
     for l in r
       if l.email == @email
+        timeDifference = l.end_date_time-Time.now
         l.destroy
         l.save
         break
@@ -163,9 +165,9 @@ class LandingsController < ApplicationController
     end
 
     s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
-    if s.length>=index
+    if s.length>index
       for i in index..s.length-1
-        s[i].end_date_time = s[i].end_date_time-600
+        s[i].end_date_time = s[i].end_date_time-timeDifference
         s[i].save
       end
     end
