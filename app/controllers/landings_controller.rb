@@ -48,14 +48,9 @@ class LandingsController < ApplicationController
 
     emails = Array.new
     emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
-    if emails.empty?
+    if emails.empty? 
       @queuePosition = -1
       return
-    else
-      for l in emails
-        l.destroy
-        l.save
-      end
     end
 
     @invitationLink = ""
