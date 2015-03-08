@@ -69,7 +69,7 @@ class LandingsController < ApplicationController
 
     for l in @relevantLanding1
       if m = Member.find_by_email(l.email) then
-        if m.email_confirmed
+        if m.email_confirmed and m.uniq==@uniq
           l.status = 'p'
           l.save
           return
