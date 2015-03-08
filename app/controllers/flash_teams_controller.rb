@@ -577,7 +577,7 @@ end
    			newLanding = Landing.new
    			newLanding.id_team = @id_team
    			newLanding.id_event = @id_task
-   			newLanding.email = email
+   			newLanding.email = email.strip
    			newLanding.task_member = @task_member
    			newLanding.status = 's'
    			newLanding.save
