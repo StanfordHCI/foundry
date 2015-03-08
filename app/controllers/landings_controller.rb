@@ -159,8 +159,10 @@ class LandingsController < ApplicationController
 
     s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
     if s.length>0
-      s[0].end_date_time = Time.now+600
-      s[0].save
+      if s[0].end_date_time>Time.now+600
+        s[0].end_date_time = Time.now+600
+        s[0].save
+      end
     end
   end
 end
