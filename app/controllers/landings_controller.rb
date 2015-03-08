@@ -41,7 +41,7 @@ class LandingsController < ApplicationController
       @task_members << getMemberById(@id_team, @id_task, task_member)
     end
 
-    if @id_team.nil? or @id_team<=0 or @id_task.nil? or @id_task<0 or @email=="" or @email.nil? or @task_member.nil? or @task_member==""
+    if @id_team.nil? or @id_team.to_i<=0 or @id_task.nil? or @id_task.to_i<0 or @email=="" or @email.nil? or @task_member.nil? or @task_member==""
       @queuePosition = -1
       return
     end
