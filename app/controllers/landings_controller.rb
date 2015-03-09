@@ -170,8 +170,12 @@ class LandingsController < ApplicationController
 
     s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
     if s.length>index
-      for i in index..s.length-1
-        s[i].end_date_time = s[i].end_date_time-timeDifference
+      s[index].end_date_time = s[index].end_date_time-timeDifference
+      s[index].save
+
+    if s.length>index+1
+      for i in index+1..s.length-1
+        s[i].end_date_time = 600+s[i-1].end_date_time
         s[i].save
       end
     end
