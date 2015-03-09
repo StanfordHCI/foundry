@@ -172,6 +172,7 @@ class LandingsController < ApplicationController
     if s.length>index
       s[index].end_date_time = s[index].end_date_time-timeDifference
       s[index].save
+    end
 
     if s.length>index+1
       for i in index+1..s.length-1
