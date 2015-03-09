@@ -69,7 +69,7 @@ class LandingsController < ApplicationController
 
     for l in @relevantLanding1
       m = Array.new
-      if m = Member.find_by_email(l.email)
+      if m = Member.find_by_email(l.email) then
         for t in m
           if t.email_confirmed and t.uniq==@uniq
             l.status = 'p'
@@ -80,7 +80,6 @@ class LandingsController < ApplicationController
             l.save
           end
         end
-      end
       elsif Time.now>l.end_date_time
         l.destroy
         l.save
