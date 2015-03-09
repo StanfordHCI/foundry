@@ -68,7 +68,7 @@ class LandingsController < ApplicationController
     @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
     for l in @relevantLanding1
-      m = new Array
+      m = Array.new
       m = Member.where(:email=>l.email, :uniq=>@uniq) 
       if not(m.empty?) then
         for t in m
