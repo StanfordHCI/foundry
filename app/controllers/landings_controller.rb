@@ -160,7 +160,7 @@ class LandingsController < ApplicationController
     index = 0
     for l in r
       if l.email == @email
-        timeDifference = l.end_date_time-Time.now
+        deletedTime = l.end_date_time
         l.destroy
         l.save
         break
@@ -170,14 +170,25 @@ class LandingsController < ApplicationController
 
     s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
     if s.length>index
-      s[index].end_date_time = s[index].end_date_time-timeDifference
-      s[index].save
-    end
+      if index == 0
+        for i in index..s.length-1
+          s[i].end_date_time = Time.now + 600*(i+1)
+          s[i].save
+        end
 
-    if s.length>index+1
-      for i in index+1..s.length-1
-        s[i].end_date_time = s[i-1].end_date_time+600
-        s[i].save
+      else
+        timings = Array.new
+        timings<<deletedTime
+        for i in index..s.length-1
+          timings<<s[i].end_date_time
+        end
+
+        count = 0
+        for i in index..s.length-1
+          s[i].end_date_time = timings[count]
+          s[i].save
+          count = count+1
+        end
       end
     end
   end
