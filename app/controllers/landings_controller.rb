@@ -68,14 +68,18 @@ class LandingsController < ApplicationController
     @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
     for l in @relevantLanding1
-      if m = Member.where(:email=>l.email, :uniq=>@uniq) then
-        if m.email_confirmed 
-          l.status = 'p'
-          l.save
-          return
-        elsif Time.now>l.end_date_time
-          l.destroy
-          l.save
+      m = new Array
+      m = Member.where(:email=>l.email, :uniq=>@uniq) 
+      if not(m.empty?) then
+        for t in m
+          if t.email_confirmed 
+            l.status = 'p'
+            l.save
+            return
+          elsif Time.now>l.end_date_time
+            l.destroy
+            l.save
+          end
         end
       elsif Time.now>l.end_date_time
         l.destroy
