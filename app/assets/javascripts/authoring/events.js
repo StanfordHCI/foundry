@@ -54,16 +54,20 @@ var drag = d3.behavior.drag()
 
             //Check if handoffs will make this a bag drag
             var outOfRange = false;
+            var event1;
+            var event2;
             var eventHandoffs = getHandoffsForEvent(d.groupNum);
             for (var i = 0; i<eventHandoffs.length; i++) {
                 var handoff = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event1"])];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event2"])];
                 if (handoffOutOfRange(handoff["event1"], handoff["event2"]) == true) {
                     outOfRange = true;
                     break;
                 }
             } 
             if (outOfRange) {
-                alert("Sorry, an upstream event cannot end before a downstream event begins.");
+                alert("Sorry, " + event1.title + " cannot end before " + event2.title + " begins.");
                 flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                 drawEvent(originalEV, false);
             }
@@ -73,14 +77,16 @@ var drag = d3.behavior.drag()
             var eventCollabs = getCollabsForEvent(d.groupNum);
             for (var i = 0; i<eventCollabs.length; i++) {
                 var collab = flashTeamsJSON["interactions"][getIntJSONIndex(eventCollabs[i])];
-                var event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
-                var event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
                 var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
                 
                 if (overlap <= 0) {
-                    alert("Sorry, the events must overlap to have a collaboration.");
+                    alert("Sorry, " + event1.title + " and " + event2.title 
+                        + " the must overlap to have a collaboration.");
                     flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                     drawEvent(originalEV, false);
+                    break;
                 }
             }
             
