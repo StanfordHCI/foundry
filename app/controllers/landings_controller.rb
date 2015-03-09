@@ -68,8 +68,8 @@ class LandingsController < ApplicationController
     @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
     for l in @relevantLanding1
-      if m = Member.find_by_email(l.email) then
-        if m.email_confirmed and m.uniq==@uniq
+      if m = Member.where(:email=>l.email, :uniq=>@uniq) then
+        if m.email_confirmed 
           l.status = 'p'
           l.save
           return
