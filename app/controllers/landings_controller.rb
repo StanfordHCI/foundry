@@ -176,7 +176,7 @@ class LandingsController < ApplicationController
 
     if s.length>index+1
       for i in index+1..s.length-1
-        s[i].end_date_time = 600+s[i-1].end_date_time
+        s[i].end_date_time = s[i-1].end_date_time+600
         s[i].save
       end
     end
