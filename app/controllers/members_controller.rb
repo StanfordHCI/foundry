@@ -80,6 +80,7 @@ class MembersController < ApplicationController
   end
 
   def register
+    id = params[:id]
     name = params[:name]
     email = params[:email]
     uniq = params[:uniq]
