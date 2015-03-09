@@ -86,10 +86,12 @@ class MembersController < ApplicationController
     @count = 0
     emails = Array.new
     emails = Landing.where(:id_team=>id, :email=>email)
-    if emails.empty? then
+    if emails.empty? 
       return
+    else
+      @count = 1
+    end
 
-    @count = 1
     confirm_email_uniq = SecureRandom.uuid
     
     # store email, uniq and confirm_email_uniq in db
