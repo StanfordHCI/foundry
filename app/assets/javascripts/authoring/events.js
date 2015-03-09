@@ -83,7 +83,7 @@ var drag = d3.behavior.drag()
                 
                 if (overlap <= 0) {
                     alert("Sorry, " + event1.title + " and " + event2.title 
-                        + " the must overlap to have a collaboration.");
+                        + " must overlap to have a collaboration.");
                     flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                     drawEvent(originalEV, false);
                     break;
