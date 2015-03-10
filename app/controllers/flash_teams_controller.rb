@@ -779,6 +779,10 @@ end
     @id_team = params[:id]
     @id_task = params[:event_id].to_i
     @flash_team = FlashTeam.find(params[:id])
+   		@workers = Worker.all.order(name: :asc)
+   		@panels = Worker.distinct.pluck(:panel)
+	
+   		@fw = Worker.all.pluck(:email)   
     # Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
     @flash_team_json = flash_team_status['flash_teams_json']
