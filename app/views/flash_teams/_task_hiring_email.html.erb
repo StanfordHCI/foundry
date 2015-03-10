@@ -77,7 +77,7 @@
                       </a>
                       <ul class="sub">
                           <li class=<%=@task_avail_active%>><%=link_to "Task Available", controller: "flash_teams", action: "hire_form"%> </li>
-                          <li class=<%=@task_avail_active%>><%=link_to "Hiring Queue", url_for :controller => 'flash_teams', :action => 'listQueue', :id => @id_team, :event_id => @id_task.to_s, :task_member => @task_member %> </li>
+                          <li class=<%=@task_avail_active%>><%=link_to "Hiring Queue", :controller => 'flash_teams', :action => 'listQueue', :id => @id_team, :event_id => @id_task.to_s, :task_member => @task_member %> </li>
                       </ul>
                   </li>
 
