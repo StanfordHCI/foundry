@@ -805,5 +805,6 @@ end
     end
     @queue = Array.new
     @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+    @queue = @queue.uniq
   end
 end
