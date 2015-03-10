@@ -18,8 +18,8 @@
 <p>The queue is empty</p>
 <% else %>
 <ol>
-<% for member in @queue %>
-<li><%=member.email%></li>
+<% for member in @addresses %>
+<li><%=member%></li>
 <% end %>
 </ol>
 <% end %>

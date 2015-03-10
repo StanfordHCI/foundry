@@ -804,7 +804,11 @@ end
       @task_duration += " and " + mm.to_s + " minutes"
     end
     @queue = Array.new
-    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
-    @queue = @queue.uniq
+    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
+    @addresses   = Array.new
+    for t in @queue
+      @addresses << t.email
+    end
+    @addresses = @addresses.uniq
   end
 end
