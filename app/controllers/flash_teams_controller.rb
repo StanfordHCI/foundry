@@ -773,4 +773,11 @@ end
   def flash_team_params params
     params.permit(:name, :author)
   end
+  def listQueue
+    @id_team = params[:id]
+    @id_task = params[:id_event]
+    @task_member = params[:task_member]
+    @queue = Array.new
+    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
+  end
 end
