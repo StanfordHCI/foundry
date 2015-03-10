@@ -86,7 +86,7 @@ class MembersController < ApplicationController
     uniq = params[:uniq]
     @count = 0
     emails = Array.new
-    emails = Landing.where(:id_team=>id, :email=>email)
+    emails = Landing.where(:id_team=>id, :email=>email, :status=>'s')
     if emails.empty? 
       return
     else
