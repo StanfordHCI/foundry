@@ -1,3 +1,10 @@
+<% if flash.alert %>
+   <div> <%= flash.alert %> </div>
+<% end %>
+<% if flash.notice %>
+   <div> <%= flash.notice %> </div>
+<% end %>
+
 <%= form_tag("/members/#{@id}/register", method: "post") do %>
   <%= label_tag(:name, "Your name:") %>
   <%= text_field_tag(:name) %>

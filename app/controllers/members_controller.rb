@@ -84,22 +84,19 @@ class MembersController < ApplicationController
     name = params[:name]
     email = params[:email]
     uniq = params[:uniq]
-    @count = 0
     emails = Array.new
     emails = Landing.where(:id_team=>id, :email=>email, :status=>'s')
     if emails.empty? 
-      return
+      flash.alert="The email address does not match our records. Please check and retry."
+      redirect_to :back
     else
-      @count = 1
+      confirm_email_uniq = SecureRandom.uuid
+          # store email, uniq and confirm_email_uniq in db
+      member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
+
+      # send confirmation email
+      url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq
+      UserMailer.send_confirmation_email(name, email, url).deliver
     end
-
-    confirm_email_uniq = SecureRandom.uuid
-    
-    # store email, uniq and confirm_email_uniq in db
-    member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
-
-    # send confirmation email
-    url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq
-    UserMailer.send_confirmation_email(name, email, url).deliver
   end
 end
