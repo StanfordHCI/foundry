@@ -776,8 +776,33 @@ end
   end
   def listQueue
     @id_team = params[:id]
-    @id_task = params[:id_event]
+    @id_task = params[:event_id].to_i
+    @flash_team = FlashTeam.find(params[:id])
+    # Extract data from the JSON
+    flash_team_status = JSON.parse(@flash_team.status)
+    @flash_team_json = flash_team_status['flash_teams_json']
+    @flash_team_event = @flash_team_json['events'][@id_task]
+    @flash_team_name = @flash_team_json['title']
+    #tm = params[:task_member].split(',') role of recipient 
     @task_member = params[:task_member]
+    @task_name = @flash_team_event['title']
+    @project_overview = @flash_team_json['projectoverview']
+    @task_description = @flash_team_event['notes']
+    @inputs = @flash_team_event['inputs']
+    #@input_link = params[:input_link]
+    @outputs = @flash_team_event['outputs']
+    #@output_description = params[:output_description]
+    minutes = @flash_team_event['duration']
+    hh, mm = minutes.divmod(60)
+    @task_duration = hh.to_s 
+    if hh==1
+      @task_duration += " hour"
+    else
+      @task_duration += " hours"
+    end
+    if mm>0
+      @task_duration += " and " + mm.to_s + " minutes"
+    end
     @queue = Array.new
     @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member)
   end
