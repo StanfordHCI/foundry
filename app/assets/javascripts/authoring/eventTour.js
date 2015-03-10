@@ -60,7 +60,7 @@ window.onload = function(){
 				content: "This is <b>YOUR</b> task. You can now end this tour, "
 				+"and <br/><b>click on the task rectangle and click start </b>"
 				+ " to read about your task, and start tracking work time. Note that time for "
-				+"reviewing the previous materials, etc. area accounted for as work time.</br></br>"
+				+"reviewing the previous materials, etc. are accounted for as work time.</br></br>"
 				+ "Pay close attention to the task description, the 'inputs' "
 				+"(what other workers have handed off to you)" 
 				+ ", and the deliverables you are expected to create."
