@@ -527,8 +527,9 @@ end
 	    end
 	    
 	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
-	    
-  end
+   		@url1 = url_for :controller => 'flash_teams', :action => 'listQueueForm', :id => @id_team, :event_id => @id_task.to_s
+   
+	     end
   
   def send_task_available
 
