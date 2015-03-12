@@ -38,6 +38,7 @@ window.onload = function(){
 				+ pOverview
 				+"</div>"
 				+"<nav class='popover-navigation'><div class='btn-group'>"
+				+"<button class='btn btn-default' data-role='prev' disabled='true'>« Prev</button>"
 				+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 				+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
@@ -64,6 +65,12 @@ window.onload = function(){
 				+ "Pay close attention to the task description, the 'inputs' "
 				+"(what other workers have handed off to you)" 
 				+ ", and the deliverables you are expected to create."
+				+"<nav class='popover-navigation'><div class='btn-group'>"
+				+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+				+"<button class='btn btn-default' data-role='next' disabled='true' >Next »</button></div>"
+				+"<button class='btn btn-default' data-role='end'>End tour</button></nav>",
+				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+				+"<div class='popover-content'></div>"
 			}
 			]
 			});
