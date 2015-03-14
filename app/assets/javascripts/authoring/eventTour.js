@@ -52,7 +52,7 @@ window.onload = function(){
 				+ " Before working, <b>click on the task</b> to read about the"
 				+ " details of the task, and the documentation information"
 				+ " that the previous worker has left for you."
-				+ "</br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
+				+ "</br></br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
 			},
 			{	element: "#g_" + elemId,
 				title: "<b>Your Task</b>",
