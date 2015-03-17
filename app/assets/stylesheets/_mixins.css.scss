@@ -95,6 +95,13 @@
           transition: #{$str};
 }
 
+@mixin transition-transform($t) {
+  -webkit-transition: -webkit-transform #{$t};
+     -moz-transition: -moz-transform #{$t};
+       -o-transition: -o-transform #{$t};
+          transition: transform #{$t};
+}
+
 @mixin translate($x, $y) {
   @include transform(translate($x, $y));
 }

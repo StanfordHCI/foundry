@@ -1,5 +1,18 @@
-<div id="left-sidebar" class="sidebar active">
-  <div class="inner" style="height:100%;overflow-y:scroll;">
+<div id="left-sidebar">
+  <div for="project-overview" class="sidebar-button project-overview"
+       data-toggle="tooltip" data-placement="right"
+       data-animation="false" title="Project overview"></div>
+  <div for="member-container" class="sidebar-button roles"
+       data-toggle="tooltip" data-placement="right"
+       data-animation="false" title="Team roles"></div>
+  <div class="sidebar-button gdrive"
+       data-toggle="tooltip" data-placement="right"
+       data-animation="false" title="Open Google Drive folder"></div>
+  
+  <div class="inner" style="display:none;">
+    
+    
+    
     <h4 class="project-name">
       <span id="ft-name" class="text"><%= flash_team.name %></span>
       <!-- Button to trigger modal -->
@@ -10,7 +23,7 @@
     <%= render :partial => "project_overview_modal" %>
 
     <% if in_author_view %>
-      <div id="project-status-container" class="sidebar-item active" <% unless author_runtime %>style="display:none"<% end %>>
+      <div id="project-status-container" class="project-status sidebar-item active" <% unless author_runtime %>style="display:none"<% end %>>
         <!-- Render project status container --> 
         <%= render :partial => "project_status" %>                 
       </div>
@@ -73,5 +86,13 @@
       <% end %>
     
     <% end %>
+    
+    
+  </div>
+</div>
+
+<div id="left-sidebar" class="sidebar active" style="display:none;">
+  <div class="inner" style="height:100%;overflow-y:scroll;">
+    
   </div>
 </div>

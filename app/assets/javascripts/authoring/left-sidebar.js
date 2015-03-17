@@ -8,6 +8,9 @@ $(document).ready(function() {
   var leftSidebar = $("#left-sidebar");
   var timelineWrapper = $("#timeline-wrapper");
   
+  // initialize tooltips
+  $('.sidebar-button[data-toggle="tooltip"]').tooltip();
+  
   // hover listeners
   menuButton.mouseenter(function() {
     // if the menu"s already extended, ignore
@@ -54,9 +57,26 @@ $(document).ready(function() {
   });
   
   // click listener for sidebar menu items
-  $("#left-sidebar .sidebar-item .header").click(function(e) {
+  leftSidebar.find(".sidebar-item .header").click(function(e) {
     $(this).parent().find('.inner').slideToggle(function() {
       $(this).parent().toggleClass('active');
     });
+  });
+  
+  leftSidebar.find('.sidebar-button').click(function() {
+    var $this = $(this);
+    var inner = leftSidebar.find('> .inner');
+    var forSelector = '.' + $this.attr('for');
+    if(!forSelector) { return; }
+    
+    if($this.hasClass('active')) {
+      inner.hide();
+      $this.removeClass('active');
+    } else {
+      // de-activate any currently active buttons
+      $this.parent().find('.active').removeClass('active');
+      inner.show();
+      $this.addClass('active');
+    }
   });
 });

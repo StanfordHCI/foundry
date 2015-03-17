@@ -19,6 +19,18 @@
   }
 }
 
+@include keyframes(tilt) {
+  70% {
+    @include transform(rotate(50deg));
+  }
+  90% {
+    @include transform(rotate(40deg));
+  }
+  100% {
+    @include transform(rotate(45deg));
+  }
+}
+
 @include keyframes(slight-slide-from-left) {
   0% {
     @include transform(translateX(-4px));
