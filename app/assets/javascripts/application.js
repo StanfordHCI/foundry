@@ -35,7 +35,6 @@
 //= require ./authoring/odeskArrays
 //= require ./authoring/spectrum
 //= require ./authoring/spectrum_use
-//= require ./authoring/diagram
 //= require ./authoring/eventslibrary
 //= require ./authoring/flash_team_update
 //= require ./authoring/notification_email
