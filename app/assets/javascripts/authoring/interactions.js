@@ -9,8 +9,10 @@ var DRAWING_COLLAB = false;
 var INTERACTION_TASK_ONE_IDNUM = 0;
 var interaction_counter = undefined;
 
-/* Called when a user clicks a task rectangle (aka event)
- * Determines if the user is trying to draw an interaction and if so, what type */
+/* 
+ * Called when a user clicks a task rectangle (aka event)
+ * Determines if the user is trying to draw an interaction and if so, what type 
+ */
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
  
@@ -205,6 +207,7 @@ function drawHandoff(handoffData) {
        .attr("class", "link")
        .style("stroke", "#ccc");
 
+    //Visually draw the handoff
     path = handoffLayerSvg.append("path")
         .attr("class", "handoffLine")
         .attr("id", function () {
@@ -283,8 +286,10 @@ function getHandoffInfo(handoffId){
 	return content;
 }
 
-//Route circuit-like paths for the handoffs
-//Use d3 path to route from event 1 end to event 2 beginning
+/*
+ * Route circuit-like paths for the handoffs
+ * Use d3 path to route from event 1 end to event 2 beginning
+ */
 function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     //Line out from first event to gutter
     var pathStr = "M " + (x1) + "," + y1 + "\n"; // + "L " + x2 + ", " + y2
@@ -341,8 +346,10 @@ function saveHandoff(intId) {
 }
 
 
-/* Called when we click the collaboration button.  
-/* Initializes creating a collaboration b/t two events. */
+/* 
+ * Called when we click the collaboration button.  
+ * Initializes creating a collaboration b/t two events. 
+ */
 function startWriteCollaboration(ev) {
     //TODO: COMMENT
     if(isUser) { // user page
@@ -371,8 +378,10 @@ function startWriteCollaboration(ev) {
     timelineSvg.on("mousemove", interMouseMove);
 };
 
-/* Draw collaboration between two events, calculates which event 
- * comes first and what the overlap is */
+/* 
+ * Draw collaboration between two events, calculates which event 
+ * comes first and what the overlap is 
+ */
 function drawCollaboration(collabData, overlap) {
     //Extract collaboration data
     var task1Id = collabData["event1"];
@@ -538,7 +547,7 @@ function interMouseMove() {
         .attr("y2", m[1]-3);
 }
 
-//Retrieve index of the JSON object using its id
+//Retrieve index of the interaction JSON object using the id
 function getIntJSONIndex(idNum) {
     for (var i = 0; i < flashTeamsJSON["interactions"].length; i++) {
         if (flashTeamsJSON["interactions"][i].id == idNum) {
@@ -595,8 +604,9 @@ function getHandoffsForEvent(id) {
         var inter = interactions[i];
         var belongs = false;
 
-        //If is a handoff, check if event 1 or event 2 is the event we want
+        //Check only handoffs
         if (inter["type"] == "handoff"){
+            //Check if handoff involves the event
             if (inter["event1"] == id) belongs = true;
             else if (inter["event2"] == id) belongs = true;
             
@@ -618,8 +628,9 @@ function getCollabsForEvent(id) {
         var inter = interactions[i];
         var belongs = false;
 
-        //If is collaboration, check if event 1 or event 2 is the event we want
+        //Check only collaborations
         if (inter["type"] == "collaboration"){
+            //Check if collaboration involves the event
             if (inter["event1"] == id) belongs = true;
             else if (inter["event2"] == id) belongs = true;
             
