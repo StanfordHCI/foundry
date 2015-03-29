@@ -57,7 +57,31 @@
 
               	  <h5 class="project-name">Project: <%=@flash_team_json["title"]%></h5>
               	   <h6 class="task-name">Task: <%=@flash_team_event["title"]%></h6>
-              	  	     
+                   
+                <% if @queuePosition == 1 %>
+
+                   <h6 class="task-name">Position in Queue: No. <%=@queuePosition%></h6>
+                   <h6 class="task-name">Deadline to Accept: <%=@wait_time%> </h6>
+                   
+                   <h6 class="task-name">
+                      <%=link_to "Accept Position", @invitationLink%>
+                   </h6>
+
+                   <h6 class="task-name">
+                      <%=link_to "Decline Position", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
+                   </h6>
+                <% end %>
+
+                 <% if @queuePosition >1 %>
+
+                   <h6 class="task-name">Position in Queue: No. <%=@queuePosition%></h6>
+                   <h6 class="task-name">Wait Time Remaining: <%=@wait_time%> </h6>
+
+                   <h6 class="task-name">
+                      <%=link_to "Decline Position & Remove from Queue", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
+                   </h6>
+                <% end %>
+              	 	     
                 
 
               </ul>
