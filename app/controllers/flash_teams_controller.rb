@@ -777,6 +777,7 @@ end
   end
 
   def listQueueForm
+    @list_queue_active = "active"
     @id_team = params[:id]
     @id_task = params[:event_id].to_i
     @flash_team = FlashTeam.find(params[:id])
@@ -816,9 +817,11 @@ end
   end
 
   def listQueue
+    @list_queue_active = "active"
     @id_team = params[:id]
     @id_task = params[:event_id].to_i
     @flash_team = FlashTeam.find(params[:id])
+    @url1 = url_for :controller => 'flash_teams', :action => 'listQueueForm', :id => @id_team, :event_id => @id_task.to_s
     # Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
     @flash_team_json = flash_team_status['flash_teams_json']
