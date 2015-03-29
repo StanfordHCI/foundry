@@ -61,24 +61,32 @@
                 <% if @queuePosition == 1 %>
 
                    <h6 class="task-name">Position in Queue: No. <%=@queuePosition%></h6>
-                   <h6 class="task-name">Deadline to Accept Position: <%=@wait_time%> </h6>
+                   <h6 class="task-name">Deadline to Accept Position: <br /> <%=@wait_time%> </h6>
                    
                    <h6 class="task-name">
+                      <%= button_to("Accept this position", @invitationLink, :class => 'btn btn-success') %>
+                   </h6>
+
+                   <h6 class="task-name">
+                      <%=button_to "Decline this position", @removalURL, :class => 'btn btn-default', :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
+                   </h6>
+
+                   <!-- <h6 class="task-name">
                       <%=link_to "Accept Position", @invitationLink%>
                    </h6>
 
                    <h6 class="task-name">
                       <%=link_to "Decline Position", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
-                   </h6>
+                   </h6> -->
                 <% end %>
 
                  <% if @queuePosition >1 %>
 
                    <h6 class="task-name">Position in Queue: No. <%=@queuePosition%></h6>
-                   <h6 class="task-name">Wait Time Remaining: <%=@wait_time%> </h6>
+                   <h6 class="task-name">Wait Time Remaining: <br /><%=@wait_time%> </h6>
 
                    <h6 class="task-name">
-                      <%=link_to "Decline Position & Remove from Queue", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
+                      <%=link_to "Decline Position & Remove from Hiring Queue", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
                    </h6>
                 <% end %>
               	 	     
