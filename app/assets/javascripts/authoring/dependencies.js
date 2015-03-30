@@ -1,3 +1,10 @@
+/* dependencies.js
+ * ---------------------------------------------
+ * API that lets you access and manipulate dependencies between 
+ * various events, often represented as handoffs from one event to another.
+ * Note: Written by Jay Patel
+ */
+
 window.dependencyAPI = {
 	forward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY AFTER
 	backward_dependency_map: {}, // map of event_id -> array of all event_ids that are IMMEDIATELY BEFORE
@@ -57,6 +64,7 @@ window.dependencyAPI = {
 
 		return false;
 	},
+
 	/*
 	 * Returns an array of event ids that need to be completed BEFORE specified event_id.
 	 * Caches the results, so it does not need to re-compute them for the same event_id.
@@ -79,6 +87,7 @@ window.dependencyAPI = {
 		for (var id in all_events) ids.push(parseInt(id));
 		return ids;
 	},
+
 	/*
 	 * Returns an array of event ids that can only start AFTER specified event_id has completed.
 	 * Caches the results, so it does not need to re-compute them for the same event_id.
@@ -101,6 +110,7 @@ window.dependencyAPI = {
 		for (var id in all_events) ids.push(parseInt(id));
 		return ids;
 	},
+
 	/*
 	 * A helper recursive function that traverses the given map (forward/backward) and finds all event ids that
 	 * are after/before the given array of event ids in curr_events.
@@ -114,6 +124,7 @@ window.dependencyAPI = {
 			}
 		}
 	},
+
 	/*
 	 * Checks whether adding a handoff from event_1_id to event_2_id will lead to the creation of a
 	 * handoff cycle. If so, returns true. Else, returns false.
@@ -125,6 +136,7 @@ window.dependencyAPI = {
 		var dependency_maps = this.getDependencyMaps(flashTeamsJSON.interactions);
 		return this.checkCycleHelper(dependency_maps["forward"], dependency_maps["forward"][event_2_id], event_1_id);
 	},
+
 	/*
 	 * Helper recursive function to check cycles in the handoffs
 	 */
@@ -151,32 +163,33 @@ window.dependencyAPI = {
 
 
 
-//this function returns the ids of the events immidiately before the current event (groupNum).
-function events_immediately_before(groupNum){
+//this function returns the ids of the events immidiately before the current event.
+function events_immediately_before(eventId){
  var ids_immediately_before=[];
  var interactions = flashTeamsJSON["interactions"];
  for(var i = 0; i<interactions.length; i++){
  	if(interactions[i].type != "handoff")
  		continue;
- 	if (parseInt(interactions[i].event2) == groupNum){
+ 	if (parseInt(interactions[i].event2) == eventId){
  		ids_immediately_before.push(parseInt(interactions[i].event1));
  	}	
  }
  return ids_immediately_before;
 }
 
-function events_in_collaboration(groupNum){
+//Returns ids of events that have a collaboration with the given event
+function events_in_collaboration(eventId){
 	var collab_ids=[];
 	var interactions = flashTeamsJSON["interactions"];
 	for(var i = 0; i<interactions.length; i++){
 		if(interactions[i].type != "collaboration")
 			continue;
 
-	 	if (parseInt(interactions[i].event2) == groupNum){
+	 	if (parseInt(interactions[i].event2) == eventId){
 	 		collab_ids.push(parseInt(interactions[i].event1));
 	 	}
 	 	
-	 	else if (parseInt(interactions[i].event1) == groupNum){
+	 	else if (parseInt(interactions[i].event1) == eventId){
 	 		collab_ids.push(parseInt(interactions[i].event2));
 	 	}	
  	}

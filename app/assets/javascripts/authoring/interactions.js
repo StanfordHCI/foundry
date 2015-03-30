@@ -1,7 +1,9 @@
 /* interaction.js
  * ---------------------------------------------
- * Code that manages the interactions (collaborations and handoffs)
- * Drawing from scratch, drag response on (popovers.js)
+ * Code that manages the interactions (collaborations and handoffs).
+ * Includes drawing, manipulating, removing, updating related data, etc.
+ * Some helper function to return handoffs/collabs pertaining to a certain event
+ * or certain worker. 
  */
 
 var DRAWING_HANDOFF = false;
