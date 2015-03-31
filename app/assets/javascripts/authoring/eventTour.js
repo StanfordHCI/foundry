@@ -4,7 +4,6 @@ isWorkerTask = function(eventObj) {
 	return current_user && eventObj.members.indexOf(current_user.id) > - 1;
 }
 
-
 window.onload = function(){
 	//Initialize the tour
 	if (!$.cookie('first')){
@@ -31,12 +30,15 @@ window.onload = function(){
 				orphan: true,
 				title: "<b>Welcome to Foundry!</b>",
 				// content: flashTeamsJSON['projectoverview'],
-				content: "<div class='tour-content-wrapper'>Welcome to Foundry. We're here to help you get started!</br>"
-				+ "Read the Project Description below, and follow the next few steps in order to start your project."
+				content: "<div class='tour-content-wrapper'>Welcome to Foundry. "
+				+"We're here to help you get started!</br>"
+				+ "Read the Project Description below, and follow the next few steps"
+				+" in order to start your project."
 				+ "<hr></hr>" 
 				+ pOverview
 				+"</div>"
 				+"<nav class='popover-navigation'><div class='btn-group'>"
+				+"<button class='btn btn-default' data-role='prev' disabled='true'>« Prev</button>"
 				+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 				+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
@@ -47,18 +49,28 @@ window.onload = function(){
 				// backdrop: true,
 				html: true,
 				content: "This is the task right before yours."
-				+ " Before working, <b>click on the task</b> to read about the details of the task, and the documentation information"
+				+ " Before working, <b>click on the task</b> to read about the"
+				+ " details of the task, and the documentation information"
 				+ " that the previous worker has left for you."
-				+ "</br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
+				+ "</br></br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
 			},
 			{	element: "#g_" + elemId,
 				title: "<b>Your Task</b>",
 				// backdrop: true,
 				html: true,
-				content: "This is <b>YOUR</b> task. You can now end this tour, and <br/><b>click on the task rectangle</b>"
-				+ " to read about your task, and get started.</br></br>"
-				+ "Pay close attention to the task description, the 'inputs' (what other workers have handed off to you)" 
-				+ ", and the deliverables you are expected to create"
+				content: "This is <b>YOUR</b> task. You can now end this tour, "
+				+"and <br/><b>click on the task rectangle and click start </b>"
+				+ " to read about your task, and start tracking work time. Note that time for "
+				+"reviewing the previous materials, etc. are accounted for as work time.</br></br>"
+				+ "Pay close attention to the task description, the 'inputs' "
+				+"(what other workers have handed off to you)" 
+				+ ", and the deliverables you are expected to create."
+				+"<nav class='popover-navigation'><div class='btn-group'>"
+				+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+				+"<button class='btn btn-default' data-role='next' disabled='true' >Next »</button></div>"
+				+"<button class='btn btn-default' data-role='end'>End tour</button></nav>",
+				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+				+"<div class='popover-content'></div>"
 			}
 			]
 			});
@@ -67,9 +79,8 @@ window.onload = function(){
 		    eventTour.goTo(0); //Always start tour at the first step
 		    $.cookie('first','1',{expires: 1});
 		}
-	}
-	else{
-		console.log("YAY COOKIE");
+	} else {
+		//console.log("YAY COOKIE");
 	}
 };
 

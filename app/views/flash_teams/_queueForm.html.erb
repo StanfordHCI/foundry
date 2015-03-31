@@ -1,0 +1,46 @@
+<div class="row-fluid">
+	
+	<h3><i class="fa fa-angle-right"></i> Hiring Process</h3>
+          	
+  	<!-- INPUT MESSAGES -->
+  	<div class="row-fluid">
+  		<div id="email-form-div" class="form-panel span8">
+  			<div>
+		  	  	<div class="row-fluid">
+		  	  		<div class="span7">
+		  	  			<p class="mb" style="font-size:18px;"><i class="fa fa-angle-right"></i> Hiring Queue </p>
+					</div>
+					
+					<div class="span5">
+						<p class="mb"><a id="hidePanelsLink" style="font-size:14px; float: right;" onclick="hideRightPanels()">Hide Panels</a></p>
+					</div>
+				</div> <!-- end div class row -->
+	
+          	  <%= form_tag({action: "listQueue", method: "post", name: "taskOverviewForm"},{:class => "hiring-email-form"}) do %>
+<p>Select a role to view the hiring queue.</p>
+
+				 					<div class="row-fluid span12">
+						  <div class="span11">
+								<select name="task_member" required="required">
+									<option value="">-- SELECT MEMBER ROLE --</option>
+									<%@task_members.each do |task_member|%>
+										<%=options_for_select([[task_member['role'], task_member['role']]])%>
+									<%end%>
+								</select> 
+						</div>
+					</div>
+				 					<div class="row-fluid span12">
+						  <div class="span11">
+ 					<%= button_tag("View Hiring Queue", :type => 'submit', :class => 'btn btn-primary') %>
+		 	 
+					</div>
+					</div>
+				<% end %>
+			</div><!-- /form-panel -->
+ 		</div><!-- /span7 -->
+  		
+  	
+ 		<%= render :partial => "task_hiring_right_sidebar" %>  
+  			
+  	</div><!-- /row -->
+</div>

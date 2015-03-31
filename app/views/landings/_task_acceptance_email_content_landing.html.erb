@@ -1,0 +1,99 @@
+<div class="row-fluid">
+	
+	<h3><i class="fa fa-angle-right"></i> Task Available</h3>
+          	
+  	<div class="row-fluid">
+  		<div class="form-panel span12">
+  			<p>
+  				<b>Congratulations!  You are at No. 1 position in the hiring queue for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. </b>
+  			</p>
+
+  		</div>
+
+  	</div>
+
+  	<div class="row-fluid">
+  		<div class="form-panel form-panel-instructions span12">
+  			<p>
+  				<em>Please read the following information carefully.</em> You have the next <%=@wait_time%> exclusively for this purpose. You should complete the entire registration process (including confirming your email account) within these <%=@wait_time%> to retain your position in the hiring queue. However, to reinforce again, you must read the following information very carefully-the originally allocated 10 minutes is a lot of time. 
+
+						<br /><br />
+						<em>Please do not close this page; </em> this page will automatically refresh every 60 seconds with the remaining time to help you pace yourself. Further, if at any time you would like to decline this position and be removed from the hiring queue (only for this position), we ask that you <%=link_to "click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>. 
+  			</p>
+  		</div>
+  	</div>
+  	<div class="row-fluid">
+
+  		<div id="email-form-div" class="form-panel span12">
+  			<!-- <div class="form-panel"> -->
+  			<div>
+		  	  	<!-- <div class="row-fluid">
+		  	  		<div class="span7">
+		  	  			<p style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Available!</p>
+					</div>
+				</div> --> <!-- end div class row -->
+				
+				<div class="row-fluid span11">
+
+					<!-- <p>
+						Congratulations!  You are at No. 1 position in the hiring queue for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. 
+
+						<br /><br />
+
+						<em>Please read the following information carefully.</em> You have the next <%=@wait_time%> exclusively for this purpose. You should complete the entire registration process (including confirming your email account) within these <%=@wait_time%> to retain your position in the hiring queue. However, to reinforce again, you must read the following information very carefully-the originally allocated 10 minutes is a lot of time. 
+
+						<br /><br />
+						<em>Please do not close this page; </em> this page will automatically refresh every 60 seconds with the remaining time to help you pace yourself. Further, if at any time you would like to decline this position and be removed from the hiring queue (only for this position), we ask that you <%=link_to "click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>.  
+
+					</p> -->
+
+					<p> 
+						As stated in the job description, you will have <b><em><%=@task_duration%></em></b> to complete this task and must start working within 30 minutes from now. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+					</p>
+						
+						<p><b>Project overview:</b> <%=@project_overview%></p>
+						<p><b>Task description:</b> <%=@task_description%></p>
+						
+						<p>
+							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
+						
+						<%if !@input_link.nil?%>
+						You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
+						</p>
+						<%end%>
+						
+						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+						
+						<%if !@output_description.nil?%>
+						<p><b>Deliverable information:</b> <%=@output_description%></p>
+						<%end%>
+						
+						<p>
+							<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work.</p>  Click the "I accept" link below to sign up for this project on Foundry. 
+						</p>
+						
+						<p><%=link_to "Click here to register for this position on Foundry", @invitationLink%></p>
+						
+						<p>
+							After you sign up, you will receive a unique link to the project, which you should use throughout the project. As stated in our previous email, we will be asking you to use our platform, Foundry, to keep track of your progress and submit your work. If you are still unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us if you have any remaining questions.
+						</p>  
+						
+			<p>Again, if you would not like to work on this project any more, <%=link_to "Click here to give up your spot in the hiring queue", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%> so that others can be offered the job.</p>
+
+			
+						<p>
+							Thank you for involvement in this project and we look forward to receiving your work!						</p>
+
+						<p>
+							Best, <br />
+							Stanford HCI Research Team
+						</p>
+					
+				</div>
+	
+          	  
+			</div><!-- /form-panel -->
+		</div><!-- /span7 -->
+  		  			
+  	</div><!-- /row -->
+</div>
