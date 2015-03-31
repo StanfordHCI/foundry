@@ -115,11 +115,15 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   var notes = document.getElementById("notes-" + targetHash).innerHTML;
   var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
   var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
+  var outputQs = document.getElementById("outputQs-" + targetHash).innerHTML;
+  //var outputQs = outputQs_string.substring(1, outputQs_string.length-1);
+  alert(outputQs);
 
   var snapPoint = calcSnap(mouseX, mouseY);
   console.log("mousex", mouseX);
   var startTimeObj = getStartTime(snapPoint[0]);
 
+  //outputQs shouldn't be empty if there are outputs
   var newEvent =  {
       "title":title, "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
       "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
