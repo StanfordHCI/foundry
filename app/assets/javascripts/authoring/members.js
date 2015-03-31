@@ -57,7 +57,6 @@ function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderDiagram(members);
     renderAllMemberCircles();
 };
 
