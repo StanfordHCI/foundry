@@ -1591,6 +1591,26 @@ function drawHiringEvent() {
     
 }
 
+
+function removeAllMemberCircles(eventObj){
+    var groupNum = eventObj["id"];
+    var members = eventObj["members"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    for(var i=0;i<members.length;i++){
+        task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1)).remove();
+    }
+};
+
+function renderAllMemberCircles() {
+    var events = flashTeamsJSON["events"];
+    for (var i = 0; i < events.length; i++){
+        var ev = events[i];
+        drawMemberTabs(ev);
+        // drawMemberCircles(ev);
+    }
+};
+
 // deprecated
 //Add one of the team members to an event, includes a bar to represent it on the task rectangle
 //and a pill in the popover that can be deleted, both of the specified color of the member
