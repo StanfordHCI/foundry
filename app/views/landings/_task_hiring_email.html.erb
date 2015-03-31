@@ -64,11 +64,11 @@
                    <h6 class="task-name">Deadline to Accept Position: <br /> <%=@wait_time%> </h6>
                    
                    <h6 class="task-name">
-                      <%= button_to("Accept this position", @invitationLink, :class => 'btn btn-success') %>
+                      <%= link_to("Accept this position", @invitationLink, :class => 'btn btn-success') %>
                    </h6>
 
                    <h6 class="task-name">
-                      <%=button_to "Decline this position", @removalURL, :class => 'btn btn-default', :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
+                      <%=link_to "Decline this position", @removalURL, :class => 'btn btn-default', :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>
                    </h6>
 
                    <!-- <h6 class="task-name">
