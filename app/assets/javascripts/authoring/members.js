@@ -57,13 +57,10 @@ function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderDiagram(members);
-    renderAllMemberCircles();
 };
 
 function renderMembersUser() {
     var members = flashTeamsJSON.members;
-    renderAllMemberCircles();
 };
 
 function setCurrentMember() {
@@ -459,14 +456,6 @@ function memberCategoryChange(mem_id) {
     }
 }
 
-function renderDiagram(members) {
-    removeAllMemberNodes();
-    for (var i=0;i<members.length;i++){
-        var member = members[i];
-        addMemberNode(member.role, member.id, "#808080");
-    }
-};
-
 function newFolderObject(folderName, parentId) {
     return {
         name: folderName, parentId: parentId, type: "folder",
@@ -699,7 +688,6 @@ function saveMemberInfo(memberId) {
     renderMemberPillColor(memberId);
 
     $("#mPill_" + memberId).popover("hide");
-    renderAllMemberCircles();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 
