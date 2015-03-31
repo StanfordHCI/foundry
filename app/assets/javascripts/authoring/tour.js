@@ -1,7 +1,8 @@
 /* tour.js
  * ---------------------------------------------
- * 
- * 
+ * Creates and runs various tours of the site for different users: author, worker, PC
+ * Uses Bootstrap Tour (bootstraptour.com)
+ * Each step is a different panel of the tour. 
  */
 
 //A tour that walks a user through the team authoring process
@@ -255,12 +256,14 @@ var authoringTour = new Tour({
 });
 
 
-
+//Start the tour on the click of the Tour Button, which only appears in author mode
 $("#tourBtn").click(function(){
 	//Initialize the tour
 	authoringTour.init();
     authoringTour.start(true);
-    authoringTour.goTo(0); //Always start tour at the first step
+
+    //Always start tour at the first step, comment out to start at most recent
+    authoringTour.goTo(0); 
 });
 
 
@@ -462,18 +465,17 @@ var expertTour = new Tour({
 	}
 ]});
 
-
-
-
-$("#expertTourBtn").click(function(){
+//Start the tour on the click of the expert tour button, only shows up in worker mode
+$("#expertTourBtn").click(function() {
 	//Initialize the expert tour
 	expertTour.init();
     expertTour.start(true);
-    expertTour.goTo(0); //Always start the tour at the first step 
+
+    //Always start at the first step, comment out to start at most recent
+    expertTour.goTo(0);  
 });
 
-//TODO: PC Tour
-//SHELL FOR THE PC TOUR
+//TODO: PC Tour, this is starter code 
 //A tour to walk the PCs through the use of Foundry
 var pcTour = new Tour({
 	steps: [
@@ -482,17 +484,19 @@ var pcTour = new Tour({
 		title: "<b>Welcome to Foundry</b>", 
 		content: "View your upcoming tasks, communicate with the team "
 		+ "track the progress of the project, "
-		+ "and upload and download files from a shared Google Drive folder. //GIF: OVERVIEW PC",
+		+ "and upload and download files from a shared Google Drive folder.",
 		backdrop: true
 	}
 ]});
 	
-//Initialize the PC tour
-pcTour.init();
-
+//TODO: Set an item to click for this to start up the PC Tour
 /*$("#").click(function(){
+	//Initialize the PC tour
+	pcTour.init();
     pcTour.start(true);
-    pcTour.goTo(0); //Always start the tour at the first step 
+
+    //Always start at the first step, comment out to start at most recent
+    pcTour.goTo(0); 
 });*/
 
 
