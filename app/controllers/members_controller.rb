@@ -60,13 +60,23 @@ class MembersController < ApplicationController
   end
 
   def confirm_email
+    @count = 0
+    id = params[:id]
     uniq = params[:u]
     confirm_email_uniq = params[:cu]
+    email = params[:email]
     member = Member.where(:uniq => uniq, :confirm_email_uniq => confirm_email_uniq)[0]
-    member.email_confirmed = true
-    member.save
-
-    login(uniq)
+    queue = Landing.where(:id_team=>id, :email=>email, :status=>'p', :queuePosition=>1)
+    if queue.empty? or queue.nil?
+      @count = -1
+      return
+    else
+      member.email_confirmed = true
+      member.save
+    end
+    if member.email_confirmed then 
+      login(uniq)
+    end
   end
 
   def login uniq
@@ -95,7 +105,7 @@ class MembersController < ApplicationController
       member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
 
       # send confirmation email
-      url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq
+      url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
       UserMailer.send_confirmation_email(name, email, url).deliver
     end
   end

@@ -108,6 +108,8 @@ class LandingsController < ApplicationController
       @queuePosition = @relevantLanding.length + 1
     else
       @queuePosition = count
+      @newLanding.queuePosition = @queuePosition
+      @newLanding.save
     end
 
     if @queuePosition == 1 and @relevantLanding.length == 0
