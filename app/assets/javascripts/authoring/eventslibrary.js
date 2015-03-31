@@ -112,6 +112,7 @@ function createDragEvent(mouseX, mouseY, targetHash) {
 
   var title = document.getElementById("title-" + targetHash).innerHTML;
   var duration = document.getElementById("duration-" + targetHash).innerHTML * 60;
+  var notes = document.getElementById("notes-" + targetHash).innerHTML;
   var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
   var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
 
@@ -122,7 +123,7 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   var newEvent =  {
       "title":title, "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
       "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
-      "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
+      "dri":"", "pc":"", "notes":notes, "startHr": startTimeObj["startHr"], "status":"not_started",
       "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":inputs, "outputs":outputs,
       "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
       ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
