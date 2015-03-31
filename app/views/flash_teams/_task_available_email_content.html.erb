@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	
-	<h3><i class="fa fa-angle-right"></i> Hiring Emails</h3>
+	<h3><i class="fa fa-angle-right"></i> Task Available Email</h3>
           	
   	<!-- INPUT MESSAGES -->
   	<div class="row-fluid">
@@ -9,7 +9,7 @@
   			<div>
 		  	  	<div class="row-fluid">
 		  	  		<div class="span7">
-		  	  			<p style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Available Email Sent!</p>
+		  	  			<p style="font-size:18px;"><i class="fa fa-angle-right"></i> A task is available! </p>
 					</div>
 				</div> <!-- end div class row -->
 				
@@ -36,9 +36,8 @@
 						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
 						
 						
-						<p> If you are available and ready to start working on this task within 30 minutes, reply to this email with your name in the content of the email as well as a confirmation that you can start working with 30 minutes from when you are hired.</p> 
-						<p> If you are hired, you will receive a task acceptance email notifying you that you have been assigned to the <%=@task_name%> task. Upon receiving the task acceptance email, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
-							
+						<p> If you are available and ready to start working on this task within 30 minutes of being hired, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
+							<p><p> URL: <%=link_to "I accept", @url%>. </p>
 						<p>
 							Best, <br />
 							Stanford HCI Research Team

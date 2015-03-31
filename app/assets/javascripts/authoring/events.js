@@ -42,17 +42,59 @@ var drag_left = d3.behavior.drag()
 //Called when task rectangles are dragged
 var drag = d3.behavior.drag()
     .origin(Object)
+    .on("dragstart", function(d) {
+        var ev = getEventFromId(d.groupNum);
+        originalEV = JSON.parse(JSON.stringify(ev)); //deep copy orig position
+    })
     .on("drag", dragEventBlock)
     .on("dragend", function(d){
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
-            //drawPopover(ev, true, false);
+
+            //Check if handoffs will make this a bag drag
+            var outOfRange = false;
+            var event1;
+            var event2;
+            var eventHandoffs = getHandoffsForEvent(d.groupNum);
+            for (var i = 0; i<eventHandoffs.length; i++) {
+                var handoff = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event1"])];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event2"])];
+                if (handoffOutOfRange(handoff["event1"], handoff["event2"]) == true) {
+                    outOfRange = true;
+                    break;
+                }
+            } 
+            if (outOfRange) {
+                alert("Sorry, " + event1.title + " cannot end before " + event2.title + " begins.");
+                flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                drawEvent(originalEV, false);
+            }
+
+            //Check if collabs will make this a bad drag
+            outOfRange = false;
+            var eventCollabs = getCollabsForEvent(d.groupNum);
+            for (var i = 0; i<eventCollabs.length; i++) {
+                var collab = flashTeamsJSON["interactions"][getIntJSONIndex(eventCollabs[i])];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
+                var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
+                
+                if (overlap <= 0) {
+                    alert("Sorry, " + event1.title + " and " + event2.title 
+                        + " must overlap to have a collaboration.");
+                    flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                    drawEvent(originalEV, false);
+                    break;
+                }
+            }
+            
             updateStatus(false);
         } else {
             // click
             eventMousedown(d.groupNum);
-        }
+        } 
     });
 
 // leftResize: resize the rectangle by dragging the left handle
@@ -455,37 +497,34 @@ function findCurrentUserNextEvent(currentUserEvents){
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
-    for (var i = 0; i < interactions.length; i++){
-        var inter = interactions[i];
+    var eventHandoffs = getHandoffsForEvent(eventObj["id"]);
+    for (var i = 0; i < eventHandoffs.length; i++){
+        var inter = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
         var draw = false;
-        if (inter["type"] == "handoff"){
-            if (inter["event1"] == eventObj["id"]){
-                draw = true;
-                var ev1 = eventObj;
-                var ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
-            }
-            else if (inter["event2"] == eventObj["id"]){
-                draw = true;
-                var ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
-                var ev2 = eventObj;
-            }  
-            
-            if (draw){
-                //Reposition an existing handoff
-                var x1 = handoffStart(ev1);
-                var y1 = ev1.y + 50;
-                var x2 = ev2.x + 3;
-                var y2 = ev2.y + 50;
-                $("#interaction_" + inter["id"])
-                    .attr("d", function(d) {
-                        return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
-                    })
-                    .attr("stroke", function() {
-                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
-                        else return "gray";
-                    });
-            }
+        var ev1;
+        var ev2;
+        if (inter["event1"] == eventObj["id"]){
+            ev1 = eventObj;
+            ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
         }
+        else if (inter["event2"] == eventObj["id"]){
+            ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
+            ev2 = eventObj;
+        }  
+        
+        //Reposition an existing handoff
+        var x1 = handoffStart(ev1);
+        var y1 = ev1.y + 50;
+        var x2 = ev2.x + 3;
+        var y2 = ev2.y + 50;
+        $("#interaction_" + inter["id"])
+            .attr("d", function(d) {
+                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+            })
+            .attr("stroke", function() {
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                else return "gray";
+            });
     }
 }
 
@@ -513,20 +552,23 @@ function drawEachCollabForEvent(eventObj){
                 var firstTaskY = 0;
                 var taskDistance = 0;
                 var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
-                if (y1 < y2) {
-                    firstTaskY = y1 + RECTANGLE_HEIGHT;
-                    taskDistance = y2 - firstTaskY;
-                } else {
-                    firstTaskY = y2 + RECTANGLE_HEIGHT;
-                    taskDistance = y1 - firstTaskY;
-                }
-                if (x1 <= x2) var startX = x2;
-                else var startX = x1;
-                $("#interaction_" + inter["id"])
-                    .attr("x", startX)
-                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
-                    .attr("height", taskDistance+9)
-                    .attr("width", overlap);
+
+                if (overlap > 0) {
+                    if (y1 < y2) {
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
+                        taskDistance = y2 - firstTaskY;
+                    } else {
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
+                        taskDistance = y1 - firstTaskY;
+                    }
+                    if (x1 <= x2) var startX = x2;
+                    else var startX = x1;
+                    $("#interaction_" + inter["id"])
+                        .attr("x", startX)
+                        .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                        .attr("height", taskDistance+9)
+                        .attr("width", overlap);
+                }      
             }
         }
     }

@@ -16,7 +16,7 @@ var authoringTour = new Tour({
 		content: "<div class='tour-content-wrapper'>Foundry is an online platform that allows you " 
 		+"to create and manage teams of experts.<img src=''> </img></div>" //USED TO BE OVERVIEW.GIF, BUT TOO SMALL
 		+"<nav class='popover-navigation'><div class='btn-group'>"
-		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+		+"<button class='btn btn-default' data-role='prev' disabled='true'>« Prev</button>"
 		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
