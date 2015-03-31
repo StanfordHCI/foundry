@@ -145,6 +145,7 @@ class LandingsController < ApplicationController
       @newLanding.end_date_time = @end_date_time + wait_time
       @newLanding.queuePosition = @queuePosition
       @newLanding.status = 'p'
+      @newLanding.uniq = @uniq
       @newLanding.save 
     else
       return
