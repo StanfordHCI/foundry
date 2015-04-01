@@ -115,23 +115,33 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   var notes = document.getElementById("notes-" + targetHash).innerHTML;
   var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
   var outputs = document.getElementById("outputs-" + targetHash).innerHTML;
-  var outputQs = document.getElementById("outputQs-" + targetHash).innerHTML;
+  //var outputQs = document.getElementById("outputQs-" + targetHash).textContent;
   //var outputQs = outputQs_string.substring(1, outputQs_string.length-1);
-  alert(outputQs);
+ // alert(outputQs);
+
+ var outputQs = $("#outputQs-" + targetHash).text();
+  var outputq_json = JSON.parse(JSON.stringify(outputQs));
+
+  //alert(outputQs); 
 
   var snapPoint = calcSnap(mouseX, mouseY);
-  console.log("mousex", mouseX);
+  //console.log("mousex", mouseX);
   var startTimeObj = getStartTime(snapPoint[0]);
 
   //outputQs shouldn't be empty if there are outputs
+  //also, docQs should pull the docQs from the actual event
   var newEvent =  {
-      "title":title, "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+      "title":title, "id":createEventId(), "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
       "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
       "dri":"", "pc":"", "notes":notes, "startHr": startTimeObj["startHr"], "status":"not_started",
       "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":inputs, "outputs":outputs,
       "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
       ["Is there anything else you want other team members, the project coordinator, or the client, to know?",""]],
       "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)}; 
+  
+
+    //newEvent.outputQs = outputQs;   
+
   flashTeamsJSON.events.push(newEvent);
 
   drawEvent(newEvent);
