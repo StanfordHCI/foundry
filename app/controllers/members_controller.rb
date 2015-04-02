@@ -60,20 +60,32 @@ class MembersController < ApplicationController
   end
 
   def confirm_email
+    first = Landing.new
     @count = 0
     id = params[:id]
     uniq = params[:u]
     confirm_email_uniq = params[:cu]
     email = params[:email]
     member = Member.where(:uniq => uniq, :confirm_email_uniq => confirm_email_uniq)[0]
-    queue = Landing.where(:id_team=>id, :email=>email, :status=>'p', :queuePosition=>1, :uniq=>uniq)
-    if queue.empty? or queue.nil?
-      @count = -1
-      return
-    else
+    queue = Landing.where(:id_team=>id, :status=>'p', :uniq=>uniq).order('created_at')
+    if not(queue.empty?) then
+      first = queue[0]
+    end
+
+    emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
+    if emails1.empty? 
       member.email_confirmed = true
       member.save
+    else
+      if first.email != email
+        @count = -1
+        return
+      else
+        member.email_confirmed = true
+        member.save
+      end
     end
+
     if member.email_confirmed then 
       login(uniq)
     end
@@ -95,18 +107,29 @@ class MembersController < ApplicationController
     email = params[:email]
     uniq = params[:uniq]
     emails = Array.new
+    emails1 = Array.new
     emails = Landing.where(:id_team=>id, :email=>email, :uniq=>uniq, :status=>'s')
-    if emails.empty? 
-      flash.alert="The email address does not match our records. Please check and retry."
-      redirect_to :back
-    else
+    emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
+    if emails1.empty? 
       confirm_email_uniq = SecureRandom.uuid
-          # store email, uniq and confirm_email_uniq in db
+      # store email, uniq and confirm_email_uniq in db
       member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
-
       # send confirmation email
       url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
       UserMailer.send_confirmation_email(name, email, url).deliver
+    else
+      if emails.empty? 
+        flash.alert="The email address does not match our records. Please check and retry."
+        redirect_to :back
+      else
+        confirm_email_uniq = SecureRandom.uuid
+        # store email, uniq and confirm_email_uniq in db
+        member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
+
+        # send confirmation email
+        url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
+        UserMailer.send_confirmation_email(name, email, url).deliver
+      end
     end
   end
 end
