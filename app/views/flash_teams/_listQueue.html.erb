@@ -16,7 +16,7 @@
 				<div class="row-fluid span11">
 <% if @queue.empty? %>
 <p>The queue is empty</p>
-<% elsif @member.empty? %>
+<% elsif not(@member.empty?) %>
 The task has been taken by <%=@addresses[0]%>.
 <% else %>
 <ol>
