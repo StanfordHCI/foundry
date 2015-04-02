@@ -59,7 +59,8 @@ class LandingsController < ApplicationController
 
     emails = Array.new
     emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
-    emails1 = Landing.where(:id_team=>@id_team, :uniq=>@uniq, :status=>'s')
+    emails1 = Array.new
+    emails1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'s')
     if not (emails1.empty?) then
       if emails.empty? 
         @queuePosition = -1
@@ -96,7 +97,6 @@ class LandingsController < ApplicationController
     alreadyPresent = 0
 
     count = 0
-
     for l in @relevantLanding
       if l.email == @email then 
         alreadyPresent = 1 
