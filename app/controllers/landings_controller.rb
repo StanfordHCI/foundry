@@ -92,7 +92,7 @@ class LandingsController < ApplicationController
     end
 
     @relevantLanding = Array.new
-    @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
+    @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
 
     alreadyPresent = 0
 
@@ -150,7 +150,7 @@ class LandingsController < ApplicationController
     else
       return
     end
-  @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
+  @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
   end
 
   def remove
@@ -159,7 +159,7 @@ class LandingsController < ApplicationController
     @id_task = params[:event_id].to_i
     @task_member = params[:task_member]
     @email = params[:email]
-    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
+    r = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p').order('created_at')
     index = 0
     for l in r
       if l.email == @email
@@ -171,7 +171,7 @@ class LandingsController < ApplicationController
       index = index+1
     end
 
-    s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p')
+    s = Landing.where(:id_team => @id_team, :id_event => @id_task, :task_member => @task_member, :status => 'p').order('created_at')
     if s.length>index
       if index == 0
         for i in index..s.length-1
