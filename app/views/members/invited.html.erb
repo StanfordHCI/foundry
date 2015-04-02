@@ -8,8 +8,15 @@
 <%= form_tag("/members/#{@id}/register", method: "post") do %>
   <%= label_tag(:name, "Your name:") %>
   <%= text_field_tag(:name) %>
-  <%= label_tag(:email, "Your email (please use the same email address that you used to register on Foundry:") %>
+  <%= label_tag(:email, "Your email: *") %>
   <%= text_field_tag(:email) %>
   <%= hidden_field_tag(:uniq, @uniq) %>
   <%= submit_tag("Submit") %>
 <% end %>
+
+<p> 
+	<br /> 
+	<i> * If you received this task via the instant hiring system, please use the same email address that you used to 
+	<br /> 
+	register for the panels on Foundry (e.g., the email address where you received the task available email)</i>
+</p>
