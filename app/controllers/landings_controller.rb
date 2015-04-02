@@ -46,6 +46,13 @@ class LandingsController < ApplicationController
       return
     end
 
+    emails = Array.new
+    emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
+    if emails.empty? 
+      @queuePosition = -1
+      return
+    end
+
     @invitationLink = ""
     @uniq = ""
 
@@ -55,14 +62,6 @@ class LandingsController < ApplicationController
         @uniq = task_member['uniq']
         break
       end
-    end
-
-    emails = Array.new
-    emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :uniq=>@uniq, :status=>'s')
-    emails1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :uniq=>@uniq, :status=>'s')
-    if emails.empty? and not(emails1.empty?)
-      @queuePosition = -1
-      return
     end
 
     @relevantLanding1 = Array.new
@@ -109,7 +108,7 @@ class LandingsController < ApplicationController
       @queuePosition = @relevantLanding.length + 1
     else
       @queuePosition = count
-      @newLanding.queuePosition = @queuePosition
+      #@newLanding.queuePosition = @queuePosition
       @newLanding.save
     end
 
@@ -177,6 +176,7 @@ class LandingsController < ApplicationController
       if index == 0
         for i in index..s.length-1
           s[i].end_date_time = Time.now + 600*(i+1)
+          s[i].queuePosition = s[i].queuePosition - 1
           s[i].save
         end
 
@@ -190,6 +190,7 @@ class LandingsController < ApplicationController
         count = 0
         for i in index..s.length-1
           s[i].end_date_time = timings[count]
+          s[i].queuePosition = s[i].queuePosition-1
           s[i].save
           count = count+1
         end
