@@ -1,6 +1,3 @@
-<% for elem in @relevantLanding%>
-<%=elem.id%>: <%=elem.email%>
-<%end%>
 <% if @queuePosition==-1 %>
 <%= render partial: "error" %>
 <% elsif @queuePosition == 1 %>

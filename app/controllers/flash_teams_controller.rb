@@ -840,8 +840,8 @@ end
     @flash_team_json = flash_team_status['flash_teams_json']
     @flash_team_event = @flash_team_json['events'][@id_task]
     @flash_team_name = @flash_team_json['title']
-    #tm = params[:task_member].split(',') role of recipient 
-    @task_member = params[:task_member]
+    #tm = params[:task_member].split(',') role of recipient
+@task_member = params[:task_member]
     @task_name = @flash_team_event['title']
     @project_overview = @flash_team_json['projectoverview']
     @task_description = @flash_team_event['notes']
@@ -861,11 +861,26 @@ end
       @task_duration += " and " + mm.to_s + " minutes"
     end
     @queue = Array.new
-    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
+    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
     @addresses   = Array.new
     for t in @queue
       @addresses << t.email
     end
-    @addresses = @addresses.uniq
+    @addresses = @addresses.uniq   		@task_members = Array.new
+   		@flash_team_event['members'].each do |task_member|
+   			@task_members << getMemberById(@id_team, @id_task, task_member)
+   		end
+   		@uniq = ""
+   		@task_members.each do |task_member|
+   			if task_member['role'] == @task_member
+   				@uniq = task_member['uniq']
+    				break
+   			end
+   		end
+
+    if @addresses.length > 0
+      @member = Array.new
+      @member = Member.where(:id => @id_team, :email => @addresses[0], :uniq => @uniq, :email_confirmed => true)
+    end
   end
 end
