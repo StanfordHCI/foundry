@@ -866,7 +866,8 @@ end
     for t in @queue
       @addresses << t.email
     end
-    @addresses = @addresses.uniq   		@task_members = Array.new
+    @addresses = @addresses.uniq
+   		@task_members = Array.new
    		@flash_team_event['members'].each do |task_member|
    			@task_members << getMemberById(@id_team, @id_task, task_member)
    		end
