@@ -881,7 +881,7 @@ end
 
     if @addresses.length > 0
       @member = Array.new
-      @member = Member.where(:id => @id_team, :email => @addresses[0], :email_confirmed => true)
+      @member = Member.where(:id => @id_team, :email => @addresses[0], :uniq => @uniq)
     end
   end
 end
