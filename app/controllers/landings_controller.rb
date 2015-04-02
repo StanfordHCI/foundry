@@ -97,7 +97,8 @@ class LandingsController < ApplicationController
     for l in @relevantLanding
       if l.email == @email then 
         alreadyPresent = 1 
-        @newLanding = l
+        l.queuePosition = count+1
+        l.save
         count = count+1
         break
       end
@@ -108,8 +109,6 @@ class LandingsController < ApplicationController
       @queuePosition = @relevantLanding.length + 1
     else
       @queuePosition = count
-      @newLanding.queuePosition = @queuePosition
-      @newLanding.save
     end
 
     if @queuePosition == 1 and @relevantLanding.length == 0
