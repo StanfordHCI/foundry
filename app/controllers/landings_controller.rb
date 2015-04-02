@@ -93,10 +93,10 @@ class LandingsController < ApplicationController
     alreadyPresent = 0
 
     count = 0
+
     for l in @relevantLanding
       if l.email == @email then 
         alreadyPresent = 1 
-        @newLanding = Landing.new
         @newLanding = l
         count = count+1
         break
@@ -108,7 +108,7 @@ class LandingsController < ApplicationController
       @queuePosition = @relevantLanding.length + 1
     else
       @queuePosition = count
-      #@newLanding.queuePosition = @queuePosition
+      @newLanding.queuePosition = @queuePosition
       @newLanding.save
     end
 
@@ -176,7 +176,6 @@ class LandingsController < ApplicationController
       if index == 0
         for i in index..s.length-1
           s[i].end_date_time = Time.now + 600*(i+1)
-          s[i].queuePosition = s[i].queuePosition - 1
           s[i].save
         end
 
@@ -190,7 +189,6 @@ class LandingsController < ApplicationController
         count = 0
         for i in index..s.length-1
           s[i].end_date_time = timings[count]
-          s[i].queuePosition = s[i].queuePosition-1
           s[i].save
           count = count+1
         end
