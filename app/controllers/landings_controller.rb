@@ -46,13 +46,6 @@ class LandingsController < ApplicationController
       return
     end
 
-    emails = Array.new
-    emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
-    if emails.empty? 
-      @queuePosition = -1
-      return
-    end
-
     @invitationLink = ""
     @uniq = ""
 
@@ -61,6 +54,16 @@ class LandingsController < ApplicationController
         @invitationLink = task_member['invitation_link']
         @uniq = task_member['uniq']
         break
+      end
+    end
+
+    emails = Array.new
+    emails = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :email=>@email, :status=>'s')
+    emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
+    if not (emails1.empty?) then
+      if emails.empty? 
+        @queuePosition = -1
+        return
       end
     end
 
@@ -97,8 +100,6 @@ class LandingsController < ApplicationController
     for l in @relevantLanding
       if l.email == @email then 
         alreadyPresent = 1 
-        l.queuePosition = count+1
-        l.save
         count = count+1
         break
       end

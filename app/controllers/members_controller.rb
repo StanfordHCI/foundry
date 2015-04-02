@@ -60,19 +60,24 @@ class MembersController < ApplicationController
   end
 
   def confirm_email
+    first = Landing.new
     @count = 0
     id = params[:id]
     uniq = params[:u]
     confirm_email_uniq = params[:cu]
     email = params[:email]
     member = Member.where(:uniq => uniq, :confirm_email_uniq => confirm_email_uniq)[0]
-    queue = Landing.where(:id_team=>id, :email=>email, :status=>'p', :queuePosition=>1, :uniq=>uniq)
+    queue = Landing.where(:id_team=>id, :status=>'p', :uniq=>uniq)
+    if not(queue.empty?) then
+      first = queue[0]
+    end
+
     emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
     if emails1.empty? 
       member.email_confirmed = true
       member.save
     else
-      if queue.empty? or queue.nil?
+      if first.email != email
         @count = -1
         return
       else
