@@ -67,7 +67,7 @@ class MembersController < ApplicationController
     confirm_email_uniq = params[:cu]
     email = params[:email]
     member = Member.where(:uniq => uniq, :confirm_email_uniq => confirm_email_uniq)[0]
-    queue = Landing.where(:id_team=>id, :status=>'p', :uniq=>uniq)
+    queue = Landing.where(:id_team=>id, :status=>'p', :uniq=>uniq).order('created_at')
     if not(queue.empty?) then
       first = queue[0]
     end
