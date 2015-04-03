@@ -148,7 +148,7 @@ function resumeTask(groupNum) {
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
-    $("#pause-resume-task").html('Pause'); 
+    $("#pause-resume-task").html('Take a Break'); 
 	
 }
 
