@@ -13,6 +13,10 @@ video{
 	height: 180px;
 }
 
+hr{
+	margin: 10px 0;
+}
+
 #confirmEnd {
 	color: black;
 	width: 350px;

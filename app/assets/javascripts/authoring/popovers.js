@@ -359,17 +359,19 @@ function writeDRIMembers(idNum, driId){
     var eventDRI = driId;
     
     // at some point change this to only members for that event (not all members in the flash team)
-    if (flashTeamsJSON["members"].length == 0) return "No Team Members";
-    for (i = 0; i<flashTeamsJSON["members"].length; i++) {
-    			var memberName = flashTeamsJSON["members"][i].role;
-				var memberId = flashTeamsJSON["members"][i].id;
-				if (eventDRI == memberId){
-					DRIString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
-				}
-				else{
-					DRIString += '<option value="'+memberId+'">' + memberName + '</option>';
-				}	   	           
-    }
+    if (entryManager.numMembers() == 0) return "No Team Members";
+    
+    entryManager.eachMember(function(member) {
+        var memberName = member.role;
+        var memberId = member.id;
+        if (eventDRI == memberId){
+            DRIString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
+        }
+        else{
+            DRIString += '<option value="'+memberId+'">' + memberName + '</option>';
+        }	
+    });
+    
     return DRIString;
 }
 
@@ -381,17 +383,17 @@ function writePCMembers(idNum, PCId){
     var eventPC = PCId;
     
     // at some point change this to only members for that event (not all members in the flash team)
-    if (flashTeamsJSON["members"].length == 0) return "No Team Members";
-    for (i = 0; i<flashTeamsJSON["members"].length; i++) {
-                var memberName = flashTeamsJSON["members"][i].role;
-                var memberId = flashTeamsJSON["members"][i].id;
-                if (eventPC == memberId){
-                    PCString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
-                }
-                else{
-                    PCString += '<option value="'+memberId+'">' + memberName + '</option>';
-                }                  
-    }
+    if (entryManager.numMembers() == 0) return "No Team Members";
+    entryManager.eachMember(function(member) {
+        var memberName = member.role;
+        var memberId = member.id;
+        if (eventPC == memberId){
+            PCString += '<option value="'+memberId+'"' + 'selected="selected">' + memberName + '</option>';
+        } else {
+            PCString += '<option value="'+memberId+'">' + memberName + '</option>';
+        }
+    });
+    
     return PCString;
 }
 
@@ -427,12 +429,12 @@ function writeEventMembers(eventObj) {
     var memberString = "";
     var evMembers = eventObj.members;
 
-    if (flashTeamsJSON["members"].length == 0) return "No Team Members";
-    for (i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var memberSearchId = flashTeamsJSON["members"][i].id;
-        var memberName = flashTeamsJSON["members"][i].role;
+    if (entryManager.numMembers() == 0) return "No Team Members";
+    entryManager.eachMember(function(member, i) {
+        var memberSearchId = member.id;
+        var memberName = member.role;
         var found = false;
-        for (j = 0; j<evMembers.length; j++) {
+        for (var j = 0; j<evMembers.length; j++) {
             if (evMembers[j] == memberSearchId) {
                 memberString += '<input type="checkbox" id="event' + eventObj["id"] + 'member' 
                     + i + 'checkbox" checked="true">' + memberName + "   <br>";
@@ -443,7 +445,8 @@ function writeEventMembers(eventObj) {
         if (!found) {
             memberString +=  '<input type="checkbox" id="event' + eventObj["id"] 
                 + 'member' + i + 'checkbox">' + memberName + "   <br>"; 
-        }      
-    }
+        }
+    });
+    
     return memberString;
 };

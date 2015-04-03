@@ -1,5 +1,7 @@
 Foundry::Application.routes.draw do
 
+  resources :landings
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -86,8 +88,14 @@ Foundry::Application.routes.draw do
   end
 
   get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'
+
   get '/flash_teams/:id/:event_id/hire_form/task_rejection' => 'flash_teams#task_rejection'
   get '/flash_teams/:id/:event_id/hire_form/task_acceptance' => 'flash_teams#task_acceptance'
+  get '/landings/:id/:event_id/view' => 'landings#view'
+  post '/flash_teams/:id/:event_id/listQueue' => 'flash_teams#listQueue'
+get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
+
+  get '/landings/:id/:event_id/remove' => 'landings#remove'
   post '/flash_teams/:id/:event_id/hire_form/send_task_acceptance' => 'flash_teams#send_task_acceptance'
   post '/flash_teams/:id/:event_id/hire_form/send_task_rejection' => 'flash_teams#send_task_rejection'
   post '/flash_teams/:id/:event_id/hire_form/send_task_available' => 'flash_teams#send_task_available'
@@ -132,7 +140,6 @@ Foundry::Application.routes.draw do
   
   resources :workers do
     member do
-	  delete :destroy
       post :create
     end
   end
