@@ -721,23 +721,29 @@ if(!window._foundry) {
          * @returns {string} the event's duration in the format 'x hrs y min'
          */
         text: function(eventObj) {
-            var time = eventObj.timer || eventObj.duration;
-            var sign = (time / Math.abs(time) < 0) ? "-" : "";
-            
-            var hours = Math.floor(Math.abs(time) / 60);
-            var minutes = Math.abs(time) % 60;
-
-            var durationArray = [];
-            if(hours !== 0) {
-                durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
-            }
-            
-            if(minutes !== 0) {
-                var minStr = (eventObj.timer || time > 30 ? " min" : "");
-                durationArray.push(minutes + minStr);
+            if(eventObj.status == "paused"){
+                var timeStr = "PAUSED";
             }
 
-            var timeStr = sign + durationArray.join(" ");
+            else{
+                var time = eventObj.timer || eventObj.duration;
+                var sign = (time / Math.abs(time) < 0) ? "-" : "";
+                
+                var hours = Math.floor(Math.abs(time) / 60);
+                var minutes = Math.abs(time) % 60;
+
+                var durationArray = [];
+                if(hours !== 0) {
+                    durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
+                }
+                
+                if(minutes !== 0) {
+                    var minStr = (eventObj.timer || time > 30 ? " min" : "");
+                    durationArray.push(minutes + minStr);
+                }
+
+                var timeStr = sign + durationArray.join(" ");
+            }  
             
             var clockAttrs = events.clock.attrs;
             
