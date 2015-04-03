@@ -604,37 +604,37 @@ if(!window._foundry) {
         return current_user && eventObj.members.indexOf(current_user.id) > - 1;
     },
     
-    clock: {
-        selector: ".clock_icon",
-        tag: "image",
-        attrs: {
-            x: function(d) {return d.x + 10},
-            y: function(d) {return d.y + 10},
-            width: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                // set the width to zero if this is an hour long event
-                return eventObj.duration <= 60 ? 0 : 9;
-            },
-            height: 9,
-            "class": "clock_icon",
-            "xlink:href": function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
-                    "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
-            }
-        },
+    // clock: {
+    //     selector: ".clock_icon",
+    //     tag: "image",
+    //     attrs: {
+    //         x: function(d) {return d.x + 10},
+    //         y: function(d) {return d.y + 10},
+    //         width: function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             // set the width to zero if this is an hour long event
+    //             return eventObj.duration <= 60 ? 0 : 9;
+    //         },
+    //         height: 9,
+    //         "class": "clock_icon",
+    //         "xlink:href": function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+    //                 "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
+    //         }
+    //     },
         
-        style: {
-            opacity: function(d) {
-                var groupNum = parseInt(d.id.replace("task_g_", ""));
-                var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
-                    events.iconOpacity : 1;
-            }
-        }
-    },
+    //     style: {
+    //         opacity: function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+    //                 events.iconOpacity : 1;
+    //         }
+    //     }
+    // },
     
     /**
      * @param {string} text
@@ -670,13 +670,13 @@ if(!window._foundry) {
         tag: "text",
         text: function(eventObj) {
             var title = eventObj.title;
-            var clockAttrs = events.clock.attrs;
+            //var clockAttrs = events.clock.attrs;
             
             
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
-                               - clockAttrs.width(d3.select("#g_" + eventObj.id).data()[0])
-                               - 10 // clock's left margin
+                               //- clockAttrs.width(d3.select("#g_" + eventObj.id).data()[0])
+                               //- 10 // clock's left margin
                                - 10 // right margin
                                - 5;
             
@@ -746,12 +746,12 @@ if(!window._foundry) {
                 var timeStr = sign + durationArray.join(" ");
             }  
             
-            var clockAttrs = events.clock.attrs;
+            //var clockAttrs = events.clock.attrs;
             
             var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
-                               - ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum))
+                               //- ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum))
                                - 10; // right padding
             return events.getShortenedString(
                 timeStr, workingWidth, eventObj.id, events.duration.style);
