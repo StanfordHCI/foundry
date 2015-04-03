@@ -16,9 +16,6 @@ ActiveRecord::Schema.define(version: 20150331075023) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "categories", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -38,8 +35,9 @@ ActiveRecord::Schema.define(version: 20150331075023) do
     t.text     "notification_email_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "original_status"
     t.integer  "user_id"
+    t.text     "original_status"
+    t.string   "author",                    limit: 50
   end
 
   create_table "handoffs", force: true do |t|

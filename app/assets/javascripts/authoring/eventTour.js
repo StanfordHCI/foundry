@@ -1,11 +1,23 @@
-elemId = null;
-prevElem = null;
+/* eventTour.js
+------------------------------------------------------------------------------------
+* References Bootstrap's Tour API to create the tour that is seen initially by workers
+* accessing Foundry for the first time.
+* Note: Written by Tulsee Doshi
+*/
+
+elemId = null;  //The ID of the worker's first task. Is initially set to null
+prevElem = null; //The ID of the task before the worker's first task. Is initially set to null
+
+//Determines if a particular event belongs to the "current user"
 isWorkerTask = function(eventObj) {
 	return current_user && eventObj.members.indexOf(current_user.id) > - 1;
 }
 
+//when the window loads for the first time, initializes and then runs the tour
 window.onload = function(){
 	//Initialize the tour
+
+	//
 	if (!$.cookie('first')){
 		pOverview = flashTeamsJSON['projectoverview']
 		if (!pOverview){
@@ -29,7 +41,6 @@ window.onload = function(){
 			{
 				orphan: true,
 				title: "<b>Welcome to Foundry!</b>",
-				// content: flashTeamsJSON['projectoverview'],
 				content: "<div class='tour-content-wrapper'>Welcome to Foundry. "
 				+"We're here to help you get started!</br>"
 				+ "Read the Project Description below, and follow the next few steps"
