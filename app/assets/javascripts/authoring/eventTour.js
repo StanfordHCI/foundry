@@ -17,28 +17,33 @@ isWorkerTask = function(eventObj) {
 window.onload = function(){
 	//Initialize the tour
 
-	//
+	//Only initializes and runs the event, if there is no cookie already in the system 
+	//(ie. if a user has never been to the page before)
 	if (!$.cookie('first')){
-		pOverview = flashTeamsJSON['projectoverview']
+		pOverview = flashTeamsJSON['projectoverview'];
+
+		//Edge case for if there is no project description
 		if (!pOverview){
-			pOverview = "<b>This project has no project description</b>"
+			pOverview = "<b>This project has no project description</b>";
 		}
+		
+		//Iterates through events, and stops  once it finds one that belongs to the worker
 		for (i = 0; i < flashTeamsJSON["events"].length; i++){
 	    	if (isWorkerTask(flashTeamsJSON["events"][i])){
 	    		elemId = flashTeamsJSON["events"][i]["id"];
 	    		if(i > 0){
 	    			prevElem = flashTeamsJSON["events"][i-1]["id"]
 	    		}
-	    		console.log(elemId);
 	    		break;
 	    	}
 	    }
+
+	    //If the worker is assigned an event, initializes the tour
 	    if (elemId){
 		    var eventTour = new Tour({
 			autoscroll: true,
 			steps: [
-			// {	orphan: true, 
-			{
+			{//The first step in the tour: Project Description
 				orphan: true,
 				title: "<b>Welcome to Foundry!</b>",
 				content: "<div class='tour-content-wrapper'>Welcome to Foundry. "
@@ -55,9 +60,9 @@ window.onload = function(){
 				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 				+"<div class='popover-content'></div>"
 			},
-			{	element: "#g_" + prevElem,
+			{	//Step 2 in the tour: Previous Event, if it exists
+				element: "#g_" + prevElem,
 				title: "<b>The Previous Task</b>",
-				// backdrop: true,
 				html: true,
 				content: "This is the task right before yours."
 				+ " Before working, <b>click on the task</b> to read about the"
@@ -65,9 +70,9 @@ window.onload = function(){
 				+ " that the previous worker has left for you."
 				+ "</br></br>Pay close attention to the tasks that have handoffs (arrows) leading into your task."
 			},
-			{	element: "#g_" + elemId,
+			{	//Step 3 in the tour: Current Event, if it exists
+				element: "#g_" + elemId,
 				title: "<b>Your Task</b>",
-				// backdrop: true,
 				html: true,
 				content: "This is <b>YOUR</b> task. You can now end this tour, "
 				+"and <br/><b>click on the task rectangle and click start </b>"
@@ -85,6 +90,8 @@ window.onload = function(){
 			}
 			]
 			});
+
+			//Runs the event tour
 			eventTour.init();
 		    eventTour.start(true);
 		    eventTour.goTo(0); //Always start tour at the first step
