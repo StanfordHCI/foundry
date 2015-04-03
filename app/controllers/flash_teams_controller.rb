@@ -548,7 +548,7 @@ end
    		if !params[:sender_email].empty?
    			@sender_email = params[:sender_email]
   		else
-  			@sender_email = "stanfordhci.odesk@gmail.com"
+  			@sender_email = ENV['DEFAULT_EMAIL']
   		end
    		
    		@flash_team_name = @flash_team_json['title']
