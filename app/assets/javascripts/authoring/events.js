@@ -686,10 +686,11 @@ if(!window._foundry) {
         
         attrs: {
             "class": "title",
-            x: function(d) {
-                var attrs = events.clock.attrs;
-                return attrs.x(d) + attrs.width(d) + 5;
-            },
+            // x: function(d) {
+            //     var attrs = events.clock.attrs;
+            //     return attrs.x(d) + attrs.width(d) + 5;
+            // },
+            x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 19}
         },
         
@@ -758,10 +759,11 @@ if(!window._foundry) {
         
         attrs: {
             "class": "duration",
-            x: function(d) {
-                var clockAttrs = events.clock.attrs;
-                return clockAttrs.x(d) + clockAttrs.width(d) + 4;
-            },
+            // x: function(d) {
+            //     var clockAttrs = events.clock.attrs;
+            //     return clockAttrs.x(d) + clockAttrs.width(d) + 4;
+            // },
+            x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 32}
         },
         
@@ -1351,8 +1353,8 @@ function drawTop(eventObj) {
     // grab the main rectangle
     var rect = task_g.select("#rect_" + groupNum);
     
-    var clockSvg = addToTaskFromData(events.clock, eventObj, task_g);
-    clockSvg.call(drag);
+    // var clockSvg = addToTaskFromData(events.clock, eventObj, task_g);
+    // clockSvg.call(drag);
     var titleSvg = addToTaskFromData(events.title, eventObj, task_g);
     titleSvg.call(drag);
     var durationSvg = addToTaskFromData(events.duration, eventObj, task_g);
