@@ -75,6 +75,7 @@ class MembersController < ApplicationController
     emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
     if emails1.empty? 
       member.email_confirmed = true
+      member.confirmationTime = Time.now
       member.save
     else
       if first.email != email
@@ -82,6 +83,7 @@ class MembersController < ApplicationController
         return
       else
         member.email_confirmed = true
+        member.confirmationTime = Time.now
         member.save
       end
     end

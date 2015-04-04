@@ -145,9 +145,21 @@ class LandingsController < ApplicationController
       @newLanding.end_date_time = @end_date_time + wait_time
       @newLanding.queuePosition = @queuePosition
       @newLanding.status = 'p'
+      if @queuePosition == 1 
+        UserMailer.send_first_in_queue(@email, @task_member, @task_name, @flash_team_name, @wait_time, @removalURL, @task_duration, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @invitationLink)
+        @newLanding.emailSent = true
+        @newLanding.emailSentTime = Time.now
+      end
       @newLanding.uniq = @uniq
       @newLanding.save 
     else
+      @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
+      if @queuePosition == 1 and not(@relevantLanding[0].emailSent)
+        UserMailer.send_first_in_queue(@email, @task_member, @task_name, @flash_team_name, @wait_time, @removalURL, @task_duration, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @invitationLink)
+        @relevantLanding[0].emailSent = true
+        @relevantLanding[0].emailSentTime = Time.now
+        @relevantLanding[0].save
+      end
       return
     end
   @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
