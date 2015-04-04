@@ -1,8 +1,18 @@
+/* training.js
+----------------------
+* File is in charge of the code for the onboarding required to join the panels. 
+* Creates training modals for both workers and PCs
+* Note: It references YouTube videos created and stored in Tulsee Doshi's gmail account
+*/
+
+//Code that opens the modal
 function openModal(){
+
+	//Sets up PC training
 	if ($("#password").val().indexOf("pc") == 0){
 		$("#pcModal").attr("style", "display: block;");
 		$('#pcModal').modal('show');
-		$('.next').click(function(){
+		$('.next').click(function(){//Edge cases for last panel and youtube videos
 	  		var nextId = $(this).parents('.tab-pane').next().attr("id");
 	  		if (nextId == "step10"){
 	  			document.getElementById("pcCompleteBtn").disabled = false;	  		
@@ -15,7 +25,7 @@ function openModal(){
 	  			$("#youtube2").attr("src", $("#youtube2").attr("src"));
 	  		}
 		});
-		$('.prev').click(function(){
+		$('.prev').click(function(){//Edge cases for first panel and youtube videos
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
 			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
@@ -33,10 +43,12 @@ function openModal(){
     		$("#pcModal .tab-pane iframe").attr("src", $("#pcModal .tab-pane iframe").attr("src"));
 		});
 	}
+
+	//Sets up worker training
 	else if ($("#password").val().indexOf("wo") == 0){
 		$("#workerModal").attr("style", "display: block;");
 		$('#workerModal').modal('show');
-		$('.next').click(function(){
+		$('.next').click(function(){//Edge cases for last panel and youtube videos
 	  		var nextId = $(this).parents('.tab-pane').next().attr("id");
 	  		if (nextId == "part5"){
 	  			document.getElementById("woCompleteBtn").disabled = false;	  		
@@ -52,7 +64,7 @@ function openModal(){
 	  			$("#youtube5").attr("src", $("#youtube5").attr("src"));
 	  		}
 		});
-		$('.prev').click(function(){
+		$('.prev').click(function(){//Edge cases for first panel and youtube videos
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
 			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
@@ -73,14 +85,19 @@ function openModal(){
 	  		$('#workerWizard a:first').tab('show')
 		});	
 	}
+
+	//Requests a code
 	else if($("#password").val() == ""){
 		alert("You must enter a code to launch training");
 	}
+
+	//Incorrect code
 	else{
 		alert("I'm sorry. The code you entered does not match our records. Please wait to recieve a code from us.");
 	}
 }
 
+//Code to display the registration form
 function showForm(){
 	console.log("Hits this");
 	$(".formDiv").attr("style", "display:inline");
