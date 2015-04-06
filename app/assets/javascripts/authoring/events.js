@@ -317,12 +317,14 @@ function durationForWidth(width) {
     return Math.ceil(mins/15) * 15;
 };
 
+//Calculate and return start hour in minutes for some given x position of an event
 function startHrForX(X){
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var hrs = Math.floor(parseFloat(roundedX)/parseFloat(RECTANGLE_WIDTH));
     return hrs;
 };
 
+//Calculate and return leftover start minutes for some given x position of an event
 function startMinForX(X){
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
