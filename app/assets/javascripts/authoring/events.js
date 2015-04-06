@@ -259,6 +259,7 @@ function createEventObj(snapPoint, duration) {
     
     var startTimeObj = getStartTime(snapPoint[0]);
   
+    //Create the event json object
     var newEvent = {
         "title":"New Event", "id":createEventId(), 
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
@@ -276,12 +277,14 @@ function createEventObj(snapPoint, duration) {
     return newEvent;
 };
 
+//Create a unique event id based on the current time
 function createEventId(){
 	var timestamp = new Date();
 	event_timestamp = Math.floor(timestamp.getTime());
 	return event_timestamp;
 }
 
+//Retrieve event json object using id
 function getEventFromId(id) {
     var events = flashTeamsJSON.events;
     for(var i=0;i<events.length;i++){
@@ -1085,7 +1088,7 @@ if(!window._foundry) {
 })();
 
 
-
+//
 function drawG(eventObj) {
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
@@ -1513,18 +1516,12 @@ function drawTimer(eventObj){
         return;
     }
     
-    if( eventObj.status == "started" ){
-    
-        //var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
-        
+    if( eventObj.status == "started" ){        
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         
         var duration = eventObj["duration"];
-        
-        //var remaining_time = duration - time_passed;
-        
+                
 		var remaining_time = eventObj.latest_remaining_time - time_passed;
-
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
@@ -1544,40 +1541,21 @@ function drawTimer(eventObj){
     }
 
     else if( eventObj.status == "delayed" ){
-    
-        /* //OLD WAY
-		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
-        var duration = eventObj["duration"];
-        var remaining_time = duration - time_passed;
-		*/
 
 		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
         var remaining_time = eventObj.latest_remaining_time - time_passed;
-
 
         eventObj["timer"] = remaining_time;
         updateStatus(true);
     }
 }
 
-
-function removeAllMemberCircles(eventObj){
-    var groupNum = eventObj["id"];
-    var members = eventObj["members"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    for(var i=0;i<members.length;i++){
-        task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1)).remove();
-    }
-};
-
-function renderAllMemberCircles() {
+function renderAllMemberTabs() {
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
         drawMemberTabs(ev);
-        // drawMemberCircles(ev);
     }
 };
 
@@ -1597,7 +1575,7 @@ function addEventMember(eventId, memberIndex) {
     flashTeamsJSON["events"][indexOfEvent].members.push({name: memberName, uniq: memberUniq, color: memberColor});
 
     // render on events
-    renderAllMemberCircles();
+    drawMemberTabs(flashTeamsJSON["events"][indexOfEvent]);
 }
 
 //Remove a team member from an event
