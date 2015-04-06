@@ -48,11 +48,6 @@ colorBox.grabColor = function() {
     return color;
 };
 
-//replaceColor adds a color back into possible space
-colorBox.replaceColor = function(color) {
-    // colorBox.colors.push(color);
-};
-
 function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();

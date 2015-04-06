@@ -14,9 +14,8 @@ $.fn.popover.Constructor.prototype.show = function () {
     } 
 };
 
-// Adds/updates the DRI dropdown on the event popover
+// Adds/updates the DRI dropdown on the event popover/modal
 function writeDRIMembers(idNum, driId){
-
 	var indexOfJSON = getEventJSONIndex(idNum);
     var DRIString = '<option value="0">-- Choose DRI --</option>';
     var eventDRI = driId;
@@ -38,7 +37,7 @@ function writeDRIMembers(idNum, driId){
     return DRIString;
 }
 
-// Adds/updates the PC dropdown on the event popover
+// Adds/updates the PC dropdown on the event popover/modal
 function writePCMembers(idNum, PCId){
 
     var indexOfJSON = getEventJSONIndex(idNum);

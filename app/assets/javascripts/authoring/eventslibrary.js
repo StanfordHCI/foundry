@@ -47,22 +47,16 @@ function dragEvent(ev) {
   //console.log(ev);
   ev.dataTransfer.setData('eventHash', ev.target.getAttribute('data-hash'));
   ev.dataTransfer.setData("Text",ev.target.id); //saves id of dragged Event div into 'data'
-  document.getElementById("overlay").style.display = "block"; //turns overlay on
 }
 
 /* Called when a user drops an event in a div that allows drop, in this case, overlay. Mouse coordinates at the point of drop are detected and members belonging to the dragged event and members belonging to the existing flash-team are compared */
 function drop(ev) {
   ev.preventDefault();
 
-  //console.log(ev);
-
   var targetHash = ev.dataTransfer.getData('eventHash');
 
   //calculates mouse coordinates relative to timeline svg to draw dragged event in corresponding location
-  var mouseCoords = calcMouseCoords(ev);
-
-  //turn overlay off so event blocks can be drawn on timeline svg
-  document.getElementById("overlay").style.display = "none";  
+  var mouseCoords = calcMouseCoords(ev); 
 
   //added createdragevent (and changed eventJSONId to eventJSONindex) here instead of compMember to test:
   createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
@@ -75,11 +69,6 @@ function drop(ev) {
 function calcMouseCoords(event) {
   var timelineX = document.getElementById("timeline-container").offsetLeft;
   var timelineY = document.getElementById("timeline-container").offsetTop;
-  var overlayX = document.getElementById("overlay").offsetLeft;
-  var overlayY = document.getElementById("overlay").offsetTop;
-
-  var svgX = timelineX + overlayX;
-  var svgY = timelineY + overlayY;
 
   var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
   var timelineScrollY = document.getElementById("timeline-container").scrollTop;
@@ -87,8 +76,8 @@ function calcMouseCoords(event) {
   var absoluteX = event.pageX+timelineScrollX;
   var absoluteY = event.pageY+timelineScrollY;
 
-  var svgpointX = absoluteX - svgX;
-  var svgpointY = absoluteY - svgY;
+  var svgpointX = absoluteX - timelineX;
+  var svgpointY = absoluteY - timelineY;
 
   var svgpoint = [svgpointX, svgpointY];
   return svgpoint;
