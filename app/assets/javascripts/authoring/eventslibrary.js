@@ -103,13 +103,6 @@ function createDragEvent(mouseX, mouseY, targetHash) {
        return;
    }
 
-   event_counter++; //To generate id
-
-  /*
-  var matchblock = document.getElementById("matchblock");
-  console.log("matchblock: " + matchblock.innerHTML);
-  */
-
   var title = document.getElementById("title-" + targetHash).innerHTML;
   var duration = document.getElementById("duration-" + targetHash).innerHTML * 60;
   var inputs = document.getElementById("inputs-" + targetHash).innerHTML;
@@ -120,7 +113,7 @@ function createDragEvent(mouseX, mouseY, targetHash) {
   var startTimeObj = getStartTime(snapPoint[0]);
 
   var newEvent =  {
-      "title":title, "id":event_counter, "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
+      "title":title, "id":createEventId(), "x": snapPoint[0], "min_x": snapPoint[0], "y": snapPoint[1], 
       "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
       "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
       "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":inputs, "outputs":outputs,

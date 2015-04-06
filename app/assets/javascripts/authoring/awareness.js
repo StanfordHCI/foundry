@@ -585,8 +585,6 @@ var loadData = function(){
     completed_red_tasks = loadedStatus.completed_red_tasks;
 
     load_statusBar(status_bar_timeline_interval);
-
-    event_counter = flashTeamsJSON["events"].length;
     
     drawEvents(!in_progress);
 

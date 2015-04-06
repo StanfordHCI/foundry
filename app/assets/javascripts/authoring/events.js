@@ -6,7 +6,6 @@
 var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var DRAGBAR_WIDTH = 8;
-var event_counter = 0;
 var GUTTER = 20;
 
 var dragged = false;
@@ -146,6 +145,7 @@ function rightResize(d) {
     drawEvent(ev, false);
 }
 
+//Called when event is dragged. First updates the json, then redraws
 function dragEventBlock(d) {
     if(isUser || in_progress) { // user page
         return;
@@ -176,7 +176,6 @@ function dragEventBlock(d) {
 
     //Vertical Dragging
     var rowHeight = window._foundry.timeline.rowHeight;
-    
     var currentY = rowHeight * ev.row;
     var dy = Math.floor(d3.event.y - currentY);
     var newRow = ev.row + Math.floor(dy/rowHeight);
@@ -185,6 +184,7 @@ function dragEventBlock(d) {
     }
     ev.row = newRow;
     ev.y = currentY+5;
+
     updateStatus();
     drawEvent(ev, false);   
 }
@@ -255,8 +255,6 @@ function getDuration(leftX, rightX) {
 
 //task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
 function createEventObj(snapPoint, duration) {
-    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
-    
     duration = duration || 60;
     
     var startTimeObj = getStartTime(snapPoint[0]);
@@ -271,13 +269,8 @@ function createEventObj(snapPoint, duration) {
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
-      //add new event to flashTeams database
-    /*
-if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
-        createNewFolder(document.getElementById("ft-name").innerHTML);
-        //createNewFolder($("#flash_team_name").val());
-    }
-*/
+    
+    //add new event to flashTeams database
     flashTeamsJSON.events.push(newEvent);
     
     return newEvent;
@@ -286,7 +279,6 @@ if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
 function createEventId(){
 	var timestamp = new Date();
 	event_timestamp = Math.floor(timestamp.getTime());
-	//console.log("eventId: " + event_timestamp);
 	return event_timestamp;
 }
 
@@ -1653,18 +1645,18 @@ function confirmDeleteEvent(eventId) {
 // first updates the event object array and interactions array
 // then, calls removeTask to remove the task from the timeline
 function deleteEvent(eventId){
-
+    //Hide the editing task modal
     $('#confirmAction').modal('hide');
-
+    
+    //Delete the event object from the json
     var indexOfJSON = getEventJSONIndex(eventId);
     var events = flashTeamsJSON["events"];
-        
     events.splice(indexOfJSON, 1);
-    //console.log("event deleted from json");
     
     //stores the ids of all of the interactions to erase
     var intersToDel = [];
     
+    //Iterate over interactions to find any that involve the specific event
     for (var i = 0; i < flashTeamsJSON["interactions"].length; i++) {
             var inter = flashTeamsJSON["interactions"][i];
             if (inter.event1 == eventId || inter.event2 == eventId) {
@@ -1672,14 +1664,14 @@ function deleteEvent(eventId){
             }
         }
       
+    //Delete all of the interactions specified from the previous function from the json
     for (var i = 0; i < intersToDel.length; i++) {
-        // remove from timeline
         var intId = intersToDel[i];
         deleteInteraction(intId);
     }
 
+    //Visually removes task from the timeline, in awareness.js
     removeTask(eventId);
-    
     updateStatus(false);
 }
 
