@@ -35,8 +35,7 @@ function handleAuthResult2(authResult) {
 };
 
 
-//Functions that authorize the API
-
+//Functions that authorize the API`
 function onAuthApiLoad() {
   gapi.auth.authorize(
     {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
@@ -85,7 +84,6 @@ function pickerCallback(data){
 function createProjectFolder(){
 	
 	gapi.client.load('drive', 'v2', function() {
-		console.log("inside create project folder after load");
 		var req;
 		req = gapi.client.request({
         'path': '/drive/v2/files',
@@ -104,9 +102,7 @@ function createProjectFolder(){
         flashTeamsJSON.folder = folderArray;
         
 		updateStatus(); // don't put true or false here
-		
-		console.log("flashTeamsJSON.folder: " + flashTeamsJSON.folder);
-		
+				
 		addAllTaskFolders(flashTeamsJSON.folder[0])
     });
 		
@@ -119,7 +115,6 @@ function createProjectFolder(){
 function createTaskFolder(eventName, JSONId, parent_folder){
 	
 	gapi.client.load('drive', 'v2', function() {
-		console.log("inside create task folder after load");
 		var req;
 		req = gapi.client.request({
         'path': '/drive/v2/files',
@@ -171,7 +166,7 @@ function createNewFile(eventName) {
          }
      });
 
-      request.execute(function(resp) { /*console.log(resp);*/ });
+      request.execute(function(resp) {});
    });
 };
 

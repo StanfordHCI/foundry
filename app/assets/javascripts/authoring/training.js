@@ -27,7 +27,6 @@ function openModal(){
 		});
 		$('.prev').click(function(){//Edge cases for first panel and youtube videos
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
-			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
 			if($(this)[0].className.indexOf("vidButton1") != -1){
 	  			$("#youtube1").attr("src", $("#youtube1").attr("src"));
@@ -66,7 +65,6 @@ function openModal(){
 		});
 		$('.prev').click(function(){//Edge cases for first panel and youtube videos
 			var prevId = $(this).parents('.tab-pane').prev().attr("id");
-			console.log(prevId)
 			$('[href=#'+prevId+']').tab('show');
 			if($(this)[0].className.indexOf("vidButton3") != -1){
 	  			$("#youtube3").attr("src", $("#youtube3").attr("src"));
@@ -99,11 +97,9 @@ function openModal(){
 
 //Code to display the registration form
 function showForm(){
-	console.log("Hits this");
 	$(".formDiv").attr("style", "display:inline");
 	$("#launchDiv").attr("style", "display:none");
 	$(".footer").attr("style", "position: relative");
 	$("#topText").attr("class", "span6");
 	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add stanfordhci.odesk@gmail.com to your address book to prevent job notifications from going to your spam folder.";
-	//$("#topText").attr("style", "padding-top:20px;");
 }
