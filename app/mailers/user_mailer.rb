@@ -105,6 +105,22 @@ class UserMailer < ActionMailer::Base
   	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
   end
 
+def send_first_in_queue(email, task_member, task_name, flash_team_name, wait_time, removalURL, task_duration, project_overview, task_description, inputs, input_link, outputs, output_description, invitationLink)
+@task_member = task_member
+@task_name = task_name
+@flash_team_name = flash_team_name
+@wait_time = wait_time
+@removalURL = removalURL
+@task_duration = task_duration
+@project_overview = project_overview
+@task_description = task_description
+@inputs = inputs
+@outputs = outputs
+@input_link = input_link
+@output_description = output_description
+@invitationLink = invitationLink
+mail(:to => email, :subject => task_member + ' role for the ' + task_name + ' task now available')
+  end
 
   
 end
