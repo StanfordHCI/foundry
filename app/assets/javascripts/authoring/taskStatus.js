@@ -26,9 +26,9 @@ var TASK_DELAY_BORDER_COLOR = "#c84d4d";
 var TASK_COMPLETE_COLOR = "#3fb53f";
 var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 
-//darker blue/grey
-var TASK_PAUSED_COLOR = "#006699"; //note: we might decide to just keep the in progress blue and lower the opacity 
-var TASK_PAUSED_BORDER_COLOR = "#006699";
+//lighter blue/grey
+var TASK_PAUSED_COLOR =  "#a8cfde"; 
+var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
