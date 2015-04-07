@@ -269,13 +269,16 @@ function getTaskOverviewContent(groupNum){
 			
 		content += '</div>';
 		
-		content += '<div class="span4"><b>Duration: </b>' + hrs+':'+mins +'<br />'
-				+ '<b>Status: </b>'; 
+		content += '<div class="span4">';
 				
 				if(ev.status == "not_started"){
+                    content += '<b>Duration: </b>' + formatModalTime(ev.duration) +'<br />' 
+                + '<b>Status: </b>'; 
 					content += "not started";
 				}
 				else{
+                    content += '<b>Remaining: </b>' + formatModalTime(ev.timer) +'/' + formatModalTime(ev.duration) +'<br />' 
+                    + '<b>Status: </b>'; 
 					content += ev.status;
 				}
 		content += '</div><br><br><br> 30 minutes of this task are allocated for reading the requirements'
@@ -435,6 +438,27 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
 	
 	return content;
+}
+
+
+/* Returns a string with the time in the format of h:mm (if h<10) or hh:mm (if h>=10)
+*  Returns a negative time string if the task is delayed
+*  Param: time in minutes
+*/
+function formatModalTime(timeInMins){
+
+    var time = timeInMins;
+    var sign = (time / Math.abs(time) < 0) ? "-" : "";
+    
+    var hours = Math.floor(Math.abs(time) / 60);
+    var minutes = Math.abs(time) % 60;
+
+    if(minutes == 0){
+        minutes = "00";
+    }
+
+    var timeStr = sign + hours + ":" + minutes;
+    return timeStr;
 }
 
 
