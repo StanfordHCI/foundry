@@ -11,14 +11,14 @@ var GUTTER = 20;
 
 var dragged = false;
 
-//Called when the right dragbar of a task rectangle is dragged
+//Called when the right resize of a task rectangle is dragged
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
         updateStatus(false);
     });
 
-//Called when the left dragbar of a task rectangle is dragged
+//Called when the left resize of a task rectangle is dragged
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
@@ -331,60 +331,6 @@ function startMinForX(X){
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
     return mins;
 };
-
-function drawRightDragBar(eventObj, firstTime) {
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-    var width = getWidth(eventObj);
-
-    var existingRightDragBar = task_g.selectAll("#rt_rect_" + groupNum);
-    if(existingRightDragBar[0].length == 0){ // first time
-        task_g.append("rect")
-            .attr("class", "rt_rect")
-            .attr("x", function(d) { 
-                return d.x + width - (GUTTER/4); })
-            .attr("y", function(d) {return d.y})
-            .attr("id", function(d) {
-                return "rt_rect_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum})
-            .attr("height", RECTANGLE_HEIGHT)
-            .attr("width", DRAGBAR_WIDTH)
-            .attr("fill", "#00")
-            .attr("fill-opacity", .6)
-            .attr('pointer-events', 'all')
-            .call(drag_right);
-    } else {
-        task_g.selectAll(".rt_rect")
-            .attr("x", function(d) {return d.x + width - (GUTTER/4);})
-            .attr("y", function(d) {return d.y});
-    }
-}
-
-function drawLeftDragBar(eventObj, firstTime) {
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    var existingLeftDragBar = task_g.selectAll("#lt_rect_" + groupNum);
-    if(existingLeftDragBar[0].length == 0){ // first time
-        task_g.append("rect")
-            .attr("class", "lt_rect")
-            .attr("x", function(d) { return (d.x + (GUTTER/4));})
-            .attr("y", function(d) {return d.y})
-            .attr("id", function(d) {
-                return "lt_rect_" + d.groupNum; })
-            .attr("groupNum", function(d) {return d.groupNum})
-            .attr("height", RECTANGLE_HEIGHT)
-            .attr("width", DRAGBAR_WIDTH)
-            .attr("fill", "#00")
-            .attr("fill-opacity", .6)
-            .attr('pointer-events', 'all')
-            .call(drag_left);
-    } else {
-        task_g.selectAll(".lt_rect")
-            .attr("x", function(d) {return d.x + (GUTTER/4);}) 
-            .attr("y", function(d) {return d.y});
-    }
-}
 
 function drawDurationText(eventObj, firstTime) {
     var x_offset = 15; // unique for duration (NOTE FROM DR: Used to be 10)
