@@ -333,6 +333,7 @@ function startMinForX(X){
 };
 
 function drawDurationText(eventObj, firstTime) {
+    console.log("duration text");
     var x_offset = 15; // unique for duration (NOTE FROM DR: Used to be 10)
     var y_offset = 26; // unique for duration
 
@@ -381,7 +382,6 @@ function findCurrentUserNextEvent(currentUserEvents){
         }
     }
 }
-
 
 
 if(!window._foundry) {
