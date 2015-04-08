@@ -242,17 +242,44 @@ $left-sidebar-width: 251px;
 
 
 /* left-sidebar roles */
+.breadcrumb, .breadcrumb.role-folder {
+    /* override bootstrap styles */
+    padding: 4px;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+    display: inline;
+    text-decoration: none;
+    
+    @include border-radius(2px);
+    
+    &.accepting {
+        background-color: #b2ddf4;
+    }
+}
 
 .role, .role-folder {
   padding: 2px 8px 2px 11px;
   cursor: pointer;
   margin-top: 2px;
-  
+  box-sizing: border-box;
   font-size: 13px;
   
-  @include transition( (background-color 0.2s, border 0.2s) );
+  @include transition( (background-color 0.2s, border 0.2s, opacity 0.4s) );
   @include display(flex);
   @include align-items(center);
+  
+  &.copy {
+    pointer-events: none;
+  }
+  
+  &.accepting {
+    background-color: #b2ddf4;
+  }
+  
+  &.dragging {
+    opacity: 0.24;  
+  }
   
   .delete-button {
     display: none;
@@ -347,22 +374,29 @@ $left-sidebar-width: 251px;
   }
 }
 
-.role.add-role input[type="text"],
-.role.add-role textarea {
-  background: none;
-  margin: 0;
-  border: 0;
-  outline: 0;
-  padding: 0;
-  font: inherit;
-  border: none;
-  height: 30px;
-  width: 80%;
-}
-
-.role.add-role input[type="text"]:focus,
-.role.add-role textarea:focus {
-  box-shadow: none;
+.role.add-role {
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+    &:hover {
+      background: none;
+    }
+  }
+  
+  input[type="text"], textarea {
+    background: none;
+    margin: 0;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    font: inherit;
+    border: none;
+    height: 30px;
+    width: 80%;
+    &:focus {
+      box-shadow: none;
+    }
+  }
 }
 
 /* right sidebar */
@@ -747,6 +781,15 @@ a.button {
       padding: 4px;
       padding-right: 8px;
       @include border-radius(2px);
+      
+      &.disabled {
+        opacity: 0.48;
+        cursor: default;
+        background: none;
+        &:hover {
+          background: none;
+        }
+      }
       
       #addFolderInput {
         border: none;

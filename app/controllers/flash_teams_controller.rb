@@ -1,4 +1,4 @@
-require 'json'
+﻿require 'json'
 #require 'google/api_client'
 #require 'google/api_client/auth/file_storage'
 #require 'google/api_client/auth/installed_app'
@@ -527,8 +527,9 @@ end
 	    end
 	    
 	    @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
-	    
-  end
+   		@url1 = url_for :controller => 'flash_teams', :action => 'listQueueForm', :id => @id_team, :event_id => @id_task.to_s
+   
+	     end
   
   def send_task_available
 
@@ -547,7 +548,7 @@ end
    		if !params[:sender_email].empty?
    			@sender_email = params[:sender_email]
   		else
-  			@sender_email = "stanfordhci.odesk@gmail.com"
+  			@sender_email = ENV['DEFAULT_EMAIL']
   		end
    		
    		@flash_team_name = @flash_team_json['title']
@@ -561,7 +562,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -570,10 +571,34 @@ end
    		@task_duration = params[:task_duration]
    		
    		#@message = params[:message]
-   		
+
+   		@task_members = Array.new
+   		@flash_team_event['members'].each do |task_member|
+   			@task_members << getMemberById(@id_team, @id_task, task_member)
+   		end
+   		@uniq = ""
+   		@task_members.each do |task_member|
+   			if task_member['role'] == @task_member
+   				@uniq = task_member['uniq']
+    				break
+   			end
+   		end
+
    		#@message = "<p>This is an email from the Stanford HCI Group notifying you that a job requiring a #{@task_member} for the #{@task_name} task for the #{@flash_team_json['title']} project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>"
-   		
-   		UserMailer.send_task_hiring_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration).deliver
+   		emails = @recipient_email.split(',')
+   		@url1 = url_for :controller => 'flash_teams', :action => 'listQueueForm', :id => @id_team, :event_id => @id_task.to_s
+   		for email in emails
+   			newLanding = Landing.new
+   			newLanding.id_team = @id_team
+   			newLanding.id_event = @id_task
+   			newLanding.email = email.strip
+   			newLanding.task_member = @task_member
+   			newLanding.status = 's'
+   			newLanding.uniq = @uniq
+   			newLanding.save
+   			@url = url_for :controller => 'landings', :action => 'view', :id => @id_team, :event_id => @id_task.to_s, :task_member => @task_member, :email => email.strip
+   			UserMailer.send_task_hiring_email(@sender_email, email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @url).deliver
+   		end
    
    end
    
@@ -655,7 +680,7 @@ end
    		@task_description = params[:task_description]
    		
    		
-   		@inputs = params[:inputs]
+   		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
    		
    		@outputs = params[:outputs]
@@ -664,7 +689,7 @@ end
    		@foundry_url = params[:foundry_url]
 
    		
-   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
+   		UserMailer.send_task_acceptance_email(@sender_email, @recipient_email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @foundry_url).deliver
    
    end
    
@@ -762,5 +787,101 @@ end
    
   def flash_team_params params
     params.permit(:name, :author)
+  end
+
+  def listQueueForm
+    @list_queue_active = "active"
+    @id_team = params[:id]
+    @id_task = params[:event_id].to_i
+    @flash_team = FlashTeam.find(params[:id])
+   		@workers = Worker.all.order(name: :asc)
+   		@panels = Worker.distinct.pluck(:panel)
+	
+   		@fw = Worker.all.pluck(:email)   
+    # Extract data from the JSON
+    flash_team_status = JSON.parse(@flash_team.status)
+    @flash_team_json = flash_team_status['flash_teams_json']
+    @flash_team_event = @flash_team_json['events'][@id_task]
+    @flash_team_name = @flash_team_json['title']
+    @task_name = @flash_team_event['title']
+    @project_overview = @flash_team_json['projectoverview']
+    @task_description = @flash_team_event['notes']
+    @inputs = @flash_team_event['inputs']
+    #@input_link = params[:input_link]
+    @outputs = @flash_team_event['outputs']
+    #@output_description = params[:output_description]
+    minutes = @flash_team_event['duration']
+    hh, mm = minutes.divmod(60)
+    @task_duration = hh.to_s 
+    if hh==1
+      @task_duration += " hour"
+    else
+      @task_duration += " hours"
+    end
+    if mm>0
+      @task_duration += " and " + mm.to_s + " minutes"
+    end
+#array for all members associated with this event
+	    @task_members = Array.new
+	    # Add all the members associated with event to @task_members array
+	    @flash_team_event['members'].each do |task_member|
+	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    end
+  end
+
+  def listQueue
+    @list_queue_active = "active"
+    @id_team = params[:id]
+    @id_task = params[:event_id].to_i
+    @flash_team = FlashTeam.find(params[:id])
+    @url1 = url_for :controller => 'flash_teams', :action => 'listQueueForm', :id => @id_team, :event_id => @id_task.to_s
+    # Extract data from the JSON
+    flash_team_status = JSON.parse(@flash_team.status)
+    @flash_team_json = flash_team_status['flash_teams_json']
+    @flash_team_event = @flash_team_json['events'][@id_task]
+    @flash_team_name = @flash_team_json['title']
+    #tm = params[:task_member].split(',') role of recipient
+@task_member = params[:task_member]
+    @task_name = @flash_team_event['title']
+    @project_overview = @flash_team_json['projectoverview']
+    @task_description = @flash_team_event['notes']
+    @inputs = @flash_team_event['inputs']
+    #@input_link = params[:input_link]
+    @outputs = @flash_team_event['outputs']
+    #@output_description = params[:output_description]
+    minutes = @flash_team_event['duration']
+    hh, mm = minutes.divmod(60)
+    @task_duration = hh.to_s 
+    if hh==1
+      @task_duration += " hour"
+    else
+      @task_duration += " hours"
+    end
+    if mm>0
+      @task_duration += " and " + mm.to_s + " minutes"
+    end
+    @queue = Array.new
+    @queue = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
+    @addresses   = Array.new
+    for t in @queue
+      @addresses << t.email
+    end
+    @addresses = @addresses.uniq
+   		@task_members = Array.new
+   		@flash_team_event['members'].each do |task_member|
+   			@task_members << getMemberById(@id_team, @id_task, task_member)
+   		end
+   		@uniq = ""
+   		@task_members.each do |task_member|
+   			if task_member['role'] == @task_member
+   				@uniq = task_member['uniq']
+    				break
+   			end
+   		end
+
+    if @addresses.length > 0
+      @member = Array.new
+      @member = Member.where(:uniq => @uniq, :email => @addresses[0], :email_confirmed => true)
+    end
   end
 end

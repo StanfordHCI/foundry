@@ -1,6 +1,11 @@
 class UserMailer < ActionMailer::Base
-  default from: "stanfordhci.odesk@gmail.com",
-          bcc: "stanfordhci.odesk@gmail.com"
+  #default from: "stanfordhci.odesk@gmail.com",
+          #bcc: "stanfordhci.odesk@gmail.com"
+
+  default from: ENV['DEFAULT_EMAIL'],
+          bcc: ENV['DEFAULT_EMAIL']
+
+          
  
   def send_early_completion_email(email,minutes)
   	  @minutes=minutes
@@ -54,7 +59,7 @@ class UserMailer < ActionMailer::Base
   end
   
   
-  def send_task_hiring_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, inputs, input_link, outputs, output_description, task_duration)
+  def send_task_hiring_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, url)
   
   	#@message = message.html_safe
   	@flash_team_name = flash_team_name
@@ -62,16 +67,17 @@ class UserMailer < ActionMailer::Base
   	@task_name = task_name
   	@project_overview = project_overview
   	@task_description = task_description
-  	@inputs = inputs
+  	@all_inputs = all_inputs
   	@input_link = input_link
   	@outputs = outputs
   	@output_description = output_description
   	@task_duration = task_duration
+  	@url = url
   		    	  
   	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
   end
   
-  def send_task_acceptance_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, inputs, input_link, outputs, output_description, task_duration, foundry_url)
+  def send_task_acceptance_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, foundry_url)
   
   	#@message = message.html_safe
   	@flash_team_name = flash_team_name
@@ -79,7 +85,7 @@ class UserMailer < ActionMailer::Base
   	@task_name = task_name
   	@project_overview = project_overview
   	@task_description = task_description
-  	@inputs = inputs
+  	@all_inputs = all_inputs
   	@input_link = input_link
   	@outputs = outputs
   	@output_description = output_description
@@ -99,6 +105,22 @@ class UserMailer < ActionMailer::Base
   	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
   end
 
+def send_first_in_queue(email, task_member, task_name, flash_team_name, wait_time, removalURL, task_duration, project_overview, task_description, inputs, input_link, outputs, output_description, invitationLink)
+@task_member = task_member
+@task_name = task_name
+@flash_team_name = flash_team_name
+@wait_time = wait_time
+@removalURL = removalURL
+@task_duration = task_duration
+@project_overview = project_overview
+@task_description = task_description
+@inputs = inputs
+@outputs = outputs
+@input_link = input_link
+@output_description = output_description
+@invitationLink = invitationLink
+mail(:to => email, :subject => task_member + ' role for the ' + task_name + ' task now available')
+  end
 
   
 end

@@ -42,17 +42,59 @@ var drag_left = d3.behavior.drag()
 //Called when task rectangles are dragged
 var drag = d3.behavior.drag()
     .origin(Object)
+    .on("dragstart", function(d) {
+        var ev = getEventFromId(d.groupNum);
+        originalEV = JSON.parse(JSON.stringify(ev)); //deep copy orig position
+    })
     .on("drag", dragEventBlock)
     .on("dragend", function(d){
         if(dragged){
             dragged = false;
             var ev = getEventFromId(d.groupNum);
-            //drawPopover(ev, true, false);
+
+            //Check if handoffs will make this a bag drag
+            var outOfRange = false;
+            var event1;
+            var event2;
+            var eventHandoffs = getHandoffsForEvent(d.groupNum);
+            for (var i = 0; i<eventHandoffs.length; i++) {
+                var handoff = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event1"])];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event2"])];
+                if (handoffOutOfRange(handoff["event1"], handoff["event2"]) == true) {
+                    outOfRange = true;
+                    break;
+                }
+            } 
+            if (outOfRange) {
+                alert("Sorry, " + event1.title + " cannot end before " + event2.title + " begins.");
+                flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                drawEvent(originalEV, false);
+            }
+
+            //Check if collabs will make this a bad drag
+            outOfRange = false;
+            var eventCollabs = getCollabsForEvent(d.groupNum);
+            for (var i = 0; i<eventCollabs.length; i++) {
+                var collab = flashTeamsJSON["interactions"][getIntJSONIndex(eventCollabs[i])];
+                event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
+                event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
+                var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
+                
+                if (overlap <= 0) {
+                    alert("Sorry, " + event1.title + " and " + event2.title 
+                        + " must overlap to have a collaboration.");
+                    flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                    drawEvent(originalEV, false);
+                    break;
+                }
+            }
+            
             updateStatus(false);
         } else {
             // click
             eventMousedown(d.groupNum);
-        }
+        } 
     });
 
 // leftResize: resize the rectangle by dragging the left handle
@@ -243,7 +285,7 @@ function createEventObj(snapPoint, duration) {
         "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "outputs":"", events_after : "",
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
         ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
@@ -313,16 +355,6 @@ function startMinForX(X){
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
     return mins;
 };
-
-
-function getMemberIndexFromName(name) {
-    for (var j = 0; j < flashTeamsJSON["members"].length; j++) { // go through all members
-        if (flashTeamsJSON["members"][j].role == name){
-            return j;
-        }
-    }
-    return -1;
-}
 
 function drawRightDragBar(eventObj, firstTime) {
     var groupNum = eventObj["id"];
@@ -469,37 +501,34 @@ function findCurrentUserNextEvent(currentUserEvents){
 
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
-    for (var i = 0; i < interactions.length; i++){
-        var inter = interactions[i];
+    var eventHandoffs = getHandoffsForEvent(eventObj["id"]);
+    for (var i = 0; i < eventHandoffs.length; i++){
+        var inter = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
         var draw = false;
-        if (inter["type"] == "handoff"){
-            if (inter["event1"] == eventObj["id"]){
-                draw = true;
-                var ev1 = eventObj;
-                var ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
-            }
-            else if (inter["event2"] == eventObj["id"]){
-                draw = true;
-                var ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
-                var ev2 = eventObj;
-            }  
-            
-            if (draw){
-                //Reposition an existing handoff
-                var x1 = handoffStart(ev1);
-                var y1 = ev1.y + 50;
-                var x2 = ev2.x + 3;
-                var y2 = ev2.y + 50;
-                $("#interaction_" + inter["id"])
-                    .attr("d", function(d) {
-                        return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
-                    })
-                    .attr("stroke", function() {
-                        if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
-                        else return "gray";
-                    });
-            }
+        var ev1;
+        var ev2;
+        if (inter["event1"] == eventObj["id"]){
+            ev1 = eventObj;
+            ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
         }
+        else if (inter["event2"] == eventObj["id"]){
+            ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
+            ev2 = eventObj;
+        }  
+        
+        //Reposition an existing handoff
+        var x1 = handoffStart(ev1);
+        var y1 = ev1.y + 50;
+        var x2 = ev2.x + 3;
+        var y2 = ev2.y + 50;
+        $("#interaction_" + inter["id"])
+            .attr("d", function(d) {
+                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+            })
+            .attr("stroke", function() {
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                else return "gray";
+            });
     }
 }
 
@@ -527,20 +556,23 @@ function drawEachCollabForEvent(eventObj){
                 var firstTaskY = 0;
                 var taskDistance = 0;
                 var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
-                if (y1 < y2) {
-                    firstTaskY = y1 + RECTANGLE_HEIGHT;
-                    taskDistance = y2 - firstTaskY;
-                } else {
-                    firstTaskY = y2 + RECTANGLE_HEIGHT;
-                    taskDistance = y1 - firstTaskY;
-                }
-                if (x1 <= x2) var startX = x2;
-                else var startX = x1;
-                $("#interaction_" + inter["id"])
-                    .attr("x", startX)
-                    .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
-                    .attr("height", taskDistance+9)
-                    .attr("width", overlap);
+
+                if (overlap > 0) {
+                    if (y1 < y2) {
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
+                        taskDistance = y2 - firstTaskY;
+                    } else {
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
+                        taskDistance = y1 - firstTaskY;
+                    }
+                    if (x1 <= x2) var startX = x2;
+                    else var startX = x1;
+                    $("#interaction_" + inter["id"])
+                        .attr("x", startX)
+                        .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                        .attr("height", taskDistance+9)
+                        .attr("width", overlap);
+                }      
             }
         }
     }
@@ -801,7 +833,20 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
-            "class": "num-members-icon"
+            "class": "num-members-icon",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: function(d) {
+                var id = d.id.substr("task_g_".length);
+                var event = getEventFromId(id);
+                var str = event.members.length +
+                    (event.members.length === 1 ? " member" : " members");
+                return str;
+            }
         },
         
         style: {
@@ -874,7 +919,14 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
-            "class": "upload"
+            "class": "upload",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Upload files"
         },
         style: {
             cursor: "pointer",
@@ -895,7 +947,7 @@ if(!window._foundry) {
                 var iconWidth = events.collabIcon.attrs.width(d);
                 return events.handoffIcon.attrs.x(d) - iconWidth;
             },
-            y: function(d) {return d.y + events.bodyHeight - 19},
+            y: function(d) {return d.y + events.bodyHeight - 18},
             width: function(d) {
                 var iconWidth = 14;
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -917,7 +969,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw collaboration"
         },
         
         style: {
@@ -973,7 +1032,14 @@ if(!window._foundry) {
             },
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
-            groupNum: function(d) {return d.groupNum}
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw handoff"
         },
         
         style: {
@@ -1304,6 +1370,7 @@ function drawBottom(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
+    var ev = getEventFromId(groupNum);
     
     // icon for the number of members
     addToTaskFromData(events.numMembersIcon, eventObj, task_g);
@@ -1315,8 +1382,8 @@ function drawBottom(eventObj) {
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
     uploadIcon.on("click", function(){
         d3.event.stopPropagation();
-        if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
-            window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
+        if (ev.gdrive.length > 0){
+            window.open(ev.gdrive[1])
         }
         else{
             alert("The flash team must be running for you to upload a file!");
@@ -1330,6 +1397,14 @@ function drawBottom(eventObj) {
     // handoff icon
     var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
     handoffIconSvg.on("click", startWriteHandoff);
+    
+    var selector = ".event " + events.numMembersIcon.selector + ", " +
+                   ".event " + events.uploadIcon.selector + ", " +
+                   ".event " + events.collabIcon.selector + ", " +
+                   ".event " + events.handoffIcon.selector;
+    $(selector).each(function() {
+          $(this).tooltip('destroy').tooltip();
+    });
 }
 
 function drawMemberTabs(eventObj) {
@@ -1416,7 +1491,6 @@ function drawShade(eventObj) {
     //if they are the CURRENT member
     for (var i=0; i<members.length; i++) {
         var member_id = members[i];
-        //var idx = getMemberIndexFromName(member["name"]);
         //debugger;
         if (current_user.id == member_id){
             if (currentUserIds.indexOf(groupNum) < 0){

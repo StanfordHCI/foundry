@@ -108,6 +108,17 @@ $("#flashTeamStartBtn").click(function(){
     document.getElementById("confirmButton").onclick=function(){startFlashTeam()};    
 });
 
+function disableTeamEditing() {
+    $(".add-folder-button").addClass("disabled");
+    $(".add-role").addClass("disabled");
+    
+    // assemble selector for event buttons
+    var selectorPrefix = ".event-layer .event ";
+    var selector = selectorPrefix + ".collab_btn, " +
+                   selectorPrefix + ".handoff_btn";
+    $(selector).hide();
+}
+
 function startFlashTeam() {
     $('#confirmAction').modal('hide');
     // view changes
@@ -121,7 +132,10 @@ function startFlashTeam() {
     //$("a#gFolder.button").css('visibility','visible');
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
-    //console.log("here0");
+    
+    
+    disableTeamEditing();
+    
     removeColabBtns();
     removeHandoffBtns();
     save_tasksAfter_json();
@@ -308,6 +322,8 @@ function renderEverything(firstTime) {
 
             renderMembersUser();
 
+            disableTeamEditing();
+            
            /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
                 show_previous_doc();

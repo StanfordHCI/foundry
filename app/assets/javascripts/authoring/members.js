@@ -13,14 +13,29 @@ var memberType;
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
     colorBox.colors = [
-      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#e26a6a", //reds
-      "#f39c12", "#f1c40f", "#f7d85c", //yellows
-        "#87d37c", "#4f8e6a", "#2ecc71",  "#26a65b", "#2e762c", //greens
-        "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad", //aquas
-        "#81cfe0", "#22a7f0","#5c97bf", "#4ecdc4", "#446cb3", //light blues
-        "#39607c","#3498db", "#2980b9", "#34495e", "#336e7b", "#3a539b", "#2574a9", "#3f63c3", //blues
-        "#674172", "#913d88", "#8e44ad", "#52201c", //purples
-         "#938ee2", "#b175ca","#9b59b6", "#f82c8a","#f2784b", "#d64541", "#e08283", //pinks
+      // reds
+      "#d24d57", "#e74c3c", "#c0392b", "#d35400", "#e67e22", "#e26a6a",
+      
+      // yellows
+      "#f39c12", "#f1c40f", "#f7d85c",
+      
+      // greens
+      "#87d37c", "#4f8e6a", "#2ecc71",  "#26a65b", "#2e762c",
+      
+      // aquas
+      "#68c3a3", "#1bbc9b", "#1ba39c", "#22adad",
+      
+      // light blues
+      "#81cfe0", "#22a7f0","#5c97bf", "#4ecdc4", "#446cb3",
+      
+      // blues
+      "#39607c","#3498db", "#2980b9", "#34495e", "#336e7b", "#3a539b", "#2574a9", "#3f63c3",
+      
+      // purples
+      "#674172", "#913d88", "#8e44ad", "#52201c",
+      
+      // pinks
+      "#938ee2", "#b175ca","#9b59b6", "#f82c8a","#f2784b", "#d64541", "#e08283",
     ];
     
     colorBox.index = Math.floor(Math.random() * (colorBox.colors.length - 1));
@@ -42,7 +57,6 @@ function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderDiagram(members);
     renderAllMemberCircles();
 };
 
@@ -57,6 +71,16 @@ function setCurrentMember() {
     
     if (uniq){
         $("#uniq").value = uniq;
+        
+        var member = entryManager.getEntryByUniq(uniq);
+        if(member) {
+            current = member.id;
+            current_user = member;
+            isUser = true;
+            memberType = member.type;
+        }
+        
+        /*
         flash_team_members = flashTeamsJSON["members"];
         //console.log(flash_team_members[0].uniq);
         for(var i=0;i<flash_team_members.length;i++){            
@@ -66,7 +90,8 @@ function setCurrentMember() {
                 isUser = true;
                 memberType = flash_team_members[i].type;
             }
-        }
+        }*/
+        
     } else {
         current = undefined;
         isUser = false;
@@ -82,7 +107,7 @@ var folderClickFn = function(e) {
 
 function createFolderElem(entry) {
     var elem = $( 
-    '<div class="role-folder" folder-id="' + entry.id + '">' +
+    '<div class="role-folder" role-id="' + entry.id +'" folder-id="' + entry.id + '">' +
       '<div class="icon"></div>' +
       '<span class="name">' + entry.name +
         ' (' + entry.numMembers + ')</span>' +
@@ -104,11 +129,11 @@ function createFolderElem(entry) {
     return elem;
 }
 
-function createRoleElem(member) {
+function createRoleElem(entry) {
   return $(
-  '<div class="role" id="mPill_' + member.id + '">' + 
-    '<div class="indicator" style="background-color:' + member.color + '"></div>' +
-    '<span class="name">' + member.role + '</span>' +
+  '<div class="role" id="mPill_' + entry.id + '" role-id="' + entry.id + '">' + 
+    '<div class="indicator" style="background-color:' + entry.color + '"></div>' +
+    '<span class="name">' + entry.role + '</span>' +
     '<div class="clear"></div>' +
   '</div>');
 }
@@ -126,42 +151,122 @@ function updateNumRolesDisplay(num) {
   }
 }
 
-function renderPills(entries) {
-    var foldersWrap = $(".foldersWrap");
-    var membersWrap = $(".membersWrap");
-    foldersWrap.html("");
-    membersWrap.html("");
+/**
+ * @param {jQuery} $elem
+ * @param {jQuery} $folderElems
+ */
+function addPillDragFns($elem, $folderElems) {
+    var dragging = false;
+    var $copy = undefined;
+    var $mouseOverElem = undefined;
+    
+    $elem.mousedown(function(e) {
+        dragging = true;
+        $elem.addClass('dragging');
+        $copy = $elem.clone()
+            .hide()
+            .css({
+                position: "absolute",
+                width: $elem.width() + "px",
+                background: "rgba(255,255,255,0.4"
+            })
+            .addClass("copy")
+            .appendTo("body");
+    });
+    
+    $(window).mousemove(function(e) {
+        if(!dragging) {return;}
+        e.preventDefault();
+        $copy.show().css({
+            left: e.pageX + "px",
+            top: e.pageY + "px",
+            zIndex: 99
+        });
+    });
+    
+    $(window).mouseup(function(e) {
+        dragging = false;
+        if($copy) { $copy.remove(); }
+        $elem.removeClass('dragging');
+        
+        if($mouseOverElem) {
+            e.preventDefault();
+            
+            var entryId = $elem.attr("role-id");
+            var destId = $mouseOverElem.attr("role-id");
+            
+            entryManager.moveEntry(entryId, destId);
+            $elem.remove();
+            $mouseOverElem.removeClass("accepting");
+            $mouseOverElem = undefined;
+            
+            renderCurrentFolderPills();
+            updateStatus(false);
+        }
+    });
+    
+    $folderElems.mouseover(function(e) {
+        if(dragging && $(this)[0] != $elem[0]) {
+            $mouseOverElem = $(this).addClass("accepting");
+        }
+    });
+    
+    $folderElems.mouseleave(function(e) {
+        if($mouseOverElem && $mouseOverElem[0] == $(this)[0]) {
+            $mouseOverElem = undefined;
+            $(this).removeClass("accepting");
+        }
+    });
+}
+
+function renderPills(folder, entries) {
+    var $foldersWrap = $(".foldersWrap");
+    var $membersWrap = $(".membersWrap");
+    $foldersWrap.html("");
+    $membersWrap.html("");
+    var elems = [];
     for(var i = 0; i < entries.length; i++) {
         var entry = entries[i];
-        var elem = entry.type === "folder" ?
-            foldersWrap.append(createFolderElem(entry)) :
-            membersWrap.append(createRoleElem(entry));
+        var $elem = entry.type === "folder" ?
+            createFolderElem(entry).appendTo($foldersWrap) :
+            createRoleElem(entry).appendTo($membersWrap);
+        elems.push($elem);
     }
     
-    renderMemberPopovers(entries);
-    updateNumRolesDisplay(flashTeamsJSON.members.length);
-};
-
-function renderCurrentFolderPills() {
-    var currentFolder = entryManager.getEntryById(entryManager.currentFolderId);
-    var names = entryManager.getEntryParentNames(currentFolder);
-    names.push(currentFolder.name);
-    var ids = entryManager.getEntryParentIds(currentFolder);
-    ids.push(currentFolder.id);
+    var names = entryManager.getEntryParentNames(folder);
+    names.push(folder.name);
+    var ids = entryManager.getEntryParentIds(folder);
+    ids.push(folder.id);
     
     var breadcrumbsHtml = [];
     for(var i = 0; i < names.length; i++) {
-        breadcrumbsHtml.push(
-            $("<a>")
+        var $breadcrumb = $("<a>")
+                .addClass("breadcrumb")
+                .addClass("role-folder")
                 .attr("folder-id", ids[i])
+                .attr("role-id", ids[i])
                 .text(names[i])
-                .click(folderClickFn));
+                .click(folderClickFn);
+        breadcrumbsHtml.push($breadcrumb);
         breadcrumbsHtml.push(" › ");
     }
     breadcrumbsHtml.pop();
     $(".breadcrumbs").html(breadcrumbsHtml);
-    renderPills(
-        entryManager.getCurrentFolderChildren());
+    
+    for(var i = 0; i < elems.length; i++) {
+        var $elem = elems[i];
+        // we wait until after every role-folder's been added
+        // before adding the listeners
+        addPillDragFns($elem, $(".role-folder"));
+    }
+    
+    renderMemberPopovers(entries);
+    updateNumRolesDisplay(entryManager.numMembers());
+};
+
+function renderCurrentFolderPills() {
+    var currentFolder = entryManager.getEntryById(entryManager.currentFolderId);
+    renderPills(currentFolder, entryManager.getCurrentFolderChildren());
 }
 
 
@@ -192,8 +297,6 @@ function renderMemberPopovers(members) {
 
         var newColor = "'"+member.color+"'";
 
-        console.log(newColor);
-        
         var category1 = member.category1;
         var category2 = member.category2;
        
@@ -328,11 +431,12 @@ function generateMemberCategoryChangeFunction(mem_id) {
 
 function memberPillClick(mem_id) {
     //Close all open popovers
-    for (var i = 0; i<flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        if (idNum == mem_id) continue;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    entryManager.eachMemberId(function(id) {
+        if(id != mem_id) {
+            $("#mPill_"+id).popover("hide");
+        }
+    });
+    
     $("#member" + mem_id + "_category1").off('change', generateMemberCategoryChangeFunction(mem_id));
     $("#member" + mem_id + "_category1").on('change', generateMemberCategoryChangeFunction(mem_id));
 }
@@ -353,14 +457,6 @@ function memberCategoryChange(mem_id) {
         }
     }
 }
-
-function renderDiagram(members) {
-    removeAllMemberNodes();
-    for (var i=0;i<members.length;i++){
-        var member = members[i];
-        addMemberNode(member.role, member.id, "#808080");
-    }
-};
 
 function newFolderObject(folderName, parentId) {
     return {
@@ -406,10 +502,9 @@ function deletePopover(id) {
 
 function closeOpenPopovers() {
     //Close all open popovers
-    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
-        var idNum = flashTeamsJSON["members"][i].id;
-        $("#mPill_"+idNum).popover('hide');
-    }
+    entryManager.eachMemberId(function(id) {
+        $("#mPill_"+id).popover('hide');
+    });
 }
 
 function addMember() {
@@ -426,10 +521,8 @@ function addMember() {
     $("#addMemberInput").val(this.placeholder);
 
     // add member to json
-    var members = flashTeamsJSON.members;
     var member_obj = newMemberObject(member_name);
     
-    members.push(member_obj);
     entryManager.addEntry(member_obj);
     
     //update event popovers to show the new member
@@ -454,10 +547,10 @@ function addSkill(memberId) {
     }
 
     //Update JSON
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    flashTeamsJSON["members"][indexOfJSON].skills.push(skillName);
-
-    var memberSkillNumber = flashTeamsJSON["members"][indexOfJSON].skills.length;
+    var member = entryManager.getEntryById(memberId);
+    member.skills.push(skillName);
+    var memberSkillNumber = members.skills.length;
+    
     $("#skillPills_" + memberId).append('<li class="active" id="sPill_mem' + memberId + '_skill' + memberSkillNumber + '"><a>' + skillName 
         + '<div class="close" onclick="deleteSkill(' + memberId + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>');
     $("#addSkillInput_" + memberId).val(this.placeholder);
@@ -467,10 +560,10 @@ function deleteSkill(memberId, pillId, skillName) {
     //Remove skill pill
     $("#sPill_mem" + memberId + '_skill' + pillId).remove();
     //Update JSON
-    var indexOfJSON = getMemberJSONIndex(memberId);
-    for (var i = 0; i < flashTeamsJSON["members"][indexOfJSON].skills.length; i++) {
-        if (flashTeamsJSON["members"][indexOfJSON].skills[i] == skillName) {
-            flashTeamsJSON["members"][indexOfJSON].skills.splice(i, 1);
+    var member = entryManager.getEntryById(memberId);
+    for (var i = 0; i < member.skills.length; i++) {
+        if (member.skills[i] == skillName) {
+            member.skills.splice(i, 1);
             break;
         }
     }
@@ -552,41 +645,32 @@ function confirmDeleteAction(labelHtml, alertHtml, deleteButtonHtml, confirmFn) 
 }
 
 //Delete team member from team list, JSON, diagram, and events
-function deleteEntry(memberId) {
-    var entry = entryManager.getEntryById(memberId);
-    // recursively delete folders
-    if(entryManager.isFolder(entry)) {
-        for(var i = 0; i < entry.childIds.length; i++) {
-            deleteEntry(entry.childIds[i]);
-        }
-    } else {
-        $('#confirmAction').modal('hide');
-        for(var i = 0; i < flashTeamsJSON.members.length; i++) {
-            var member = flashTeamsJSON.members[i];
-            if(member.id == memberId) {
-                flashTeamsJSON.members.splice(i, 1);
-            }
-        }
-
+function deleteEntry(entryId) {
+    // ensure that entry id is a string before using it to search
+    // through event members
+    entryId = String(entryId);
+    $('#confirmAction').modal('hide');
+    var entry = entryManager.getEntryById(entryId);
+    if(entryManager.isMember(entry)) {
         // remove from members array with event object
         for(var i=0; i<flashTeamsJSON["events"].length; i++){
             var ev = flashTeamsJSON["events"][i];
-            var member_event_index = ev.members.indexOf(memberId);
+            var member_event_index = ev.members.indexOf(entryId);
             // remove member
             if(member_event_index != -1){ // found member in the event
-                deleteEventMember(ev.id, memberId);
+                deleteEventMember(ev.id, entryId);
             }
 
             //remove dri if the member was a dri
-            if (ev.dri == String(memberId)){
+            if (ev.dri == String(entryId)){
                 ev.dri = "";
             }
         }
     }
     
-    entryManager.removeEntry(memberId);
+    entryManager.removeEntry(entryId);
     
-    deletePopover(memberId);
+    deletePopover(entryId);
     
     renderCurrentFolderPills();
     updateStatus(false);
@@ -664,9 +748,6 @@ function confirmReplaceMember(pillId) {
 }
 
 function renderMemberPillColor(memberId) {
-    // var indexOfJSON = getMemberJSONIndex(memberId);
-    // var color = flashTeamsJSON["members"][indexOfJSON].color;
-
     var color = entryManager.getEntryById(memberId).color;
     
     var pillLi = document.getElementById("mPill_" + memberId);
@@ -675,8 +756,6 @@ function renderMemberPillColor(memberId) {
 
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
-    // var indexOfJSON = getMemberJSONIndex(memberId);
-    // flashTeamsJSON["members"][indexOfJSON].color = color;
     entryManager.getEntryById(memberId).color = color;
     updateStatus(false);
 };
@@ -699,34 +778,13 @@ function initializeColorPicker(newColor) {
     });
 }
 
-function initializeMemberCounter() {
-    if (flashTeamsJSON["members"].length == 0) return 0; 
-    else {
-        var highestId = 0;
-        for (i = 0; i < flashTeamsJSON["members"].length; i++) {
-            if (flashTeamsJSON["members"][i].id > highestId) {
-                highestId = flashTeamsJSON["members"][i].id;
-            }
-        }
-        return highestId;
-    }
-}
-
 function generateMemberId() {
-    return (new Date()).getTime();
+    return String((new Date()).getTime());
 }
-
-//Find the index of a member in the JSON object "members" array by using unique id
-function getMemberJSONIndex(idNum) {
-    for (var i = 0; i < flashTeamsJSON["members"].length; i++) {
-        if (parseInt(flashTeamsJSON["members"][i].id) == parseInt(idNum)) return i; 
-    }
-    return -1;
-};
 
 function getMemberById(id) {
     return entryManager.getEntryById(id);
-};
+}
 
 function searchById (arr, id) {
     for (var i = 0; i < arr.length; i++) {
@@ -769,11 +827,11 @@ function updateRoleName(id, newValue) {
 //Populate the autocomplete function for the event members
 //TO BE DELETED, WILL BE CHANGING TO A CHECKBOX SYSTEM
 function addMemAuto() {
-    var memberArray = new Array(flashTeamsJSON["members"].length);
-    for (i = 0; i < flashTeamsJSON["members"].length; i++) {
-        memberArray[i] = flashTeamsJSON["members"][i].role;
-    }
-
+    var memberArray = [];
+    entryManager.eachMemberId(function(id) {
+        memberArray.push(entryManager.getEntryById(id).role);
+    });
+    
     $(".eventMemberInput").each(function() {
         $(this).autocomplete({
             source: memberArray
