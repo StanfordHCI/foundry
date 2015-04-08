@@ -373,47 +373,8 @@ function drawDurationText(eventObj, firstTime) {
     }
 }
 
-function drawGdriveLink(eventObj, firstTime) {
-    var x_offset = 15; // unique for gdrive link (NOTE FROM DR: Used to be 10)
-    var y_offset = 38; // unique for gdrive link
-
-    var groupNum = eventObj["id"];
-    var task_g = getTaskGFromGroupNum(groupNum);
-
-    var existingGdriveLink = task_g.selectAll("#gdrive_" + groupNum);
-    if(existingGdriveLink[0].length == 0){ // first time
-        task_g.append("text")
-            .text("Upload")
-            .attr("style", "cursor:pointer; text-decoration:underline; text-decoration:bold;")
-            .attr("class", "gdrive_link")
-            .attr("id", function(d) {return "gdrive_" + d.groupNum;})
-            .attr("groupNum", function(d){return d.groupNum})
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset})
-            .attr("fill", "blue")
-            .attr("font-size", "12px");
-
-        // open gdrive upon click
-        $("#gdrive_" + groupNum).on('click', function(ev){
-            ev.stopPropagation();
-            
-            if (flashTeamsJSON["events"][groupNum-1].gdrive.length > 0){
-                window.open(flashTeamsJSON["events"][groupNum-1].gdrive[1])
-            }
-            else{
-                alert("The flash team must be running for you to upload a file!");
-            }
-        });
-    } else {
-         task_g.selectAll(".gdrive_link")
-            .attr("x", function(d) {return d.x + x_offset})
-            .attr("y", function(d) {return d.y + y_offset});
-    }
-}
-
-
+//
 function findCurrentUserNextEvent(currentUserEvents){
-    //console.log("currentUserEvents: " + currentUserEvents);
     for (var i = 0; i < currentUserEvents.length; i++){
         if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
             return currentUserEvents[i]["id"];      
