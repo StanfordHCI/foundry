@@ -2,6 +2,7 @@
  * ---------------------------------------------
  * 
  * See eventDraw.js to see all the functions that draw an event
+ * See eventDetails.js for detailed piece drawing (i.e., clock icon, duration)
  */
 
 var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;

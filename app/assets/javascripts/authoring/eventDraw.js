@@ -2,6 +2,8 @@
  * ---------------------------------------------
  * All functions that are involved in physically drawing the 
  * events on the timeline
+ * See events.js for helpers
+ * See eventDetails.js for detailed piece drawing (i.e., clock icon, duration)
  */
 
  //Creates graphical elements from array of data (task_rectangles)
