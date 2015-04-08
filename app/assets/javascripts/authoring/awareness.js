@@ -1242,7 +1242,8 @@ var moveTasksLeft = function(tasks, amount){
     tasks_with_current = tasks_with_current.concat(delayed_tasks);
     drawInteractions(tasks_with_current);
 
-    updateStatus(true);
+    //updateStatus(true);
+    updateStatus();
 };
 
 var moveRemainingTasksRight = function(amount){
@@ -1339,7 +1340,8 @@ var trackLiveAndRemainingTasks = function() {
         
 
         if(at_least_one_task_delayed || at_least_one_task_started){
-            updateStatus(true);
+            //updateStatus(true);
+            updateStatus();
             if(at_least_one_task_delayed)
                 at_least_one_task_delayed = false;
             if(at_least_one_task_started)
