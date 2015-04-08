@@ -52,3 +52,4 @@
 //= require ./authoring/jquery.cookie
 //= require ./authoring/video_chat
 //= require ./authoring/eventDraw
+//= require ./authoring/eventDetails
