@@ -124,8 +124,8 @@ function disableTeamEditing() {
 function enableTeamEditing() {
     
     
-    $(".add-folder-button").addClass("enabled");
-    $(".add-role").addClass("enabled");
+    $(".add-folder-button").removeClass("disabled");
+    $(".add-role").removeClass("disabled");
     
     // assemble selector for event buttons
     var selectorPrefix = ".event-layer .event ";
