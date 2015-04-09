@@ -672,7 +672,7 @@ function saveMemberInfo(memberId) {
     renderMemberPillColor(memberId);
 
     $("#mPill_" + memberId).popover("hide");
-    renderAllMemberCircles();
+    renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 
