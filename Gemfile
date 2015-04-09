@@ -21,7 +21,7 @@ gem 'uglifier', '>= 1.3.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-gem 'execjs', '~> 2.5.0'
+gem 'execjs', '2.5.0'
 
 # Use jquery UI
 # gem 'jquery—ui-rails'
@@ -62,7 +62,7 @@ gem 'd3-rails'
 gem 'rails_12factor', group: :production
 
 # Heroku db: postgres
-gem 'pg'
+gem 'pg', '0.17.1'
 
 platforms :ruby do
         gem 'unicorn'
