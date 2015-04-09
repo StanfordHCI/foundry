@@ -37,10 +37,7 @@ ActiveRecord::Schema.define(version: 20150404042543) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "original_status"
-<<<<<<< HEAD
     t.integer  "user_id"
-=======
->>>>>>> master
   end
 
   create_table "handoffs", force: true do |t|
