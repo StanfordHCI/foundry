@@ -253,8 +253,6 @@ function drawTop(eventObj) {
     // grab the main rectangle
     var rect = task_g.select("#rect_" + groupNum);
     
-    var clockSvg = addToTaskFromData(events.clock, eventObj, task_g);
-    clockSvg.call(drag);
     var titleSvg = addToTaskFromData(events.title, eventObj, task_g);
     titleSvg.call(drag);
     var durationSvg = addToTaskFromData(events.duration, eventObj, task_g);
