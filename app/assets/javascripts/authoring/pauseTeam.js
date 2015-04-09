@@ -26,6 +26,9 @@ function pauseFlashTeam(){
 	flashTeamsJSON["paused"]=true;
 	updateStatus();
 
+    //draw events in editable mode (show collaboration and handoff buttons, show drag handles etc.)
+    drawEvents(true);
+
 }
 
 
@@ -57,4 +60,6 @@ function resumeFlashTeam(){
 	flashTeamsJSON["paused"]=false;
 	updateStatus();
 	
+    //draw all events in read only mode after editting the team.
+    drawEvents(false);
 }

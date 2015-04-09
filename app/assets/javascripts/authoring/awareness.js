@@ -134,6 +134,7 @@ function startFlashTeam() {
     $("#flashTeamTitle").css('display','none');
     
     
+
     disableTeamEditing();
     
     removeColabBtns();
@@ -322,7 +323,13 @@ function renderEverything(firstTime) {
 
             renderMembersUser();
 
-            disableTeamEditing();
+            //call this function if team is not in the edit mode 
+            if(isUser){
+                disableTeamEditing();
+            }
+            else if(!flashTeamsJSON["paused"]){
+                disableTeamEditing();
+            }
             
            /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
