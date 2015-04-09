@@ -109,6 +109,8 @@ $("#flashTeamStartBtn").click(function(){
 });
 
 function disableTeamEditing() {
+   
+
     $(".add-folder-button").addClass("disabled");
     $(".add-role").addClass("disabled");
     
@@ -117,6 +119,19 @@ function disableTeamEditing() {
     var selector = selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).hide();
+}
+
+function enableTeamEditing() {
+    
+    
+    $(".add-folder-button").addClass("enabled");
+    $(".add-role").addClass("enabled");
+    
+    // assemble selector for event buttons
+    var selectorPrefix = ".event-layer .event ";
+    var selector = selectorPrefix + ".collab_btn, " +
+                   selectorPrefix + ".handoff_btn";
+    $(selector).show();
 }
 
 function startFlashTeam() {
