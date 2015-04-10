@@ -22,6 +22,10 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# Some of the gems are dependent on execjs
+# Starting with version 2.5.1, execjs requires ruby 2.0 or greater so we must specify version 2.5.0 for now
+gem 'execjs', '2.5.0'
+
 # Use jquery UI
 # gem 'jquery—ui-rails'
 
@@ -61,7 +65,7 @@ gem 'd3-rails'
 gem 'rails_12factor', group: :production
 
 # Heroku db: postgres
-gem 'pg'
+gem 'pg', '0.17.1'
 
 platforms :ruby do
         gem 'unicorn'
