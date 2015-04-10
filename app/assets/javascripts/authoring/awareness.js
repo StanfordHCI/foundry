@@ -1635,7 +1635,7 @@ var updateStatus = function(flash_team_in_progress){
         type: 'post',
         data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
     }).done(function(data){
-        console.log("UPDATED FLASH TEAM STATUS");
+        //console.log("UPDATED FLASH TEAM STATUS");
     });
 };
 
