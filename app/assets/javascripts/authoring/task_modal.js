@@ -604,6 +604,10 @@ function saveTaskOverview(groupNum){
     if($("#eventName").val() != "")
         ev.title = $("#eventName").val();
 
+    if(ev.gdrive != ""){
+        renameFolder(ev.gdrive[0], ev.title);
+    }
+
     //Update start time if changed
     var startHour = $("#startHr").val();    
     if (startHour != "") startHour = parseInt($("#startHr").val());
