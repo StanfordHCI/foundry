@@ -194,22 +194,6 @@ function renameFolder(fileId, newTitle) {
    });
 };
 
-/**
- * Rename a file.
- *
- * @param {String} fileId <span style="font-size: 13px; ">ID of the file to rename.</span><br> * @param {String} newTitle New title for the file.
- */
-// function renameFile(fileId, newTitle) {
-//   var body = {'title': newTitle};
-//   var request = gapi.client.drive.files.patch({
-//     'fileId': fileId,
-//     'resource': body
-//   });
-//   request.execute(function(resp) {
-//     console.log('New Title: ' + resp.title);
-//   });
-// }
-
 
 //Deletes a file
 function deleteFile(fileId){
