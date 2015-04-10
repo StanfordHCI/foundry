@@ -486,10 +486,16 @@ var flashTeamEndedorStarted = function(){
 };
 
 var flashTeamUpdated = function(){
+    var updated_team_paused = loadedStatus.team_paused; 
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
+
+    if(updated_team_paused != flashTeamsJSON["paused"]){
+        //console.log("PAUSE DIFFERENCE");
+        return true;
+    }
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         /*console.log("drawn_blue_tasks not same length");
@@ -1550,6 +1556,11 @@ var trackUpcomingEvent = function(){
         if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
             overallTime = "The team is not started. " + overallTime;
         }
+
+        if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
+            overallTime = "The team is in edit mode. " + overallTime;
+        }
+
         statusText.text(overallTime);
     }, fire_interval);
 }
@@ -1578,9 +1589,10 @@ var constructStatusObj = function(){
     flashTeamsJSON["id"] = flash_team_id;
     flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
     flashTeamsJSON["status"] = in_progress; 
-   
+
     var localStatus = {};
 
+    localStatus.team_paused = flashTeamsJSON["paused"];
     localStatus.live_tasks = live_tasks;
     localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;
@@ -1623,7 +1635,7 @@ var updateStatus = function(flash_team_in_progress){
         type: 'post',
         data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
     }).done(function(data){
-        //console.log("UPDATED FLASH TEAM STATUS");
+        console.log("UPDATED FLASH TEAM STATUS");
     });
 };
 
