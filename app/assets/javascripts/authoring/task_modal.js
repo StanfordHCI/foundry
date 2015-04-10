@@ -88,12 +88,12 @@ if(eventObj.status == "started" || eventObj.status == "delayed"){
 		
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
-	} //only the author can edit tasks if the projec is in progress.
-    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) ) {
-        $("#edit-save-task").css('display', '');
-        
-        $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
-        $("#edit-save-task").html('Edit');
+	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+            $("#edit-save-task").css('display', '');
+            
+            $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+            $("#edit-save-task").html('Edit');
     }
 	else{
 		$("#edit-save-task").css('display', 'none');
