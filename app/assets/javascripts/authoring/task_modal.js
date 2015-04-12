@@ -460,6 +460,10 @@ function formatModalTime(timeInMins){
         minutes = "00";
     }
 
+    if(minutes > 0 && minutes < 10){
+        minutes = "0" + minutes;
+    }
+
     var timeStr = sign + hours + ":" + minutes;
     return timeStr;
 }
