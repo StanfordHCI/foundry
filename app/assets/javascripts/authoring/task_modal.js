@@ -1,3 +1,4 @@
+
 function showTaskOverview(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
@@ -17,10 +18,10 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
-	if(in_progress == true){
+    // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.) 
+    //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client
+	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
         
-
-
 	
 	if(eventObj.status == "started" || eventObj.status == "delayed"){
 	            $("#start-end-task").addClass('btn-success');
