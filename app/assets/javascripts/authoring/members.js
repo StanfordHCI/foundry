@@ -794,6 +794,29 @@ function searchById (arr, id) {
     }
 };
 
+// returns true or false depending on if the current member assigned to task with the groupNum passed in
+function currentMemberTask(groupNum){
+     if(current_user == undefined) {return;}
+
+    var task_id = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][task_id];
+
+    var members = eventObj["members"];
+
+    if(members.length == 0){
+        //console.log("no members");
+        return false;
+    }
+
+    for (var i=0; i<members.length; i++) {
+        var member_id = members[i];
+        if (current_user.id == member_id){
+           //console.log("members = true");
+           return true;
+        }
+    }
+}
+
 $(document).ready(function() {
     pressEnterKeyToSubmit("#addMemberInput", "#addMemberButton");
 });

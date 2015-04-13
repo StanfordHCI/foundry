@@ -1,3 +1,4 @@
+
 function showTaskOverview(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
@@ -17,29 +18,23 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
-	if(in_progress == true){
-  	
-	if(eventObj.status == "started" || eventObj.status == "delayed"){
-	            $("#start-end-task").addClass('btn-success');
-	            $("#start-end-task").css('display', '');
-	            $("#pause-resume-task").addClass('btn-default');
-	            $("#pause-resume-task").css('display', '');
-	            
-	            
-	            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
-	            $("#start-end-task").html('Complete');
-	        } 
- 
 
+    // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.) 
+    //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client
+	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
+        
 
-		/*
-if(eventObj.status == "started" || eventObj.status == "delayed"){
+        if(eventObj.status == "started" || eventObj.status == "delayed"){
+            $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
-            $("#start-end-task").attr('onclick', 'pauseTask('+groupNum+')');
-            $("#start-end-task").addClass('btn-default');
-            $("#start-end-task").html('Pause');
+            $("#pause-resume-task").addClass('btn-default');
+            $("#pause-resume-task").css('display', '');
+            
+            
+            $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
+            $("#start-end-task").html('Complete');
         } 
-*/
+ 
         
         else if(eventObj.status == "paused"){
             $("#start-end-task").css('display', 'none');
@@ -49,11 +44,6 @@ if(eventObj.status == "started" || eventObj.status == "delayed"){
             
             $("#pause-resume-task").html('Resume Task');
             
-             /*
- $("#start-end-task").html('Complete');
-              $("#start-end-task").addClass('btn-success');
-              $("#start-end-task").prop('disabled', true);
-*/
         } 
         
         else if(eventObj.status == "completed"){
@@ -70,8 +60,7 @@ if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").addClass('btn-primary');
             $("#start-end-task").html('Start'); 
         }
-    }
-    else{
+    } else{
             $("#start-end-task").css('display', 'none');   
             $("#pause-resume-task").css('display', 'none');  
     }
