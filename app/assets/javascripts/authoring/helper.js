@@ -5,7 +5,7 @@
 
 //MAKE SURE THE JSON IS UPDATED IN ITS CURRENT VERSION EVERYWHERE
 var flashTeamsJSON = {
-    "title" : "New Flash Team",
+    "title" : document.getElementById("ft-name").innerHTML,
     "id" : flash_team_id,
     "events": [],        //{"title", "id", "startTime", "duration", "notes", "members": [], "dri", "yPosition", inputs”:[], “outputs”:[]}
     "members": [],       //{"id", "role", "skills":[], "color", "category1", "category2"}
