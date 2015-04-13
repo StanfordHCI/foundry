@@ -483,13 +483,12 @@ var author_name; // save name of flash team author
 var team_name; // saves flash team name
 var team_id; // saves flash team id
 
-//return 
+//returns author name, team name and team ID
 var getTeamInfo = function(){
     var url = '/flash_teams/' + flash_team_id + '/get_team_info';
     $.ajax({
        url: url,
-       type: 'post'//,
-       //data : { "uniq" : String(uniq_u) }
+       type: 'post'
     }).done(function(data){
        author_name = data["author_name"];
        team_name = data["flash_team_name"]; 
@@ -1604,11 +1603,8 @@ var getAllTasks = function(){
 };
 
 var constructStatusObj = function(){
-    //var flash_team_id = $("#flash_team_id").val();
-    //flashTeamsJSON["id"] = flash_team_id;
-    //flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
-    flashTeamsJSON["id"] = team_id;
-    flashTeamsJSON["title"] = team_name;
+    flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
+    flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
     flashTeamsJSON["author"] = author_name;
     flashTeamsJSON["status"] = in_progress; 
 
