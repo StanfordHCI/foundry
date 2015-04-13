@@ -170,6 +170,31 @@ function createNewFile(eventName) {
    });
 };
 
+
+/**
+ * Rename a folder.
+ *
+ * @param {String} fileId <span style="font-size: 13px; ">ID of the file to rename.</span><br> * @param {String} newTitle New title for the file.
+ */
+function renameFolder(fileId, newTitle) {
+
+    gapi.client.load('drive', 'v2', function() {
+
+       var request = gapi.client.request({
+        'path': '/drive/v2/files/'+fileId,
+        'method': 'PATCH',
+        'body':{
+            //"fileId": fileId,
+            "title" : newTitle,
+            "mimeType" : "application/vnd.google-apps.folder"
+         }
+     });
+
+      request.execute(function(resp) {});
+   });
+};
+
+
 //Deletes a file
 function deleteFile(fileId){
   gapi.client.load('drive', 'v2', function(){
