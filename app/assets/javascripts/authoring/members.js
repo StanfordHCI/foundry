@@ -201,7 +201,7 @@ function addPillDragFns($elem, $folderElems) {
             $mouseOverElem = undefined;
             
             renderCurrentFolderPills();
-            updateStatus(false);
+            updateStatus();
         }
     });
     
@@ -490,7 +490,7 @@ function addFolder(folderName, parentId) {
     entryManager.addEntry(folderObject);
     
     renderCurrentFolderPills();
-    updateStatus(false);
+    updateStatus();
 }
 
 /**
@@ -533,7 +533,7 @@ function addMember() {
 
    renderCurrentFolderPills();
    // renderMemberPopovers(members);
-   updateStatus(false);
+   updateStatus();
    inviteMember(member_obj.id);
 };
 
@@ -673,7 +673,7 @@ function deleteEntry(entryId) {
     deletePopover(entryId);
     
     renderCurrentFolderPills();
-    updateStatus(false);
+    updateStatus();
 };
 
 //Calling this one
@@ -708,7 +708,7 @@ function inviteMember(pillId) {
         member.uniq = data["uniq"];
         member.invitation_link = data["url"];
         renderMemberPopovers(entryManager.getCurrentFolderChildren());
-        updateStatus(false);
+        updateStatus();
     });
 }
 
@@ -757,7 +757,7 @@ function renderMemberPillColor(memberId) {
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
     entryManager.getEntryById(memberId).color = color;
-    updateStatus(false);
+    updateStatus();
 };
 
 //Necessary to save member popover information
@@ -843,7 +843,7 @@ function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
-    updateStatus(false);
+    updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);
 }
 

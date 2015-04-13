@@ -29,14 +29,14 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        updateStatus(false);
+        updateStatus();
     });
 
 //Called when the left dragbar of a task rectangle is dragged
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        updateStatus(false);
+        updateStatus();
     });
 
 //Called when task rectangles are dragged
@@ -90,7 +90,7 @@ var drag = d3.behavior.drag()
                 }
             }
             
-            updateStatus(false);
+            updateStatus();
         } else {
             // click
             eventMousedown(d.groupNum);
@@ -99,8 +99,11 @@ var drag = d3.behavior.drag()
 
 // leftResize: resize the rectangle by dragging the left handle
 function leftResize(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
         return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
+            return;
     }
 
     // get event id
@@ -137,7 +140,10 @@ function leftResize(d) {
 
 // rightResize: resize the rectangle by dragging the right handle
 function rightResize(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
+        return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
 
@@ -161,9 +167,13 @@ function rightResize(d) {
 }
 
 function dragEventBlock(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
         return;
     }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
+            return;
+    }
+
     dragged = true;
 
     // get event id
@@ -224,9 +234,13 @@ function newEvent(point, duration) {
         return;
     } 
 
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
+       return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
+
     createEvent(point, duration);
 };
 
@@ -243,8 +257,14 @@ function createEvent(point, duration) {
     // render event on timeline
     drawEvent(eventObj, true);
 
+    //if team is in edit mode, add the gDrive folder for this event
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(eventObj.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
     // save
-    updateStatus(false);
+    updateStatus();
 };
 
 function checkWithinTimelineBounds(snapPoint) {
@@ -1140,7 +1160,10 @@ function drawG(eventObj) {
     
     var showHandles = function(d) {
         // same size as in leftResize and rightResize functions
-        if(isUser || in_progress) {
+        if(isUser) {
+            return;
+        }
+        if(in_progress && flashTeamsJSON["paused"]!=true){
             return;
         }
         
@@ -1570,7 +1593,7 @@ function drawTimer(eventObj){
         }
 
         eventObj["timer"] = remaining_time;
-        updateStatus(true);
+        updateStatus();
     }
 
     else if( eventObj.status == "delayed" ){
@@ -1587,7 +1610,7 @@ function drawTimer(eventObj){
 
 
         eventObj["timer"] = remaining_time;
-        updateStatus(true);
+        updateStatus();
     }
 }
 
@@ -1710,7 +1733,7 @@ function deleteEvent(eventId){
 
     removeTask(eventId);
     
-    updateStatus(false);
+    updateStatus();
 }
 
 //CODE ON HOLD

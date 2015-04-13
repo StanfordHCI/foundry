@@ -92,7 +92,7 @@ function eventMousedown(task2idNum) {
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
-            updateStatus(false);
+            updateStatus();
 
             //Visually draw the handoff using the data
             drawHandoff(handoffData);
@@ -132,7 +132,7 @@ function eventMousedown(task2idNum) {
             var collabData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"collaboration", "description":"", "id":interaction_counter};
             flashTeamsJSON.interactions.push(collabData);
-            updateStatus(false);
+            updateStatus();
 
             //Visually draw the collaboration 
             drawCollaboration(collabData, overlap);
