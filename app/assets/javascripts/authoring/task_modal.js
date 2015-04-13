@@ -18,10 +18,7 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
     
 	if(in_progress == true){
-        
-
-
-	
+  	
 	if(eventObj.status == "started" || eventObj.status == "delayed"){
 	            $("#start-end-task").addClass('btn-success');
 	            $("#start-end-task").css('display', '');
@@ -91,7 +88,13 @@ if(eventObj.status == "started" || eventObj.status == "delayed"){
 		
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
-	}
+	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+            $("#edit-save-task").css('display', '');
+            
+            $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
+            $("#edit-save-task").html('Edit');
+    }
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
@@ -604,6 +607,10 @@ function saveTaskOverview(groupNum){
     //Update title
     if($("#eventName").val() != "")
         ev.title = $("#eventName").val();
+
+    if(ev.gdrive != ""){
+        renameFolder(ev.gdrive[0], ev.title);
+    }
 
     //Update start time if changed
     var startHour = $("#startHr").val();    

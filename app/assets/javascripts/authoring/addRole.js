@@ -18,6 +18,10 @@
     };
     
     $role.click(function() {
+        if(in_progress && flashTeamsJSON["paused"]!=true) { $role.addClass('disabled'); }
+        else  $role.removeClass('disabled');
+      
+
         if($(this).hasClass('disabled')) { return; }
         $role.addClass('active');
         if(isValidRole($input.val())) {
@@ -68,7 +72,9 @@
         var $addFolderButton = $(this);
         
         // check if the team is currently in progress
-        if(in_progress) { $addFolderButton.addClass('disabled'); }
+        if(in_progress && flashTeamsJSON["paused"]!=true) { $addFolderButton.addClass('disabled'); }
+        else  $addFolderButton.removeClass('disabled');
+
         if($addFolderButton.hasClass('disabled')) { return; }
         
         $addFolderButton.addClass('active');
