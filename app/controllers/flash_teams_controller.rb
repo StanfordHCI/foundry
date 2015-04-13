@@ -232,14 +232,16 @@ end
     
     # update flash teams title in json object saved in rails model
     flash_team_json = JSON.parse(flash_team.json)
-    flash_team_json["title"] = params[:value] #
+    flash_team_json["title"] = params[:value] 
     flash_team.json = flash_team_json.to_json
 
     # update flash teams title in flash team json object saved in status json object saved in rails model
-    status = flash_team.status 
-    json_status = JSON.parse(status)
-    json_status['flash_teams_json']['title'] = params[:value] 
-    flash_team.status = json_status.to_json
+    
+    if !flash_team.status.nil?
+      json_status = JSON.parse(flash_team.status)
+      json_status["flash_teams_json"]["title"] = params[:value] 
+      flash_team.status = json_status.to_json
+    end
 
     flash_team.save
     head :ok
