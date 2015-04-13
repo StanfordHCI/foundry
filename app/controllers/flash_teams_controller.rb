@@ -226,10 +226,27 @@ end
   end
 
   def rename
+    # update flash team name in rails model
     flash_team = FlashTeam.find(params[:pk])
     flash_team.name = params[:value]
+    
+    # update flash teams title in json object saved in rails model
+    flash_team_json = JSON.parse(flash_team.json)
+    flash_team_json["title"] = params[:value] #
+    flash_team.json = flash_team_json.to_json
+
+    # update flash teams title in flash team json object saved in status json object saved in rails model
+    status = flash_team.status 
+    json_status = JSON.parse(status)
+    json_status['flash_teams_json']['title'] = params[:value] 
+    flash_team.status = json_status.to_json
+
     flash_team.save
     head :ok
+
+    
+    #flash_team.save
+
   end
 
   def update
