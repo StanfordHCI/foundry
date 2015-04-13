@@ -281,14 +281,6 @@ end
     @flash_team = FlashTeam.find(params[:id])
     @flash_team.status = status
 
-    # if the author name == defaultAuthor, update it with the author name (should only need to update the first time)   
-    # json_status = JSON.parse(@flash_team.status)
-    
-    # if (json_status["flash_teams_json"]["author"].to_s == "defaultAuthor")
-    #   json_status["flash_teams_json"]["author"] = @flash_team.author
-    #   @flash_team.status = json_status.to_json
-    # end
-
     @flash_team.save
 
     respond_to do |format|
