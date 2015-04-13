@@ -231,6 +231,7 @@ if(flashTeamsJSON) {
 // firstTime=true means page is reloaded
 function renderEverything(firstTime) {
     colorBox();
+    getTeamInfo();
     var flash_team_id = $("#flash_team_id").val();
     var url = '/flash_teams/' + flash_team_id + '/get_status';
     $.ajax({
@@ -435,6 +436,24 @@ var renderChatbox = function(){
                 name = message.name;
             });
                    
+    });
+};
+
+var author_name; // save name of flash team author
+var team_name; // saves flash team name
+var team_id; // saves flash team id
+
+//return 
+var getTeamInfo = function(){
+    var url = '/flash_teams/' + flash_team_id + '/get_team_info';
+    $.ajax({
+       url: url,
+       type: 'post'//,
+       //data : { "uniq" : String(uniq_u) }
+    }).done(function(data){
+       author_name = data["author_name"];
+       team_name = data["flash_team_name"]; 
+       team_id =   data["flash_team_id"];
     });
 };
 
@@ -1531,9 +1550,12 @@ var getAllTasks = function(){
 };
 
 var constructStatusObj = function(){
-    var flash_team_id = $("#flash_team_id").val();
-    flashTeamsJSON["id"] = flash_team_id;
-    flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
+    //var flash_team_id = $("#flash_team_id").val();
+    //flashTeamsJSON["id"] = flash_team_id;
+    //flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
+    flashTeamsJSON["id"] = team_id;
+    flashTeamsJSON["title"] = team_name;
+    flashTeamsJSON["author"] = author_name;
     flashTeamsJSON["status"] = in_progress; 
    
     var localStatus = {};

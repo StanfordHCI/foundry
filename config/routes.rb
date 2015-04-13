@@ -77,6 +77,7 @@ Foundry::Application.routes.draw do
       get :get_json
       post :early_completion_email
       post :get_user_name
+      post :get_team_info
       post :delayed_task_finished_email
       post :create
       #get :hire_form

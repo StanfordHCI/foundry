@@ -448,6 +448,18 @@ end
     end
   end
   
+    def get_team_info
+        flash_team = FlashTeam.find(params[:id])
+        flash_team_name = flash_team.name
+        flash_team_id = flash_team.id
+        flash_team_json = JSON.parse(flash_team.json)
+        author_name = flash_team_json["author"]
+
+     respond_to do |format|
+      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}.to_json, status: :ok}
+    end
+  end
+
 
   def event_search
 

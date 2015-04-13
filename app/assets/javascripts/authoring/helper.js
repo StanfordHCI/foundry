@@ -11,7 +11,7 @@ var flashTeamsJSON = {
     "members": [],       //{"id", "role", "skills":[], "color", "category1", "category2"}
     "folders": [],
     "interactions" : [],  //{"event1", "event2", "type", "description", "id"}
-    "author": "defaultAuthor"//,
+    "author": document.getElementById("ft-author-name").innerHTML//,
    // "original_status": "original status",
     //"original_json": "original json"
 };
