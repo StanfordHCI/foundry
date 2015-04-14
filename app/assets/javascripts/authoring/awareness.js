@@ -27,6 +27,7 @@ var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
 var in_progress = false;
+//var paused = false;
 var delayed_tasks_time = [];
 var dri_responded = [];
 var project_status_handler;
@@ -108,6 +109,8 @@ $("#flashTeamStartBtn").click(function(){
 });
 
 function disableTeamEditing() {
+   
+
     $(".add-folder-button").addClass("disabled");
     $(".add-role").addClass("disabled");
     
@@ -118,12 +121,27 @@ function disableTeamEditing() {
     $(selector).hide();
 }
 
+function enableTeamEditing() {
+    
+    
+    $(".add-folder-button").removeClass("disabled");
+    $(".add-role").removeClass("disabled");
+    
+    // assemble selector for event buttons
+    var selectorPrefix = ".event-layer .event ";
+    var selector = selectorPrefix + ".collab_btn, " +
+                   selectorPrefix + ".handoff_btn";
+    $(selector).show();
+}
+
 function startFlashTeam() {
     $('#confirmAction').modal('hide');
     // view changes
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
+    $("#flashTeamPauseBtn").css('display', '');
+  
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
     //$("a#gFolder.button").css('visibility','visible');
@@ -131,6 +149,7 @@ function startFlashTeam() {
     $("#flashTeamTitle").css('display','none');
     
     
+
     disableTeamEditing();
     
     removeColabBtns();
@@ -294,20 +313,38 @@ function renderEverything(firstTime) {
 
 
         if(in_progress){
+
+
             colorBox();
             //console.log("flash team in progress");
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
             
+            if(flashTeamsJSON["paused"]){
+                $("#flashTeamResumeBtn").css('display','');
+                $("#flashTeamPauseBtn").css('display','none');
+            }
+            else{
+                $("#flashTeamPauseBtn").css('display','');
+                $("#flashTeamResumeBtn").css('display','none');
+            }
+
             loadData();
             if(!isUser || memberType == "pc" || memberType == "client")
                 renderMembersRequester();
             else
                 renderMembersUser();
+
             renderMembersUser();
 
-            disableTeamEditing();
+            //call this function if team is not in the edit mode 
+            if(isUser){
+                disableTeamEditing();
+            }
+            else if(!flashTeamsJSON["paused"]){
+                disableTeamEditing();
+            }
             
            /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
@@ -316,6 +353,9 @@ function renderEverything(firstTime) {
             }*/
 
             //startTeam(firstTime);
+
+
+           
         } else {
             //console.log("flash team not in progress");
             
@@ -446,10 +486,16 @@ var flashTeamEndedorStarted = function(){
 };
 
 var flashTeamUpdated = function(){
+    var updated_team_paused = loadedStatus.team_paused; 
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
+
+    if(updated_team_paused != flashTeamsJSON["paused"]){
+        //console.log("PAUSE DIFFERENCE");
+        return true;
+    }
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         /*console.log("drawn_blue_tasks not same length");
@@ -631,6 +677,7 @@ var startTeam = function(firstTime){
         googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
+        flashTeamsJSON["paused"]=false;
         //added next line to disable the ticker
         updateStatus(true);
         //console.log("here2");
@@ -1221,7 +1268,8 @@ var moveTasksLeft = function(tasks, amount){
     tasks_with_current = tasks_with_current.concat(delayed_tasks);
     drawInteractions(tasks_with_current);
 
-    updateStatus(true);
+    //updateStatus(true);
+    updateStatus();
 };
 
 var moveRemainingTasksRight = function(amount){
@@ -1318,7 +1366,8 @@ var trackLiveAndRemainingTasks = function() {
         
 
         if(at_least_one_task_delayed || at_least_one_task_started){
-            updateStatus(true);
+            //updateStatus(true);
+            updateStatus();
             if(at_least_one_task_delayed)
                 at_least_one_task_delayed = false;
             if(at_least_one_task_started)
@@ -1505,6 +1554,11 @@ var trackUpcomingEvent = function(){
         if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
             overallTime = "The team is not started. " + overallTime;
         }
+
+        if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
+            overallTime = "The team is in edit mode. " + overallTime;
+        }
+
         statusText.text(overallTime);
     }, fire_interval);
 }
@@ -1533,9 +1587,10 @@ var constructStatusObj = function(){
     flashTeamsJSON["id"] = flash_team_id;
     flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
     flashTeamsJSON["status"] = in_progress; 
-   
+
     var localStatus = {};
 
+    localStatus.team_paused = flashTeamsJSON["paused"];
     localStatus.live_tasks = live_tasks;
     localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;

@@ -16,14 +16,14 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        updateStatus(false);
+        updateStatus();
     });
 
 //Called when the left resize of a task rectangle is dragged
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        updateStatus(false);
+        updateStatus();
     });
 
 //Called when task rectangles are dragged
@@ -77,7 +77,7 @@ var drag = d3.behavior.drag()
                 }
             }
             
-            updateStatus(false);
+            updateStatus();
         } else {
             // click
             eventMousedown(d.groupNum);
@@ -86,8 +86,11 @@ var drag = d3.behavior.drag()
 
 // leftResize: resize the rectangle by dragging the left handle
 function leftResize(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
         return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
+            return;
     }
 
     // get event id
@@ -124,7 +127,10 @@ function leftResize(d) {
 
 // rightResize: resize the rectangle by dragging the right handle
 function rightResize(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
+        return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
 
@@ -149,9 +155,13 @@ function rightResize(d) {
 
 //Called when event is dragged. First updates the json, then redraws
 function dragEventBlock(d) {
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
         return;
     }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
+            return;
+    }
+
     dragged = true;
 
     // get event id
@@ -208,9 +218,13 @@ function newEvent(point, duration) {
         return;
     }
 
-    if(isUser || in_progress) { // user page
+    if(isUser) { // user page
+       return;
+    }
+    if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
+
     createEvent(point, duration);
 };
 
@@ -227,8 +241,14 @@ function createEvent(point, duration) {
     // render event on timeline
     drawEvent(eventObj, true);
 
+    //if team is in edit mode, add the gDrive folder for this event
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(eventObj.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
     // save
-    updateStatus(false);
+    updateStatus();
 };
 
 function checkWithinTimelineBounds(snapPoint) {
@@ -342,6 +362,695 @@ function findCurrentUserNextEvent(currentUserEvents){
     }
 }
 
+<<<<<<< HEAD
+=======
+function drawEachHandoffForEvent(eventObj){
+    var interactions = flashTeamsJSON["interactions"];
+    var eventHandoffs = getHandoffsForEvent(eventObj["id"]);
+    for (var i = 0; i < eventHandoffs.length; i++){
+        var inter = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
+        var draw = false;
+        var ev1;
+        var ev2;
+        if (inter["event1"] == eventObj["id"]){
+            ev1 = eventObj;
+            ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
+        }
+        else if (inter["event2"] == eventObj["id"]){
+            ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
+            ev2 = eventObj;
+        }  
+        
+        //Reposition an existing handoff
+        var x1 = handoffStart(ev1);
+        var y1 = ev1.y + 50;
+        var x2 = ev2.x + 3;
+        var y2 = ev2.y + 50;
+        $("#interaction_" + inter["id"])
+            .attr("d", function(d) {
+                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+            })
+            .attr("stroke", function() {
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                else return "gray";
+            });
+    }
+}
+
+function drawEachCollabForEvent(eventObj){
+    var interactions = flashTeamsJSON["interactions"];
+    for (var i = 0; i < interactions.length; i++){
+        var inter = interactions[i];
+        var draw = false;
+        if (inter["type"] == "collaboration"){
+            if (inter["event1"] == eventObj["id"]){
+                draw = true;
+                var ev1 = eventObj;
+                var ev2 = flashTeamsJSON["events"][getEventJSONIndex(inter["event2"])];
+            }
+            else if (inter["event2"] == eventObj["id"]){
+                draw = true;
+                var ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
+                var ev2 = eventObj;
+            }
+            if (draw){
+                var y1 = ev1.y;
+                var x1 = ev1.x + 3;
+                var x2 = ev2.x + 3;
+                var y2 = ev2.y;
+                var firstTaskY = 0;
+                var taskDistance = 0;
+                var overlap = eventsOverlap(ev1.x, getWidth(ev1), ev2.x, getWidth(ev2));
+
+                if (overlap > 0) {
+                    if (y1 < y2) {
+                        firstTaskY = y1 + RECTANGLE_HEIGHT;
+                        taskDistance = y2 - firstTaskY;
+                    } else {
+                        firstTaskY = y2 + RECTANGLE_HEIGHT;
+                        taskDistance = y1 - firstTaskY;
+                    }
+                    if (x1 <= x2) var startX = x2;
+                    else var startX = x1;
+                    $("#interaction_" + inter["id"])
+                        .attr("x", startX)
+                        .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
+                        .attr("height", taskDistance+9)
+                        .attr("width", overlap);
+                }      
+            }
+        }
+    }
+}
+
+if(!window._foundry) {
+    window._foundry = {};
+}
+
+(function() {
+  var events = {
+    bodyHeight: 64,
+    
+    tabHeight: 11,
+    
+    get totalHeight() {
+        return events.bodyHeight + events.tabHeight;
+    },
+    
+    get marginTop() {
+        return (window._foundry.timeline.rowHeight - events.totalHeight)/2;
+    },
+    
+    marginLeft: 4,
+    
+    iconOpacity: 0.38,
+    
+    /**
+     * @param {object} eventObj
+     * @returns true if the current user is assigned this task
+     */
+    isWorkerTask: function(eventObj) {
+        return current_user && eventObj.members.indexOf(current_user.id) > - 1;
+    },
+    
+    // clock: {
+    //     selector: ".clock_icon",
+    //     tag: "image",
+    //     attrs: {
+    //         x: function(d) {return d.x + 10},
+    //         y: function(d) {return d.y + 10},
+    //         width: function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             // set the width to zero if this is an hour long event
+    //             return eventObj.duration <= 60 ? 0 : 9;
+    //         },
+    //         height: 9,
+    //         "class": "clock_icon",
+    //         "xlink:href": function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+    //                 "/assets/icons/clock/clock.svg" : "/assets/icons/clock/clock_white.svg";
+    //         }
+    //     },
+        
+    //     style: {
+    //         opacity: function(d) {
+    //             var groupNum = parseInt(d.id.replace("task_g_", ""));
+    //             var eventObj = getEventFromId(groupNum);
+    //             return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+    //                 events.iconOpacity : 1;
+    //         }
+    //     }
+    // },
+    
+    /**
+     * @param {string} text
+     * @param {number} workingWidth
+     * @param {object} [style]
+     * @param {number} eventObjectId
+     * @returns The string truncated enough to fit inside of the given working
+     * width
+     */
+    getShortenedString: function(text, workingWidth, eventObjectId, style) {
+        var textSvg = d3.select("#g_" + eventObjectId).append("text")
+            .style(style)
+            .style({color: "transparent"})
+            .text(text);
+        
+        var length = text.length;
+        while (textSvg.node().getBBox().width > workingWidth) {
+            if(length === 0) {
+                text = '...';
+                break;
+            }
+            length--;
+            text = text.substr(0, length) + "...";
+            textSvg.text(text);
+        }
+
+        textSvg.remove();
+        return text;
+    },
+    
+    title: {
+        selector: ".title",
+        tag: "text",
+        text: function(eventObj) {
+            var title = eventObj.title;
+            //var clockAttrs = events.clock.attrs;
+            
+            
+            var workingWidth =   getWidth(eventObj)
+                               - 2 * events.marginLeft
+                               //- clockAttrs.width(d3.select("#g_" + eventObj.id).data()[0])
+                               //- 10 // clock's left margin
+                               - 10 // right margin
+                               - 5;
+            
+            return events.getShortenedString(
+                title, workingWidth, eventObj.id, events.title.style);
+        },
+        
+        attrs: {
+            "class": "title",
+            // x: function(d) {
+            //     var attrs = events.clock.attrs;
+            //     return attrs.x(d) + attrs.width(d) + 5;
+            // },
+            x: function(d) {return d.x + 10},
+            y: function(d) {return d.y + 19}
+        },
+        
+        style: {
+            "font-family": "proxima-nova",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "#444" : "white";
+            },
+            "font-weight": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    400 : 300;
+            },
+            "letter-spacing": "1px",
+            "font-size": "12px",
+            "text-transform": "uppercase"
+        }
+    },
+    
+    duration: {
+        selector: ".duration",
+        tag: "text",
+        /**
+         * @param {object} eventObj
+         * @returns {string} the event's duration in the format 'x hrs y min'
+         */
+        text: function(eventObj) {
+            if(eventObj.status == "paused"){
+                var timeStr = "PAUSED";
+            }
+
+            else{
+                var time = eventObj.timer || eventObj.duration;
+                var sign = (time / Math.abs(time) < 0) ? "-" : "";
+                
+                var hours = Math.floor(Math.abs(time) / 60);
+                var minutes = Math.abs(time) % 60;
+
+                var durationArray = [];
+                if(hours !== 0) {
+                    durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
+                }
+                
+                if(minutes !== 0) {
+                    var minStr = (eventObj.timer || time > 30 ? " min" : "");
+                    durationArray.push(minutes + minStr);
+                }
+
+                var timeStr = sign + durationArray.join(" ");
+            }  
+            
+            //var clockAttrs = events.clock.attrs;
+            
+            var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
+            var workingWidth =   getWidth(eventObj)
+                               - 2 * events.marginLeft
+                               //- ((clockAttrs.x(d3Datum) - d3Datum.x) + clockAttrs.width(d3Datum))
+                               - 10; // right padding
+            return events.getShortenedString(
+                timeStr, workingWidth, eventObj.id, events.duration.style);
+        },
+        
+        attrs: {
+            "class": "duration",
+            // x: function(d) {
+            //     var clockAttrs = events.clock.attrs;
+            //     return clockAttrs.x(d) + clockAttrs.width(d) + 4;
+            // },
+            x: function(d) {return d.x + 10},
+            y: function(d) {return d.y + 32}
+        },
+        
+        style: {
+            "font-family": "proxima-nova",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "#444" : "white";
+            },
+            "font-weight": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    400 : 300;
+            },
+            "letter-spacing": "1px",
+            "font-size": "10px",
+            "text-transform": "uppercase"
+        }
+    },
+    
+    line: {
+        selector: ".underline",
+        tag: "line",
+        attrs: {
+            x1: function(d) {return d.x + 10},
+            y1: function(d) {return d.y + 40},
+            y2: function(d) {return d.y + 40},
+            "class": "underline"
+        },
+        style: {
+            "stroke": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
+            },
+            "stroke-width": "1px"
+        }
+    },
+    
+    bottomBorder: {
+        selector: ".bottom-border",
+        tag: "rect",
+        attrs: {
+            x: function(d) {return d.x},
+            y: function(d) {return d.y + events.bodyHeight},
+            height: function(d) {return 2},
+            class: "bottom-border"
+        }
+    },
+    
+    numMembersIcon: {
+        selector: ".num-members-icon",
+        tag: "image",
+        attrs: {
+            x: function(d) {return d.x + 10},
+            y: function(d) {return d.y + events.bodyHeight - 18},
+            width: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // set the width to zero if this is an hour long event
+                return eventObj.duration <= 60 ? 0 : 12;
+            },
+            height: 12,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
+            },
+            "class": "num-members-icon",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: function(d) {
+                var id = d.id.substr("task_g_".length);
+                var event = getEventFromId(id);
+                var str = event.members.length +
+                    (event.members.length === 1 ? " member" : " members");
+                return str;
+            }
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
+        }
+    },
+    
+    numMembers: {
+        selector: ".num-members",
+        tag: "text",
+        text: function(eventObj) {return eventObj.members.length || 0;},
+        attrs: {
+            x: function(d) {
+                var attrs = events.numMembersIcon.attrs;
+                return attrs.x(d) + attrs.width(d) + 4;
+            },
+            y: function(d) {return d.y + window._foundry.events.bodyHeight - 9},
+            style: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // don't display the number of members if the event
+                // is an hour or shorter
+                return eventObj.duration <= 60 ? "display:none;" : "";
+            },
+            "class": "num-members"
+        },
+        style: {
+            "font-size": "8px",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "black" : "white";
+            },
+            "font-weight": 200,
+            "font-family": "Helvetica"
+        }
+    },
+    
+    uploadIcon: {
+        selector: ".upload",
+        tag: "image",
+        attrs: {
+            x: function(d) {
+                var iconWidth = events.uploadIcon.attrs.width(d);
+                return events.collabIcon.attrs.x(d) - iconWidth;
+            },
+            y: function(d) {return d.y + events.bodyHeight - 19},
+            width: function(d) {
+                var iconWidth = 14;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                return iconWidth;
+            },
+            height: 14,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                //console.log(d);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
+            },
+            "class": "upload",
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Upload files"
+        },
+        style: {
+            cursor: "pointer",
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
+        }
+    },
+    
+    collabIcon: {
+        selector: ".collab_btn",
+        tag: "image",
+        attrs: {
+            x: function(d) {
+                var iconWidth = events.collabIcon.attrs.width(d);
+                return events.handoffIcon.attrs.x(d) - iconWidth;
+            },
+            y: function(d) {return d.y + events.bodyHeight - 18},
+            width: function(d) {
+                var iconWidth = 14;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                return iconWidth;
+            },
+            height: 14,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/collaboration/collaboration.svg" :
+                    "/assets/icons/collaboration/collaboration_white.svg";
+            },
+            id: function(d) {return "collab_btn_" + d.groupNum;},
+            "class": "collab_btn",
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw collaboration"
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
+        }
+    },
+    
+    handoffIcon: {
+        selector: ".handoff_btn",
+        tag: "image",
+        attrs: {
+            x: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var iconWidth = events.handoffIcon.attrs.width(d);
+                
+                // subtract the button's width and the right margin
+                if(iconWidth !== 15) {
+                    // if the width is to small to fit everything, just
+                    // center the icons, don't worry about the padding
+                    return (d.x + width - iconWidth) - (width - 3 * iconWidth)/2;
+                } else {
+                    return d.x + width - iconWidth - 10;
+                }
+            },
+            y: function(d) {return d.y + events.bodyHeight - 19},
+            width: function(d) {
+                var iconWidth = 15;
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj) - 2 * events.marginLeft;
+                var workingWidth = width - 2 * 10;
+                
+                if(workingWidth/3 < iconWidth) {
+                    iconWidth = Math.floor(width/3) - 2;
+                }
+                
+                return iconWidth;
+            },
+            height: 15,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/arrow/right_arrow.svg" :
+                    "/assets/icons/arrow/right_arrow_white.svg";
+            },
+            id: function(d) {return "handoff_btn_" + d.groupNum;},
+            class: "handoff_btn",
+            groupNum: function(d) {return d.groupNum},
+            
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: "Draw handoff"
+        },
+        
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
+        }
+    },
+    
+    leftHandle: {
+        selector: ".left-handle",
+        tag: "rect",
+        attrs: {
+            x: function(d) {return d.x + 4},
+            y: function(d) {return d.y + (events.bodyHeight - 11)/2},
+            width: 2,
+            height: 11,
+            rx: 1,
+            ry: 1,
+            "class": "left-handle"
+        },
+        style: {
+            display: "none",
+            cursor: "ew-resize",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
+            }
+        }
+    },
+    
+    rightHandle: {
+        selector: ".right-handle",
+        tag: "rect",
+        attrs: {
+            x: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                var width = getWidth(eventObj);
+                return d.x + width - 2 * events.marginLeft - 2 - 4;
+            },
+            y: function(d) {return d.y + (events.bodyHeight - 11)/2},
+            width: 2,
+            height: 11,
+            rx: 1,
+            ry: 1,
+            "class": "right-handle",
+        },
+        
+        style: {
+            display: "none",
+            cursor: "ew-resize",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "rgba(0, 0, 0, 0.2" : "rgba(255, 255, 255, 0.8)";
+            }
+        }
+    }
+  };
+  
+  window._foundry.events = events;
+})();
+
+
+
+function drawG(eventObj) {
+    var x = _foundry.timeline.stepWidth *
+            (eventObj.startTime/_foundry.timeline.stepInterval);
+    var y = _foundry.timeline.rowHeight * eventObj.row;
+    
+    var xOffset = window._foundry.events.marginLeft;
+    var yOffset = window._foundry.events.marginTop;
+    
+    var groupNum = eventObj["id"];
+
+    var idx = getDataIndexFromGroupNum(groupNum);
+    if(idx == null) {
+        var new_data = {
+          id: "task_g_" + groupNum, class: "task_g",
+          groupNum: groupNum, x: x + xOffset, y: y + yOffset
+        };
+        task_groups.push(new_data);
+    } else {
+        task_groups[idx].x = x + xOffset;
+        task_groups[idx].y = y + yOffset;
+    }
+    
+    var showHandles = function(d) {
+        // same size as in leftResize and rightResize functions
+        if(isUser) {
+            return;
+        }
+        if(in_progress && flashTeamsJSON["paused"]!=true){
+            return;
+        }
+        
+        var x = d3.mouse(this)[0];
+        var eventX = d.x;
+
+        var left = d3.select(this).selectAll(".left-handle");
+        var right = d3.select(this).selectAll(".right-handle");
+
+        var width = getWidth(getEventFromId(groupNum));
+        
+        if(x < eventX + width/2) {
+            // show the left and hide the right
+            left.style({display: ""})
+            right.style({display: "none"});
+        } else {
+            // show the right and hide the left
+            right.style({display: ""});
+            left.style({display: "none"});
+        }
+    };
+    
+    // add group to timeline, based on the data object
+    window._foundry.timeline.eventLayer.selectAll("g.event")
+        .data(task_groups, function(d){ return d.groupNum; })
+        .enter()
+        .append("g")
+        .attr("id", "g_" + groupNum)
+        .attr("class", "event")
+        .style({cursor: "pointer"})
+        .on("mousemove", showHandles)
+        .on("mouseout", function() {
+            var handles = d3.select(this).selectAll(".left-handle, .right-handle");
+            handles.style({display: "none"});
+        });
+}
+
+>>>>>>> master
 /**
  * Adds a box shadow filter to the root <svg> element and gives it the
  * passed in id
@@ -417,7 +1126,278 @@ function addToTaskFromData(data, eventObj, taskGroup) {
     return svgElem;
 }
 
+<<<<<<< HEAD
 function renderAllMemberTabs() {
+=======
+function drawTop(eventObj) {
+    var events = window._foundry.events;
+    
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    var width = getWidth(eventObj);
+
+    // grab the main rectangle
+    var rect = task_g.select("#rect_" + groupNum);
+    
+    // var clockSvg = addToTaskFromData(events.clock, eventObj, task_g);
+    // clockSvg.call(drag);
+    var titleSvg = addToTaskFromData(events.title, eventObj, task_g);
+    titleSvg.call(drag);
+    var durationSvg = addToTaskFromData(events.duration, eventObj, task_g);
+    durationSvg.call(drag);
+    
+    // special case, have to determine x2
+    var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
+    lineSvg.attr("x2", function(d) {
+        var x1 = events.line.attrs.x1(d);
+        return x1 + (getWidth(eventObj) - (2 * events.marginLeft) - (2 * (x1 - d.x)));
+    })
+    .call(drag);
+    
+}
+
+function drawBottom(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    var ev = getEventFromId(groupNum);
+    
+    // icon for the number of members
+    addToTaskFromData(events.numMembersIcon, eventObj, task_g);
+    
+    // the number of members
+    addToTaskFromData(events.numMembers, eventObj, task_g);
+    
+    // upload icon
+    var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
+    uploadIcon.on("click", function(){
+        d3.event.stopPropagation();
+        if (ev.gdrive.length > 0){
+            window.open(ev.gdrive[1])
+        }
+        else{
+            alert("The flash team must be running for you to upload a file!");
+        }
+    });
+    
+    // collaboration icon
+    var collabIconSvg = addToTaskFromData(events.collabIcon, eventObj, task_g);
+    collabIconSvg.on("click", startWriteCollaboration);
+    
+    // handoff icon
+    var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
+    handoffIconSvg.on("click", startWriteHandoff);
+    
+    var selector = ".event " + events.numMembersIcon.selector + ", " +
+                   ".event " + events.uploadIcon.selector + ", " +
+                   ".event " + events.collabIcon.selector + ", " +
+                   ".event " + events.handoffIcon.selector;
+    $(selector).each(function() {
+          $(this).tooltip('destroy').tooltip();
+    });
+}
+
+function drawMemberTabs(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var members = eventObj.members;
+    var task_g = getTaskGFromGroupNum(groupNum);
+    
+    task_g.selectAll(".mem_tab").remove();
+    var start = 4;
+    for(var i = 0; i < members.length; i++) {
+        var memberId = members[i];
+        var member = getMemberById(memberId);
+        var memberTab = task_g.selectAll("#mem_tab_" + memberId);
+        if(memberTab.empty()) {
+            memberTab = task_g.append("path");
+        }
+        
+        // coordinates for drawing the tab shape
+        var shapeData = [
+            {x: 0, y: 0}, {x: 24, y: 0},
+            {x: 24, y: 11}, {x: 7, y: 11},
+            {x: 0, y: 0}
+        ];
+        
+        var xOffset = 4 + i * 16;
+        var tabPathFn = function(line, data) {
+            return d3.svg.line()
+                .x(function(d) {return data.x + xOffset + d.x;})
+                .y(function(d) {return data.y + events.bodyHeight + d.y;})
+                .interpolate("linear")(line);
+        };
+        
+        var attrs = {
+            id: "mem_tab_" + memberId,
+            class: "mem_tab",
+            "member-id": memberId,
+            width: 24,
+            height: 11,
+            d: function(d) {return tabPathFn(shapeData, d)},
+            fill: member.color,
+            
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: member.role
+        }
+        
+        for(var key in attrs) {
+            memberTab.attr(key, attrs[key]);
+        }
+        
+        $(".mem_tab[member-id='" + memberId + "']").each(function() {
+          $(this).tooltip()
+        });
+    }
+}
+
+function drawDragHandles(eventObj) {
+    var events = window._foundry.events;
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+    
+    var leftHandleSvg = addToTaskFromData(events.leftHandle, eventObj, task_g);
+    leftHandleSvg.call(drag_left);
+    
+    var rightHandleSvg = addToTaskFromData(events.rightHandle, eventObj, task_g);
+    rightHandleSvg.call(drag_right);
+}
+
+// TODO: might have issues with redrawing
+function drawShade(eventObj) {
+    if(current_user == undefined) {return;}
+
+    var groupNum = eventObj["id"];
+    var members = eventObj["members"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    // draw shade on main rect of this event
+    //for each event it draws the shade. 
+    //in doing so it takes its array of members FOR THAT EVENT
+    //for each member for that event it gets their ID
+    //if they are the CURRENT member
+    for (var i=0; i<members.length; i++) {
+        var member_id = members[i];
+        //debugger;
+        if (current_user.id == member_id){
+            if (currentUserIds.indexOf(groupNum) < 0){
+                currentUserIds.push(groupNum);
+                currentUserEvents.push(eventObj);
+            }
+
+            
+            task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            break;
+        }
+    }
+}
+
+//Creates graphical elements from array of data (task_rectangles)
+function drawEvent(eventObj) {
+    // Start off by redrawing the timeline if we need to, so the events
+    
+    // subtract two so there's always at least one empty row
+    // (event.row is 0 indexed)
+    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+      window._foundry.timeline.updateNumRows(eventObj.row + 2);
+    }
+    
+    drawG(eventObj);
+    
+    drawMemberTabs(eventObj);
+    drawMainRect(eventObj);
+    drawTop(eventObj);
+    drawBottom(eventObj);
+    
+    drawDragHandles(eventObj);
+    
+    drawEachHandoffForEvent(eventObj);
+    drawEachCollabForEvent(eventObj);
+    
+    drawShade(eventObj);
+    drawTimer(eventObj);
+};
+
+
+
+function drawTimer(eventObj){
+   
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
+        return;
+    }
+    
+    if( eventObj.status == "started" ){
+    
+        //var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval ));
+        
+        var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        
+        var duration = eventObj["duration"];
+        
+        //var remaining_time = duration - time_passed;
+        
+		var remaining_time = eventObj.latest_remaining_time - time_passed;
+
+        
+        if(remaining_time < 0){
+            eventObj.status = "delayed";
+             
+            var groupNum = parseInt(eventObj["id"]);
+            
+            var idx = live_tasks.indexOf(groupNum);
+            if (idx != -1) { // delayed task
+                live_tasks.splice(idx, 1);
+            }
+            delayed_tasks.push(groupNum);
+            drawEvent(eventObj);
+        }
+
+        eventObj["timer"] = remaining_time;
+        updateStatus();
+    }
+
+    else if( eventObj.status == "delayed" ){
+    
+        /* //OLD WAY
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_startBtn_time)/ task_timer_interval )) ;
+        var duration = eventObj["duration"];
+        var remaining_time = duration - time_passed;
+		*/
+
+		var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
+        var duration = eventObj["duration"];
+        var remaining_time = eventObj.latest_remaining_time - time_passed;
+
+
+        eventObj["timer"] = remaining_time;
+        updateStatus();
+    }
+}
+
+//Draw a triangular hiring event on the timeline
+function drawHiringEvent() {
+    drawHiringRect();
+    //NOT DONE
+
+    
+}
+
+
+function removeAllMemberCircles(eventObj){
+    var groupNum = eventObj["id"];
+    var members = eventObj["members"];
+    var task_g = getTaskGFromGroupNum(groupNum);
+
+    for(var i=0;i<members.length;i++){
+        task_g.selectAll("#event_" + groupNum + "_eventMemCircle_" + (i+1)).remove();
+    }
+};
+
+function renderAllMemberCircles() {
+>>>>>>> master
     var events = flashTeamsJSON["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
@@ -516,7 +1496,12 @@ function deleteEvent(eventId){
 
     //Visually removes task from the timeline, in awareness.js
     removeTask(eventId);
+<<<<<<< HEAD
     updateStatus(false);
+=======
+    
+    updateStatus();
+>>>>>>> master
 }
 
 
