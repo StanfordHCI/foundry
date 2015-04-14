@@ -48,26 +48,20 @@ colorBox.grabColor = function() {
     return color;
 };
 
-//replaceColor adds a color back into possible space
-colorBox.replaceColor = function(color) {
-    // colorBox.colors.push(color);
-};
-
 function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderAllMemberCircles();
+    renderAllMemberTabs();
 };
 
 function renderMembersUser() {
     var members = flashTeamsJSON.members;
-    renderAllMemberCircles();
+    renderAllMemberTabs();
 };
 
 function setCurrentMember() {
     var uniq = getParameterByName('uniq');
-    //console.log("THIS IS THE CURRENT UNIQ VALUE", uniq);
     
     if (uniq){
         $("#uniq").value = uniq;
@@ -79,18 +73,6 @@ function setCurrentMember() {
             isUser = true;
             memberType = member.type;
         }
-        
-        /*
-        flash_team_members = flashTeamsJSON["members"];
-        //console.log(flash_team_members[0].uniq);
-        for(var i=0;i<flash_team_members.length;i++){            
-            if (flash_team_members[i].uniq == uniq){
-                current = flash_team_members[i].id;
-                current_user = flash_team_members[i];
-                isUser = true;
-                memberType = flash_team_members[i].type;
-            }
-        }*/
         
     } else {
         current = undefined;
@@ -690,7 +672,7 @@ function saveMemberInfo(memberId) {
     renderMemberPillColor(memberId);
 
     $("#mPill_" + memberId).popover("hide");
-    renderAllMemberCircles();
+    renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 

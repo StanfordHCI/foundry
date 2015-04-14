@@ -36,8 +36,6 @@ var currentUserEvents = [];
 var currentUserIds = [];
 var upcomingEvent; 
 
-var overlayIsOn = false;
-
 //Remove existing X-axis labels
 var numMins = -60;
 
@@ -361,21 +359,7 @@ function initializeTimelineDuration() {
     }
 }
 
-
 var task_g = timeline_svg.selectAll(".task_g");
-
-//Turn on the overlay so a user cannot continue to draw events when focus is on a popover
-function overlayOn() {
-    //console.log("overlay on");
-    //$("#overlay").css("display", "block");
-};
-
-//Remove the overlay so a user can draw events again
-function overlayOff() {
-    //console.log("overlay off");
-    $(".task_rectangle").popover("hide");
-    //$("#overlay").css("display", "none");
-};
 
 //Access a particular "event" in the JSON by its id number and return its index in the JSON array of events
 function getEventJSONIndex(idNum) {
@@ -421,8 +405,7 @@ function redrawTimeline() {
   var timelineSvg = timeline.timelineSvg;
   var gridLayer = timeline.gridLayer;
   
-  //Reset overlay and svg width
-  document.getElementById("overlay").style.width = SVG_WIDTH + 50 + "px";
+  //Reset svg width
   timeline.resizeSvg(SVG_WIDTH, SVG_HEIGHT);
   
   //Remove all existing grid lines & background
