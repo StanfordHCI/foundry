@@ -1101,7 +1101,7 @@ var computeTasksAfterCurrent = function(curr_x){
 
          if(getEventJSONIndex(groupNum) == undefined){
                 removeTask(groupNum);
-                console.log("removed task from task_groups in computeTasksAfterCurrent");
+                //console.log("removed task from task_groups in computeTasksAfterCurrent");
 
             } else{
             // get start x coordinate of task
@@ -1130,7 +1130,7 @@ var computeTasksBeforeCurrent = function(curr_x){
 
         if(getEventJSONIndex(groupNum) == undefined){
             removeTask(groupNum);
-            console.log("removed task from task_groups in computeTasksBeforeCurrent");
+            //console.log("removed task from task_groups in computeTasksBeforeCurrent");
 
         } else{
             // get start x coordinate of task
