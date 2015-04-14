@@ -226,8 +226,22 @@ end
   end
 
   def rename
+    # update flash team name in rails model
     flash_team = FlashTeam.find(params[:pk])
     flash_team.name = params[:value]
+    
+    # update flash teams title in json object saved in rails model
+    flash_team_json = JSON.parse(flash_team.json)
+    flash_team_json["title"] = params[:value] 
+    flash_team.json = flash_team_json.to_json
+
+    # update flash teams title in flash team json object saved in status json object saved in rails model
+    if !flash_team.status.nil?
+      json_status = JSON.parse(flash_team.status)
+      json_status["flash_teams_json"]["title"] = params[:value] 
+      flash_team.status = json_status.to_json
+    end
+
     flash_team.save
     head :ok
   end
@@ -266,6 +280,7 @@ end
     status = params[:localStatusJSON]
     @flash_team = FlashTeam.find(params[:id])
     @flash_team.status = status
+
     @flash_team.save
 
     respond_to do |format|
@@ -425,6 +440,18 @@ end
     end
   end
   
+    def get_team_info
+        flash_team = FlashTeam.find(params[:id])
+        flash_team_name = flash_team.name
+        flash_team_id = flash_team.id
+        flash_team_json = JSON.parse(flash_team.json)
+        author_name = flash_team_json["author"]
+
+     respond_to do |format|
+      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}.to_json, status: :ok}
+    end
+  end
+
 
   def event_search
 
