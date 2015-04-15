@@ -14,4 +14,6 @@
  *= stub hiring-panel
  *= stub font-awesome
   *= stub panel-reg
+  *= require jquery-ui
+  //= require jquery.contextMenu.css
  */

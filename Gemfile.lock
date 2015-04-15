@@ -79,6 +79,13 @@ GEM
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
+    jquery-ui-rails (5.0.3)
+      railties (>= 3.2.16)
+    jquery_context_menu-rails (0.0.4)
+      jquery-rails
     json (1.8.2)
     jwt (1.4.1)
     kgio (2.9.3)
@@ -181,6 +188,9 @@ DEPENDENCIES
   google-api-client
   jbuilder (~> 1.2)
   jquery-rails
+  jquery-turbolinks
+  jquery-ui-rails
+  jquery_context_menu-rails
   launchy (>= 2.1.1)
   oauth
   pg (= 0.17.1)

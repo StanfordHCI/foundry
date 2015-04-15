@@ -200,7 +200,7 @@ function dragEventBlock(d) {
     ev.row = newRow;
     ev.y = currentY+5;
     updateStatus();
-    drawEvent(ev, false);   
+    drawEvent(ev, false);
 }
 
 //VCom Calculates where to snap event block to when created
@@ -237,7 +237,7 @@ function createEvent(point, duration) {
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(snapPoint, duration);
+    var eventObj = createEventObj(newEventObj(snapPoint, duration));
     
 
     // render event on timeline
@@ -267,34 +267,39 @@ function getDuration(leftX, rightX) {
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
 
-//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
-function createEventObj(snapPoint, duration) {
-    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
-    
+function newEventObj(snapPoint, duration){
+
     duration = duration || 60;
-    
+
     var startTimeObj = getStartTime(snapPoint[0]);
-  
+
     var newEvent = {
-        "title":"New Event", "id":createEventId(), 
+        "title":"New Event", "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration,
         "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
-        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
-        ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
+        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""],
+            ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
-      //add new event to flashTeams database
-    /*
-if (flashTeamsJSON.events.length == 0 || !flashTeamsJSON.folder){
-        createNewFolder(document.getElementById("ft-name").innerHTML);
-        //createNewFolder($("#flash_team_name").val());
-    }
-*/
-    flashTeamsJSON.events.push(newEvent);
-    
     return newEvent;
+}
+function duplicateEventObj(eventObject){
+    var newObject = JSON.parse(JSON.stringify(eventObject));
+    newObject["id"] = createEventId();
+    newObject["y"] = newObject["y"] + RECTANGLE_HEIGHT + 20;
+    return newObject;
+}
+
+//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
+function createEventObj(eventObject) {
+    event_counter++; //this was previously used to assign IDs to events but now we use the createEventId() function instead to make sure that IDs are unique within a team
+    
+    //add new event to flashTeams database
+    flashTeamsJSON.events.push(eventObject);
+    
+    return eventObject;
 };
 
 function createEventId(){
@@ -894,6 +899,53 @@ if(!window._foundry) {
             "font-family": "Helvetica"
         }
     },
+    configIcon: {
+        selector: ".icon-cog",
+        tag: "image",
+        attrs: {
+            x: function(d) {
+                var attrs = events.numMembers.attrs;
+                return attrs.x(d) + 15;
+            },
+            y: function(d) {return d.y + events.bodyHeight - 18},
+            width: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // set the width to zero if this is an hour long event
+                return eventObj.duration <= 60 ? 0 : 12;
+            },
+            height: 12,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/config/icon-cog.svg" : "/assets/icons/config/icon-cog.svg";
+            },
+            "class": "icon-cog",
+
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            title: function(d) {
+                var id = d.id.substr("task_g_".length);
+                var event = getEventFromId(id);
+                var str = event.members.length +
+                    (event.members.length === 1 ? " member" : " members");
+                return str;
+            }
+        },
+
+        style: {
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
+        }
+    },
     
     uploadIcon: {
         selector: ".upload",
@@ -1381,6 +1433,9 @@ function drawBottom(eventObj) {
     
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
+
+    var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
+    configIcon.on("click", onConfigClick);
     
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
@@ -1409,6 +1464,45 @@ function drawBottom(eventObj) {
     $(selector).each(function() {
           $(this).tooltip('destroy').tooltip();
     });
+}
+
+function onConfigClick(event){
+
+   showDropDown(event);
+
+}
+
+function showDropDown(event){
+
+    $.contextMenu({
+        selector: '.icon-cog',
+        groupNum: event.groupNum,
+        trigger: 'left',
+        callback: function(key, options) {
+            //var m = "clicked: " + key;
+            //window.console && console.log(m) || alert(options.groupNum);
+            window[key + "Event"](options.groupNum);
+        },
+        items: {
+            "duplicate": {name: "Duplicate", icon: ""},
+            "edit": {name: "Edit", icon: ""},
+            "delete": {name: "Delete", icon: ""}
+        }
+    });
+}
+
+function duplicateEvent(groupNumber){
+    var task_g = getTaskGFromGroupNum(groupNumber);
+    var indexOfJSON = getEventJSONIndex(groupNumber);
+    var events = flashTeamsJSON["events"];
+    var eventToDuplicate = events[indexOfJSON];
+
+    var eventObj = createEventObj(duplicateEventObj(eventToDuplicate));
+
+    drawEvent(eventObj, true);
+
+    // save
+    updateStatus(false);
 }
 
 function drawMemberTabs(eventObj) {

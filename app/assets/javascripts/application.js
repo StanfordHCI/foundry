@@ -12,6 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
+//= require jquery.contextMenu.js
 // require_tree ./d3
 //= require ./d3/d3.v3.min
 //= require turbolinks
