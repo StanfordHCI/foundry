@@ -9,30 +9,31 @@
 //Initializes the global array which will store information about each event's google drive folder
 folderIds = [];
 
+//Called when the client library is loaded.
 function handleClientLoad() {
   gapi.client.setApiKey(apiKey);
   window.setTimeout(checkAuth(true),1);
 }
 
-
+//Check if the current user has authorized the application.
+//loadPopup parameter indicates whether it will try to load the popup authorization window immeidately
 function checkAuth(loadPopup) {
   gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: loadPopup}, handleAuthResult);
 }
 
+//Called when authorization server replies.
 function handleAuthResult(authResult) {
   var authorizeButton = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
     $("#authorize-button").html('Google Drive™ folder');
     googleDriveLink();
-    //$("#gfolder").css('display','none');
       if(!in_progress){ 
-        $("#google-drive-button").css('display', 'none');
+        hideGoogleDriveFolder();
       }else{
-        if(!flashTeamsJSON.folder[1]){
+        if(!flashTeamsJSON.folder[1] && current_user == "Author"){
           createProjectFolder();
         }
-        //googleDriveLink();
-        $("#google-drive-button").css('display', '');
+        showGoogleDriveFolder();
       }    
   } else {
     checkAuth(false);
@@ -42,18 +43,30 @@ function handleAuthResult(authResult) {
   }
 }
 
+//loads the authorization popup window when the user clicks on the login to google drive button
 function handleAuthClick(event) {
   gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
   return false;
 }
 
+//shows the google drive button in the left sidebar
 function showGoogleDriveFolder(){
   $("#google-drive-button").css('display','');
 }
 
+//hides the google drive bar in the left sidebar if it is a worker 
+//if is in author view and the team has been started (e.g., even if it ended), it will show the google drive folder
+// this is because the author should always see the google drive folder when the team has ended but a worker shouldn't
+function hideGoogleDriveFolder(){
+  if(current_user == "Author" && flashTeamsJSON["startTime"]){
+    showGoogleDriveFolder();
+  }else{
+    $("#google-drive-button").css('display','none');
+  }
+}
+
 //Creates the project's folder
 function createProjectFolder(){
-  
   gapi.client.load('drive', 'v2', function() {
     var req;
     req = gapi.client.request({
@@ -190,216 +203,3 @@ function insertPermission(fileId, value, type, role) {
   });
   request.execute(function(resp) { });
 };
-
-
-
-// //Called when the client library is loaded.
-// function handleClientLoad() {
-//   checkAuth();
-// };
-
-// //Check if the current user has authorized the application.
-// function checkAuth() {
-//   gapi.auth.authorize(
-//       {'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': false},
-//       handleAuthResult2);
-// };
-
-// //Called when authorization server replies.
-// function handleAuthResult2(authResult) {
-//   if (authResult) {
-//     // Access token has been successfully retrieved, requests can be sent to the API
-//   } else {
-//     // No access token could be retrieved, force the authorization flow.
-//     gapi.auth.authorize(
-//         {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
-//         handleAuthResult2);
-//   }
-// };
-
-
-// //Functions that authorize the API`
-// function onAuthApiLoad() {
-//   gapi.auth.authorize(
-//     {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
-//     handleAuthResult);
-// };
-
-// function onApiLoad(){
-//       gapi.load('auth', {'callback': onAuthApiLoad});
-//       gapi.load('picker');
-// };
-
-
-// /*
-// * The following code creates and runs a file picker
-// */
-
-// var oauthToken;
-// function handleAuthResult(authResult){
-//   if (authResult && !authResult.error){
-//     oauthToken = authResult.access_token;
-//     createPicker();
-//   }
-// };
-
-// function createPicker(){
-//   var docUpload = new google.picker.DocsUploadView();
-//   var picker = new google.picker.PickerBuilder()
-//     .addView(docUpload)
-//     .setOAuthToken(oauthToken)
-//     .setDeveloperKey(GDRIVE_DEV_KEY)
-//     .setCallback(pickerCallback)
-//     .build()
-//   picker.setVisible(true);
-// };
-
-// function pickerCallback(data){
-//   if (data.action == google.picker.Action.PICKED){
-//     alert('URL: ' + data.docs[0].url);
-//   }
-// };
-
-// // -----------------------------------------------------
-
-
-// //Creates the project's folder
-// function createProjectFolder(){
-	
-// 	gapi.client.load('drive', 'v2', function() {
-// 		var req;
-// 		req = gapi.client.request({
-//         'path': '/drive/v2/files',
-//         'method': 'POST',
-//         'body':{
-//             "title" : flashTeamsJSON.title,
-//             "mimeType" : "application/vnd.google-apps.folder",
-//             "description" : "Overall Shared Folder"
-//          }
-//       });
-      
-//       req.execute(function(resp) { 
-//       	var folderArray = [resp.id, resp.alternateLink];
-      	
-//         insertPermission(folderArray[0], "me", "anyone", "writer");
-//         flashTeamsJSON.folder = folderArray;
-        
-// 		updateStatus(); // don't put true or false here
-				
-// 		addAllTaskFolders(flashTeamsJSON.folder[0])
-//     });
-		
-		
-// 	}); 
-	
-// }
-
-// //Creates a subfolder for a particular task
-// function createTaskFolder(eventName, JSONId, parent_folder){
-	
-// 	gapi.client.load('drive', 'v2', function() {
-// 		var req;
-// 		req = gapi.client.request({
-//         'path': '/drive/v2/files',
-//         'method': 'POST',
-//         'body':{
-//             "title" : eventName,
-//             "mimeType" : "application/vnd.google-apps.folder",
-//             "description" : "Shared Folder",
-//             "parents": [{"id": parent_folder}]
-//          }
-//       });
-      
-//       req.execute(function(resp) { 
-//       	var folderArray = [resp.id, resp.alternateLink];
-      	
-//         flashTeamsJSON["events"][JSONId].gdrive = folderArray;
-//         insertPermission(folderArray[0], "me", "anyone", "writer");
-//         folderIds.push(folderArray);
-
-// 		updateStatus(); // don't put true or false here
-//     });
-		
-		
-// 	}); //end gapi.client.load
-	
-// }
-
-// //Adds all the task folders when the folder has started
-// function addAllTaskFolders(parent_folder){
-//   for (var i = 0; i<flashTeamsJSON["events"].length; i++){
-//     createTaskFolder(flashTeamsJSON["events"][i].title, i, parent_folder);
-//   }
-// };
-
-
-// //Creates a new file
-// function createNewFile(eventName) {
-
-//     gapi.client.load('drive', 'v2', function() {
-
-//        var request = gapi.client.request({
-//         'path': '/drive/v2/files',
-//         'method': 'POST',
-//         'body':{
-//             "title" : eventName + ".gdoc",
-//             "mimeType" : "application/vnd.google-apps.document",
-//             "description" : "Shared Doc"//,
-//             // "parents": [{"id": "0B6l5YPiF_QFBUWtPaEgyOWZmOUk"}]
-//          }
-//      });
-
-//       request.execute(function(resp) {});
-//    });
-// };
-
-
-// /**
-//  * Rename a folder.
-//  *
-//  * @param {String} fileId <span style="font-size: 13px; ">ID of the file to rename.</span><br> * @param {String} newTitle New title for the file.
-//  */
-// function renameFolder(fileId, newTitle) {
-
-//     gapi.client.load('drive', 'v2', function() {
-
-//        var request = gapi.client.request({
-//         'path': '/drive/v2/files/'+fileId,
-//         'method': 'PATCH',
-//         'body':{
-//             //"fileId": fileId,
-//             "title" : newTitle,
-//             "mimeType" : "application/vnd.google-apps.folder"
-//          }
-//      });
-
-//       request.execute(function(resp) {});
-//    });
-// };
-
-
-// //Deletes a file
-// function deleteFile(fileId){
-//   gapi.client.load('drive', 'v2', function(){
-//     var request = gapi.client.drive.files.delete({
-//       'fileId': fileId
-//     });
-//     request.execute(function(resp) { });
-//   });
-// };
-
-
-// //Allows a changing of the permissions of a file or folder: roles can be checked on the Google API
-// function insertPermission(fileId, value, type, role) {
-//   var body = {
-//     'value': value,
-//     'type': type,
-//     'role': role,
-//     'withLink': true
-//   };
-//   var request = gapi.client.drive.permissions.insert({
-//     'fileId': fileId,
-//     'resource': body
-//   });
-//   request.execute(function(resp) { });
-// };

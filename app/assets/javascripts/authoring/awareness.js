@@ -1508,6 +1508,13 @@ var trackUpcomingEvent = function(){
     
     setInterval(function(){
        
+        if(in_progress){
+            showGoogleDriveFolder();
+        }
+        else{
+            hideGoogleDriveFolder();
+        }
+
         var overallTime;
         
         if (currentUserEvents.length == 0 ) return;

@@ -1,19 +1,13 @@
 <script>
 
-//var CLIENT_ID = '<%=ENV['GDRIVE_CLIENT_ID']%>';
 var clientId = '<%=ENV['GDRIVE_CLIENT_ID']%>';
-// var SCOPES = [
-//     'https://www.googleapis.com/auth/drive.file',
-//     'https://www.googleapis.com/auth/userinfo.email',
-//     'https://www.googleapis.com/auth/userinfo.profile',
-//     'https://www.googleapis.com/auth/drive.install'];
- var scopes = [
+
+var scopes = [
     'https://www.googleapis.com/auth/drive.file',
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/drive.install'];
 
-//var GDRIVE_DEV_KEY = '<%=ENV['GDRIVE_DEV_KEY']%>';
 var apiKey = '<%=ENV['GDRIVE_DEV_KEY']%>';
     
 var firebaseURL = '<%=ENV['FIREBASE_URL']%>';
