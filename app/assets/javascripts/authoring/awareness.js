@@ -509,9 +509,17 @@ var flashTeamUpdated = function(){
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
+    var updated_task_groups = loadedStatus.task_groups;
+
+    if(updated_task_groups.length != task_groups.length){
+        return true;
+    }
+
+    if(updated_task_groups.sort().join(',') !== task_groups.sort().join(',')){
+        return true;
+    }
 
     if(updated_team_paused != flashTeamsJSON["paused"]){
-        //console.log("PAUSE DIFFERENCE");
         return true;
     }
 
@@ -647,8 +655,9 @@ var loadData = function(){
     delayed_tasks = loadedStatus.delayed_tasks;
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     completed_red_tasks = loadedStatus.completed_red_tasks;
+    
 
-    load_statusBar(status_bar_timeline_interval);
+    //load_statusBar(status_bar_timeline_interval);
     
     drawEvents(!in_progress);
 
@@ -1090,13 +1099,19 @@ var computeTasksAfterCurrent = function(curr_x){
         var data = task_groups[i];
         var groupNum = data.groupNum;
 
-        // get start x coordinate of task
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x;
-        
-        // if the task's x coordinate is after the current x, it is "after," so add it
-        if(curr_x <= start_x){
-            tasks_after_curr.push(groupNum);
+         if(getEventJSONIndex(groupNum) == undefined){
+                removeTask(groupNum);
+                //console.log("removed task from task_groups in computeTasksAfterCurrent");
+
+            } else{
+            // get start x coordinate of task
+            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+            var start_x = ev.x;
+            
+            // if the task's x coordinate is after the current x, it is "after," so add it
+            if(curr_x <= start_x){
+                tasks_after_curr.push(groupNum);
+            }
         }
     }
 
@@ -1113,16 +1128,22 @@ var computeTasksBeforeCurrent = function(curr_x){
         var data = task_groups[i];
         var groupNum = data.groupNum;
 
-        // get start x coordinate of task
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x;
-        var width = getWidth(ev);
-        var end_x = parseFloat(start_x) + parseFloat(width);
-        
-        // if the task's end x coordinate is before the current x, it is "before," so add it
-        if(end_x <= curr_x){
-            tasks_before_curr.push(groupNum);
-        }
+        if(getEventJSONIndex(groupNum) == undefined){
+            removeTask(groupNum);
+            //console.log("removed task from task_groups in computeTasksBeforeCurrent");
+
+        } else{
+            // get start x coordinate of task
+            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+            var start_x = ev.x;
+            var width = getWidth(ev);
+            var end_x = parseFloat(start_x) + parseFloat(width);
+            
+            // if the task's end x coordinate is before the current x, it is "before," so add it
+            if(end_x <= curr_x){
+                tasks_before_curr.push(groupNum);
+            }
+        }  
     }
     return tasks_before_curr;
 };
@@ -1609,6 +1630,7 @@ var constructStatusObj = function(){
     var localStatus = {};
 
     localStatus.team_paused = flashTeamsJSON["paused"];
+    localStatus.task_groups = task_groups;
     localStatus.live_tasks = live_tasks;
     localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;
