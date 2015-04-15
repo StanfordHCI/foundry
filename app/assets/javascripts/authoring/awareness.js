@@ -691,8 +691,8 @@ var startTeam = function(firstTime){
 		recordStartTime();
 		//checkProjectFolder();
         //addAllFolders();
-        showGoogleDriveFolder();
         createProjectFolder();
+        showGoogleDriveFolder();
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
