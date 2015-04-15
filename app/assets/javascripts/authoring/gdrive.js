@@ -31,36 +31,18 @@ function handleAuthResult(authResult) {
           createProjectFolder();
     }
 
-    googleDriveLink();
-    // if(!in_progress){
-    //   $("#authorize-button").html('Waiting for Google Drive™');
-    // }else{
-    //   $("#authorize-button").html('Google Drive™ folder');
-    // }
-    //   if(flashTeamsJSON.folder){ 
-    //     googleDriveLink();
-    //     //hideGoogleDriveFolder();
-    //   }else{
-    //     if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
-    //       createProjectFolder();
-    //       googleDriveLink();
-    //     }else{
-    //       $("#authorize-button").html('Waiting for Google Drive™');
-    //     }
-    //     //showGoogleDriveFolder();
-    //   }    
+    googleDriveLink();  
+
   } else {
     checkAuth(false);
-    if(!in_progress || current_user == "Author"){
+    if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
       $("#authorize-button").html('Login to Google Drive™');
       gFolderBtn.onclick = handleAuthClick; 
     }
     else{
       googleDriveLink();
     }
-    
-    //$("#google-drive-button").css('display','');
-    //gFolderBtn.onclick = handleAuthClick; 
+
   }
 }
 
@@ -70,21 +52,6 @@ function handleAuthClick(event) {
   return false;
 }
 
-//shows the google drive button in the left sidebar
-function showGoogleDriveFolder(){
-  $("#google-drive-button").css('display','');
-}
-
-//hides the google drive bar in the left sidebar if it is a worker 
-//if is in author view and the team has been started (e.g., even if it ended), it will show the google drive folder
-// this is because the author should always see the google drive folder when the team has ended but a worker shouldn't
-function hideGoogleDriveFolder(){
-  if(current_user == "Author" && flashTeamsJSON["startTime"]){
-    showGoogleDriveFolder();
-  }else{
-    $("#google-drive-button").css('display','none');
-  }
-}
 
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
