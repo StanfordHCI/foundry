@@ -29,7 +29,9 @@ function callajaxreq(inputid, type, url, resultsid){
 
 } //end callajaxreq
 
-callajaxreq("searchEventsInput", "GET", "/flash_teams/event_search", "search-results");
+if(document.getElementById("searchEventsInput") != null){
+    callajaxreq("searchEventsInput", "GET", "/flash_teams/event_search", "search-results");
+}
 
 //DR: I have no idea what the following three lines do
 /* Dialog prompt code. Prevents dialogs from automatically opening upon initialization */

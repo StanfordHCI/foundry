@@ -468,137 +468,132 @@ var stopProjectStatus = function(){
     window.clearInterval(project_status_handler);
 };
 
-function init_statusBar(status_bar_timeline_interval){
-    var last_group_num=-1;
-    var last_end_x=0;
+// function init_statusBar(status_bar_timeline_interval){
+//     var last_group_num=-1;
+//     var last_end_x=0;
 
-    for (var i=0;i<task_groups.length;i++){
-        var data = task_groups[i];
-        var groupNum = data.groupNum;
+//     for (var i=0;i<task_groups.length;i++){
+//         var data = task_groups[i];
+//         var groupNum = data.groupNum;
 
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x+4;  //CHECK with Jay
-        var width = getWidth(ev);
-        var end_x = parseFloat(start_x) + parseFloat(width);
+//         var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+//         var start_x = ev.x+4;  //CHECK with Jay
+//         var width = getWidth(ev);
+//         var end_x = parseFloat(start_x) + parseFloat(width);
         
-        /*console.log("start_x",start_x);
-        console.log("width",width);
-        console.log("here2");
-        console.log("end_time",groupNum +" "+ parseFloat(end_x)/100);
-        */
-        if(last_end_x<end_x){
-            last_end_x=end_x;
-        }
+//         if(last_end_x<end_x){
+//             last_end_x=end_x;
+//         }
         
-    }
-   // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
-   //console.log("last_end",last_end_x);
-   project_duration=parseInt(last_end_x/50)*thirty_min;
-   //console.log("project duration: ",project_duration);
+//     }
+//    // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
+//    //console.log("last_end",last_end_x);
+//    project_duration=parseInt(last_end_x/50)*thirty_min;
+//    //console.log("project duration: ",project_duration);
 
-   num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
-   project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
-}
+//    num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
+//    project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
+// }
 
 
-function load_statusBar(status_bar_timeline_interval){
+// function load_statusBar(status_bar_timeline_interval){
 
-    //pause if a task is delayed
-    if(delayed_tasks.length != 0){
+//     //pause if a task is delayed
+//     if(delayed_tasks.length != 0){
 
-        var start_delayed_x;  //CHECK with Jay
-        var width_delayed;
-        var end_delayed_x;
+//         var start_delayed_x;  //CHECK with Jay
+//         var width_delayed;
+//         var end_delayed_x;
         
-        for (var i = 0; i<task_groups.length; i++){
-            var data = task_groups[i];
-            var groupNum = data.groupNum;
+//         for (var i = 0; i<task_groups.length; i++){
+//             var data = task_groups[i];
+//             var groupNum = data.groupNum;
             
             
-            if (groupNum == delayed_tasks[0]){
+//             if (groupNum == delayed_tasks[0]){
 
-                start_delayed_x = data.x+4;  //CHECK with Jay
-                var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-                width_delayed = getWidth(ev);
-                end_delayed_x = parseFloat(start_delayed_x) + parseFloat(width_delayed);
+//                 start_delayed_x = data.x+4;  //CHECK with Jay
+//                 var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+//                 width_delayed = getWidth(ev);
+//                 end_delayed_x = parseFloat(start_delayed_x) + parseFloat(width_delayed);
                 
 
-                break;
-            }
-        }
+//                 break;
+//             }
+//         }
 
-        var last_group_num=-1;
-        var last_end_x=0;
+//         var last_group_num=-1;
+//         var last_end_x=0;
 
-        for (var i=0;i<task_groups.length;i++){
-            var data = task_groups[i];
-            var groupNum = data.groupNum;
+//         for (var i=0;i<task_groups.length;i++){
+//             var data = task_groups[i];
+//             var groupNum = data.groupNum;
 
-            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+//             var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
 
-            var start_x = ev.x+4;  //CHECK with Jay
-            var width = getWidth(ev);
-            var end_x = parseFloat(start_x) + parseFloat(width);
+//             var start_x = ev.x+4;  //CHECK with Jay
+//             var width = getWidth(ev);
+//             var end_x = parseFloat(start_x) + parseFloat(width);
             
-            if(last_end_x<end_x){
-                last_end_x=end_x;
-            }
+//             if(last_end_x<end_x){
+//                 last_end_x=end_x;
+//             }
             
-        }
+//         }
         
-        // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
-        //console.log("last_end",last_end_x);
-        var cursor_x = cursor.attr("x1");
-        project_duration=parseInt((last_end_x)/50)*thirty_min;
-        //console.log("project duration: ",project_duration);
+//         // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
+//         //console.log("last_end",last_end_x);
+//         var cursor_x = cursor.attr("x1");
+//         project_duration=parseInt((last_end_x)/50)*thirty_min;
+//         //console.log("project duration: ",project_duration);
 
-        num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
-        project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
+//         num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
+//         project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
 
 
-        curr_status_width = status_width * parseFloat(end_delayed_x)/parseFloat(last_end_x);
+//         curr_status_width = status_width * parseFloat(end_delayed_x)/parseFloat(last_end_x);
 
-        return;    
-    }
+//         return;    
+//     }
 
-    if (flashTeamsJSON["startTime"] == null ){
-        return;
-    }
+//     if (flashTeamsJSON["startTime"] == null ){
+//         return;
+//     }
     
-    var currTime = (new Date).getTime();
+//     var currTime = (new Date).getTime();
     
-    var startTime = flashTeamsJSON["startTime"];
-    var diff = currTime - startTime;
-    var diff_sec = diff/1000;
+//     var startTime = flashTeamsJSON["startTime"];
+//     var diff = currTime - startTime;
+//     var diff_sec = diff/1000;
 
 
-    var last_group_num=-1;
-    var last_end_x=0;
+//     var last_group_num=-1;
+//     var last_end_x=0;
 
-    for (var i=0;i<task_groups.length;i++){
-        var data = task_groups[i];
-        var groupNum = data.groupNum;
+//     for (var i=0;i<task_groups.length;i++){
+//         var data = task_groups[i];
+//         var groupNum = data.groupNum;
 
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x+4;  //CHECK with Jay
-        var width = getWidth(ev);
-        var end_x = parseFloat(start_x) + parseFloat(width);
+//         var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+//         var start_x = ev.x+4;  //CHECK with Jay
+//         var width = getWidth(ev);
+//         var end_x = parseFloat(start_x) + parseFloat(width);
         
-        if(last_end_x<end_x){
-            last_end_x=end_x;
-        }        
-    }
+//         if(last_end_x<end_x){
+//             last_end_x=end_x;
+//         }        
+//     }
 
-   // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
-   //console.log("last_end",last_end_x);
-   project_duration=parseInt(last_end_x/50)*thirty_min;
-   //console.log("project duration: ",project_duration);
+//    // last_end_x=parseFloat(last_end_x)/50*thirty_min; //TODO change to width
+//    //console.log("last_end",last_end_x);
+//    project_duration=parseInt(last_end_x/50)*thirty_min;
+//    //console.log("project duration: ",project_duration);
 
-   num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
-   project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
+//    num_intervals=(parseFloat(project_duration)/parseFloat(status_bar_timeline_interval));
+//    project_status_interval_width=parseFloat(status_width)/parseFloat(num_intervals);
 
-   curr_status_width = project_status_interval_width * diff_sec;
-}
+//    curr_status_width = project_status_interval_width * diff_sec;
+// }
 var status_interval_id;
 
 var setProjectStatusMoving = function(){
