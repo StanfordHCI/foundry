@@ -701,10 +701,10 @@ var startTeam = function(firstTime){
 		//checkProjectFolder();
         //addAllFolders();
         createProjectFolder();
-        //showGoogleDriveFolder();
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
+        
         flashTeamsJSON["paused"]=false;
         //added next line to disable the ticker
         updateStatus(true);
