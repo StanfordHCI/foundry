@@ -11,21 +11,34 @@ folderIds = [];
 
 function handleClientLoad() {
   gapi.client.setApiKey(apiKey);
-  window.setTimeout(checkAuth,1);
+  window.setTimeout(checkAuth(true),1);
 }
 
-function checkAuth() {
-  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+
+function checkAuth(loadPopup) {
+  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: loadPopup}, handleAuthResult);
 }
 
 function handleAuthResult(authResult) {
-  var authorizeButton = document.getElementById('authorize-button');
+  var authorizeButton = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
-    authorizeButton.style.visibility = 'hidden';
-    //makeApiCall();
+    $("#authorize-button").html('Google Drive™ folder');
+    googleDriveLink();
+    //$("#gfolder").css('display','none');
+      if(!in_progress){ 
+        $("#google-drive-button").css('display', 'none');
+      }else{
+        if(!flashTeamsJSON.folder[1]){
+          createProjectFolder();
+        }
+        //googleDriveLink();
+        $("#google-drive-button").css('display', '');
+      }    
   } else {
-    authorizeButton.style.visibility = '';
-    authorizeButton.onclick = handleAuthClick;
+    checkAuth(false);
+    $("#authorize-button").html('Login to Google Drive™');
+    $("#google-drive-button").css('display','');
+    authorizeButton.onclick = handleAuthClick; 
   }
 }
 
@@ -34,10 +47,9 @@ function handleAuthClick(event) {
   return false;
 }
 
-function makeApiCall(){
-  //createProjectFolder();
+function showGoogleDriveFolder(){
+  $("#google-drive-button").css('display','');
 }
-
 
 //Creates the project's folder
 function createProjectFolder(){

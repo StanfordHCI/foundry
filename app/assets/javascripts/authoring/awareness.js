@@ -691,8 +691,9 @@ var startTeam = function(firstTime){
 		recordStartTime();
 		//checkProjectFolder();
         //addAllFolders();
+        showGoogleDriveFolder();
         createProjectFolder();
-        googleDriveLink();
+        //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
         flashTeamsJSON["paused"]=false;
