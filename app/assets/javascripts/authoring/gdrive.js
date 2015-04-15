@@ -37,6 +37,9 @@ function handleAuthResult(authResult) {
     checkAuth(false);
     if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
       $("#authorize-button").html('Login to Google Drive™');
+      //var gdriveStyle = '<style>#google-drive-button:before{background-color:grey;}</style>';
+      //$('head').append(gdriveStyle);
+      $("#google-drive-button").toggleClass('gdrive-inactive', false);
       gFolderBtn.onclick = handleAuthClick; 
     }
     else{
@@ -56,14 +59,21 @@ function handleAuthClick(event) {
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
 
+    if(in_progress){
+      $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+    }
+
     if(!in_progress || !flashTeamsJSON.folder){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
         $("#authorize-button").html('Google Drive™ folder');
+        $("#google-drive-button").toggleClass('gdrive-inactive', false);
       }else{
         $("#authorize-button").html('Waiting for Google Drive™');
+        $("#google-drive-button").toggleClass('gdrive-inactive', true);
       }
     }else{
       $("#authorize-button").html('Google Drive™ folder');
+      $("#google-drive-button").toggleClass('gdrive-inactive', false);
     }
 
     gFolderBtn.onclick=function(){
@@ -79,6 +89,13 @@ var googleDriveLink = function(){
 
 //Creates the project's folder
 function createProjectFolder(){
+  
+  //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
+  if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+    //console.log('project folder already exists');
+    return;
+  }
+
   gapi.client.load('drive', 'v2', function() {
     var req;
     req = gapi.client.request({

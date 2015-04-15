@@ -704,6 +704,7 @@ var startTeam = function(firstTime){
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
+        $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
         
         flashTeamsJSON["paused"]=false;
         //added next line to disable the ticker

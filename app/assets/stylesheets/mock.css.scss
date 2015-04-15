@@ -708,6 +708,11 @@ a.button {
   @include border-radius( 2px 0 0 0 );
 }
 
+.gdrive-inactive, .gdrive-inactive::before, .gdrive-inactive:hover{
+  background-color: grey;
+  border-bottom: solid 3px grey;
+}
+
 .google-drive-button .text {
   text-decoration: none;
   float: left;
@@ -718,6 +723,10 @@ a.button {
 .google-drive-button::after {
   content: '';
   clear: both;
+}
+
+.projectStatusText-inactive{
+  display: none;
 }
 
 .roles-menu {
