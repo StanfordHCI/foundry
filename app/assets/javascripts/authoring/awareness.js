@@ -701,7 +701,7 @@ var startTeam = function(firstTime){
 		//checkProjectFolder();
         //addAllFolders();
         createProjectFolder();
-        showGoogleDriveFolder();
+        //showGoogleDriveFolder();
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
