@@ -23,23 +23,31 @@ function checkAuth(loadPopup) {
 
 //Called when authorization server replies.
 function handleAuthResult(authResult) {
-  var authorizeButton = document.getElementById('gFolder');
+  var gFolderBtn = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
-    $("#authorize-button").html('Google Drive™ folder');
-    googleDriveLink();
-      if(!in_progress){ 
-        hideGoogleDriveFolder();
+    console.log("authResult true");
+    if(!in_progress){
+      $("#authorize-button").html('Waiting for Google Drive™');
+    }else{
+      $("#authorize-button").html('Google Drive™ folder');
+    }
+      if(flashTeamsJSON.folder){ 
+        googleDriveLink();
+        //hideGoogleDriveFolder();
       }else{
-        if(!flashTeamsJSON.folder[1] && current_user == "Author"){
+        if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
           createProjectFolder();
+          googleDriveLink();
+        }else{
+          $("#authorize-button").html('Waiting for Google Drive™');
         }
-        showGoogleDriveFolder();
+        //showGoogleDriveFolder();
       }    
   } else {
     checkAuth(false);
     $("#authorize-button").html('Login to Google Drive™');
-    $("#google-drive-button").css('display','');
-    authorizeButton.onclick = handleAuthClick; 
+    //$("#google-drive-button").css('display','');
+    gFolderBtn.onclick = handleAuthClick; 
   }
 }
 
@@ -64,6 +72,19 @@ function hideGoogleDriveFolder(){
     $("#google-drive-button").css('display','none');
   }
 }
+
+var googleDriveLink = function(){
+    var gFolderBtn= document.getElementById("gFolder");
+    gFolderBtn.onclick=function(){
+        //console.log("is clicked");
+        if(in_progress){
+          window.open(flashTeamsJSON.folder[1]);
+        }else{
+          alert("Team hasn't started");
+        }
+        
+    }
+};
 
 //Creates the project's folder
 function createProjectFolder(){

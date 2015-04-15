@@ -739,13 +739,13 @@ var startTeam = function(firstTime){
     //load_statusBar(status_bar_timeline_interval);
 };
 
-var googleDriveLink = function(){
-    var gFolderLink = document.getElementById("gFolder");
-    gFolderLink.onclick=function(){
-        //console.log("is clicked");
-        window.open(flashTeamsJSON.folder[1]);
-    }
-};
+// var googleDriveLink = function(){
+//     var gFolderLink = document.getElementById("gFolder");
+//     gFolderLink.onclick=function(){
+//         //console.log("is clicked");
+//         window.open(flashTeamsJSON.folder[1]);
+//     }
+// };
 
 var drawEvents = function(editable){
     for(var i=0;i<flashTeamsJSON.events.length;i++){
@@ -1529,12 +1529,12 @@ var trackUpcomingEvent = function(){
     
     setInterval(function(){
        
-        if(in_progress){
-            showGoogleDriveFolder();
-        }
-        else{
-            hideGoogleDriveFolder();
-        }
+        // if(in_progress){
+        //     showGoogleDriveFolder();
+        // }
+        // else{
+        //     hideGoogleDriveFolder();
+        // }
 
         var overallTime;
         
