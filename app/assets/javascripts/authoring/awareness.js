@@ -175,6 +175,8 @@ function endTeam() {
     stopPolling();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
+    $("#flashTeamPauseBtn").css('display','none');
+    $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
 
 

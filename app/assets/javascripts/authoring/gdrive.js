@@ -62,6 +62,10 @@ var googleDriveLink = function(){
     if(in_progress){
       $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
     }
+    else{
+      $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+    }
+
 
     if(!in_progress || !flashTeamsJSON.folder){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
