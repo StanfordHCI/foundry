@@ -280,7 +280,11 @@ function drawBottom(eventObj) {
     
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
-    
+
+    var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
+    configIcon.on("click", onConfigClick);
+
+
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
     uploadIcon.on("click", function(){
