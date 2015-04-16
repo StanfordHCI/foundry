@@ -289,13 +289,26 @@ function drawBottom(eventObj) {
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
     uploadIcon.on("click", function(){
         d3.event.stopPropagation();
-        if (ev.gdrive.length > 0){
-            window.open(ev.gdrive[1])
+        // if (ev.gdrive.length > 0){
+        //     window.open(ev.gdrive[1])
+        // }
+        // else{
+        //     alert("The flash team must be running for you to upload a file!");
+        // }
+
+        if(ev.gdrive.length > 0){
+          if (in_progress || (!in_progress && current_user == "Author" && flashTeamsJSON["startTime"])){
+            window.open(ev.gdrive[1]);
+            } else{
+            alert("The flash team must be running for you to upload a file!");  
+            }
         }
         else{
-            alert("The flash team must be running for you to upload a file!");
+            alert("The flash team must be running for you to upload a file!");  
         }
     });
+
+
     
     // collaboration icon
     var collabIconSvg = addToTaskFromData(events.collabIcon, eventObj, task_g);

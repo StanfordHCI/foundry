@@ -1,12 +1,21 @@
 <div style="padding: 0 11px;">
   
- 
+
+
 	<a target="_blank" id="gFolder" class="button">
   <!-- <a target="_blank" id="gFolder" class="button" style="visibility:hidden"> -->
-    <div class="google-drive-button">
-      <span class="text">Google Drive™ folder</span>
+    <div class="google-drive-button" id="google-drive-button">
+      <span class="text" id="authorize-button">Google Drive™ folder</span>
     </div>
   </a>
+
+  <% if @flash_team.status == nil || @author_runtime==false %>
+
+      <p class="projectStatusText" id="projectStatusText">The project is not in progress or has not started yet.<br /><br /></p>
+
+    <% end %>
+
+  
   <!--<p style="font-weight: 400;margin-top: 11px;">Progress Status:</p>
   <div class="progress progress-bar" style="background: #ffffff !important; border:solid 1px #c3c3c3;">
       <div class="bar" style=" width: 0%; transition:width 1s linear;
