@@ -27,6 +27,7 @@ var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
 var in_progress = false;
+//var paused = false;
 var delayed_tasks_time = [];
 var dri_responded = [];
 var project_status_handler;
@@ -108,6 +109,8 @@ $("#flashTeamStartBtn").click(function(){
 });
 
 function disableTeamEditing() {
+   
+
     $(".add-folder-button").addClass("disabled");
     $(".add-role").addClass("disabled");
     
@@ -118,12 +121,27 @@ function disableTeamEditing() {
     $(selector).hide();
 }
 
+function enableTeamEditing() {
+    
+    
+    $(".add-folder-button").removeClass("disabled");
+    $(".add-role").removeClass("disabled");
+    
+    // assemble selector for event buttons
+    var selectorPrefix = ".event-layer .event ";
+    var selector = selectorPrefix + ".collab_btn, " +
+                   selectorPrefix + ".handoff_btn";
+    $(selector).show();
+}
+
 function startFlashTeam() {
     $('#confirmAction').modal('hide');
     // view changes
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
+    $("#flashTeamPauseBtn").css('display', '');
+  
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
     //$("a#gFolder.button").css('visibility','visible');
@@ -131,6 +149,7 @@ function startFlashTeam() {
     $("#flashTeamTitle").css('display','none');
     
     
+
     disableTeamEditing();
     
     removeColabBtns();
@@ -231,6 +250,7 @@ if(flashTeamsJSON) {
 // firstTime=true means page is reloaded
 function renderEverything(firstTime) {
     colorBox();
+    getTeamInfo();
     var flash_team_id = $("#flash_team_id").val();
     var url = '/flash_teams/' + flash_team_id + '/get_status';
     $.ajax({
@@ -294,20 +314,38 @@ function renderEverything(firstTime) {
 
 
         if(in_progress){
+
+
             colorBox();
             //console.log("flash team in progress");
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
             
+            if(flashTeamsJSON["paused"]){
+                $("#flashTeamResumeBtn").css('display','');
+                $("#flashTeamPauseBtn").css('display','none');
+            }
+            else{
+                $("#flashTeamPauseBtn").css('display','');
+                $("#flashTeamResumeBtn").css('display','none');
+            }
+
             loadData();
             if(!isUser || memberType == "pc" || memberType == "client")
                 renderMembersRequester();
             else
                 renderMembersUser();
+
             renderMembersUser();
 
-            disableTeamEditing();
+            //call this function if team is not in the edit mode 
+            if(isUser){
+                disableTeamEditing();
+            }
+            else if(!flashTeamsJSON["paused"]){
+                disableTeamEditing();
+            }
             
            /* //show the documentation of the previous task for the workers and the PCs.
             if (isUser || memberType == "pc"){
@@ -316,6 +354,9 @@ function renderEverything(firstTime) {
             }*/
 
             //startTeam(firstTime);
+
+
+           
         } else {
             //console.log("flash team not in progress");
             
@@ -438,6 +479,23 @@ var renderChatbox = function(){
     });
 };
 
+var author_name; // save name of flash team author
+var team_name; // saves flash team name
+var team_id; // saves flash team id
+
+//returns author name, team name and team ID
+var getTeamInfo = function(){
+    var url = '/flash_teams/' + flash_team_id + '/get_team_info';
+    $.ajax({
+       url: url,
+       type: 'post'
+    }).done(function(data){
+       author_name = data["author_name"];
+       team_name = data["flash_team_name"]; 
+       team_id =   data["flash_team_id"];
+    });
+};
+
 var flashTeamEndedorStarted = function(){
     if (loadedStatus.flash_team_in_progress == undefined){
         return false;
@@ -446,10 +504,24 @@ var flashTeamEndedorStarted = function(){
 };
 
 var flashTeamUpdated = function(){
+    var updated_team_paused = loadedStatus.team_paused; 
     var updated_drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     var updated_completed_red_tasks = loadedStatus.completed_red_tasks;
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
+    var updated_task_groups = loadedStatus.task_groups;
+
+    if(updated_task_groups.length != task_groups.length){
+        return true;
+    }
+
+    if(updated_task_groups.sort().join(',') !== task_groups.sort().join(',')){
+        return true;
+    }
+
+    if(updated_team_paused != flashTeamsJSON["paused"]){
+        return true;
+    }
 
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
         /*console.log("drawn_blue_tasks not same length");
@@ -583,10 +655,9 @@ var loadData = function(){
     delayed_tasks = loadedStatus.delayed_tasks;
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     completed_red_tasks = loadedStatus.completed_red_tasks;
+    
 
-    load_statusBar(status_bar_timeline_interval);
-
-    event_counter = flashTeamsJSON["events"].length;
+    //load_statusBar(status_bar_timeline_interval);
     
     drawEvents(!in_progress);
 
@@ -633,6 +704,7 @@ var startTeam = function(firstTime){
         googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
+        flashTeamsJSON["paused"]=false;
         //added next line to disable the ticker
         updateStatus(true);
         //console.log("here2");
@@ -1027,13 +1099,19 @@ var computeTasksAfterCurrent = function(curr_x){
         var data = task_groups[i];
         var groupNum = data.groupNum;
 
-        // get start x coordinate of task
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x;
-        
-        // if the task's x coordinate is after the current x, it is "after," so add it
-        if(curr_x <= start_x){
-            tasks_after_curr.push(groupNum);
+         if(getEventJSONIndex(groupNum) == undefined){
+                removeTask(groupNum);
+                //console.log("removed task from task_groups in computeTasksAfterCurrent");
+
+            } else{
+            // get start x coordinate of task
+            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+            var start_x = ev.x;
+            
+            // if the task's x coordinate is after the current x, it is "after," so add it
+            if(curr_x <= start_x){
+                tasks_after_curr.push(groupNum);
+            }
         }
     }
 
@@ -1050,16 +1128,22 @@ var computeTasksBeforeCurrent = function(curr_x){
         var data = task_groups[i];
         var groupNum = data.groupNum;
 
-        // get start x coordinate of task
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-        var start_x = ev.x;
-        var width = getWidth(ev);
-        var end_x = parseFloat(start_x) + parseFloat(width);
-        
-        // if the task's end x coordinate is before the current x, it is "before," so add it
-        if(end_x <= curr_x){
-            tasks_before_curr.push(groupNum);
-        }
+        if(getEventJSONIndex(groupNum) == undefined){
+            removeTask(groupNum);
+            //console.log("removed task from task_groups in computeTasksBeforeCurrent");
+
+        } else{
+            // get start x coordinate of task
+            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+            var start_x = ev.x;
+            var width = getWidth(ev);
+            var end_x = parseFloat(start_x) + parseFloat(width);
+            
+            // if the task's end x coordinate is before the current x, it is "before," so add it
+            if(end_x <= curr_x){
+                tasks_before_curr.push(groupNum);
+            }
+        }  
     }
     return tasks_before_curr;
 };
@@ -1223,7 +1307,8 @@ var moveTasksLeft = function(tasks, amount){
     tasks_with_current = tasks_with_current.concat(delayed_tasks);
     drawInteractions(tasks_with_current);
 
-    updateStatus(true);
+    //updateStatus(true);
+    updateStatus();
 };
 
 var moveRemainingTasksRight = function(amount){
@@ -1320,7 +1405,8 @@ var trackLiveAndRemainingTasks = function() {
         
 
         if(at_least_one_task_delayed || at_least_one_task_started){
-            updateStatus(true);
+            //updateStatus(true);
+            updateStatus();
             if(at_least_one_task_delayed)
                 at_least_one_task_delayed = false;
             if(at_least_one_task_started)
@@ -1507,6 +1593,11 @@ var trackUpcomingEvent = function(){
         if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
             overallTime = "The team is not started. " + overallTime;
         }
+
+        if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
+            overallTime = "The team is in edit mode. " + overallTime;
+        }
+
         statusText.text(overallTime);
     }, fire_interval);
 }
@@ -1531,13 +1622,15 @@ var getAllTasks = function(){
 };
 
 var constructStatusObj = function(){
-    var flash_team_id = $("#flash_team_id").val();
-    flashTeamsJSON["id"] = flash_team_id;
-    flashTeamsJSON["title"] = document.getElementById("ft-name").innerHTML;
+    flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
+    flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
+    flashTeamsJSON["author"] = author_name;
     flashTeamsJSON["status"] = in_progress; 
-   
+
     var localStatus = {};
 
+    localStatus.team_paused = flashTeamsJSON["paused"];
+    localStatus.task_groups = task_groups;
     localStatus.live_tasks = live_tasks;
     localStatus.paused_tasks = paused_tasks;
     localStatus.remaining_tasks = remaining_tasks;

@@ -84,7 +84,7 @@ function startTask(groupNum) {
     }
     live_tasks.push(groupNum);
 
-    updateStatus(true);
+    updateStatus();
     drawEvent(eventObj); //Will update color
 
     //Close the task modal
@@ -114,7 +114,7 @@ function pauseTask(groupNum) {
     paused_tasks.push(groupNum);
 
     
-    updateStatus(true);
+    updateStatus();
     drawEvent(eventObj); //Will update color
 	
 
@@ -143,7 +143,7 @@ function resumeTask(groupNum) {
         paused_tasks.splice(idx, 1);
     }
    
-    updateStatus(true);
+    updateStatus();
     drawEvent(eventObj); //Will update color	
 
 	//chaning start button to complete button on the task modal
@@ -397,7 +397,7 @@ function saveDocQuestions(groupNum){
 //Called when user presses "Save" button
 var saveQuestions = function(groupNum){
     saveDocQuestions(groupNum);
-    updateStatus(true);
+    updateStatus();
 }
 
 
@@ -458,7 +458,7 @@ var completeTask = function(groupNum){
     
     /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
     I think updateStatus needs to be true since the team is still in progress when you complete a task */
-    updateStatus(true);
+    updateStatus();
     drawEvent(eventToComplete);
 
     //Message the PC that the task has been completed

@@ -48,26 +48,20 @@ colorBox.grabColor = function() {
     return color;
 };
 
-//replaceColor adds a color back into possible space
-colorBox.replaceColor = function(color) {
-    // colorBox.colors.push(color);
-};
-
 function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderAllMemberCircles();
+    renderAllMemberTabs();
 };
 
 function renderMembersUser() {
     var members = flashTeamsJSON.members;
-    renderAllMemberCircles();
+    renderAllMemberTabs();
 };
 
 function setCurrentMember() {
     var uniq = getParameterByName('uniq');
-    //console.log("THIS IS THE CURRENT UNIQ VALUE", uniq);
     
     if (uniq){
         $("#uniq").value = uniq;
@@ -79,18 +73,6 @@ function setCurrentMember() {
             isUser = true;
             memberType = member.type;
         }
-        
-        /*
-        flash_team_members = flashTeamsJSON["members"];
-        //console.log(flash_team_members[0].uniq);
-        for(var i=0;i<flash_team_members.length;i++){            
-            if (flash_team_members[i].uniq == uniq){
-                current = flash_team_members[i].id;
-                current_user = flash_team_members[i];
-                isUser = true;
-                memberType = flash_team_members[i].type;
-            }
-        }*/
         
     } else {
         current = undefined;
@@ -201,7 +183,7 @@ function addPillDragFns($elem, $folderElems) {
             $mouseOverElem = undefined;
             
             renderCurrentFolderPills();
-            updateStatus(false);
+            updateStatus();
         }
     });
     
@@ -490,7 +472,7 @@ function addFolder(folderName, parentId) {
     entryManager.addEntry(folderObject);
     
     renderCurrentFolderPills();
-    updateStatus(false);
+    updateStatus();
 }
 
 /**
@@ -533,7 +515,7 @@ function addMember() {
 
    renderCurrentFolderPills();
    // renderMemberPopovers(members);
-   updateStatus(false);
+   updateStatus();
    inviteMember(member_obj.id);
 };
 
@@ -673,7 +655,7 @@ function deleteEntry(entryId) {
     deletePopover(entryId);
     
     renderCurrentFolderPills();
-    updateStatus(false);
+    updateStatus();
 };
 
 //Calling this one
@@ -690,7 +672,7 @@ function saveMemberInfo(memberId) {
     renderMemberPillColor(memberId);
 
     $("#mPill_" + memberId).popover("hide");
-    renderAllMemberCircles();
+    renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
 };
 
@@ -708,7 +690,7 @@ function inviteMember(pillId) {
         member.uniq = data["uniq"];
         member.invitation_link = data["url"];
         renderMemberPopovers(entryManager.getCurrentFolderChildren());
-        updateStatus(false);
+        updateStatus();
     });
 }
 
@@ -757,7 +739,7 @@ function renderMemberPillColor(memberId) {
 //Takes the new color, turns into hex and changes background color of a pill list item
 function updateMemberPillColor(color, memberId) {
     entryManager.getEntryById(memberId).color = color;
-    updateStatus(false);
+    updateStatus();
 };
 
 //Necessary to save member popover information
@@ -794,6 +776,29 @@ function searchById (arr, id) {
     }
 };
 
+// returns true or false depending on if the current member assigned to task with the groupNum passed in
+function currentMemberTask(groupNum){
+     if(current_user == undefined) {return;}
+
+    var task_id = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][task_id];
+
+    var members = eventObj["members"];
+
+    if(members.length == 0){
+        //console.log("no members");
+        return false;
+    }
+
+    for (var i=0; i<members.length; i++) {
+        var member_id = members[i];
+        if (current_user.id == member_id){
+           //console.log("members = true");
+           return true;
+        }
+    }
+}
+
 $(document).ready(function() {
     pressEnterKeyToSubmit("#addMemberInput", "#addMemberButton");
 });
@@ -820,7 +825,7 @@ function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
-    updateStatus(false);
+    updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);
 }
 
