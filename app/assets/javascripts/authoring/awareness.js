@@ -514,81 +514,80 @@ var flashTeamUpdated = function(){
     var updated_task_groups = loadedStatus.task_groups;
     var updated_gdrive = loadedStatus.flash_teams_json["folder"];
 
+    // if gdrive folder is created (e.g., when a team starts), the gdrive btn in all views should activate
     if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
-        //console.log("gdrives undefined don't match");
         return true;
     }
 
+    //if the gdrive folders don't match (this should only happen if a gdrive error occurs and the gdrive folder array is [null, null])
     if(updated_gdrive != undefined && flashTeamsJSON["folder"] != undefined){
         if(updated_gdrive.sort().join(',') != flashTeamsJSON["folder"].sort().join(',')){
-            //console.log("gdrive update");
-            // console.log("updated_gdrive: " + updated_gdrive);
-            // console.log("flashTeamsJSON['folder']: " + flashTeamsJSON["folder"]);
             return true;
         }
     }
 
-
-
+    // if tasks are added or erased in author view (e.g., in authoring or editing mode), the changes should appear in all views
     if(updated_task_groups.length != task_groups.length){
         return true;
     }
 
+    // if tasks are edited (e.g., name or other task details change), the changes should be reflected in other views
+    // checks for content changes
     if(updated_task_groups.sort().join(',') !== task_groups.sort().join(',')){
         return true;
     }
 
+    // if the author view enters edit mode, other views should be notified and update accordingly
     if(updated_team_paused != flashTeamsJSON["paused"]){
         return true;
     }
 
+    // when a task is completed, all views should reflect that it is completed (e.g., green tasks)
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
-        /*console.log("drawn_blue_tasks not same length");
-        console.log(drawn_blue_tasks);
-        console.log(updated_drawn_blue_tasks);*/
-        return true;
-    }
-    if (updated_completed_red_tasks.length != completed_red_tasks.length) {
-        /*console.log("completed_red_tasks not same length");
-        console.log(completed_red_tasks);
-        console.log(updated_completed_red_tasks);
-        console.log(loadedStatus.live_tasks);
-        console.log(loadedStatus.delayed_tasks);*/
         return true;
     }
 
+    // when a task is completed, all views should reflect that it is completed (e.g., green tasks)
+    // checks for content changes
     if(updated_drawn_blue_tasks.sort().join(',') !== drawn_blue_tasks.sort().join(',')){
-        /*console.log("drawn_blue_tasks not same content");
-        console.log(drawn_blue_tasks);
-        console.log(updated_drawn_blue_tasks);*/
         return true;
     }
 
+    // when a task becomes delayed, all views should reflect that it is delayed (e.g., red tasks)
+    if (updated_completed_red_tasks.length != completed_red_tasks.length) {
+        return true;
+    }
+
+    // when a task becomes delayed, all views should reflect that it is delayed (e.g., red tasks)
+    // checks for content changes
     if(updated_completed_red_tasks.sort().join(',') !== completed_red_tasks.sort().join(',')){
-        /*console.log("completed_red_tasks not same content");
-        console.log(completed_red_tasks);
-        console.log(updated_completed_red_tasks);*/
         return true;
     }
 
-     if (updated_live_tasks.length != live_tasks.length) {
-        //console.log("live_tasks not same length")
+    // when a task becomes in progress, all views should reflect that it is in progress (e.g., blue tasks)
+    if (updated_live_tasks.length != live_tasks.length) {
         return true;
     }
 
+    // when a task becomes in progress, all views should reflect that it is in progress (e.g., blue tasks)
+    // checks for content changes
     if(updated_live_tasks.sort().join(',') !== live_tasks.sort().join(',')){
         //console.log("live_tasks not same content");
         return true;
     }
     
+    // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
     if (updated_paused_tasks.length != paused_tasks.length) {
         return true;
     }
 
+    // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
+    // checks for content changes
     if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
         return true;
     }
-    return false;
+
+    return false; // returns false if none of the above conditions are true, which assumes that the flash team has not been updated
 };
 
 var poll = function(){
@@ -1563,10 +1562,7 @@ var trackUpcomingEvent = function(){
 
         var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
         upcomingEvent = ev.id;
-        var task_g = getTaskGFromGroupNum(upcomingEvent);
-        
-        //console.log("here");
-        //console.log(ev);     
+        var task_g = getTaskGFromGroupNum(upcomingEvent);   
         
         while (ev.status == "completed"){
             toDelete = upcomingEvent;
