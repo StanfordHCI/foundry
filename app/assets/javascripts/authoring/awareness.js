@@ -175,6 +175,8 @@ function endTeam() {
     stopPolling();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
+    $("#flashTeamPauseBtn").css('display','none');
+    $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
 
 
@@ -510,6 +512,7 @@ var flashTeamUpdated = function(){
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
     var updated_task_groups = loadedStatus.task_groups;
+    var updated_gdrive = loadedStatus.flash_teams_json["folder"];
     var updated_local_update = loadedStatus.local_update;
 
     if(updated_local_update > flashTeamsJSON['local_update']){
@@ -517,65 +520,80 @@ var flashTeamUpdated = function(){
         return true; 
     }
 
+    // if gdrive folder is created (e.g., when a team starts), the gdrive btn in all views should activate
+    if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
+        return true;
+    }
+
+    //if the gdrive folders don't match (this should only happen if a gdrive error occurs and the gdrive folder array is [null, null])
+    if(updated_gdrive != undefined && flashTeamsJSON["folder"] != undefined){
+        if(updated_gdrive.sort().join(',') != flashTeamsJSON["folder"].sort().join(',')){
+            return true;
+        }
+    }
+
+    // if tasks are added or erased in author view (e.g., in authoring or editing mode), the changes should appear in all views
     if(updated_task_groups.length != task_groups.length){
         return true;
     }
 
+    // if tasks are edited (e.g., name or other task details change), the changes should be reflected in other views
+    // checks for content changes
     if(updated_task_groups.sort().join(',') !== task_groups.sort().join(',')){
         return true;
     }
 
+    // if the author view enters edit mode, other views should be notified and update accordingly
     if(updated_team_paused != flashTeamsJSON["paused"]){
         return true;
     }
 
+    // when a task is completed, all views should reflect that it is completed (e.g., green tasks)
     if (updated_drawn_blue_tasks.length != drawn_blue_tasks.length) {
-        /*console.log("drawn_blue_tasks not same length");
-        console.log(drawn_blue_tasks);
-        console.log(updated_drawn_blue_tasks);*/
-        return true;
-    }
-    if (updated_completed_red_tasks.length != completed_red_tasks.length) {
-        /*console.log("completed_red_tasks not same length");
-        console.log(completed_red_tasks);
-        console.log(updated_completed_red_tasks);
-        console.log(loadedStatus.live_tasks);
-        console.log(loadedStatus.delayed_tasks);*/
         return true;
     }
 
+    // when a task is completed, all views should reflect that it is completed (e.g., green tasks)
+    // checks for content changes
     if(updated_drawn_blue_tasks.sort().join(',') !== drawn_blue_tasks.sort().join(',')){
-        /*console.log("drawn_blue_tasks not same content");
-        console.log(drawn_blue_tasks);
-        console.log(updated_drawn_blue_tasks);*/
         return true;
     }
 
+    // when a task becomes delayed, all views should reflect that it is delayed (e.g., red tasks)
+    if (updated_completed_red_tasks.length != completed_red_tasks.length) {
+        return true;
+    }
+
+    // when a task becomes delayed, all views should reflect that it is delayed (e.g., red tasks)
+    // checks for content changes
     if(updated_completed_red_tasks.sort().join(',') !== completed_red_tasks.sort().join(',')){
-        /*console.log("completed_red_tasks not same content");
-        console.log(completed_red_tasks);
-        console.log(updated_completed_red_tasks);*/
         return true;
     }
 
-     if (updated_live_tasks.length != live_tasks.length) {
-        //console.log("live_tasks not same length")
+    // when a task becomes in progress, all views should reflect that it is in progress (e.g., blue tasks)
+    if (updated_live_tasks.length != live_tasks.length) {
         return true;
     }
 
+    // when a task becomes in progress, all views should reflect that it is in progress (e.g., blue tasks)
+    // checks for content changes
     if(updated_live_tasks.sort().join(',') !== live_tasks.sort().join(',')){
         //console.log("live_tasks not same content");
         return true;
     }
     
+    // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
     if (updated_paused_tasks.length != paused_tasks.length) {
         return true;
     }
 
+    // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
+    // checks for content changes
     if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
         return true;
     }
-    return false;
+
+    return false; // returns false if none of the above conditions are true, which assumes that the flash team has not been updated
 };
 
 var poll = function(){
@@ -707,9 +725,11 @@ var startTeam = function(firstTime){
 		//checkProjectFolder();
         //addAllFolders();
         createProjectFolder();
-        googleDriveLink();
+        //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
+        $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+        
         flashTeamsJSON["paused"]=false;
         //added next line to disable the ticker
         updateStatus(true);
@@ -744,13 +764,13 @@ var startTeam = function(firstTime){
     //load_statusBar(status_bar_timeline_interval);
 };
 
-var googleDriveLink = function(){
-    var gFolderLink = document.getElementById("gFolder");
-    gFolderLink.onclick=function(){
-        //console.log("is clicked");
-        window.open(flashTeamsJSON.folder[1]);
-    }
-};
+// var googleDriveLink = function(){
+//     var gFolderLink = document.getElementById("gFolder");
+//     gFolderLink.onclick=function(){
+//         //console.log("is clicked");
+//         window.open(flashTeamsJSON.folder[1]);
+//     }
+// };
 
 var drawEvents = function(editable){
     for(var i=0;i<flashTeamsJSON.events.length;i++){
@@ -1533,27 +1553,22 @@ var trackUpcomingEvent = function(){
     }
     
     setInterval(function(){
-       
+
         var overallTime;
         
-        if (currentUserEvents.length == 0 ) return;
-        /*if (currentUserEvents.length <= 0) {
-            overallTime = "You are not assigned to any tasks yet.";
-            statusText.style("color", "black");      
+        if (currentUserEvents.length == 0 ){
+            overallTime = "You have not been assigned to any tasks yet.";
             statusText.text(overallTime);
+            statusText.style("color", "black");  
             return;
-        }*/
-
+        }
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         
 
         var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
         upcomingEvent = ev.id;
-        var task_g = getTaskGFromGroupNum(upcomingEvent);
-        
-        //console.log("here");
-        //console.log(ev);     
+        var task_g = getTaskGFromGroupNum(upcomingEvent);   
         
         while (ev.status == "completed"){
             toDelete = upcomingEvent;
@@ -1596,12 +1611,13 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "#40b8e4");
         }
         
-        if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
-            overallTime = "The team is not started. " + overallTime;
-        }
+        // Commenting this out because I include the project status information under the gdrive button
+        // if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
+        //     overallTime = "The team is not started. " + overallTime;
+        // }
 
         if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
-            overallTime = "The team is in edit mode. " + overallTime;
+            overallTime = "The team is being edited right now. " + overallTime;
         }
 
         statusText.text(overallTime);

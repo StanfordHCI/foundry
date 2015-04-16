@@ -9,83 +9,98 @@
 //Initializes the global array which will store information about each event's google drive folder
 folderIds = [];
 
-
 //Called when the client library is loaded.
 function handleClientLoad() {
-  checkAuth();
-};
+  gapi.client.setApiKey(apiKey);
+  window.setTimeout(checkAuth(true),1);
+}
 
 //Check if the current user has authorized the application.
-function checkAuth() {
-  gapi.auth.authorize(
-      {'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': false},
-      handleAuthResult2);
-};
+//loadPopup parameter indicates whether it will try to load the popup authorization window immeidately
+function checkAuth(loadPopup) {
+  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: loadPopup}, handleAuthResult);
+}
 
 //Called when authorization server replies.
-function handleAuthResult2(authResult) {
-  if (authResult) {
-    // Access token has been successfully retrieved, requests can be sent to the API
+function handleAuthResult(authResult) {
+  var gFolderBtn = document.getElementById('gFolder');
+  if (authResult && !authResult.error) {
+    
+    //if user is authorized and the team is in progress but the folder hasn't been created it, create it
+    if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
+          createProjectFolder();
+    }
+
+    googleDriveLink();  
+
   } else {
-    // No access token could be retrieved, force the authorization flow.
-    gapi.auth.authorize(
-        {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': false},
-        handleAuthResult2);
+    checkAuth(false);
+    if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
+      $("#authorize-button").html('Log in to Google Drive™');
+      $("#google-drive-button").toggleClass('gdrive-inactive', false);
+      gFolderBtn.onclick = handleAuthClick; 
+    }
+    else{
+      googleDriveLink();
+    }
+
   }
+}
+
+//loads the authorization popup window when the user clicks on the log in to google drive button
+function handleAuthClick(event) {
+  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+  return false;
+}
+
+
+var googleDriveLink = function(){
+    var gFolderBtn= document.getElementById("gFolder");
+
+    if(in_progress){
+      $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+    }
+    else{
+      $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+    }
+
+
+    if(!in_progress || !flashTeamsJSON.folder){
+      if (current_user == "Author" && flashTeamsJSON["startTime"]){
+        $("#authorize-button").html('Google Drive™ folder');
+        $("#google-drive-button").toggleClass('gdrive-inactive', false);
+      }else{
+        $("#authorize-button").html('Waiting for Google Drive™');
+        $("#google-drive-button").toggleClass('gdrive-inactive', true);
+      }
+    }else{
+      $("#authorize-button").html('Google Drive™ folder');
+      $("#google-drive-button").toggleClass('gdrive-inactive', false);
+    }
+
+    gFolderBtn.onclick=function(){
+        //console.log("is clicked");
+        if((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
+          window.open(flashTeamsJSON.folder[1]);
+        }else{
+          alert("Team hasn't started or folder hasn't been created yet.");
+        }
+        
+    }
 };
-
-
-//Functions that authorize the API`
-function onAuthApiLoad() {
-  gapi.auth.authorize(
-    {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
-    handleAuthResult);
-};
-
-function onApiLoad(){
-      gapi.load('auth', {'callback': onAuthApiLoad});
-      gapi.load('picker');
-};
-
-
-/*
-* The following code creates and runs a file picker
-*/
-
-var oauthToken;
-function handleAuthResult(authResult){
-  if (authResult && !authResult.error){
-    oauthToken = authResult.access_token;
-    createPicker();
-  }
-};
-
-function createPicker(){
-  var docUpload = new google.picker.DocsUploadView();
-  var picker = new google.picker.PickerBuilder()
-    .addView(docUpload)
-    .setOAuthToken(oauthToken)
-    .setDeveloperKey(GDRIVE_DEV_KEY)
-    .setCallback(pickerCallback)
-    .build()
-  picker.setVisible(true);
-};
-
-function pickerCallback(data){
-  if (data.action == google.picker.Action.PICKED){
-    alert('URL: ' + data.docs[0].url);
-  }
-};
-
-// -----------------------------------------------------
-
 
 //Creates the project's folder
 function createProjectFolder(){
-	
-	gapi.client.load('drive', 'v2', function() {
-		var req;
-		req = gapi.client.request({
+  
+  //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
+  if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+    //console.log('project folder already exists');
+    return;
+  }
+
+  gapi.client.load('drive', 'v2', function() {
+    var req;
+    req = gapi.client.request({
         'path': '/drive/v2/files',
         'method': 'POST',
         'body':{
@@ -96,27 +111,37 @@ function createProjectFolder(){
       });
       
       req.execute(function(resp) { 
-      	var folderArray = [resp.id, resp.alternateLink];
-      	
+        //console.log("resp: " + resp);
+         //console.log("resp.id: " + resp.id);
+         if(resp.id == undefined){
+           //console.log("resp.id is undefined: " + resp);
+           return;
+         }
+
+        var folderArray = [resp.id, resp.alternateLink];
+        
         insertPermission(folderArray[0], "me", "anyone", "writer");
         flashTeamsJSON.folder = folderArray;
         
-		updateStatus(); // don't put true or false here
-				
-		addAllTaskFolders(flashTeamsJSON.folder[0])
+    updateStatus(); // don't put true or false here
+        
+    addAllTaskFolders(flashTeamsJSON.folder[0])
+
+    googleDriveLink();
+
     });
-		
-		
-	}); 
-	
+    
+    
+  }); 
+  
 }
 
 //Creates a subfolder for a particular task
 function createTaskFolder(eventName, JSONId, parent_folder){
-	
-	gapi.client.load('drive', 'v2', function() {
-		var req;
-		req = gapi.client.request({
+  
+  gapi.client.load('drive', 'v2', function() {
+    var req;
+    req = gapi.client.request({
         'path': '/drive/v2/files',
         'method': 'POST',
         'body':{
@@ -128,18 +153,18 @@ function createTaskFolder(eventName, JSONId, parent_folder){
       });
       
       req.execute(function(resp) { 
-      	var folderArray = [resp.id, resp.alternateLink];
-      	
+        var folderArray = [resp.id, resp.alternateLink];
+        
         flashTeamsJSON["events"][JSONId].gdrive = folderArray;
         insertPermission(folderArray[0], "me", "anyone", "writer");
         folderIds.push(folderArray);
 
-		updateStatus(); // don't put true or false here
+    updateStatus(); // don't put true or false here
     });
-		
-		
-	}); //end gapi.client.load
-	
+    
+    
+  }); //end gapi.client.load
+  
 }
 
 //Adds all the task folders when the folder has started
@@ -204,7 +229,6 @@ function deleteFile(fileId){
     request.execute(function(resp) { });
   });
 };
-
 
 //Allows a changing of the permissions of a file or folder: roles can be checked on the Google API
 function insertPermission(fileId, value, type, role) {
