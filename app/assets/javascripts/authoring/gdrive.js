@@ -25,8 +25,8 @@ function checkAuth(loadPopup) {
 function handleAuthResult(authResult) {
   var gFolderBtn = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
-    //console.log("authResult true");
     
+    //if user is authorized and the team is in progress but the folder hasn't been created it, create it
     if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
           createProjectFolder();
     }
@@ -36,9 +36,7 @@ function handleAuthResult(authResult) {
   } else {
     checkAuth(false);
     if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
-      $("#authorize-button").html('Login to Google Drive™');
-      //var gdriveStyle = '<style>#google-drive-button:before{background-color:grey;}</style>';
-      //$('head').append(gdriveStyle);
+      $("#authorize-button").html('Log in to Google Drive™');
       $("#google-drive-button").toggleClass('gdrive-inactive', false);
       gFolderBtn.onclick = handleAuthClick; 
     }
@@ -49,7 +47,7 @@ function handleAuthResult(authResult) {
   }
 }
 
-//loads the authorization popup window when the user clicks on the login to google drive button
+//loads the authorization popup window when the user clicks on the log in to google drive button
 function handleAuthClick(event) {
   gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
   return false;
