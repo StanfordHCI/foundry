@@ -30,7 +30,6 @@ ActiveRecord::Schema.define(version: 20150404042543) do
 
   create_table "flash_teams", force: true do |t|
     t.string   "name"
-    t.string   "author"
     t.text     "json"
     t.text     "status"
     t.text     "notification_email_status"
@@ -38,6 +37,7 @@ ActiveRecord::Schema.define(version: 20150404042543) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "original_status"
+    t.string   "author",                    limit: 50
   end
 
   create_table "handoffs", force: true do |t|
