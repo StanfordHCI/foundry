@@ -1548,24 +1548,15 @@ var trackUpcomingEvent = function(){
     }
     
     setInterval(function(){
-       
-        // if(in_progress){
-        //     showGoogleDriveFolder();
-        // }
-        // else{
-        //     hideGoogleDriveFolder();
-        // }
 
         var overallTime;
         
-        if (currentUserEvents.length == 0 ) return;
-        /*if (currentUserEvents.length <= 0) {
-            overallTime = "You are not assigned to any tasks yet.";
-            statusText.style("color", "black");      
+        if (currentUserEvents.length == 0 ){
+            overallTime = "You have not been assigned to any tasks yet.";
             statusText.text(overallTime);
+            statusText.style("color", "black");  
             return;
-        }*/
-
+        }
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         
@@ -1618,12 +1609,13 @@ var trackUpcomingEvent = function(){
             statusText.style("color", "#40b8e4");
         }
         
-        if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
-            overallTime = "The team is not started. " + overallTime;
-        }
+        // Commenting this out because I include the project status information under the gdrive button
+        // if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
+        //     overallTime = "The team is not started. " + overallTime;
+        // }
 
         if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
-            overallTime = "The team is in edit mode. " + overallTime;
+            overallTime = "The team is being edited right now. " + overallTime;
         }
 
         statusText.text(overallTime);
