@@ -25,7 +25,7 @@ function checkAuth(loadPopup) {
 function handleAuthResult(authResult) {
   var gFolderBtn = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
-    console.log("authResult true");
+    //console.log("authResult true");
     
     if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
           createProjectFolder();
@@ -113,6 +113,13 @@ function createProjectFolder(){
       });
       
       req.execute(function(resp) { 
+        //console.log("resp: " + resp);
+         //console.log("resp.id: " + resp.id);
+         if(resp.id == undefined){
+           //console.log("resp.id is undefined: " + resp);
+           return;
+         }
+
         var folderArray = [resp.id, resp.alternateLink];
         
         insertPermission(folderArray[0], "me", "anyone", "writer");

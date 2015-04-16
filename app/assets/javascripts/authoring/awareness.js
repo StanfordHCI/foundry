@@ -512,6 +512,23 @@ var flashTeamUpdated = function(){
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
     var updated_task_groups = loadedStatus.task_groups;
+    var updated_gdrive = loadedStatus.flash_teams_json["folder"];
+
+    if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
+        //console.log("gdrives undefined don't match");
+        return true;
+    }
+
+    if(updated_gdrive != undefined && flashTeamsJSON["folder"] != undefined){
+        if(updated_gdrive.sort().join(',') != flashTeamsJSON["folder"].sort().join(',')){
+            //console.log("gdrive update");
+            // console.log("updated_gdrive: " + updated_gdrive);
+            // console.log("flashTeamsJSON['folder']: " + flashTeamsJSON["folder"]);
+            return true;
+        }
+    }
+
+
 
     if(updated_task_groups.length != task_groups.length){
         return true;
