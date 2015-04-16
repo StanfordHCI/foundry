@@ -510,6 +510,12 @@ var flashTeamUpdated = function(){
     var updated_live_tasks = loadedStatus.live_tasks;
     var updated_paused_tasks = loadedStatus.paused_tasks;
     var updated_task_groups = loadedStatus.task_groups;
+    var updated_local_update = loadedStatus.local_update;
+
+    if(updated_local_update > flashTeamsJSON['local_update']){
+        console.log('local update has been updated!');
+        return true; 
+    }
 
     if(updated_task_groups.length != task_groups.length){
         return true;
@@ -1629,6 +1635,7 @@ var constructStatusObj = function(){
 
     var localStatus = {};
 
+    localStatus.local_update = flashTeamsJSON["local_update"];
     localStatus.team_paused = flashTeamsJSON["paused"];
     localStatus.task_groups = task_groups;
     localStatus.live_tasks = live_tasks;

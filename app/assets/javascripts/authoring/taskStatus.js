@@ -392,6 +392,10 @@ function saveDocQuestions(groupNum){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
     ev["docQs"] = docQuestions;
+    //console.log(ev["docQs"]);
+    flashTeamsJSON["local_update"] = (new Date).getTime();
+    console.log("flashTeamsJSON['local_update']: " + flashTeamsJSON["local_update"]);
+    //updateStatus();
 }
 
 //Called when user presses "Save" button
