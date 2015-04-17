@@ -286,6 +286,105 @@ if(!window._foundry) {
             "font-family": "Helvetica"
         }
     },
+
+    /*-------------  adding  setting Icon on event ----------------*/
+    settingIcon: {
+        selector: ".setting-icon",
+        tag: "image",
+        attrs: {
+            x: function(d) {
+                var attrs = events.numMembers.attrs;
+                return attrs.x(d) + 10 + 4;
+            },
+            y: function(d) {return d.y + events.bodyHeight - 18},
+            width: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // set the width to zero if this is an hour long event
+                return eventObj.duration <= 60 ? 0 : 12;
+            },
+            height: 12,
+            "xlink:href": function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+               
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "/assets/icons/member/setting.svg" : "/assets/icons/member/setting.svg";
+            },
+            "class": "setting-icon",
+            "id": "settingID",
+
+            // tooltip stuff
+            "data-toggle": "tooltip",
+            "data-placement": "bottom",
+            "data-container": "body",
+            "data-animation": false,
+            "title": "Duplicate Event"
+        },        
+        style: {
+            cursor: "pointer",
+            opacity: "0.5"
+        }
+        
+    },
+
+    duprect: {
+        selector: ".duprect",
+        tag: "rect",
+        attrs: {
+            x: function(d) {
+                var attrs = events.numMembers.attrs;
+                return attrs.x(d) + 10 + 4;
+            },
+            y: function(d) {return d.y + events.bodyHeight},
+            width: 120,
+            height: 21,
+            "class": "duprect"
+    
+        },
+        
+        style: { 
+            fill: "#eeeeee",
+            cursor: "pointer",
+            stroke: "#000000",
+            display: "none"
+        }
+        
+
+    },
+    
+    duptxt: {
+        selector: ".duptxt",
+        tag: "text",
+        text: function(eventObj) {return "Create duplicate event";},
+        attrs: {
+            x: function(d) {
+                var attrs = events.numMembers.attrs;
+                return attrs.x(d) + 20;
+            },
+            y: function(d) {return d.y + window._foundry.events.bodyHeight + 12},
+            style: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                // don't display the number of members if the event
+                // is an hour or shorter
+                return eventObj.duration <= 60 ? "display:none;" : "12";
+            },
+            "class": "duptxt"
+        },
+        style: {
+            "font-size": "10px",
+            fill: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    "black" : "black";
+            },
+            "font-weight": 200,
+            "font-family": "Helvetica",
+            display: "none"
+        }
+    },
     
     uploadIcon: {
         selector: ".upload",
