@@ -132,7 +132,12 @@ function resumeTask(groupNum) {
     
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
-    eventObj.status = "started";
+    
+    if(isDelayed(groupNum)){
+        eventObj.status = "delayed";
+    } else{
+        eventObj.status = "started";
+    }
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
