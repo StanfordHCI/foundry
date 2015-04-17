@@ -170,8 +170,6 @@ function confirmCompleteTask(groupNum) {
     //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = eventToComplete.title + "<br /> Have You Completed This Task?";
-
-   
     
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
@@ -212,7 +210,6 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
         }
     });
-
 
 
     //Calls completeTask function if user confirms the complete
@@ -299,7 +296,7 @@ var keyUpFunc = function(eventToComplete){
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
     var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
-    //var groupNum = eventToComplete.id;
+
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -398,10 +395,8 @@ function saveDocQuestions(groupNum){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
     ev["docQs"] = docQuestions;
-    //console.log(ev["docQs"]);
+
     flashTeamsJSON["local_update"] = new Date().getTime();
-    //console.log("flashTeamsJSON['local_update']: " + flashTeamsJSON["local_update"]);
-    //updateStatus();
 }
 
 //Called when user presses "Save" button
