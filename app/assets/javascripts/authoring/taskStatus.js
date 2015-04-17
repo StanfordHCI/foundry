@@ -162,15 +162,16 @@ function confirmCompleteTask(groupNum) {
     //Close the first (task) modal
     $("#task_modal").modal('hide');
 
-    //Creates the alert modal title
-    var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Have You Completed This Task?";
-
     //Gets information from event using id
     var indexOfJSON = getEventJSONIndex(groupNum);
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
+    //Creates the alert modal title
+    var label = document.getElementById("confirmActionLabel");
+    label.innerHTML = eventToComplete.title + "<br /> Have You Completed This Task?";
+
+   
     
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
