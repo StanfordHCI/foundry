@@ -8,6 +8,7 @@
 var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var DRAGBAR_WIDTH = 8;
+var CURRENT_EVENT_SELECTED = "";
 var GUTTER = 20;
 
 var dragged = false;
@@ -277,6 +278,7 @@ function duplicateEventObj(eventObject){
     var newObject = JSON.parse(JSON.stringify(eventObject));
     newObject["id"] = createEventId();
     newObject["y"] = newObject["y"] + RECTANGLE_HEIGHT + 20;
+    newObject["row"] = Math.floor((newObject["y"]-5)/_foundry.timeline.rowHeight);
     return newObject;
 }
 
@@ -290,18 +292,18 @@ function createEventObj(eventObject) {
 };
 
 function onConfigClick(event){
-   showDropDown(event);
+    CURRENT_EVENT_SELECTED = event.groupNum;
+    showDropDown();
 }
 
-function showDropDown(event){
-    $.contextMenu({
+function showDropDown(){
+    var menu = $.contextMenu({
         selector: '.icon-cog',
-        groupNum: event.groupNum,
         trigger: 'left',
         callback: function(key, options) {
             //var m = "clicked: "  key;
             //window.console && console.log(m) || alert(options.groupNum);
-            window[key + "Event"](options.groupNum);
+            window[key + "Event"](CURRENT_EVENT_SELECTED);
         },
         items: {
             "duplicate": {name: "Duplicate", icon: ""},
