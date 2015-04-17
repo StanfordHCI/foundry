@@ -410,7 +410,8 @@ function listenForVisibilityChange(){
     // Add a listener for the next time that the page becomes visible
     document.addEventListener(window_visibility_change, function() {
         var state = document[window_visibility_state];
-        if(state == "visible" && in_progress){
+        //if(state == "visible" && in_progress){
+        if(state == "visible"){
             renderEverything(false);
         }
     }, false);
@@ -515,8 +516,9 @@ var flashTeamUpdated = function(){
     var updated_gdrive = loadedStatus.flash_teams_json["folder"];
     var updated_local_update = loadedStatus.local_update;
 
+    // if certain task attributes (e.g., documentation answers, members added, etc.)
     if(updated_local_update > flashTeamsJSON['local_update']){
-        console.log('local update has been updated!');
+        //console.log('local update has been updated!');
         return true; 
     }
 

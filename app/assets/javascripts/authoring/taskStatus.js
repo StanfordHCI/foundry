@@ -398,8 +398,8 @@ function saveDocQuestions(groupNum){
     }    
     ev["docQs"] = docQuestions;
     //console.log(ev["docQs"]);
-    flashTeamsJSON["local_update"] = (new Date).getTime();
-    console.log("flashTeamsJSON['local_update']: " + flashTeamsJSON["local_update"]);
+    flashTeamsJSON["local_update"] = new Date().getTime();
+    //console.log("flashTeamsJSON['local_update']: " + flashTeamsJSON["local_update"]);
     //updateStatus();
 }
 
@@ -467,6 +467,7 @@ var completeTask = function(groupNum){
     
     /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
     I think updateStatus needs to be true since the team is still in progress when you complete a task */
+    flashTeamsJSON['local_update'] = new Date().getTime();
     updateStatus();
     drawEvent(eventToComplete);
 

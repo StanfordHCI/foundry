@@ -689,6 +689,7 @@ function saveTaskOverview(groupNum){
     //everytime a modal is saved all_inputs of all events on the timeline are updated
     update_all_inputs_string();
 
+    flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
     updateStatus();
 
