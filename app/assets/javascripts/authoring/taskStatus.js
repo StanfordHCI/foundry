@@ -298,7 +298,7 @@ var keyUpFunc = function(eventToComplete){
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
     var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
-    
+    //var groupNum = eventToComplete.id;
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -333,7 +333,7 @@ function completeTaskModalText(eventToComplete) {
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
-                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3" onkeyup="keyUpFunc()">' + questions[j][1] + '</textarea></br>';
+                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
                 }
             }
             modalText += "</div>"
@@ -350,7 +350,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup="keyUpFunc()">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</form>";
     modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
