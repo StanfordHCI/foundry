@@ -9,14 +9,14 @@
     <%= f.label :skype_username, "Skype Username*: " %>
     <%= f.text_field :skype_username, :required => :true %> <br />
     
-    <%= f.label :odesk_url, "oDesk Profile URL*: " %>
+    <%= f.label :odesk_url, "oDesk/Elance Profile URL*: " %>
     <%= f.text_field :odesk_url, :required => :true %> <br />
     
     <%= f.label :timezone_utc, "Your Timezone (in UTC/GMT)*: " %>
     <%= f.time_zone_select(:timezone_utc, nil, {include_blank: "-- Select Timezone --"}, {:required => :true, style: "width: 315px;"}) %><br />
 
     <%= f.label :panel, "Panel Password*: " %>
-    <%= f.text_field :panel, :required => :true %> <br />
+    <%= f.text_field :panel, :required => :true, :readonly => true %> <br />
     
     <%= f.label :additional_info, "Anything else you want us to know?" %> <br />
     <%= f.text_area :additional_info, :rows =>2 %> <br />
