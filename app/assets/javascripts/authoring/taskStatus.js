@@ -295,8 +295,9 @@ var keyUpFunc = function(eventToComplete){
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
-
+    var modalText = "<p align='left' style='padding-bottom:4px'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b>"
+                    + "<a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
+                    
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -331,7 +332,7 @@ function completeTaskModalText(eventToComplete) {
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
-                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
+                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
                 }
             }
             modalText += "</div>"
@@ -340,18 +341,18 @@ function completeTaskModalText(eventToComplete) {
 
     //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
-    modalText += '<p align="left"><b>General Questions:</b></p>';
-    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;" align="left">' + '<div class="event-table-wrapper">';
+    modalText += '<p align="left" style="padding-bottom:4px"><b>General Questions:</b></p>';
+    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 1px; padding-bottom: 4px;" align="left">' + '<div class="event-table-wrapper">';
     for (i = 0; i < generalQuestions.length; i++){
         if (!generalFilledQ)
             var placeholderVal = "";
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
     } 
-    modalText += "</form>";
-    modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
+    modalText += "</div></form>";
+    modalText+= "<em>Click 'Task Completed' to alert the PC and move on to the documentation questons.</em>";
     return modalText;
 }
 

@@ -5,11 +5,14 @@
 * Note: It references YouTube videos created and stored in Tulsee Doshi's gmail account
 */
 
+var user_panel_pw; 
+
 //Code that opens the modal
 function openModal(){
 
 	//Sets up PC training
 	if ($("#password").val().indexOf("pc") == 0){
+		user_panel_pw = $("#password").val();
 		$("#pcModal").attr("style", "display: block;");
 		$('#pcModal').modal('show');
 		$('.next').click(function(){//Edge cases for last panel and youtube videos
@@ -45,6 +48,7 @@ function openModal(){
 
 	//Sets up worker training
 	else if ($("#password").val().indexOf("wo") == 0){
+		user_panel_pw = $("#password").val();
 		$("#workerModal").attr("style", "display: block;");
 		$('#workerModal').modal('show');
 		$('.next').click(function(){//Edge cases for last panel and youtube videos
@@ -102,4 +106,5 @@ function showForm(){
 	$(".footer").attr("style", "position: relative");
 	$("#topText").attr("class", "span6");
 	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add stanfordhci.odesk@gmail.com to your address book to prevent job notifications from going to your spam folder.";
+	$("#worker_panel").val(user_panel_pw);
 }
