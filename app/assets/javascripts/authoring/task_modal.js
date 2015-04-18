@@ -273,7 +273,7 @@ function getTaskOverviewContent(groupNum){
                     + '<b>Status: </b>'; 
 					content += ev.status;
 				}
-		content += '</div><br><br><br> 30 minutes of this task are allocated for reading the requirements'
+		content += '</div></div><hr/><div class="row-fluid" >30 minutes of this task are allocated for reading the requirements'
         +' and reviewing the previous materials. Click start when you are ready to review.';
 		
 	content += '</div>';
