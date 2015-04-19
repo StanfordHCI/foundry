@@ -64,12 +64,16 @@
       </div>
 
       <% if @member_type == "pc" || @member_type == "client" %>
-      <div id="member-container" class="well" style="overflow-y:scroll;">
+        <div id="member-container" class="sidebar-item" style="overflow-y:scroll;">
+      <% else %>
+        <!--Need to include the div for worker (e.g., display none) because we display it via javascript if member role changes -->
+        <div id="member-container" class="sidebar-item" style="overflow-y:scroll; display: none;">
+      <% end %>
         <!-- Render member roles container --> 
         <%= render :partial => "roles" %> 
       </div>
     
-      <% end %>
+      
     
     <% end %>
   </div>
