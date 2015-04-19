@@ -297,12 +297,10 @@ function renderEverything(firstTime) {
         // initialize the entry manager after flashTeamsJSON has been loaded
         window.entryManager = new window.EntryManager(flashTeamsJSON);
 
-        //console.log('current_user before: ' + JSON.stringify(current_user));
         setCurrentMember();
-        //console.log('current_user after: ' + JSON.stringify(current_user));
         
         if(firstTime) {
-            setCurrentMember();
+            //setCurrentMember(); //commented this out because we now always call setCurrentMember() in case changes are made during project
             initializeTimelineDuration();
             renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
         }
