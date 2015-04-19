@@ -246,9 +246,23 @@ function getTaskOverviewContent(groupNum){
 	    evStartMin = '0' + evStartMin;
     }
 	
-	var content = '<div class="row-fluid" >';
+	//var content = '<div class="row-fluid" >';
+
+    var content = '<div class="row-fluid">';
+                
+                if(ev.status == "not_started"){
+                    content += '<span class="span6"><b>Task Status: </b> not started  </span>';
+                    content += '<span class="span6" style="text-align:right"><b>Task Duration: </b>' + formatModalTime(ev.duration) + '</span>'; 
+                }
+                else{
+                    content += '<span class="span6"><b>Task Status: </b>' + ev.status +' </span>';
+                    content += '<span class="span6" style="text-align:right">'
+                            + '<b>Time Remaining: </b>' + formatModalTime(ev.timer) +' / ' + formatModalTime(ev.duration) + '</span>'; 
+                }
+
+        content += '</div>';
 	
-		content += '<div class="span8">';
+		content += '<hr /><div class="row-fluid">';
 		
 			content += '<h4>The goal of this task is to: </h4>';
 		
@@ -261,20 +275,9 @@ function getTaskOverviewContent(groupNum){
 			
 		content += '</div>';
 		
-		content += '<div class="span4">';
-				
-				if(ev.status == "not_started"){
-                    content += '<b>Duration: </b>' + formatModalTime(ev.duration) +'<br />' 
-                + '<b>Status: </b>'; 
-					content += "not started";
-				}
-				else{
-                    content += '<b>Remaining: </b>' + formatModalTime(ev.timer) +'/' + formatModalTime(ev.duration) +'<br />' 
-                    + '<b>Status: </b>'; 
-					content += ev.status;
-				}
-		content += '</div><br><br><br> 30 minutes of this task are allocated for reading the requirements'
-        +' and reviewing the previous materials. Click start when you are ready to review.';
+        //content += '</div>';
+        content += '<hr/><div class="row-fluid"><em>30 minutes of this task are allocated for reading the requirements'
+        +' and reviewing the previous materials. Click start when you are ready to review.</em>';
 		
 	content += '</div>';
 		
@@ -616,6 +619,14 @@ function saveTaskOverview(groupNum){
     ev.startMin = startMin;
     //SHOULD WE BE UPDATING EV.X HERE??
 
+    // Save original duration (e.g., the tasks current duration in case it changes)
+    // useful for updating the timer of in progress / paused tasks in edit mode (right now you can only edit paused tasks though)
+    var originalDuration = ev.duration;
+
+    // Save original remaining time (which is the time on the timer)
+    // Used for recalculating the remaining time and timer for paused tasks edited when team is in progress (e.g., via edit mode)
+    var originalRemainingTime = ev.latest_remaining_time;
+
     //Update duration if changed
     var newHours = $("#hours").val();
     if (newHours != "") newHours = parseInt($("#hours").val());
@@ -630,6 +641,13 @@ function saveTaskOverview(groupNum){
         newMin = 30;
     }
     ev.duration = (newHours * 60) + newMin;
+
+    // Updates the remaining time and timer for tasks that are paused and edited when team is in progress via edit mode
+    if(in_progress == true && flashTeamsJSON["paused"] == true && ev.status == "paused"){
+        var newRemainingTime = (ev.duration - originalDuration) + originalRemainingTime;
+        ev.timer = newRemainingTime;
+        ev.latest_remaining_time = newRemainingTime;
+    }
 
     //Update PC if changed
     var pcId = getPC(groupNum);
@@ -689,6 +707,7 @@ function saveTaskOverview(groupNum){
     //everytime a modal is saved all_inputs of all events on the timeline are updated
     update_all_inputs_string();
 
+    flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
     updateStatus();
 

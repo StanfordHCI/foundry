@@ -132,7 +132,12 @@ function resumeTask(groupNum) {
     
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
-    eventObj.status = "started";
+    
+    if(isDelayed(groupNum)){
+        eventObj.status = "delayed";
+    } else{
+        eventObj.status = "started";
+    }
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
@@ -152,20 +157,36 @@ function resumeTask(groupNum) {
 	
 }
 
+// This function lets you know the current status of a task that is paused
+// This is useful because if you just get the value of ev.status for a paused event it will be paused
+// If you are editing a paused task, you might need to know the actual status of the task (e.g., whether the paused task is currently delayed)
+// NOTE: Right now this function is not used anywhere but it might be useful at some point
+function checkPausedTaskStatus(eventObj){
+    var pausedTaskStatus;
+
+    if(eventObj.status != "paused"){
+        return;
+    }
+
+    if (isDelayed(eventObj)) pausedTaskStatus = "delayed";
+    else pausedTaskStatus = "started";
+
+    return pausedTaskStatus; 
+}
+
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
     //Close the first (task) modal
     $("#task_modal").modal('hide');
-
-    //Creates the alert modal title
-    var label = document.getElementById("confirmActionLabel");
-    label.innerHTML = "Have You Completed This Task?";
 
     //Gets information from event using id
     var indexOfJSON = getEventJSONIndex(groupNum);
     var events = flashTeamsJSON["events"];
     var eventToComplete = events[indexOfJSON];
 
+    //Creates the alert modal title
+    var label = document.getElementById("confirmActionLabel");
+    label.innerHTML = eventToComplete.title + "<br /> Have You Completed This Task?";
     
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
@@ -206,7 +227,6 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
         }
     });
-
 
 
     //Calls completeTask function if user confirms the complete
@@ -292,8 +312,9 @@ var keyUpFunc = function(eventToComplete){
 
 //Return text to fill complete task modal
 function completeTaskModalText(eventToComplete) {
-    var modalText = "<p align='left'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b><a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
-    
+    var modalText = "<p align='left' style='padding-bottom:4px'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b>"
+                    + "<a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
+                    
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -328,7 +349,7 @@ function completeTaskModalText(eventToComplete) {
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
-                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="3" onkeyup="keyUpFunc()">' + questions[j][1] + '</textarea></br>';
+                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
                 }
             }
             modalText += "</div>"
@@ -337,18 +358,18 @@ function completeTaskModalText(eventToComplete) {
 
     //Creating a form for the general documentation questions for a particular task
     modalText += "</form><hr/>";
-    modalText += '<p align="left"><b>General Questions:</b></p>';
-    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 5px;" align="left">' + '<div class="event-table-wrapper">';
+    modalText += '<p align="left" style="padding-bottom:4px"><b>General Questions:</b></p>';
+    modalText +='<form name="docQForm" id="docQForm" style="margin-bottom: 1px; padding-bottom: 4px;" align="left">' + '<div class="event-table-wrapper">';
     for (i = 0; i < generalQuestions.length; i++){
         if (!generalFilledQ)
             var placeholderVal = "";
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="3" onkeyup="keyUpFunc()">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
     } 
-    modalText += "</form>";
-    modalText+= "<br>Click 'Task Completed' to alert the PC and move on to the documentation questons.";
+    modalText += "</div></form>";
+    modalText+= "<em>Click 'Task Completed' to alert the PC and move on to the documentation questons.</em>";
     return modalText;
 }
 
@@ -392,6 +413,8 @@ function saveDocQuestions(groupNum){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
     }    
     ev["docQs"] = docQuestions;
+
+    flashTeamsJSON["local_update"] = new Date().getTime();
 }
 
 //Called when user presses "Save" button
@@ -458,6 +481,7 @@ var completeTask = function(groupNum){
     
     /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
     I think updateStatus needs to be true since the team is still in progress when you complete a task */
+    flashTeamsJSON['local_update'] = new Date().getTime();
     updateStatus();
     drawEvent(eventToComplete);
 
