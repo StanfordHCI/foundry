@@ -105,6 +105,6 @@ function showForm(){
 	$("#launchDiv").attr("style", "display:none");
 	$(".footer").attr("style", "position: relative");
 	$("#topText").attr("class", "span6");
-	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add stanfordhci.odesk@gmail.com to your address book to prevent job notifications from going to your spam folder.";
+	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add " + defaultEmail + " to your address book to prevent job notifications from going to your spam folder.";
 	$("#worker_panel").val(user_panel_pw);
 }
