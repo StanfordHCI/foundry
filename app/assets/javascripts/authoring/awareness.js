@@ -410,7 +410,8 @@ function listenForVisibilityChange(){
     // Add a listener for the next time that the page becomes visible
     document.addEventListener(window_visibility_change, function() {
         var state = document[window_visibility_state];
-        if(state == "visible" && in_progress){
+        //if(state == "visible" && in_progress){
+        if(state == "visible"){
             renderEverything(false);
         }
     }, false);
@@ -513,6 +514,13 @@ var flashTeamUpdated = function(){
     var updated_paused_tasks = loadedStatus.paused_tasks;
     var updated_task_groups = loadedStatus.task_groups;
     var updated_gdrive = loadedStatus.flash_teams_json["folder"];
+    var updated_local_update = loadedStatus.local_update;
+
+    // if certain task attributes (e.g., documentation answers, members added, etc.)
+    if(updated_local_update > flashTeamsJSON['local_update']){
+        //console.log('local update has been updated!');
+        return true; 
+    }
 
     // if gdrive folder is created (e.g., when a team starts), the gdrive btn in all views should activate
     if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
@@ -1645,6 +1653,7 @@ var constructStatusObj = function(){
 
     var localStatus = {};
 
+    localStatus.local_update = flashTeamsJSON["local_update"];
     localStatus.team_paused = flashTeamsJSON["paused"];
     localStatus.task_groups = task_groups;
     localStatus.live_tasks = live_tasks;

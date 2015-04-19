@@ -619,6 +619,14 @@ function saveTaskOverview(groupNum){
     ev.startMin = startMin;
     //SHOULD WE BE UPDATING EV.X HERE??
 
+    // Save original duration (e.g., the tasks current duration in case it changes)
+    // useful for updating the timer of in progress / paused tasks in edit mode (right now you can only edit paused tasks though)
+    var originalDuration = ev.duration;
+
+    // Save original remaining time (which is the time on the timer)
+    // Used for recalculating the remaining time and timer for paused tasks edited when team is in progress (e.g., via edit mode)
+    var originalRemainingTime = ev.latest_remaining_time;
+
     //Update duration if changed
     var newHours = $("#hours").val();
     if (newHours != "") newHours = parseInt($("#hours").val());
@@ -633,6 +641,13 @@ function saveTaskOverview(groupNum){
         newMin = 30;
     }
     ev.duration = (newHours * 60) + newMin;
+
+    // Updates the remaining time and timer for tasks that are paused and edited when team is in progress via edit mode
+    if(in_progress == true && flashTeamsJSON["paused"] == true && ev.status == "paused"){
+        var newRemainingTime = (ev.duration - originalDuration) + originalRemainingTime;
+        ev.timer = newRemainingTime;
+        ev.latest_remaining_time = newRemainingTime;
+    }
 
     //Update PC if changed
     var pcId = getPC(groupNum);
@@ -692,6 +707,7 @@ function saveTaskOverview(groupNum){
     //everytime a modal is saved all_inputs of all events on the timeline are updated
     update_all_inputs_string();
 
+    flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
     updateStatus();
 

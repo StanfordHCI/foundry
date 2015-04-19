@@ -674,6 +674,7 @@ function saveMemberInfo(memberId) {
     $("#mPill_" + memberId).popover("hide");
     renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
+    flashTeamsJSON['local_update'] = new Date().getTime();
 };
 
 //Close the popover on a member to "cancel" the edit
@@ -825,6 +826,7 @@ function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
+    flashTeamsJSON['local_update'] = new Date().getTime;
     updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);
 }
