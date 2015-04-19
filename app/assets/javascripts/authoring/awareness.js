@@ -292,9 +292,14 @@ function renderEverything(firstTime) {
 
         in_progress = loadedStatus.flash_team_in_progress;
         flashTeamsJSON = loadedStatus.flash_teams_json;
+
         
         // initialize the entry manager after flashTeamsJSON has been loaded
         window.entryManager = new window.EntryManager(flashTeamsJSON);
+
+        //console.log('current_user before: ' + JSON.stringify(current_user));
+        setCurrentMember();
+        //console.log('current_user after: ' + JSON.stringify(current_user));
         
         if(firstTime) {
             setCurrentMember();
@@ -515,6 +520,11 @@ var flashTeamUpdated = function(){
     var updated_task_groups = loadedStatus.task_groups;
     var updated_gdrive = loadedStatus.flash_teams_json["folder"];
     var updated_local_update = loadedStatus.local_update;
+    var updated_members = loadedStatus.flash_teams_json['members'];
+
+    if(JSON.stringify(flashTeamsJSON['members'])!= JSON.stringify(updated_members)){
+        return true;
+    }
 
     // if certain task attributes (e.g., documentation answers, members added, etc.)
     if(updated_local_update > flashTeamsJSON['local_update']){
