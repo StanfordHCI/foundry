@@ -72,6 +72,7 @@ function setCurrentMember() {
             current_user = member;
             isUser = true;
             memberType = member.type;
+            $('#member_role_span').html(current_user.role);
         }
         
     } else {
@@ -79,6 +80,7 @@ function setCurrentMember() {
         isUser = false;
         memberType = "author";
     }
+
 };
 
 var folderClickFn = function(e) {

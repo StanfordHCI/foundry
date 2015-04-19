@@ -47,7 +47,7 @@
     <% if in_expert_view %>
       <div class="welcome">
         <h4><b>Welcome <%= @user_name %>!</b>
-        <br /> Your role: <%= @member_role %></h4>
+        <br /> Your role: <span id="member_role_span"><%= @member_role %></span></h4>
       </div>
     
       <div id="project-status-container" class="sidebar-item active">
