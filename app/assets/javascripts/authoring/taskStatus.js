@@ -152,6 +152,23 @@ function resumeTask(groupNum) {
 	
 }
 
+// This function lets you know the current status of a task that is paused
+// This is useful because if you just get the value of ev.status for a paused event it will be paused
+// If you are editing a paused task, you might need to know the actual status of the task (e.g., whether the paused task is currently delayed)
+// NOTE: Right now this function is not used anywhere but it might be useful at some point
+function checkPausedTaskStatus(eventObj){
+    var pausedTaskStatus;
+
+    if(eventObj.status != "paused"){
+        return;
+    }
+
+    if (isDelayed(eventObj)) pausedTaskStatus = "delayed";
+    else pausedTaskStatus = "started";
+
+    return pausedTaskStatus; 
+}
+
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
     //Close the first (task) modal
