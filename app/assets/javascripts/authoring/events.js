@@ -293,19 +293,20 @@ function createDuplicateEvent(jsonevent){
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":oldeventObj.completed_x, "inputs":oldeventObj.inputs, "all_inputs":oldeventObj.all_inputs, "outputs":oldeventObj.outputs, events_after : oldeventObj.events_after,
         "docQs": oldeventObj.docQs,"outputQs":oldeventObj.outputQs,"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
     
-    flashTeamsJSON.events.push(newEvent);
+    //add new event to flashTeams database  "oldeventObj.gdrive"
+        flashTeamsJSON.events.push(newEvent);
 
-    // draw duplicate event
-    drawEvent(newEvent, true);
+    // render event on timeline
+        drawEvent(newEvent, true);
 
     //if team is in edit mode, add the gDrive folder for this event
-    if(flashTeamsJSON["paused"] == true){
-        var event_index = getEventJSONIndex(eventObj.id);
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
-    }
+        if(flashTeamsJSON["paused"] == true){
+            var event_index = getEventJSONIndex(newEvent.id); 
+            createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        }
 
     // save
-    updateStatus();
+        updateStatus();
 }
 
 function checkWithinTimelineBounds(snapPoint) {

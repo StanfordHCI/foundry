@@ -309,7 +309,7 @@ if(!window._foundry) {
                 var eventObj = getEventFromId(groupNum);
                
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
-                    "/assets/icons/member/setting.svg" : "/assets/icons/member/setting.svg";
+                    "/assets/icons/member/setting.svg" : "/assets/icons/member/setting_white.svg";
             },
             "class": "setting-icon",
             "id": "settingID",
@@ -323,7 +323,12 @@ if(!window._foundry) {
         },        
         style: {
             cursor: "pointer",
-            opacity: "0.5"
+            opacity: function(d) {
+                var groupNum = parseInt(d.id.replace("task_g_", ""));
+                var eventObj = getEventFromId(groupNum);
+                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    events.iconOpacity : 1;
+            }
         }
         
     },
