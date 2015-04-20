@@ -298,11 +298,12 @@ function renderEverything(firstTime) {
         window.entryManager = new window.EntryManager(flashTeamsJSON);
 
         setCurrentMember();
+        renderProjectOverview();
         
         if(firstTime) {
             //setCurrentMember(); //commented this out because we now always call setCurrentMember() in case changes are made during project
             initializeTimelineDuration();
-            renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
+            //renderProjectOverview(); //commented this out because we now always call setCurrentMember() in case changes are made during project
         }
 
 
@@ -519,6 +520,12 @@ var flashTeamUpdated = function(){
     var updated_gdrive = loadedStatus.flash_teams_json["folder"];
     var updated_local_update = loadedStatus.local_update;
     var updated_members = loadedStatus.flash_teams_json['members'];
+    var updated_project_overview = loadedStatus.flash_teams_json['projectoverview'];
+
+    if(flashTeamsJSON['projectoverview'] != updated_project_overview){
+        console.log('project overview has been updated');
+        return true;
+    }
 
     if(JSON.stringify(flashTeamsJSON['members'])!= JSON.stringify(updated_members)){
         return true;
