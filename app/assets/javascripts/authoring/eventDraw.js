@@ -283,6 +283,7 @@ function drawBottom(eventObj) {
 
     // icon for setting
     var settingIcon = addToTaskFromData(events.settingIcon, eventObj, task_g);
+        
         settingIcon.on("click", function(){ 
 
             // toggle the element of duplicateEvent

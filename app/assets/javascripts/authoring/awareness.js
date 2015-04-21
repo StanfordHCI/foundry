@@ -116,7 +116,8 @@ function disableTeamEditing() {
     
     // assemble selector for event buttons
     var selectorPrefix = ".event-layer .event ";
-    var selector = selectorPrefix + ".collab_btn, " +
+    var selector = selectorPrefix + ".setting-icon, " +
+                    selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).hide();
 }
@@ -129,7 +130,8 @@ function enableTeamEditing() {
     
     // assemble selector for event buttons
     var selectorPrefix = ".event-layer .event ";
-    var selector = selectorPrefix + ".collab_btn, " +
+    var selector =  selectorPrefix + ".setting-icon, " +
+                    selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).show();
 }
