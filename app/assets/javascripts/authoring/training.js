@@ -47,7 +47,7 @@ function openModal(){
 	}
 
 	//Sets up worker training
-	else if ($("#password").val().indexOf("wo") == 0){
+	else if ($("#password").val().indexOf("wo") == 0 || $("#password").val() == "refresher"){
 		user_panel_pw = $("#password").val();
 		$("#workerModal").attr("style", "display: block;");
 		$('#workerModal').modal('show');
@@ -101,10 +101,17 @@ function openModal(){
 
 //Code to display the registration form
 function showForm(){
-	$(".formDiv").attr("style", "display:inline");
 	$("#launchDiv").attr("style", "display:none");
 	$(".footer").attr("style", "position: relative");
 	$("#topText").attr("class", "span6");
-	document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> Don't forget to add " + defaultEmail + " to your address book to prevent job notifications from going to your spam folder.";
-	$("#worker_panel").val(user_panel_pw);
+
+	if(user_panel_pw == "refresher"){
+		document.getElementById("topText").innerHTML="Thank you for reviewing the training. <br /><br /> <b>Don't forget to add " + defaultEmail + " to your address book to prevent job notifications from going to your spam folder.</b>";
+	}
+	else{
+		$(".formDiv").attr("style", "display:inline");
+		document.getElementById("topText").innerHTML="Thank you for completing the training. Please complete the registration form below to be added to the panel and start receiving job notifications! <br /><br /> <b>Don't forget to add " + defaultEmail + " to your address book to prevent job notifications from going to your spam folder.</b>";
+		$("#worker_panel").val(user_panel_pw);
+	}
+	
 }
