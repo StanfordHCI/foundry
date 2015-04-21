@@ -47,7 +47,7 @@
     <% if in_expert_view %>
       <div class="welcome">
         <h4><b>Welcome <%= @user_name %>!</b>
-        <br /> Your role: <%= @member_role %></h4>
+        <br /> Your role: <span id="member_role_span"><%= @member_role %></span></h4>
       </div>
     
       <div id="project-status-container" class="sidebar-item active">
@@ -64,12 +64,16 @@
       </div>
 
       <% if @member_type == "pc" || @member_type == "client" %>
-      <div id="member-container" class="well" style="overflow-y:scroll;">
+        <div id="member-container" class="sidebar-item" style="overflow-y:scroll;">
+      <% else %>
+        <!--Need to include the div for worker (e.g., display none) because we display it via javascript if member role changes -->
+        <div id="member-container" class="sidebar-item" style="overflow-y:scroll; display: none;">
+      <% end %>
         <!-- Render member roles container --> 
         <%= render :partial => "roles" %> 
       </div>
     
-      <% end %>
+      
     
     <% end %>
   </div>
