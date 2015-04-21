@@ -90,6 +90,8 @@ function showTaskOverview(groupNum){
 	}
 }
 
+
+
 function editTaskOverview(popover,groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
@@ -109,7 +111,17 @@ function editTaskOverview(popover,groupNum){
 		
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
 		$("#edit-save-task").html('Save');	
-        
+
+        // create the read only tags for inputs created by handoffs or collaborations
+        var int_inputs_tags = $('#int_inputs').tags({
+            bootstrapVersion: "2",
+            readOnly: true,
+            readOnlyEmptyMessage: "No handoff or collaboration inputs from other tasks exist.",
+            tagData: get_int_inputs_array(groupNum),
+            tagClass: "btn-info",
+            tagSize: "sm",
+        });
+
         $("#inputs").tagsinput(); 
         $("#outputs").tagsinput();
 
@@ -153,6 +165,7 @@ function getTaskOverviewForm(groupNum){
     var notes = eventObj["notes"];
     var inputs = eventObj["inputs"];
     if(!inputs) inputs = "";
+    //var int_inputs = get_int_inputs_array(groupNum).join(', ');
     var outputs = eventObj["outputs"];
     if(!outputs) outputs = "";
     var numHours = Math.floor(totalMinutes/60);
@@ -179,6 +192,7 @@ function getTaskOverviewForm(groupNum){
         + 'Minutes : <input type="number" id="startMin" placeholder="' + startMin 
             + '" min="0" step="15" max="45" style="width:36px"><br />'
 
+        +'<br />'
         + '<b>Project Coordinator</b><br><select class="pcInput"' 
             +' name="pcName" id="pcEvent"' 
             + 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
@@ -189,19 +203,23 @@ function getTaskOverviewForm(groupNum){
             +numHours+'" min="0" style="width:36px"/>         ' 
         + 'Minutes : <input type = "number" id = "minutes" placeholder="'+minutesLeft
             +'" style="width:36px" min="0" step="15" max="45"/> <br />'     
+        +'<br />'
         + '<b>Directly-Responsible Individual</b><br><select class="driInput"' 
             +' name="driName" id="driEvent"' 
 			+ 'onchange="getDRI('+groupNum + ')">'+ writeDRIMembers(groupNum,dri_id) +'</select>'
         + '</div>'
         + '</div>'
+        +'<br />'
 
         + '<div class="row-fluid">' 
         + '<div class="span12">'
         + '<b>Members</b><br/> <div id="eventMemberList">'
         + writeEventMembers(eventObj)  +'</div>'
-
+        +'<br />'
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
-        + '<div><b>Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
+        //+'<br />'
+        + '<div><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br />'
+        + '<div><br /><b>Additional Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
         + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
         + '<div id="outputQForm">';
@@ -371,8 +389,6 @@ function getTaskOverviewContent(groupNum){
             content += '</div>'
         }
     }
-   
-		
 		  if (ev.pc != "" && ev.pc != undefined){
 	        var pc_id = parseInt (ev.pc);
 	        var mem = null;
@@ -392,13 +408,10 @@ function getTaskOverviewContent(groupNum){
             
         }
     }
-    
 
 	content += '</div>';
 		
 	content += "<hr/>";
-		
-		
 		
 	content += '<div class="row-fluid" >';	
 		
@@ -458,138 +471,6 @@ function formatModalTime(timeInMins){
 
     var timeStr = sign + hours + ":" + minutes;
     return timeStr;
-}
-
-
-
-//this was the previous task overview content that used the old modal layout (can be erased once we confirm we like new modal)
-function getTaskOverviewContentOld(groupNum){
-	var task_id = getEventJSONIndex(groupNum);
-	var ev = flashTeamsJSON["events"][task_id];
-
-    var hrs = Math.floor(ev.duration/60);
-    var mins = ev.duration % 60;
-    
-    // if the minutes are < 10, you need to add a zero before
-    if(mins < 10){
-	    mins = '0' + mins;
-    }
-    
-    var evStartHr = ev.startHr; 
-	var evStartMin = ev.startMin.toFixed(0); 
-	
-	// if the minutes are < 10, you need to add a zero before
-	if(evStartMin < 10){
-	    evStartMin = '0' + evStartMin;
-    }
-
-    var content = '<div class="row-fluid" >' 
-        + '<div class="span6">'
-        + '<b>Event Start:  </b>'
-        + evStartHr + ':'
-        + evStartMin + '<br>'
-        + '</div>'
-        + '<div class="span6" style="margin-left:0px">'
-        +'<b>Total Runtime:  </b>' 
-        + hrs+':'+mins
-        + '</div>';
-        + '</div>';
-
-    if (ev.pc != "" && ev.pc != undefined){
-        var pc_id = parseInt (ev.pc);
-        var mem = null;
-
-        if(entryManager.memberExists(pc_id)) {
-            mem = entryManager.getEntryById(pc_id).role;
-            if(mem && mem != undefined){
-                content += '<div class=row-fluid> <div class="span6">'
-                content += '<b>Project Coordinator:</b><br>';
-                content += mem;
-                content += "</div>";
-            }
-        }
-    }
-
-     if (ev.dri != "" && ev.dri != undefined){
-        var dri_id = parseInt (ev.dri);
-        var mem = null;
-        
-        if(entryManager.memberExists(pc_id)) {
-            mem = entryManager.getEntryById(pc_id).role;
-            if(mem && mem != undefined){
-                content += '<div class="span6">';
-                content += '<b>Directly-Responsible Individual:</b><br>';
-                content += mem;
-                content += '</div> </div>'
-            }
-        }
-    }
-
-    if(ev.inputs) {
-        content += '<b>Inputs:</b><br>';
-        var inputs = ev.inputs.split(",");
-        for(var i=0;i<inputs.length;i++){
-            content += inputs[i];
-            content += "<br>";
-        }
-    }
-    
-    if(ev.outputs) {
-        content += '<b>Deliverables:</b><br>';
-        var outputs = ev.outputs.split(",");
-        for(var i=0;i<outputs.length;i++){
-            content += outputs[i];
-            content += "<br>";
-        }
-    }
-
-    var num_members = ev.members.length;
-    if(num_members > 0){
-        content += '<b>Members:</b><br>';
-        for (var j=0;j<num_members-1;j++){
-            var member = getMemberById(ev.members[j]);
-            content += member.role;
-            content += ', ';
-        }
-        var member = getMemberById(ev.members[num_members-1]);
-        content += member.role;
-        content += '<br/>';
-    }
-
-    if (ev.notes != ""){
-        content += '</br><b>Description:</b><br>';
-        content += ev.notes;
-        content += '<br>';
-    }
-
-
-    content += "<hr/>";
-    content += "<b>Documentation Questions</b><hr/>";
-
-    //Add output documentation questions to task modal    
-    for (var key in ev.outputQs){
-        if (key != ""){
-            content += "<b>" + key + "</b></br>";
-            keyArray = ev.outputQs[key];
-            for (i = 0; i < keyArray.length; i++){
-                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
-            }
-        }
-    }
-    content += "<hr/>";
-
-    //Add general documentation questions to task modal
-    if (ev.docQs.length > 0){
-        docQs = ev.docQs;
-        for (i = 0; i < docQs.length; i++){
-            if (docQs[i][1] != null){
-                content += "<b>" + docQs[i][0] + " </b>";
-                content += "<p>" + docQs[i][1] + "</p>";
-            }
-        }
-    }
-   
-    return content;
 }
 
 function saveTaskOverview(groupNum){
@@ -723,11 +604,12 @@ function update_all_inputs_string(){
     for (var i =0; i<events.length; i++){
         var all_inputs_string="";
         all_inputs_array = getAllInputs(events[i].id);
+
         for( var j=0; j<all_inputs_array.length; j++){
             if (j==0)
                 all_inputs_string +=String(all_inputs_array[j][1]);
             else
-                all_inputs_string +=','+ String(all_inputs_array[j][1]);
+                all_inputs_string +=', '+ String(all_inputs_array[j][1]);
 
             flashTeamsJSON["events"][i]["all_inputs"] = all_inputs_string;
         }
@@ -784,4 +666,25 @@ function getAllInputs(groupNum){
     }
 
     return all_inputs;
+}
+
+
+//this function returns all of a task's inputs that are only from interactions (e.g., not inputs added manually to a task)
+function get_int_inputs_array(groupNum){
+    //var events = flashTeamsJSON["events"];
+    var int_inputs_array=[];
+    
+    var task_id = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][task_id];
+
+    var all_inputs_array = getAllInputs(groupNum);
+    
+    for( var j=0; j<all_inputs_array.length; j++){
+
+        if (all_inputs_array[j][0] != groupNum){
+            console.log("int input: " + all_inputs_array[j][1]);
+            int_inputs_array.push(all_inputs_array[j][1]);
+        }
+    }
+    return int_inputs_array;
 }
