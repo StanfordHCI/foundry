@@ -682,7 +682,6 @@ function get_int_inputs_array(groupNum){
     for( var j=0; j<all_inputs_array.length; j++){
 
         if (all_inputs_array[j][0] != groupNum){
-            console.log("int input: " + all_inputs_array[j][1]);
             int_inputs_array.push(all_inputs_array[j][1]);
         }
     }
