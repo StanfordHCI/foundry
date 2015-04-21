@@ -89,7 +89,7 @@ function saveProjectOverview(){
 	 
     flashTeamsJSON["projectoverview"] = project_overview_input;
     
-    console.log("saved projectoverview: " + flashTeamsJSON["projectoverview"]);
+    //console.log("saved projectoverview: " + flashTeamsJSON["projectoverview"]);
     
     updateStatus();
     
