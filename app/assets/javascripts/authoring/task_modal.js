@@ -218,7 +218,7 @@ function getTaskOverviewForm(groupNum){
         +'<br />'
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         //+'<br />'
-        + '<div><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br />'
+        + '<div style="margin-bottom: 5px;"><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br /></div>'
         + '<div><br /><b>Additional Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
         + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
