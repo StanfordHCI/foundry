@@ -169,6 +169,7 @@ function startFlashTeam() {
 function endTeam() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
+    logTeamActivity('End Team', new Date().getTime(), current_user, chat_role, loadedStatus);
     updateStatus(false);
     stopCursor();
     stopProjectStatus();
@@ -394,6 +395,8 @@ function renderEverything(firstTime) {
         poll_interval_id = poll();
         listenForVisibilityChange();
     }
+
+    logTeamActivity('Render Everything', new Date().getTime(), current_user, chat_role, loadedStatus);
 }
 
 function listenForVisibilityChange(){
@@ -416,6 +419,7 @@ function listenForVisibilityChange(){
         var state = document[window_visibility_state];
         //if(state == "visible" && in_progress){
         if(state == "visible"){
+            logTeamActivity('Page Became Visible', new Date().getTime(), current_user, chat_role, loadedStatus);
             renderEverything(false);
         }
     }, false);
@@ -748,8 +752,11 @@ var startTeam = function(firstTime){
         $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
         
         flashTeamsJSON["paused"]=false;
+
         //added next line to disable the ticker
         updateStatus(true);
+
+        logTeamActivity('Start Team', new Date().getTime(), current_user, chat_role, loadedStatus);
         //console.log("here2");
     }
 

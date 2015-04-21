@@ -29,6 +29,7 @@ function pauseFlashTeam(){
     //draw events in editable mode (show collaboration and handoff buttons, show drag handles etc.)
     enableTeamEditing();
     //drawEvents(true);
+    logTeamActivity('Edit Team', new Date().getTime(), current_user, chat_role, team_id, loadedStatus);
 
 }
 
@@ -64,4 +65,6 @@ function resumeFlashTeam(){
     //Hide handoff and collaboration buttons on the events.
     //drawEvents(false);
     disableTeamEditing();
+
+    logTeamActivity('Save Edited Team', new Date().getTime(), current_user, chat_role, team_id, loadedStatus);
 }

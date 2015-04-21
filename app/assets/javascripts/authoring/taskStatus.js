@@ -84,6 +84,8 @@ function startTask(groupNum) {
     }
     live_tasks.push(groupNum);
 
+    logEventActivity('Start Task', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
     drawEvent(eventObj); //Will update color
 
@@ -113,7 +115,8 @@ function pauseTask(groupNum) {
     
     paused_tasks.push(groupNum);
 
-    
+    logEventActivity('Pause Task', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
     drawEvent(eventObj); //Will update color
 	
@@ -147,6 +150,8 @@ function resumeTask(groupNum) {
     if (idx != -1) { // delayed task
         paused_tasks.splice(idx, 1);
     }
+
+    logEventActivity('Resume Task', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
     drawEvent(eventObj); //Will update color	
@@ -231,13 +236,15 @@ function confirmCompleteTask(groupNum) {
 
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
-    	$('#confirmAction').modal('hide');
+    	logEventActivity('Confirm Complete Task - Clicked Confirm Button', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        $('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };
     //hidePopover(groupNum); 
 
     //calls saveQuestions functions if user chooses to save questions
     document.getElementById("saveButton").onclick=function(){
+        logEventActivity('Confirm Complete Task - Clicked Save Button', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
         saveQuestions(groupNum);
     };
@@ -420,6 +427,7 @@ function saveDocQuestions(groupNum){
 //Called when user presses "Save" button
 var saveQuestions = function(groupNum){
     saveDocQuestions(groupNum);
+    logEventActivity('Save Questions', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     updateStatus();
 }
 
@@ -473,6 +481,8 @@ var completeTask = function(groupNum){
     }
 
     eventToComplete.status = "completed";
+
+    logEventActivity('Complete Task', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 

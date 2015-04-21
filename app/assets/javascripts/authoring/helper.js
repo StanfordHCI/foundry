@@ -16,6 +16,27 @@ var flashTeamsJSON = {
     //"original_json": "original json"
 };
 
+function logTeamActivity(activityName, time, currentUser, chatRole, teamId, loadedStatus){
+    console.log('activity: ' + activityName);
+    console.log('time: ' + time);
+    console.log('current_user: ' + currentUser);
+    console.log('chatRole: ' + chatRole);
+    console.log('teamId: ' + teamId);
+    console.log('loadedStatus: ' + loadedStatus);
+
+}
+
+function logEventActivity(activityName, time, currentUser, chatRole, teamId, eventJSON){
+    console.log('activity: ' + activityName);
+    console.log('time: ' + time);
+    console.log('current_user: ' + currentUser);
+    console.log('chatRole: ' + chatRole);
+    console.log('teamId: ' + teamId);
+    console.log('eventJSON: ' + JSON.stringify(eventJSON));
+
+}
+
+
 function pressEnterKeyToSubmit(inputId, buttonId) {
 	$(inputId).keydown(function(event){
 		if(event.keyCode == 13){

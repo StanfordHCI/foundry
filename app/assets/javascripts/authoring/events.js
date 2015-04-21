@@ -253,6 +253,9 @@ function createEvent(point, duration) {
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
+    logEventActivity('Create Event', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
+
+
     // save
     updateStatus();
 };
@@ -539,6 +542,8 @@ function deleteEvent(eventId){
         var intId = intersToDel[i];
         deleteInteraction(intId);
     }
+
+    logEventActivity('Delete Event', new Date().getTime(), current_user, chat_role, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
     //Visually removes task from the timeline, in awareness.js
     removeTask(eventId);
