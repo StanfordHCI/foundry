@@ -306,7 +306,7 @@ if(!window._foundry) {
               var groupNum = parseInt(d.id.replace("task_g_", ""));
               var eventObj = getEventFromId(groupNum);
               return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
-                  "/assets/icons/config/icon-cog.svg" : "/assets/icons/config/icon-cog.svg";
+                  "/assets/icons/config/icon-cog.svg" : "/assets/icons/config/icon-cog_white.svg";
           },
           "class": "icon-cog",
 

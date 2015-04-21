@@ -237,7 +237,7 @@ function createEvent(point, duration) {
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(newEventObj(snapPoint, duration));
+    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
 
     // render event on timeline
     drawEvent(eventObj, true);
@@ -258,28 +258,35 @@ function createEvent(point, duration) {
     updateStatus();
 };
 
-function newEventObj(snapPoint, duration){
+
+function newEventObject(snapPoint, duration, objectToDuplicate){
+
     duration = duration || 60;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {
-        "title":"New Event", "id":createEventId(),
-        "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration,
-        "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
-        "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
+        "id":createEventId(),
+        "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
+        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
         "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""],
-        ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
-        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+            ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
+        "outputQs":{}};
+
+
+    newEvent["title"]  = objectToDuplicate["title"] || "New Event" ;
+    newEvent["y"] = (objectToDuplicate["y"] + RECTANGLE_HEIGHT + 20) || snapPoint[1];
+    newEvent["members"] = objectToDuplicate["members"] || [];
+    newEvent["startTime"] = objectToDuplicate["startTime"] || startTimeObj["startTimeinMinutes"];
+    newEvent["duration"] = objectToDuplicate["duration"] || duration;
+    newEvent["startHr"]  =  objectToDuplicate["startHr"] || startTimeObj["startHr"];
+    newEvent["startMin"]  =  objectToDuplicate["startMin"] || startTimeObj["startMin"];
+    newEvent["row"] = Math.floor((newEvent["y"]-5)/_foundry.timeline.rowHeight);
+    newEvent["dri"] = objectToDuplicate["dri"] || "";
+    newEvent["pc"] =  objectToDuplicate["pc"]|| "";
+    newEvent["notes"] = objectToDuplicate["notes"] || "";
+
+
 
     return newEvent;
-}
-function duplicateEventObj(eventObject){
-    var newObject = JSON.parse(JSON.stringify(eventObject));
-    newObject["id"] = createEventId();
-    newObject["y"] = newObject["y"] + RECTANGLE_HEIGHT + 20;
-    newObject["row"] = Math.floor((newObject["y"]-5)/_foundry.timeline.rowHeight);
-    return newObject;
 }
 
 //task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
@@ -317,12 +324,12 @@ function duplicateEvent(groupNumber){
     var task_id = getEventJSONIndex(groupNumber);
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
-    var eventObj = createEventObj(duplicateEventObj(eventToDuplicate));
+    var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
 
     drawEvent(eventObj, true);
 
     // save
-    updateStatus(false);
+    updateStatus();
 }
 
 function editEvent(groupNumber){
@@ -348,30 +355,6 @@ function getDuration(leftX, rightX) {
 
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
 };
-
-//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
-/*function createEventObj(snapPoint, duration) {
-    duration = duration || 60;
-    
-    var startTimeObj = getStartTime(snapPoint[0]);
-  
-    //Create the event json object
-    var newEvent = {
-        "title":"New Event", "id":createEventId(), 
-        "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
-        "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
-        "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
-        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
-        ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
-        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
-    
-    //add new event to flashTeams database
-    flashTeamsJSON.events.push(newEvent);
-    
-    return newEvent;
-};*/
 
 //Create a unique event id based on the current time
 function createEventId(){

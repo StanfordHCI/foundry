@@ -281,8 +281,10 @@ function drawBottom(eventObj) {
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
-    var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
-    configIcon.on("click", onConfigClick);
+    if( !in_progress && flashTeamsJSON["paused"] != true){
+        var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
+        configIcon.on("click", onConfigClick);
+    }
 
 
     // upload icon
