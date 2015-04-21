@@ -42,6 +42,7 @@
 //= require ./authoring/notification_email
 //= require ./authoring/gdrive
 //= require ./authoring/bootstrap-tagsinput
+//= require ./authoring/bootstrap-tags.min.js
 //= require ./authoring/notifications
 //= require ./authoring/tour
 //= require ./authoring/eventTour

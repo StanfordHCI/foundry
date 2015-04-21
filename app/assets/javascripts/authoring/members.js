@@ -72,6 +72,17 @@ function setCurrentMember() {
             current_user = member;
             isUser = true;
             memberType = member.type;
+            
+            $('#member_role_span').html(current_user.role); //updates the "Your Role: " text in left sidebar
+
+            if (member.type == "worker" && $('#member-container').css('display') != "none"){
+                //console.log('member switched to worker role');
+                $('#member-container').css('display', 'none');
+            }
+            if (member.type == "pc" && $('#member-container').css('display') == "none"){
+                //console.log('member switched to pc role');
+                $('#member-container').css('display', 'block');
+            }
         }
         
     } else {
@@ -79,6 +90,7 @@ function setCurrentMember() {
         isUser = false;
         memberType = "author";
     }
+
 };
 
 var folderClickFn = function(e) {

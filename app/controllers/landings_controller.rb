@@ -81,12 +81,12 @@ class LandingsController < ApplicationController
             l.save
             return
           elsif Time.now>l.end_date_time
-            l.destroy
+            l.status = 'd'
             l.save
           end
         end
       elsif Time.now>l.end_date_time
-        l.destroy
+        l.status = 'd'
         l.save
       end
     end
@@ -145,7 +145,8 @@ class LandingsController < ApplicationController
       @newLanding.end_date_time = @end_date_time + wait_time
       @newLanding.queuePosition = @queuePosition
       @newLanding.status = 'p'
-      if @queuePosition == 1 
+      deletedLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'d').order('created_at')
+      if @queuePosition == 1 and deletedLanding.length>0
         UserMailer.send_first_in_queue(@email, @task_member, @task_name, @flash_team_name, @wait_time, @removalURL, @task_duration, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @invitationLink).deliver
         @newLanding.emailSent = true
         @newLanding.emailSentTime = Time.now
@@ -154,7 +155,8 @@ class LandingsController < ApplicationController
       @newLanding.save 
     else
       @relevantLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p').order('created_at')
-      if @queuePosition == 1 and not(@relevantLanding[0].emailSent)
+      deletedLanding = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'d').order('created_at')
+      if @queuePosition == 1 and not(@relevantLanding[0].emailSent) and deletedLanding.length>0
         UserMailer.send_first_in_queue(@email, @task_member, @task_name, @flash_team_name, @wait_time, @removalURL, @task_duration, @project_overview, @task_description, @inputs, @input_link, @outputs, @output_description, @invitationLink).deliver
         @relevantLanding[0].emailSent = true
         @relevantLanding[0].emailSentTime = Time.now
@@ -176,7 +178,7 @@ class LandingsController < ApplicationController
     for l in r
       if l.email == @email
         deletedTime = l.end_date_time
-        l.destroy
+        l.status = 'd'
         l.save
         break
       end
