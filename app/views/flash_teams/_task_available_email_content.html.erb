@@ -16,8 +16,8 @@
 				<div class="row-fluid span11">
 					<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
 						
-						<p><b>Project overview:</b> <%=@project_overview.html_safe%></p>
-						<p><b>Task description:</b> <%=@task_description.html_safe%></p>
+						<p><b>Project overview:</b> <%= raw @project_overview %></p>
+						<p><b>Task description:</b> <%= raw @task_description %></p>
 						
 						<p>
 							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
