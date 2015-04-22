@@ -102,6 +102,10 @@ function saveProjectOverview(){
     showProjectOverview();
 }
 
+function logSidebarClick(containerName){
+    logActivity("logSidebarClick('containerName')",'Clicked on Sidebar Container: ' + containerName, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+}
+
 
 /***chat****/
 
