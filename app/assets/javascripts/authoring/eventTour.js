@@ -40,7 +40,7 @@ window.onload = function(){
 
 	    //If the worker is assigned an event, initializes the tour
 	    if (elemId){
-	    	logEventActivity('Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	    	logTeamActivity('Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 		    var eventTour = new Tour({
 			autoscroll: true,
@@ -91,10 +91,10 @@ window.onload = function(){
 				+"<div class='popover-content'></div>"
 			}
 			],
-			onStart: function (tour) {logEventActivity('Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onEnd: function (tour) {logEventActivity('Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onNext: function (tour) {logEventActivity('Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onPrev: function (tour) {logEventActivity('Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+			onStart: function (tour) {logTeamActivity('Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onEnd: function (tour) {logTeamActivity('Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onNext: function (tour) {logTeamActivity('Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onPrev: function (tour) {logTeamActivity('Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 
 			});
 
