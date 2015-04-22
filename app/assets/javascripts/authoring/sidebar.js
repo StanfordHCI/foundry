@@ -118,8 +118,11 @@ var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 var name;
 
 function sendChatMessage() {
+    
   var text = $('#messageInput').val();
   var uniq_u=getParameterByName('uniq');
+
+  logActivity("sendChatMessage()",'Send Chat Message', new Date().getTime(), current_user, chat_name, team_id, text);
   
   if(uniq_u == undefined || uniq_u == ""){
     uniq_u = 'Author';
