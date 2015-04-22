@@ -24,12 +24,14 @@ function pauseFlashTeam(){
     $("#flashTeamResumeBtn").css('display', '');
  
 	flashTeamsJSON["paused"]=true;
+
+    logTeamActivity('Edit Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	updateStatus();
 
     //draw events in editable mode (show collaboration and handoff buttons, show drag handles etc.)
     enableTeamEditing();
     //drawEvents(true);
-    logTeamActivity('Edit Team', new Date().getTime(), current_user, chat_role, team_id, loadedStatus);
+    logTeamActivity('Edit Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 }
 
@@ -60,11 +62,13 @@ function resumeFlashTeam(){
     $("#flashTeamResumeBtn").css('display', 'none');
  
 	flashTeamsJSON["paused"]=false;
+    
+    logTeamActivity('Save Edited Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	updateStatus();
 	
     //Hide handoff and collaboration buttons on the events.
     //drawEvents(false);
     disableTeamEditing();
 
-    logTeamActivity('Save Edited Team', new Date().getTime(), current_user, chat_role, team_id, loadedStatus);
+    logTeamActivity('Save Edited Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }

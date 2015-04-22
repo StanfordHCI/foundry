@@ -86,12 +86,18 @@ function saveProjectOverview(){
 				//alert("Please enter a project overview.");
 				//return;
 		}
+
+    logTeamActivity('Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	 
     flashTeamsJSON["projectoverview"] = project_overview_input;
     
     //console.log("saved projectoverview: " + flashTeamsJSON["projectoverview"]);
     
     updateStatus();
+
+    logTeamActivity('Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
     
     showProjectOverview();
 }

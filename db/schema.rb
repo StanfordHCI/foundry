@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150404042543) do
+ActiveRecord::Schema.define(version: 20150421224539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "activity_logs", force: true do |t|
+    t.string   "activity_type"
+    t.string   "act_tstamp"
+    t.text     "current_user"
+    t.string   "chat_name"
+    t.integer  "team_id"
+    t.text     "activity_json"
+    t.string   "update_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -30,6 +42,7 @@ ActiveRecord::Schema.define(version: 20150404042543) do
 
   create_table "flash_teams", force: true do |t|
     t.string   "name"
+    t.string   "author"
     t.text     "json"
     t.text     "status"
     t.text     "notification_email_status"
@@ -37,7 +50,6 @@ ActiveRecord::Schema.define(version: 20150404042543) do
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "original_status"
-    t.string   "author",                    limit: 50
   end
 
   create_table "handoffs", force: true do |t|

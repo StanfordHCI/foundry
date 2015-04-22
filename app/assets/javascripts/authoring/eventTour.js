@@ -40,6 +40,8 @@ window.onload = function(){
 
 	    //If the worker is assigned an event, initializes the tour
 	    if (elemId){
+	    	logEventActivity('Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 		    var eventTour = new Tour({
 			autoscroll: true,
 			steps: [
@@ -54,9 +56,9 @@ window.onload = function(){
 				+ pOverview
 				+"</div>"
 				+"<nav class='popover-navigation'><div class='btn-group'>"
-				+"<button class='btn btn-default' data-role='prev' disabled='true'>« Prev</button>"
-				+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
-				+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+				+"<button class='btn btn-default' class='event-tour-prev-btn' data-role='prev' disabled='true'>« Prev</button>"
+				+"<button class='btn btn-default' class='event-tour-next-btn' data-role='next'>Next »</button></div>"
+				+"<button class='btn btn-default' class='event-tour-end-btn'data-role='end'>End tour</button></nav></div>",
 				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 				+"<div class='popover-content'></div>"
 			},
@@ -82,13 +84,18 @@ window.onload = function(){
 				+"(what other workers have handed off to you)" 
 				+ ", and the deliverables you are expected to create."
 				+"<nav class='popover-navigation'><div class='btn-group'>"
-				+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
-				+"<button class='btn btn-default' data-role='next' disabled='true' >Next »</button></div>"
-				+"<button class='btn btn-default' data-role='end'>End tour</button></nav>",
+				+"<button class='btn btn-default' class='event-tour-prev-btn' data-role='prev'>« Prev</button>"
+				+"<button class='btn btn-default' class='event-tour-next-btn' data-role='next' disabled='true' >Next »</button></div>"
+				+"<button class='btn btn-default' class='event-tour-end-btn' data-role='end'>End tour</button></nav>",
 				template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 				+"<div class='popover-content'></div>"
 			}
-			]
+			],
+			onStart: function (tour) {logEventActivity('Started Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onEnd: function (tour) {logEventActivity('Ended Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onNext: function (tour) {logEventActivity('Clicked Next on Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onPrev: function (tour) {logEventActivity('Clicked Previous on Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+
 			});
 
 			//Runs the event tour

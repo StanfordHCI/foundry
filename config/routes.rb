@@ -116,6 +116,9 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
     end
   end
   
+  post '/activity_logs/create' => 'activity_logs#create'
+  post '/activity_logs/log_update' => 'activity_logs#log_update'
+
   get '/users/logout' => 'users#logout'
   get '/users/login' => 'users#login'
   

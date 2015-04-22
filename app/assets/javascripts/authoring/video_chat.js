@@ -7,6 +7,8 @@ function createVideoConf(room_name){
 
 	//$("#vc").html('<video id="localVideo" autoplay></video>');
 	$("#videoChatModal").modal('show');
+
+  logTeamActivity(('Created Video Conference - Room Name: ' + room_name), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	
 }
 
@@ -27,6 +29,8 @@ function disconnectVC(){
 	comm.close();
 	//$("video").remove();
 	$("#videoChatModal").modal('hide');
+  logTeamActivity("Disconnected Video Conference", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	
 }
 

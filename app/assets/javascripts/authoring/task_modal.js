@@ -12,6 +12,8 @@ function showTaskOverview(groupNum){
 	var label = title;
 	$('#task_modal_Label').html(label);
 
+    $("#modal-close-btn").attr('onclick', 'logHideTaskOverview('+groupNum+')');
+
 	//modal content
 	//var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
 	var taskOverviewContent = getTaskOverviewContent(groupNum);
@@ -88,12 +90,18 @@ function showTaskOverview(groupNum){
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
 	}
+    logEventActivity('Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
+//logs when the user clicks the x on the top right of the task modal to hide it
+function logHideTaskOverview(groupNum){
+    logEventActivity('Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
-
 function editTaskOverview(popover,groupNum){
-	var task_id = getEventJSONIndex(groupNum);
+	logEventActivity('Edit Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
    	
@@ -590,6 +598,9 @@ function saveTaskOverview(groupNum){
 
     flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
+
+    logEventActivity('Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
 
     $('#task_modal').modal('hide'); 
