@@ -16,7 +16,7 @@ var flashTeamsJSON = {
     //"original_json": "original json"
 };
 
-function logTeamActivity(activityName, time, currentUser, chatName, teamId, loadedStatus){
+function logActivity(updateType, activityName, time, currentUser, chatName, teamId, loadedStatus){
    
     var activityJSON = JSON.stringify(loadedStatus);
     var currentUser = JSON.stringify(currentUser);
@@ -26,29 +26,9 @@ function logTeamActivity(activityName, time, currentUser, chatName, teamId, load
     $.ajax({
         url: url,
         type: 'post',
-        data: {"activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON, "update_type": "Team Event"},
+        data: {"update_type": updateType, "activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON},
         success: function (result) {
             console.log("Team activity: " + activityName);
-        },
-        error: function (){
-            console.log('something went wrong!');
-        }
-    });
-}
-
-function logEventActivity(activityName, time, currentUser, chatName, teamId, eventJSON){
-
-    var activityJSON = JSON.stringify(eventJSON);
-    var currentUser = JSON.stringify(currentUser);
-
-    var url = '/activity_logs/log_update';
-
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {"activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON, "update_type": "Task Event"},
-        success: function (result) {
-            console.log("Event activity: " + activityName);
         },
         error: function (){
             console.log('something went wrong!');

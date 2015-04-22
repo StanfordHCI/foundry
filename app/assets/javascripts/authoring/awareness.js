@@ -169,7 +169,7 @@ function startFlashTeam() {
 function endTeam() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
-    logTeamActivity('End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("Team Update",'End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     updateStatus(false);
     stopCursor();
     stopProjectStatus();
@@ -393,7 +393,7 @@ function renderEverything(firstTime) {
     });
 
     if(firstTime) {
-        logTeamActivity('Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
         listenForVisibilityChange();
     }
@@ -405,19 +405,19 @@ function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
         window_visibility_change = "visibilitychange";
         window_visibility_state = "visibilityState";
-        logTeamActivity('Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.mozHidden !== "undefined") {
         window_visibility_change = "mozvisibilitychange";
         window_visibility_state = "mozVisibilityState";
-        logTeamActivity('Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.msHidden !== "undefined") {
         window_visibility_change = "msvisibilitychange";
         window_visibility_state = "msVisibilityState";
-        logTeamActivity('Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.webkitHidden !== "undefined") {
         window_visibility_change = "webkitvisibilitychange";
         window_visibility_state = "webkitVisibilityState";
-        logTeamActivity('Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     }
 
     // Add a listener for the next time that the page becomes visible
@@ -426,7 +426,7 @@ function listenForVisibilityChange(){
         //if(state == "visible" && in_progress){
         if(state == "visible"){
             renderEverything(false);
-            logTeamActivity('Window Became Visible', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+            logActivity("Team Update",'Window Became Visible', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         }
     }, false);
 };  
@@ -759,12 +759,12 @@ var startTeam = function(firstTime){
         
         flashTeamsJSON["paused"]=false;
 
-        logTeamActivity('Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
         //added next line to disable the ticker
         updateStatus(true);
 
-        logTeamActivity('Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         //console.log("here2");
     }
 

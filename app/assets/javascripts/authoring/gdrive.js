@@ -81,12 +81,12 @@ var googleDriveLink = function(){
     gFolderBtn.onclick=function(){
         //console.log("is clicked");
         if((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
-          logTeamActivity('Clicked Google Drive Project Folder', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON); 
+          logActivity("Team Update",'Clicked Google Drive Project Folder', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON); 
           window.open(flashTeamsJSON.folder[1]);
           
 
         }else{
-          logTeamActivity('Clicked Google Drive Project Folder - Error Alert Triggered', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+          logActivity("Team Update",'Clicked Google Drive Project Folder - Error Alert Triggered', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
           alert("Team hasn't started or folder hasn't been created yet.");
         }
         
@@ -133,7 +133,7 @@ function createProjectFolder(){
 
     googleDriveLink();
 
-    logTeamActivity('Created Project and Task Folders', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("Team Update",'Created Project and Task Folders', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     });
     
     

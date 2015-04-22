@@ -253,19 +253,19 @@ var authoringTour = new Tour({
 		title: "<b>Good luck! </b>", 
 		content: "Good luck with your project and please enjoy the use of Foundry!"
 	}],
-		onStart: function (tour) {logTeamActivity('Start Foundry Authoring Tour - step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onEnd: function (tour) {logTeamActivity('Ended Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		//onShow: function (tour) {logEventActivity('Viewing Foundry Authoring Tour- title: ' + authoringTour.getStep(authoringTour.getCurrentStep()).title + '- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onNext: function (tour) {logTeamActivity('Clicked Next on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onPrev: function (tour) {logTeamActivity('Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onPrev: function (tour) {logTeamActivity('Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+		onStart: function (tour) {logActivity("Team Update",'Start Foundry Authoring Tour - step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onEnd: function (tour) {logActivity("Team Update",'Ended Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		//onShow: function (tour) {logActivity("Event Update",'Viewing Foundry Authoring Tour- title: ' + authoringTour.getStep(authoringTour.getCurrentStep()).title + '- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onNext: function (tour) {logActivity("Team Update",'Clicked Next on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onPrev: function (tour) {logActivity("Team Update",'Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onPrev: function (tour) {logActivity("Team Update",'Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 });
 
 
 //Start the tour on the click of the Tour Button, which only appears in author mode
 $("#tourBtn").click(function(){
 
-	logEventActivity('Started Foundry Authoring Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	logActivity("Event Update",'Started Foundry Authoring Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	//Initialize the tour
 	authoringTour.init();
     authoringTour.start(true);
@@ -472,16 +472,16 @@ var expertTour = new Tour({
 		content: "Good luck with your project and please enjoy the use of Foundry!"
 	}
 ],
-		onStart: function (tour) {logTeamActivity('Start Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onEnd: function (tour) {logTeamActivity('Ended Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onNext: function (tour) {logTeamActivity('Clicked Next on Foundry Worker Tour - step: - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onPrev: function (tour) {logTeamActivity('Clicked Previous on Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+		onStart: function (tour) {logActivity("Team Update",'Start Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onEnd: function (tour) {logActivity("Team Update",'Ended Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onNext: function (tour) {logActivity("Team Update",'Clicked Next on Foundry Worker Tour - step: - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onPrev: function (tour) {logActivity("Team Update",'Clicked Previous on Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 });
 
 //Start the tour on the click of the expert tour button, only shows up in worker mode
 $("#expertTourBtn").click(function() {
 
-	logEventActivity('Started Foundry Worker Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	logActivity("Event Update",'Started Foundry Worker Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 	//Initialize the expert tour
 	expertTour.init();

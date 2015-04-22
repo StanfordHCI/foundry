@@ -90,17 +90,17 @@ function showTaskOverview(groupNum){
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
 	}
-    logEventActivity('Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    logActivity("Event Update",'Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideTaskOverview(groupNum){
-    logEventActivity('Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    logActivity("Event Update",'Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
 function editTaskOverview(popover,groupNum){
-	logEventActivity('Edit Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+	logActivity("Event Update",'Edit Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
@@ -599,7 +599,7 @@ function saveTaskOverview(groupNum){
     flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
 
-    logEventActivity('Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    logActivity("Event Update",'Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
 
