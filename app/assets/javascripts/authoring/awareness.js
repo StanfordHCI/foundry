@@ -405,19 +405,19 @@ function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
         window_visibility_change = "visibilitychange";
         window_visibility_state = "visibilityState";
-        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Change -- document.hidden: ' + document.hidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.mozHidden !== "undefined") {
         window_visibility_change = "mozvisibilitychange";
         window_visibility_state = "mozVisibilityState";
-        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Change - document.mozHidden: ' + document.mozHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.msHidden !== "undefined") {
         window_visibility_change = "msvisibilitychange";
         window_visibility_state = "msVisibilityState";
-        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Change - document.msHidden: ' + document.msHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.webkitHidden !== "undefined") {
         window_visibility_change = "webkitvisibilitychange";
         window_visibility_state = "webkitVisibilityState";
-        logActivity("Team Update",'Window Visibility Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("Team Update",'Window Visibility Change - document.webkitHidden: ' + document.webkitHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     }
 
     // Add a listener for the next time that the page becomes visible
