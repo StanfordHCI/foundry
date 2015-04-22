@@ -91,10 +91,10 @@ window.onload = function(){
 				+"<div class='popover-content'></div>"
 			}
 			],
-			onStart: function (tour) {logEventActivity('Started Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onEnd: function (tour) {logEventActivity('Ended Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onNext: function (tour) {logEventActivity('Clicked Next on Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onPrev: function (tour) {logEventActivity('Clicked Previous on Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+			onStart: function (tour) {logEventActivity('Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onEnd: function (tour) {logEventActivity('Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onNext: function (tour) {logEventActivity('Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onPrev: function (tour) {logEventActivity('Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 
 			});
 

@@ -81,26 +81,26 @@ var authoringTour = new Tour({
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
 	},
-	{
-		element: "#search-events-container" ,
-		title: "<b>Event Library</b>", 
-		content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
-		+"all previously created events by entering in keywords, inputs, "
-		+"and outputs, and drag them to your timeline."
-		+"<img src='/assets/eventlibrary.png'> </img></div>"
-		+"<nav class='popover-navigation'><div class='btn-group'>"
-		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
-		+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
-		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
-		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
-		+"<div class='popover-content'></div>",
-		onShow: function(authoringTour) {
-			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
-			if($("#search-events-container").hasClass("active") == false) {
-				$("#left-sidebar .sidebar-item .header")[2].click();
-			}
-		}
-	},
+	// {
+	// 	element: "#search-events-container" ,
+	// 	title: "<b>Event Library</b>", 
+	// 	content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
+	// 	+"all previously created events by entering in keywords, inputs, "
+	// 	+"and outputs, and drag them to your timeline."
+	// 	+"<img src='/assets/eventlibrary.png'> </img></div>"
+	// 	+"<nav class='popover-navigation'><div class='btn-group'>"
+	// 	+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
+	// 	+"<button class='btn btn-default' data-role='next'>Next »</button></div>"
+	// 	+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
+	// 	template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
+	// 	+"<div class='popover-content'></div>",
+	// 	onShow: function(authoringTour) {
+	// 		if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
+	// 		if($("#search-events-container").hasClass("active") == false) {
+	// 			$("#left-sidebar .sidebar-item .header")[2].click();
+	// 		}
+	// 	}
+	// },
 	{
 		orphan: true,
 		title: "<b>Handoffs</b>",
@@ -252,12 +252,19 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Good luck! </b>", 
 		content: "Good luck with your project and please enjoy the use of Foundry!"
-	}]
+	}],
+		onStart: function (tour) {logEventActivity('Start Foundry Authoring Tour - step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onEnd: function (tour) {logEventActivity('Ended Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		//onShow: function (tour) {logEventActivity('Viewing Foundry Authoring Tour- title: ' + authoringTour.getStep(authoringTour.getCurrentStep()).title + '- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onNext: function (tour) {logEventActivity('Clicked Next on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onPrev: function (tour) {logEventActivity('Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 });
 
 
 //Start the tour on the click of the Tour Button, which only appears in author mode
 $("#tourBtn").click(function(){
+
+	logEventActivity('Started Foundry Authoring Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	//Initialize the tour
 	authoringTour.init();
     authoringTour.start(true);
@@ -463,10 +470,18 @@ var expertTour = new Tour({
 		title: "<b>Good luck! </b>", 
 		content: "Good luck with your project and please enjoy the use of Foundry!"
 	}
-]});
+],
+		onStart: function (tour) {logEventActivity('Start Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onEnd: function (tour) {logEventActivity('Ended Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onNext: function (tour) {logEventActivity('Clicked Next on Foundry Worker Tour - step: - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  		onPrev: function (tour) {logEventActivity('Clicked Previous on Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+});
 
 //Start the tour on the click of the expert tour button, only shows up in worker mode
 $("#expertTourBtn").click(function() {
+
+	logEventActivity('Started Foundry Worker Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	//Initialize the expert tour
 	expertTour.init();
     expertTour.start(true);
