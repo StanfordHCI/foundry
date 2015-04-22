@@ -16,17 +16,8 @@ var flashTeamsJSON = {
     //"original_json": "original json"
 };
 
-//rails g migration create_activity_logs activity_type:string act_tstamp:datetime current_user:string chat_role:string team_id:integer activity_json:text
-
 function logTeamActivity(activityName, time, currentUser, chatName, teamId, loadedStatus){
-    // console.log('activity: ' + activityName);
-    // console.log('time: ' + time);
-    // console.log('current_user: ' + currentUser);
-    // console.log('chatRole: ' + chatRole);
-    // console.log('teamId: ' + teamId);
-    // console.log('loadedStatus: ' + loadedStatus);
-
-    //"activity_type": activityName, "act_tstamp" :time, "current_user": currentUser, "chat_role": chatRole, "team_id": teamId, "activity_json": loadedStatus
+   
     var activityJSON = JSON.stringify(loadedStatus);
     var currentUser = JSON.stringify(currentUser);
 
@@ -37,28 +28,15 @@ function logTeamActivity(activityName, time, currentUser, chatName, teamId, load
         type: 'post',
         data: {"activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON, "update_type": "Team Event"},
         success: function (result) {
-        //do somthing here
-        //window.alert("success!!");
             console.log("Team activity: " + activityName);
         },
         error: function (){
-            //window.alert("something wrong!");
             console.log('something went wrong!');
         }
     });
-    // }).done(function(data){
-    //     console.log("UPDATED log team activity!");
-    // });
-
 }
 
 function logEventActivity(activityName, time, currentUser, chatName, teamId, eventJSON){
-    // console.log('activity: ' + activityName);
-    // console.log('time: ' + time);
-    // console.log('current_user: ' + currentUser);
-    // console.log('chatRole: ' + chatRole);
-    // console.log('teamId: ' + teamId);
-    // console.log('eventJSON: ' + JSON.stringify(eventJSON));
 
     var activityJSON = JSON.stringify(eventJSON);
     var currentUser = JSON.stringify(currentUser);
@@ -70,20 +48,12 @@ function logEventActivity(activityName, time, currentUser, chatName, teamId, eve
         type: 'post',
         data: {"activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON, "update_type": "Task Event"},
         success: function (result) {
-        //do somthing here
-        //window.alert("success!!");
-            //console.log("UPDATED log event activity!");
             console.log("Event activity: " + activityName);
         },
         error: function (){
             console.log('something went wrong!');
-            //window.alert("something wrong!");
         }
     });
-    // }).done(function(data){
-    //     console.log("UPDATED log team activity!");
-    // });
-
 }
 
 
