@@ -190,7 +190,7 @@ function addPillDragFns($elem, $folderElems) {
             var destId = $mouseOverElem.attr("role-id");
             
             logActivity("Team Update",'Drag Member to Folder - Before', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
-            
+
             entryManager.moveEntry(entryId, destId);
             $elem.remove();
             $mouseOverElem.removeClass("accepting");
@@ -380,7 +380,7 @@ function renderMemberPopovers(members) {
          +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     '
          +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button><br><br>'
          
-        + 'Invitation link: <a id="invitation_link_' + member_id + '" href="' + invitation_link + '" target="_blank">'
+        + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id + ')" href="' + invitation_link + '" target="_blank">'
         + invitation_link
         + '</a>'
         +'</p></form>' 
@@ -398,6 +398,8 @@ function renderMemberPopovers(members) {
             content:  content,
             container: $("#member-container"),
             callback: function(){
+                logActivity("Team Update",'Clicked Member Pill to Show Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
+
                //$("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
                 $(this).typeahead({source: oSkills})
@@ -405,8 +407,8 @@ function renderMemberPopovers(members) {
            }
        });
        
-        $("#mPill_" + member_id).off('click', generateMemberPillClickHandlerFunction(member_id));
         $("#mPill_" + member_id).on('click', generateMemberPillClickHandlerFunction(member_id));
+        $("#mPill_" + member_id).off('click', generateMemberPillClickHandlerFunction(member_id));
 
         // append oDesk Skills input to popover
         $(document).ready(function() {
@@ -414,6 +416,11 @@ function renderMemberPopovers(members) {
         });
     }
 };
+
+function clickedMemInviteLink(mem_id){
+    logActivity("Team Update", 'Clicked Member Invite Link', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+
+}
 
 function generateMemberPillClickHandlerFunction(mem_id) {
     return function() {
@@ -428,6 +435,9 @@ function generateMemberCategoryChangeFunction(mem_id) {
 }
 
 function memberPillClick(mem_id) {
+
+    logActivity("Team Update", 'Clicked Member Pill', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+
     //Close all open popovers
     entryManager.eachMemberId(function(id) {
         if(id != mem_id) {
