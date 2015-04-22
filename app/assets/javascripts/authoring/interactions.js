@@ -279,7 +279,7 @@ function handoffStart(firstEvent){
 
 //TODO: COMMENT
 function getHandoffInfo(handoffId){
-	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
 		+ '</textarea><br />'
@@ -461,7 +461,7 @@ function drawCollabPopover(collabId, ev1, ev2) {
 //TODO: COMMENT
 function getCollabInfo(collabId){
 	
-	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="collabNotes_' + collabId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
         +'</textarea><br />'
