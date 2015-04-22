@@ -294,15 +294,15 @@ function drawBottom(eventObj) {
 
         if(ev.gdrive.length > 0){
           if (in_progress || (!in_progress && current_user == "Author" && flashTeamsJSON["startTime"])){
-            logActivity("Event Update",'Clicked gDrive Upload Icon - Success', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             window.open(ev.gdrive[1]);
             } else{
-            logActivity("Event Update",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             alert("The flash team must be running for you to upload a file!");  
             }
         }
         else{
-            logActivity("Event Update",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             alert("The flash team must be running for you to upload a file!");  
         }
     });

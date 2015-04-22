@@ -28,7 +28,7 @@ function logActivity(updateType, activityName, time, currentUser, chatName, team
         type: 'post',
         data: {"update_type": updateType, "activity_type": activityName, "act_tstamp": time, "current_user": currentUser, "chat_name": chatName, "team_id": teamId, "activity_json": activityJSON},
         success: function (result) {
-            console.log("Team activity: " + activityName);
+            console.log(activityName);
         },
         error: function (){
             console.log('something went wrong!');

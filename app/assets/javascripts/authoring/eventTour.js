@@ -40,7 +40,7 @@ window.onload = function(){
 
 	    //If the worker is assigned an event, initializes the tour
 	    if (elemId){
-	    	logActivity("Team Update",'Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	    	logActivity("var eventTour = new Tour",'Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 		    var eventTour = new Tour({
 			autoscroll: true,
@@ -91,10 +91,10 @@ window.onload = function(){
 				+"<div class='popover-content'></div>"
 			}
 			],
-			onStart: function (tour) {logActivity("Team Update",'Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onEnd: function (tour) {logActivity("Team Update",'Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onNext: function (tour) {logActivity("Team Update",'Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onPrev: function (tour) {logActivity("Team Update",'Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+			onStart: function (tour) {logActivity("eventTour onStart: function (tour)",'Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onEnd: function (tour) {logActivity("eventTour onEnd: function (tour)",'Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onNext: function (tour) {logActivity("eventTour onNext: function (tour)",'Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+  			onPrev: function (tour) {logActivity("eventTour onPrev: function (tour)",'Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 
 			});
 

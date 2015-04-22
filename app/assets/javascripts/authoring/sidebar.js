@@ -87,7 +87,7 @@ function saveProjectOverview(){
 				//return;
 		}
 
-    logActivity("Team Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("saveProjectOverview() - Before Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 	 
     flashTeamsJSON["projectoverview"] = project_overview_input;
@@ -96,7 +96,7 @@ function saveProjectOverview(){
     
     updateStatus();
 
-    logActivity("Team Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("saveProjectOverview() - After Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
     
     showProjectOverview();

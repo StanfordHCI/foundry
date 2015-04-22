@@ -169,7 +169,7 @@ function startFlashTeam() {
 function endTeam() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
-    logActivity("Team Update",'End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("endTeam()",'End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     updateStatus(false);
     stopCursor();
     stopProjectStatus();
@@ -393,7 +393,7 @@ function renderEverything(firstTime) {
     });
 
     if(firstTime) {
-        logActivity("Team Update",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
         listenForVisibilityChange();
     }
@@ -405,26 +405,26 @@ function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
         window_visibility_change = "visibilitychange";
         window_visibility_state = "visibilityState";
-        logActivity("Team Update",'Window Visibility Change -- document.hidden: ' + document.hidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("listenForVisibilityChange()",'Window Visibility Change -- document.hidden: ' + document.hidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.mozHidden !== "undefined") {
         window_visibility_change = "mozvisibilitychange";
         window_visibility_state = "mozVisibilityState";
-        logActivity("Team Update",'Window Visibility Change - document.mozHidden: ' + document.mozHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.mozHidden: ' + document.mozHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.msHidden !== "undefined") {
         window_visibility_change = "msvisibilitychange";
         window_visibility_state = "msVisibilityState";
-        logActivity("Team Update",'Window Visibility Change - document.msHidden: ' + document.msHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.msHidden: ' + document.msHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.webkitHidden !== "undefined") {
         window_visibility_change = "webkitvisibilitychange";
         window_visibility_state = "webkitVisibilityState";
-        logActivity("Team Update",'Window Visibility Change - document.webkitHidden: ' + document.webkitHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.webkitHidden: ' + document.webkitHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     }
 
     // Add a listener for the next time that the page becomes visible
     document.addEventListener(window_visibility_change, function() {
         var state = document[window_visibility_state];
 
-        logActivity("Team Update",'Window Visibility Change -- window_visibility_state: ' + state, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("listenForVisibilityChange() -- document.addEventListener(window_visibility_change, function()",'Window Visibility Change -- window_visibility_state: ' + state, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
         //if(state == "hidden"){
             //logActivity("Team Update",'Window Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
@@ -766,12 +766,12 @@ var startTeam = function(firstTime){
         
         flashTeamsJSON["paused"]=false;
 
-        logActivity("Team Update",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
         //added next line to disable the ticker
         updateStatus(true);
 
-        logActivity("Team Update",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         //console.log("here2");
     }
 

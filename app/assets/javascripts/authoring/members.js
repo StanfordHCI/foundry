@@ -189,14 +189,14 @@ function addPillDragFns($elem, $folderElems) {
             var entryId = $elem.attr("role-id");
             var destId = $mouseOverElem.attr("role-id");
             
-            logActivity("Team Update",'Drag Member to Folder - Before', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
+            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - Before', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
 
             entryManager.moveEntry(entryId, destId);
             $elem.remove();
             $mouseOverElem.removeClass("accepting");
             $mouseOverElem = undefined;
 
-            logActivity("Team Update",'Drag Member to Folder - After', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
+            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - After', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
             
             renderCurrentFolderPills();
             updateStatus();
@@ -398,7 +398,7 @@ function renderMemberPopovers(members) {
             content:  content,
             container: $("#member-container"),
             callback: function(){
-                logActivity("Team Update",'Clicked Member Pill to Show Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
+                logActivity("renderMemberPopovers(members)",'Clicked Member Pill to Show Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
 
                //$("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
@@ -418,7 +418,7 @@ function renderMemberPopovers(members) {
 };
 
 function clickedMemInviteLink(mem_id){
-    logActivity("Team Update", 'Clicked Member Invite Link', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+    logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
 
 }
 
@@ -436,7 +436,7 @@ function generateMemberCategoryChangeFunction(mem_id) {
 
 function memberPillClick(mem_id) {
 
-    logActivity("Team Update", 'Clicked Member Pill', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+    logActivity("memberPillClick(mem_id)", 'Clicked Member Pill', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
 
     //Close all open popovers
     entryManager.eachMemberId(function(id) {
@@ -497,7 +497,7 @@ function addFolder(folderName, parentId) {
     var folderObject = newFolderObject(folderName, parentId);
     entryManager.addEntry(folderObject);
 
-    logActivity("Team Update",'Added Folder', new Date().getTime(), current_user, chat_name, team_id, folderObject);
+    logActivity("addFolder(folderName, parentId)",'Added Folder', new Date().getTime(), current_user, chat_name, team_id, folderObject);
     
     renderCurrentFolderPills();
     updateStatus();
@@ -544,7 +544,7 @@ function addMember() {
 
    renderCurrentFolderPills();
    // renderMemberPopovers(members);
-   logActivity("Team Update",'Added Member', new Date().getTime(), current_user, chat_name, team_id, member_obj);
+   logActivity("addMember()",'Added Member', new Date().getTime(), current_user, chat_name, team_id, member_obj);
 
    updateStatus();
    inviteMember(member_obj.id);
@@ -564,7 +564,7 @@ function addSkill(memberId) {
     member.skills.push(skillName);
     var memberSkillNumber = member.skills.length;
 
-    logActivity("Team Update",('Add Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("addSkill(memberId)",('Add Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
 
     
     $("#skillPills_" + memberId).append('<li class="active" id="sPill_mem' + memberId + '_skill' + memberSkillNumber + '"><a>' + skillName 
@@ -574,7 +574,7 @@ function addSkill(memberId) {
 
 function deleteSkill(memberId, pillId, skillName) {
 
-    logActivity("Team Update",('Delete Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("deleteSkill(memberId, pillId, skillName)",('Delete Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
     //Remove skill pill
     $("#sPill_mem" + memberId + '_skill' + pillId).remove();
     //Update JSON
@@ -670,7 +670,7 @@ function deleteEntry(entryId) {
     $('#confirmAction').modal('hide');
     var entry = entryManager.getEntryById(entryId);
 
-    logActivity("Team Update",'Delete Member', new Date().getTime(), current_user, chat_name, team_id, entry);
+    logActivity("deleteEntry(entryId)",'Delete Member', new Date().getTime(), current_user, chat_name, team_id, entry);
 
     if(entryManager.isMember(entry)) {
         // remove from members array with event object
@@ -714,12 +714,12 @@ function saveMemberInfo(memberId) {
     renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
     flashTeamsJSON['local_update'] = new Date().getTime();
-    logActivity("Team Update",'Saved Member Info', new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("saveMemberInfo(memberId)",'Saved Member Info', new Date().getTime(), current_user, chat_name, team_id, member);
 };
 
 //Close the popover on a member to "cancel" the edit
 function hideMemberPopover(memberId) {
-    logActivity("Team Update",'Closed Member Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(memberId));
+    logActivity("hideMemberPopover(memberId)",'Closed Member Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(memberId));
     $("#mPill_" + memberId).popover("hide");
 }
 
@@ -739,7 +739,7 @@ function inviteMember(pillId) {
 function reInviteMember(pillId) {
     $('#confirmAction').modal('hide');
     
-    logActivity("Team Update",'Reinvited Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
+    logActivity("reInviteMember(pillId)",'Reinvited Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
 
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/reInvite';
@@ -770,7 +770,7 @@ function confirmReplaceMember(pillId) {
 
     //Calls reInviteMember function if user confirms the replace
     document.getElementById("confirmButton").onclick=function(){
-        logActivity("Team Update",'Confirmed Replace Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
+        logActivity("confirmReplaceMember(pillId)",'Confirmed Replace Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
         reInviteMember(pillId)
     };
 
@@ -872,7 +872,7 @@ function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
-    logActivity("Team Update",'Updated Member Role Name', new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("updateRoleName(id, newValue)",'Updated Member Role Name', new Date().getTime(), current_user, chat_name, team_id, member);
     flashTeamsJSON['local_update'] = new Date().getTime;
     updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);

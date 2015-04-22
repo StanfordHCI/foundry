@@ -25,13 +25,13 @@ function pauseFlashTeam(){
  
 	flashTeamsJSON["paused"]=true;
 
-    logActivity("Team Update",'Edit Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("pauseFlashTeam() - Before Update Status",'Edit Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	updateStatus();
 
     //draw events in editable mode (show collaboration and handoff buttons, show drag handles etc.)
     enableTeamEditing();
     //drawEvents(true);
-    logActivity("Team Update",'Edit Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("pauseFlashTeam() - After Update Status",'Edit Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 }
 
@@ -62,13 +62,13 @@ function resumeFlashTeam(){
     $("#flashTeamResumeBtn").css('display', 'none');
  
 	flashTeamsJSON["paused"]=false;
-    
-    logActivity("Team Update",'Save Edited Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
+    logActivity("resumeFlashTeam() - Before Update Status",'Save Edited Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	updateStatus();
 	
     //Hide handoff and collaboration buttons on the events.
     //drawEvents(false);
     disableTeamEditing();
 
-    logActivity("Team Update",'Save Edited Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("resumeFlashTeam() - After Update Status",'Save Edited Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }
