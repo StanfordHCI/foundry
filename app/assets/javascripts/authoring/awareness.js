@@ -261,24 +261,27 @@ function renderEverything(firstTime) {
         type: 'get'
     }).done(function(data){
 
-       
-
         // firstTime will also be true in the case that flashTeamEndedorStarted, so
         // we make sure that it is false (i.e. true firstTime, upon page reload for user
         // before the team starts)
         // !user_poll means a poll wasn't the one the generated this call to renderEverything
         //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
-        if(firstTime){
-            renderChatbox(); 
-            renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
-        }
+        //if(firstTime){
+            //renderChatbox(); 
+            //renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
+        //}
 
         //console.log("inside render everything"); 
         //console.log("THIS IS THE DATA", data);
             
         //get user name and user role for the chat
         if(data == null){
-            //console.log("RETURNING BEFORE LOAD"); 
+            if(firstTime){
+                renderChatbox(); 
+                renderProjectOverview(); 
+                //console.log("DATA NULL & FIRST TIME - RETURNING BEFORE LOAD"); 
+            }
+            //console.log("DATA NULL - RETURNING BEFORE LOAD"); 
             // will only be run way at the beginning before any members or events are added
             // will only run in requester's page, because on members' pages, members array
             // length will be greater than zero

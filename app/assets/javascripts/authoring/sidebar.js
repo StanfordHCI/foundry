@@ -169,6 +169,8 @@ var lastMessage = 0;
 var lastWriter;
 
 function displayChatMessage(name, uniq, role, date, text) {
+
+    console.log('calling displayChatMessage');
     
     if(name == undefined){
         return;
@@ -238,11 +240,15 @@ function displayChatMessage(name, uniq, role, date, text) {
         wrapperDiv
           .append(messageFooterDiv)
           .append(clearDiv.clone());
+
+        console.log('appending wrapperDiv to message list');
       
         wrapperDiv.appendTo($('#messageList'));
         
     } else{
         var textP = $('<p/>').text(text);
+
+        console.log('appending textP to messageList');
         
         textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
 
