@@ -50,6 +50,7 @@ $(document).ready(function() {
       });
       $(this).addClass("active");
       leftSidebar.addClass("active");
+
     }
   });
   
