@@ -5,7 +5,7 @@
       <span id="ft-author-name" style="display:none"><%= flash_team.author%></span>
       <!-- Button to trigger modal -->
       <a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;">
-        <i class="info-sign" style="vertical-align: middle;"></i>
+        <i class="info-sign" onclick="logSidebarClick('project-overview-info-sign')" style="vertical-align: middle;"></i>
       </a>
     </h4>
     <%= render :partial => "project_overview_modal" %>

@@ -13,6 +13,9 @@ function showProjectOverview(){
 	if(project_overview === undefined){
 		project_overview = "No project overview has been added yet.";
 	}
+
+    logActivity("showProjectOverview()",'Show Project Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
 	var uniq_u=getParameterByName('uniq');
@@ -50,6 +53,9 @@ function editProjectOverview(popover){
 	
 	if(popover==true){
 		$('#po-edit-link').hide();
+
+        logActivity("editProjectOverview(true)",'Edit Project Overview - In Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 		
 		var projectOverviewForm = '<form name="projectOverviewForm" id="projectOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="projectOverviewInput" rows="6" placeholder="Description of project...">'+project_overview+'</textarea>'
@@ -103,7 +109,7 @@ function saveProjectOverview(){
 }
 
 function logSidebarClick(containerName){
-    logActivity("logSidebarClick('containerName')",'Clicked on Sidebar Container: ' + containerName, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity("logSidebarClick('containerName')",'Clicked on Sidebar Container Element: ' + containerName, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }
 
 
