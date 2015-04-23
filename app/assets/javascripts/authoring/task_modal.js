@@ -335,7 +335,7 @@ function getTaskOverviewContent(groupNum){
 		for(var i=0; i<all_inputs.length; i++){
                 input_ev_id = all_inputs[i][0];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += "<a href=" + input_ev["gdrive"][1] + " target='_blank'>"+ all_inputs[i][1] +"</a></br>";
+                content += '<a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logInputClick(' + groupNum + ',' + input_ev_id + ')">'+ all_inputs[i][1] +'</a></br>';
         }
         //content += '<b>Inputs:</b><br>';
 		/*var inputs = ev.inputs.split(",");
@@ -454,6 +454,13 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
 	
 	return content;
+}
+
+
+function logInputClick(groupNum, inputEvId){
+    //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
+    logActivity("logInputClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+
 }
 
 
