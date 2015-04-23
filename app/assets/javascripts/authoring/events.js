@@ -261,14 +261,16 @@ function createEvent(point, duration) {
 
 function newEventObject(snapPoint, duration, objectToDuplicate){
 
+    var documented_questions = []
+    documented_questions[0] = "Please explain all other design or execution decisions made, along with the reason they were made";
+    documented_questions[1] = "Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)";
+
     duration = duration || 60;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
         timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
-        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""],
-            ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
         "outputQs":{}};
 
 
@@ -283,8 +285,16 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     newEvent["dri"] = objectToDuplicate["dri"] || "";
     newEvent["pc"] =  objectToDuplicate["pc"]|| "";
     newEvent["notes"] = objectToDuplicate["notes"] || "";
+    if(objectToDuplicate["docQs"]){
+        var questions = [];
+        for(var i=0; i < objectToDuplicate["docQs"].length; i++){
+             questions.push([objectToDuplicate["docQs"][i],""]);
+        }
+        newEvent["docQs"] = questions;
 
-
+    }else{
+        newEvent["docQs"] = [[documented_questions[0],""],[documented_questions[1], ""]];
+    }
 
     return newEvent;
 }
@@ -333,7 +343,7 @@ function duplicateEvent(groupNumber){
 }
 
 function editEvent(groupNumber){
-    $('#task_modal').modal({show: true, onload: editTaskOverview(true, groupNumber)});
+    $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 }
 
 function checkWithinTimelineBounds(snapPoint) {

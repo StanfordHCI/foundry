@@ -281,7 +281,7 @@ function drawBottom(eventObj) {
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
-    if( !in_progress && flashTeamsJSON["paused"] != true){
+    if( !in_progress || flashTeamsJSON["paused"] ==true ){
         var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
         configIcon.on("click", onConfigClick);
     }
