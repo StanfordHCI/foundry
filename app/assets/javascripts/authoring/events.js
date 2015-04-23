@@ -288,7 +288,7 @@ function createDuplicateEvent(jsonevent){
         "title":oldeventObj.title+"(Copy)", "id":createEventId(), 
         "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
         "startTime": startTimeObj["startTimeinMinutes"], "duration":oldeventObj.duration, 
-        "members": oldeventObj.members, timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
+        "members": oldeventObj.members, timer: jsonevent.duration, task_startBtn_time:oldeventObj.task_startBtn_time, task_endBtn_time:oldeventObj.task_endBtn_time,
         "dri":oldeventObj.dri, "pc":oldeventObj.pc, "notes":oldeventObj.notes, "startHr": startTimeObj["startHr"], "status":"not_started",
         "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":oldeventObj.completed_x, "inputs":oldeventObj.inputs, "all_inputs":oldeventObj.all_inputs, "outputs":oldeventObj.outputs, events_after : oldeventObj.events_after,
         "docQs": oldeventObj.docQs,"outputQs":oldeventObj.outputQs,"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};

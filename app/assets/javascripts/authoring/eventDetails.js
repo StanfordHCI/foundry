@@ -311,8 +311,10 @@ if(!window._foundry) {
                 return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/member/setting.svg" : "/assets/icons/member/setting_white.svg";
             },
+            
+            id: function(d) {return "setting-icon" + d.groupNum;},
             "class": "setting-icon",
-            "id": "settingID",
+            groupNum: function(d) {return d.groupNum},
 
             // tooltip stuff
             "data-toggle": "tooltip",
