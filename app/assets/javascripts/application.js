@@ -52,7 +52,7 @@
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
 //= require ./authoring/jquery.cookie
-//= require ./authoring/video_chat
+// require ./authoring/video_chat
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
