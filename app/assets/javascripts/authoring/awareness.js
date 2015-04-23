@@ -266,21 +266,21 @@ function renderEverything(firstTime) {
         // before the team starts)
         // !user_poll means a poll wasn't the one the generated this call to renderEverything
         //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
-        //if(firstTime){
-            //renderChatbox(); 
-            //renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
-        //}
+        if(firstTime){
+            renderChatbox(); 
+            renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
+        }
 
         //console.log("inside render everything"); 
         //console.log("THIS IS THE DATA", data);
             
         //get user name and user role for the chat
         if(data == null){
-            if(firstTime){
-                renderChatbox(); 
-                renderProjectOverview(); 
-                //console.log("DATA NULL & FIRST TIME - RETURNING BEFORE LOAD"); 
-            }
+            // if(firstTime){
+            //     renderChatbox(); 
+            //     renderProjectOverview(); 
+            //     //console.log("DATA NULL & FIRST TIME - RETURNING BEFORE LOAD"); 
+            // }
             //console.log("DATA NULL - RETURNING BEFORE LOAD"); 
             // will only be run way at the beginning before any members or events are added
             // will only run in requester's page, because on members' pages, members array
@@ -301,7 +301,7 @@ function renderEverything(firstTime) {
         // initialize the entry manager after flashTeamsJSON has been loaded
         window.entryManager = new window.EntryManager(flashTeamsJSON);
 
-        renderChatbox(); 
+        //renderChatbox(); 
         setCurrentMember();
         renderProjectOverview();
         
