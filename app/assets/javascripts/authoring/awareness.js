@@ -1598,12 +1598,12 @@ var trackUpcomingEvent = function(){
 
         var overallTime;
         
-        if (currentUserEvents.length == 0 ){
-            overallTime = "You have not been assigned to any tasks yet.";
-            statusText.text(overallTime);
-            statusText.style("color", "black");  
-            return;
-        }
+        // if (currentUserEvents.length == 0 ){
+        //     overallTime = "You have not been assigned to any tasks yet.";
+        //     statusText.text(overallTime);
+        //     statusText.style("color", "black");  
+        //     return;
+        // }
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         
