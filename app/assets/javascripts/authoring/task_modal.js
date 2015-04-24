@@ -15,7 +15,6 @@ function showTaskOverview(groupNum){
     $("#modal-close-btn").attr('onclick', 'logHideTaskOverview('+groupNum+')');
 
 	//modal content
-	//var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
 	var taskOverviewContent = getTaskOverviewContent(groupNum);
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
@@ -347,31 +346,92 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
     
     
-	//var events_before_ids = events_immediately_before(groupNum);
-	
-    var handoff_inputs = getHandoffInputs(groupNum);
+
+  // HANDOFF OPTION 1: 
+  //   var handoff_inputs = getHandoffInputs(groupNum);
+
+  //   if(handoff_inputs.length!=0) {
+  //       content += '<div class="row-fluid" >';  
+		// content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
+		// for(var i=0; i<handoff_inputs.length; i++){
+  //               input_ev_id = handoff_inputs[i][0];
+  //               var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+  //               content += '[<a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a>] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ handoff_inputs[i][1] +'</a></br>';
+  //       }
+
+  //       content +=  '</div>'; 
+  //   }
+
+    // HANDOFF OPTION 2:
+    // var handoff_inputs = events_immediately_before(groupNum);
+
+    // if(handoff_inputs.length!=0) {
+    //     content += '<div class="row-fluid" >';  
+    //     content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
+    //     for(var i=0; i<handoff_inputs.length; i++){
+    //             input_ev_id = handoff_inputs[i];
+    //             var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+    //             content += '[<a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a>] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a></br>';
+    //     }
+
+    //     content +=  '</div>'; 
+    // }
+
+    // HANDOFF OPTION 3: 
+    var handoff_inputs = events_immediately_before(groupNum);
 
     if(handoff_inputs.length!=0) {
         content += '<div class="row-fluid" >';  
-		content += '<hr /><h5>Review the following deliverables: </h5>';
-		for(var i=0; i<handoff_inputs.length; i++){
-                input_ev_id = handoff_inputs[i][0];
+        content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
+        for(var i=0; i<handoff_inputs.length; i++){
+                input_ev_id = handoff_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '<a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ handoff_inputs[i][1] +'</a></br>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
         }
 
         content +=  '</div>'; 
     }
 
-    var collab_inputs = getCollabInputs(groupNum);
+    //COLLAB OPTION 1:
+    // var collab_inputs = getCollabInputs(groupNum);
+
+    // if(collab_inputs.length!=0) {
+    //     content += '<div class="row-fluid" >';  
+    //     content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
+    //     for(var i=0; i<collab_inputs.length; i++){
+    //             input_ev_id = collab_inputs[i][0];
+    //             var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+    //             content += '[<a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a>] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ collab_inputs[i][1] +'</a></br>';
+    //     }
+
+    //     content +=  '</div>'; 
+    // }
+
+    //COLLAB OPTION 2:
+    // var collab_inputs = events_in_collaboration(groupNum);
+
+    // if(collab_inputs.length!=0) {
+    //     content += '<div class="row-fluid" >';  
+    //     content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
+    //     for(var i=0; i<collab_inputs.length; i++){
+    //             input_ev_id = collab_inputs[i];
+    //             var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+    //             content += '[<a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a>] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a></br>';
+    //     }
+
+    //     content +=  '</div>'; 
+    // }
+
+    //COLLAB OPTION 3:
+     var collab_inputs = events_in_collaboration(groupNum);
 
     if(collab_inputs.length!=0) {
         content += '<div class="row-fluid" >';  
         content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
         for(var i=0; i<collab_inputs.length; i++){
-                input_ev_id = collab_inputs[i][0];
+                input_ev_id = collab_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '[' + input_ev.title + '] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ collab_inputs[i][1] +'</a></br>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
         }
 
         content +=  '</div>'; 
