@@ -84,6 +84,8 @@ function startTask(groupNum) {
     }
     live_tasks.push(groupNum);
 
+    logActivity("startTask(groupNum)",'Start Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
     drawEvent(eventObj); //Will update color
 
@@ -113,7 +115,8 @@ function pauseTask(groupNum) {
     
     paused_tasks.push(groupNum);
 
-    
+    logActivity("pauseTask(groupNum)",'Pause Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
     drawEvent(eventObj); //Will update color
 	
@@ -147,6 +150,8 @@ function resumeTask(groupNum) {
     if (idx != -1) { // delayed task
         paused_tasks.splice(idx, 1);
     }
+
+    logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
     drawEvent(eventObj); //Will update color
@@ -179,6 +184,10 @@ function checkPausedTaskStatus(eventObj){
 function confirmCompleteTask(groupNum) { 
     //Close the first (task) modal
     $("#task_modal").modal('hide');
+
+    logActivity("confirmCompleteTask(groupNum)",'Confirm Complete Task - Show Doc Questions Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
+    $(".confirm-modal-cancel").attr('onclick', 'logCloseTaskDocModal('+groupNum+')');
 
     //Gets information from event using id
     var indexOfJSON = getEventJSONIndex(groupNum);
@@ -232,16 +241,22 @@ function confirmCompleteTask(groupNum) {
 
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
-    	$('#confirmAction').modal('hide');
+    	logActivity("confirmCompleteTask(groupNum) - document.getElementById('confirmButton').onclick=function()",'Confirm Complete Task - Clicked Confirm Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        $('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };
     //hidePopover(groupNum); 
 
     //calls saveQuestions functions if user chooses to save questions
     document.getElementById("saveButton").onclick=function(){
+        logActivity("confirmCompleteTask(groupNum) - document.getElementById('saveButton').onclick=function()",'Confirm Complete Task - Clicked Save Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
         saveQuestions(groupNum);
     };
+}
+
+function logCloseTaskDocModal(groupNum){
+    logActivity("logCloseTaskDocModal(groupNum)",'Close Task Documentation Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 var allCompleted = function(eventToComplete){
@@ -421,6 +436,7 @@ function saveDocQuestions(groupNum){
 //Called when user presses "Save" button
 var saveQuestions = function(groupNum){
     saveDocQuestions(groupNum);
+    logActivity("var saveQuestions = function(groupNum)",'Save Questions', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     updateStatus();
 }
 
@@ -474,6 +490,8 @@ var completeTask = function(groupNum){
     }
 
     eventToComplete.status = "completed";
+
+    logActivity("var completeTask = function(groupNum)",'Complete Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 

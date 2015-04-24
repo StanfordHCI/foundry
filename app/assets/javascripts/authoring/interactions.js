@@ -33,6 +33,7 @@ function eventMousedown(task2idNum) {
        $('.task-modal-footer').html(modal_footer);
        $('.task-modal-body').html(modal_body);
 
+      logActivity("eventMousedown(task2idNum)",'Clicked on Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(task2idNum)]);
       showTaskOverview(task2idNum);
     }
 
@@ -92,6 +93,7 @@ function eventMousedown(task2idNum) {
             var handoffData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
+            logActivity("eventMousedown(task2idNum)",'Created Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
             updateStatus();
 
             //Visually draw the handoff using the data
@@ -132,6 +134,7 @@ function eventMousedown(task2idNum) {
             var collabData = {"event1":task1idNum, "event2":task2idNum, 
                 "type":"collaboration", "description":"", "id":interaction_counter};
             flashTeamsJSON.interactions.push(collabData);
+            logActivity("eventMousedown(task2idNum)",'Created collaboration', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
             updateStatus();
 
             //Visually draw the collaboration 
@@ -259,6 +262,12 @@ function drawHandoff(handoffData) {
         + getHandoffInfo(handoffId),
         container: $("#timeline-container")
     });
+
+    $("#interaction_" + handoffId).on('click', function() { 
+        logActivity("drawHandoff(handoffData)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
+
+    });
+
 }
 
 //Calculate where the physical handoff starts
@@ -270,7 +279,7 @@ function handoffStart(firstEvent){
 
 //TODO: COMMENT
 function getHandoffInfo(handoffId){
-	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
 		+ '</textarea><br />'
@@ -324,6 +333,7 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
 //Close the popover to "cancel" the edit
 function hideHandoffPopover(handoffId) {
     $('#interaction_' + handoffId).popover("hide");
+    logActivity("hideHandoffPopover(handoffId)",'Closed Handoff Popover', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
 }
 
 //Save handoff notes and update popover
@@ -341,6 +351,7 @@ function saveHandoff(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
+    logActivity("saveHandoff(intId)",'Saved Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
     updateStatus();
 
     //Hide Popover
@@ -440,12 +451,17 @@ function drawCollabPopover(collabId, ev1, ev2) {
         + getCollabInfo(collabId),
         container: $("#timeline-container")
     });
+
+    $("#interaction_" + collabId).on('click', function() { 
+        logActivity("drawCollabPopover(collabId, ev1, ev2)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(collabId)]);
+
+    });
 }
 
 //TODO: COMMENT
 function getCollabInfo(collabId){
 	
-	if(in_progress != true && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
+	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="collabNotes_' + collabId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
         +'</textarea><br />'
@@ -479,6 +495,7 @@ function saveCollab(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
+    logActivity("saveCollab(intId)",'Saved Collaboration', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
     updateStatus();
 
     //Hide Popover
@@ -488,6 +505,7 @@ function saveCollab(intId) {
 //Close popover without saving
 function hideCollabPopover(intId){
 	 $("#interaction_" + intId).popover("hide");
+     logActivity("hideCollabPopover(intId)",'Closed Collab Popover', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
 }
 
 //Deletes the interaction from the timeline and the JSON
@@ -497,6 +515,9 @@ function deleteInteraction(intId) {
 
     //Delete interaction data from JSON
     var indexOfJSON = getIntJSONIndex(intId);
+    
+    logActivity("deleteInteraction(intId)",'Delete Interaction', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
+
     flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
     updateStatus();
 

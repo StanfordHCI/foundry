@@ -13,6 +13,9 @@ function showProjectOverview(){
 	if(project_overview === undefined){
 		project_overview = "No project overview has been added yet.";
 	}
+
+    //logActivity("showProjectOverview()",'Show Project Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
 	var uniq_u=getParameterByName('uniq');
@@ -50,6 +53,9 @@ function editProjectOverview(popover){
 	
 	if(popover==true){
 		$('#po-edit-link').hide();
+
+        logActivity("editProjectOverview(true)",'Edit Project Overview - In Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 		
 		var projectOverviewForm = '<form name="projectOverviewForm" id="projectOverviewForm" style="margin-bottom: 5px;">'
 					+'<textarea type="text"" id="projectOverviewInput" rows="6" placeholder="Description of project...">'+project_overview+'</textarea>'
@@ -86,14 +92,24 @@ function saveProjectOverview(){
 				//alert("Please enter a project overview.");
 				//return;
 		}
+
+    logActivity("saveProjectOverview() - Before Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
 	 
     flashTeamsJSON["projectoverview"] = project_overview_input;
     
     //console.log("saved projectoverview: " + flashTeamsJSON["projectoverview"]);
     
     updateStatus();
+
+    logActivity("saveProjectOverview() - After Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
     
     showProjectOverview();
+}
+
+function logSidebarClick(containerName){
+    logActivity("logSidebarClick('containerName')",'Clicked on Sidebar Container Element: ' + containerName, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }
 
 
@@ -108,8 +124,11 @@ var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
 var name;
 
 function sendChatMessage() {
+    
   var text = $('#messageInput').val();
   var uniq_u=getParameterByName('uniq');
+
+  logActivity("sendChatMessage()",'Send Chat Message', new Date().getTime(), current_user, chat_name, team_id, text);
   
   if(uniq_u == undefined || uniq_u == ""){
     uniq_u = 'Author';
@@ -312,7 +331,8 @@ userListRef.on("child_added", function(snapshot) {
     var numOnlineElem = $(".num-online");
     // number of occurrences of the string "is online"
     // TODO: is there a better way to do this?
-    var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
+    //var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
+    var numOnline = $("#presenceDiv").children().length;
     numOnlineElem.text(numOnline);
 });
 
@@ -320,6 +340,11 @@ userListRef.on("child_added", function(snapshot) {
 userListRef.on("child_removed", function(snapshot) {
 	$("#presenceDiv").children("#" + getMessageId(snapshot))
 	  .remove();
+
+    // update display for num people online
+    var numOnlineElem = $(".num-online");
+    var numOnline = $("#presenceDiv").children().length;
+    numOnlineElem.text(numOnline);
 });
 
 // Update our GUI to change a user"s status.

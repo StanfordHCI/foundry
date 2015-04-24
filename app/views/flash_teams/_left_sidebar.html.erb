@@ -5,7 +5,7 @@
       <span id="ft-author-name" style="display:none"><%= flash_team.author%></span>
       <!-- Button to trigger modal -->
       <a href="#projectOverviewModal" data-toggle="modal" style="font-size: 24px; padding-left: 5px;">
-        <i class="info-sign" style="vertical-align: middle;"></i>
+        <i class="info-sign" onclick="logSidebarClick('project-overview-info-sign')" style="vertical-align: middle;"></i>
       </a>
     </h4>
     <%= render :partial => "project_overview_modal" %>
@@ -18,12 +18,12 @@
         <%= render :partial => "project_status" %>                 
       </div>
 
-      <div id="member-container" class="sidebar-item" style="overflow-y:scroll;">
+      <div id="member-container" class="sidebar-item" onclick="logSidebarClick('member-container')" style="overflow-y:scroll;">
         <!-- Render member roles container --> 
         <%= render :partial => "roles" %>    
       </div>
 
-      <div id="project-overview-container" class="sidebar-item" style="overflow-y:scroll;">
+      <div id="project-overview-container" class="sidebar-item" onclick="logSidebarClick('project-overview-container')" style="overflow-y:scroll;">
         <!-- Render project overview container --> 
         <%= render :partial => "project_overview" %> 
       </div>
@@ -35,7 +35,7 @@
         <input type="file" id="filePicker" />
         <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
         -->	
-        <div id="search-events-container" class="sidebar-item">
+        <div id="search-events-container" class="sidebar-item" onclick="logSidebarClick('search-events-container')">
           <!-- render partial with event library --> 
           <%= render :partial => "event_library" %>
         </div>
@@ -50,7 +50,7 @@
         <br /> Your role: <span id="member_role_span"><%= @member_role %></span></h4>
       </div>
     
-      <div id="project-status-container" class="sidebar-item active">
+      <div id="project-status-container" class="sidebar-item active" onclick="logSidebarClick('project-status-container')">
         <!-- Render project status container --> 
         <%= render :partial => "project_status" %>
         <div id="status-bar-container" >
@@ -58,16 +58,16 @@
         </div>
       </div> <!-- end of project-status-container div -->
 
-      <div id="project-overview-container" class="sidebar-item">
+      <div id="project-overview-container" class="sidebar-item" onclick="logSidebarClick('project-overview-container')">
         <!-- Render project overview container --> 
         <%= render :partial => "project_overview" %> 
       </div>
 
       <% if @member_type == "pc" || @member_type == "client" %>
-        <div id="member-container" class="sidebar-item" style="overflow-y:scroll;">
+        <div id="member-container" class="sidebar-item" style="overflow-y:scroll;" onclick="logSidebarClick('member-container')">
       <% else %>
         <!--Need to include the div for worker (e.g., display none) because we display it via javascript if member role changes -->
-        <div id="member-container" class="sidebar-item" style="overflow-y:scroll; display: none;">
+        <div id="member-container" class="sidebar-item" onclick="logSidebarClick('member-container')" style="overflow-y:scroll; display: none;">
       <% end %>
         <!-- Render member roles container --> 
         <%= render :partial => "roles" %> 

@@ -12,6 +12,8 @@ function showTaskOverview(groupNum){
 	var label = title;
 	$('#task_modal_Label').html(label);
 
+    $("#modal-close-btn").attr('onclick', 'logHideTaskOverview('+groupNum+')');
+
 	//modal content
 	//var taskOverviewContent = '<div id="task-description-text"><p>' + description + '</p></div>';	
 	var taskOverviewContent = getTaskOverviewContent(groupNum);
@@ -88,12 +90,18 @@ function showTaskOverview(groupNum){
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
 	}
+    logActivity("showTaskOverview(groupNum)",'Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
+//logs when the user clicks the x on the top right of the task modal to hide it
+function logHideTaskOverview(groupNum){
+    logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
-
 function editTaskOverview(popover,groupNum){
-	var task_id = getEventJSONIndex(groupNum);
+	logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
    	
@@ -218,7 +226,7 @@ function getTaskOverviewForm(groupNum){
         +'<br />'
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         //+'<br />'
-        + '<div><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br />'
+        + '<div style="margin-bottom: 5px;"><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br /></div>'
         + '<div><br /><b>Additional Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
         + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
@@ -327,7 +335,7 @@ function getTaskOverviewContent(groupNum){
 		for(var i=0; i<all_inputs.length; i++){
                 input_ev_id = all_inputs[i][0];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += "<a href=" + input_ev["gdrive"][1] + " target='_blank'>"+ all_inputs[i][1] +"</a></br>";
+                content += '<a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logInputClick(' + groupNum + ',' + input_ev_id + ')">'+ all_inputs[i][1] +'</a></br>';
         }
         //content += '<b>Inputs:</b><br>';
 		/*var inputs = ev.inputs.split(",");
@@ -446,6 +454,13 @@ function getTaskOverviewContent(groupNum){
     content += '</div>';
 	
 	return content;
+}
+
+
+function logInputClick(groupNum, inputEvId){
+    //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
+    logActivity("logInputClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+
 }
 
 
@@ -590,6 +605,9 @@ function saveTaskOverview(groupNum){
 
     flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
+
+    logActivity("saveTaskOverview(groupNum)",'Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
 
     $('#task_modal').modal('hide'); 

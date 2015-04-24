@@ -110,6 +110,9 @@ function upcoming_ev_doc_seen(upcomingEvent_tmp){
 };
 
 function showDocModal(ev_before, events_before, curr_event_id){
+  
+  logActivity("showDocModal(ev_before, events_before, curr_event_id)",'Show Doc Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(curr_event_id)]);
+
   //body of the modal
     //hides the current task modal
  
@@ -198,7 +201,7 @@ function showDocModal(ev_before, events_before, curr_event_id){
 function showDocModal_main(ev_before, events_before, curr_event_id){
 	//body of the modal
     //hides the current task modal
- 
+  
     $("#task_modal").modal('hide');
 
     var content = '<div class="row-fluid" >' ;
@@ -272,7 +275,8 @@ function nextDocModal(curr_event_id){
 		return;
 	if (events_before.length == 0) return;
   //alert(curr_event_id)
-	var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before[events_before_index])];
+	logActivity("nextDocModal(curr_event_id)",'Show Next Doc Modal Button Clicked', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(curr_event_id)]);
+  var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before[events_before_index])];
 	showDocModal(ev_before, events_before, curr_event_id);
 	
 };
@@ -286,6 +290,8 @@ function prevDocModal(curr_event_id){
  
   events_before_index = events_before_index - 2;
   
+  logActivity("prevDocModal(curr_event_id)",'Show Prev Doc Modal Button Clicked', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(curr_event_id)]);
+
   //alert(curr_event_id);
   var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before[events_before_index])];
   showDocModal(ev_before, events_before, curr_event_id);
