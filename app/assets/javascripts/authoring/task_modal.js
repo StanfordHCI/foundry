@@ -10,6 +10,7 @@ function showTaskOverview(groupNum){
 	
 	//modal label
 	var label = title;
+
 	$('#task_modal_Label').html(label);
 
     $("#modal-close-btn").attr('onclick', 'logHideTaskOverview('+groupNum+')');
@@ -96,6 +97,44 @@ function showTaskOverview(groupNum){
 function logHideTaskOverview(groupNum){
     logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
+
+function showShortTaskOverview(groupNum){
+        var task_id = getEventJSONIndex(groupNum);
+        var eventObj = flashTeamsJSON["events"][task_id];
+        var title = eventObj["title"];
+    
+        //modal label
+        var label = title;
+        var taskOverviewContent = getTaskOverviewContent(groupNum);
+
+        $('#task_modal_Label2').html(label);
+        $("#modal-close-btn2").attr('onclick', 'logHideShortTaskOverview('+groupNum+')');
+
+        //$("#modal-close-btn2").attr('onclick', 'logHideTaskOverview('+groupNum+')');
+
+        $('#task-text2').html(taskOverviewContent);
+
+        var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" style="float: right" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Go to Deliverables Folder</a>'
+                            + '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: left" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>';
+
+        $('#task_modal2').modal('show'); 
+       $('.task-modal-footer2').html(modal_footer);
+       //$('.task-modal-body2').html(modal_body);
+
+        logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
+    
+}
+
+function logShortTaskOverviewGDriveBtnClick(groupNum){
+        logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
+//logs when the user clicks the x on the top right of the task modal to hide it
+function logHideShortTaskOverview(groupNum){
+    logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
 
 
 function editTaskOverview(popover,groupNum){
@@ -386,7 +425,12 @@ function getTaskOverviewContent(groupNum){
         for(var i=0; i<handoff_inputs.length; i++){
                 input_ev_id = handoff_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
+                //content += '<p style="padding-top: 5px"><b><a onclick=showShortTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
+                if(input_ev['outputs'].length !=0){
+                    content +='<br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]';
+                }
+                content += '</p>';
         }
 
         content +=  '</div>'; 
@@ -431,7 +475,11 @@ function getTaskOverviewContent(groupNum){
         for(var i=0; i<collab_inputs.length; i++){
                 input_ev_id = collab_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
+                if(input_ev['outputs'].length !=0){
+                    content +='<br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]';
+                }
+                content += '</p>';
         }
 
         content +=  '</div>'; 
@@ -854,4 +902,32 @@ function getHandoffInputs(groupNum){
     }
 
     return handoff_inputs;
+}
+
+// resolves jquery stacking error in console
+//http://stackoverflow.com/questions/13649459/twitter-bootstrap-multiple-modal-error
+$.fn.modal.Constructor.prototype.enforceFocus = function () {};
+
+//improves apperance of stacked task modals
+//http://gurde.com/stacked-bootstrap-modals/
+$(document)  
+  .on('show.bs.modal', '.modal', function(event) {
+    $(this).appendTo($('body'));
+  })
+  .on('shown.bs.modal', '.modal.in', function(event) {
+    setModalsAndBackdropsOrder();
+  })
+  .on('hidden.bs.modal', '.modal', function(event) {
+    setModalsAndBackdropsOrder();
+  });
+
+function setModalsAndBackdropsOrder() {  
+  var modalZIndex = 1040;
+  $('.modal.in').each(function(index) {
+    var $modal = $(this);
+    modalZIndex++;
+    $modal.css('zIndex', modalZIndex);
+    $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+});
+  $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
 }
