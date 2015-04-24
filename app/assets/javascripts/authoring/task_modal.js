@@ -121,11 +121,29 @@ function editTaskOverview(popover,groupNum){
 		$("#edit-save-task").html('Save');	
 
         // create the read only tags for inputs created by handoffs or collaborations
-        var int_inputs_tags = $('#int_inputs').tags({
+        // var int_inputs_tags = $('#int_inputs').tags({
+        //     bootstrapVersion: "2",
+        //     readOnly: true,
+        //     readOnlyEmptyMessage: "No handoff or collaboration inputs from other tasks exist.",
+        //     tagData: get_int_inputs_array(groupNum),
+        //     tagClass: "btn-info",
+        //     tagSize: "sm",
+        // });
+
+        var handoff_inputs_tags = $('#handoff_inputs').tags({
             bootstrapVersion: "2",
             readOnly: true,
-            readOnlyEmptyMessage: "No handoff or collaboration inputs from other tasks exist.",
-            tagData: get_int_inputs_array(groupNum),
+            readOnlyEmptyMessage: "No handoff inputs from other tasks exist.",
+            tagData: get_int_inputs_array(groupNum, "handoff"),
+            tagClass: "btn-info",
+            tagSize: "sm",
+        });
+
+        var collab_inputs_tags = $('#collab_inputs').tags({
+            bootstrapVersion: "2",
+            readOnly: true,
+            readOnlyEmptyMessage: "No collaboration inputs from other tasks exist.",
+            tagData: get_int_inputs_array(groupNum, "collab"),
             tagClass: "btn-info",
             tagSize: "sm",
         });
@@ -226,8 +244,9 @@ function getTaskOverviewForm(groupNum){
         +'<br />'
         + '<div><b>Description </br></b><textarea class="span12" style="width:475px" rows="5" placeholder="Description of the task..." id="notes">' + notes + '</textarea></div>'
         //+'<br />'
-        + '<div style="margin-bottom: 5px;"><b>Inputs From Handoffs or Collaborations</b><br> <div id="int_inputs"></div><br /></div>'
-        + '<div><br /><b>Additional Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
+        + '<div style="margin-bottom: 15px;"><b>Inputs From Handoffs</b><br> <div id="handoff_inputs"></div><br /></div>'
+        + '<div style="margin-bottom: 15px;"><b>Inputs From Collaborations</b><br> <div id="collab_inputs"></div><br /></div>'
+        + '<div><b>Additional Inputs</b><br> <div><input type="text" value="' + inputs + '" placeholder="Add input" id="inputs" /></div>'
         + '<div><b>Deliverables</b> <div><input type="text" value="' + outputs + '" placeholder="Add deliverable" id="outputs" /></div>'
         + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
         + '<div id="outputQForm">';
@@ -287,6 +306,11 @@ function getTaskOverviewContent(groupNum){
                 }
 
         content += '</div>';
+
+        content += '<hr/><div class="row-fluid"><em>30 minutes of this task are allocated for reading the requirements'
+        +' and reviewing the previous materials. Click the start button when you are ready to review.</em>';
+        
+    content += '</div>';
 	
 		content += '<hr /><div class="row-fluid">';
 		
@@ -302,16 +326,13 @@ function getTaskOverviewContent(groupNum){
 		content += '</div>';
 		
         //content += '</div>';
-        content += '<hr/><div class="row-fluid"><em>30 minutes of this task are allocated for reading the requirements'
-        +' and reviewing the previous materials. Click start when you are ready to review.</em>';
-		
-	content += '</div>';
+        
 		
 	content += '<div class="row-fluid" >';
 		
 		if(ev.outputs) {
 			//content += '<b>Deliverables:</b><br>';
-			content +=  '<br /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
+			content +=  '<hr /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
 			var outputs = ev.outputs.split(",");
 			for(var i=0;i<outputs.length;i++){
 				
@@ -325,36 +346,37 @@ function getTaskOverviewContent(groupNum){
     			
     content += '</div>';
     
-    content += '<div class="row-fluid" >';	
+    
 	//var events_before_ids = events_immediately_before(groupNum);
 	
-    var all_inputs = getAllInputs(groupNum);
+    var handoff_inputs = getHandoffInputs(groupNum);
 
-    if(all_inputs.length!=0) {
-		content += '<br /><h5>Review the following deliverables: </h5>';
-		for(var i=0; i<all_inputs.length; i++){
-                input_ev_id = all_inputs[i][0];
+    if(handoff_inputs.length!=0) {
+        content += '<div class="row-fluid" >';  
+		content += '<hr /><h5>Review the following deliverables: </h5>';
+		for(var i=0; i<handoff_inputs.length; i++){
+                input_ev_id = handoff_inputs[i][0];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '<a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logInputClick(' + groupNum + ',' + input_ev_id + ')">'+ all_inputs[i][1] +'</a></br>';
+                content += '<a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ handoff_inputs[i][1] +'</a></br>';
         }
-        //content += '<b>Inputs:</b><br>';
-		/*var inputs = ev.inputs.split(",");
-		for(var i=0;i<inputs.length;i++){
-			content += "<a href=" + ev["gdrive"][1] + " target='_blank'>"+ inputs[i] +"</a></br>";
-        }
-        //content +="</br>"
 
-        for(var i=0;i<events_before_ids.length;i++){
-           
-            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
-            var outputs = ev_before["outputs"].split(",");
-           
-            for(var j=0;j<outputs.length;j++){   
-                content += "<a href=" + ev_before["gdrive"][1] + " target='_blank'>"+ outputs[j] + "</a></br>";
-            }					
-	    } */   
+        content +=  '</div>'; 
     }
-		content +=  '</div>'; 
+
+    var collab_inputs = getCollabInputs(groupNum);
+
+    if(collab_inputs.length!=0) {
+        content += '<div class="row-fluid" >';  
+        content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
+        for(var i=0; i<collab_inputs.length; i++){
+                input_ev_id = collab_inputs[i][0];
+                var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+                content += '[' + input_ev.title + '] <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ collab_inputs[i][1] +'</a></br>';
+        }
+
+        content +=  '</div>'; 
+    }
+		
 		
 		content += "<hr/>";
 		
@@ -457,12 +479,17 @@ function getTaskOverviewContent(groupNum){
 }
 
 
-function logInputClick(groupNum, inputEvId){
+function logHandoffInputClick(groupNum, inputEvId){
     //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
-    logActivity("logInputClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+    logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
 
 }
 
+function logCollabInputClick(groupNum, inputEvId){
+    //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
+    logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+
+}
 
 /* Returns a string with the time in the format of h:mm (if h<10) or hh:mm (if h>=10)
 *  Returns a negative time string if the task is delayed
@@ -688,14 +715,21 @@ function getAllInputs(groupNum){
 
 
 //this function returns all of a task's inputs that are only from interactions (e.g., not inputs added manually to a task)
-function get_int_inputs_array(groupNum){
+function get_int_inputs_array(groupNum, type){
     //var events = flashTeamsJSON["events"];
     var int_inputs_array=[];
     
     var task_id = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][task_id];
 
-    var all_inputs_array = getAllInputs(groupNum);
+    //var all_inputs_array = getAllInputs(groupNum);
+
+    if(type == "handoff"){
+        var all_inputs_array = getHandoffInputs(groupNum);
+    }
+    else if(type == "collab"){
+        var all_inputs_array = getCollabInputs(groupNum);
+    }
     
     for( var j=0; j<all_inputs_array.length; j++){
 
@@ -704,4 +738,60 @@ function get_int_inputs_array(groupNum){
         }
     }
     return int_inputs_array;
+}
+
+
+//returns an array of inputs of the task only from collaborations
+// getHandoffInputs returns: [[task_id, input]]
+function getCollabInputs(groupNum){
+   var task_id = getEventJSONIndex(groupNum);
+   var ev = flashTeamsJSON["events"][task_id];
+
+   var collaboration_ids = events_in_collaboration(groupNum);
+   var collab_inputs=[];
+
+
+    if(collaboration_ids.length!=0){
+        for(var i=0;i<collaboration_ids.length;i++){
+           
+            var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
+            if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_collab["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               collab_inputs.push([ev_collab.id , outputs[j] ])
+            }                   
+        }   
+    }
+
+    return collab_inputs;
+}
+
+//returns an array of inputs of the task only from handoffs
+// getHandoffInputs returns: [[task_id, input]]
+function getHandoffInputs(groupNum){
+   var task_id = getEventJSONIndex(groupNum);
+   var ev = flashTeamsJSON["events"][task_id];
+
+   var events_before_ids = events_immediately_before(groupNum);
+   var handoff_inputs=[];
+
+    if(events_before_ids.length!=0){
+        for(var i=0;i<events_before_ids.length;i++){
+           
+            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
+                continue;
+
+            var outputs = ev_before["outputs"].split(",");
+            
+            for(var j=0;j<outputs.length;j++){   
+               handoff_inputs.push([ev_before.id , outputs[j] ])
+            }                   
+        }    
+    }
+
+    return handoff_inputs;
 }
