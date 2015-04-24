@@ -331,7 +331,8 @@ userListRef.on("child_added", function(snapshot) {
     var numOnlineElem = $(".num-online");
     // number of occurrences of the string "is online"
     // TODO: is there a better way to do this?
-    var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
+    //var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
+    var numOnline = $("#presenceDiv").children().length;
     numOnlineElem.text(numOnline);
 });
 
@@ -339,6 +340,11 @@ userListRef.on("child_added", function(snapshot) {
 userListRef.on("child_removed", function(snapshot) {
 	$("#presenceDiv").children("#" + getMessageId(snapshot))
 	  .remove();
+
+    // update display for num people online
+    var numOnlineElem = $(".num-online");
+    var numOnline = $("#presenceDiv").children().length;
+    numOnlineElem.text(numOnline);
 });
 
 // Update our GUI to change a user"s status.
