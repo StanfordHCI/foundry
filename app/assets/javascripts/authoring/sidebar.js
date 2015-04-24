@@ -14,7 +14,7 @@ function showProjectOverview(){
 		project_overview = "No project overview has been added yet.";
 	}
 
-    logActivity("showProjectOverview()",'Show Project Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    //logActivity("showProjectOverview()",'Show Project Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 	
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
