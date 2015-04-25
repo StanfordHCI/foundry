@@ -387,6 +387,11 @@ function getTaskOverviewContent(groupNum){
 
     var handoff_inputs = events_immediately_before(groupNum);
 
+    if(ev.inputs.length!=0) { 
+        handoff_inputs.push(parseInt(ev.id));
+        console.log('event has input');
+    }
+
     if(handoff_inputs.length!=0) {
         content += '<div class="row-fluid" >';  
         content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
@@ -828,6 +833,7 @@ function getCollabInputs(groupNum){
 
 //returns an array of inputs of the task only from handoffs
 // getHandoffInputs returns: [[task_id, input]]
+// Note: this only returns inputs from handoffs but in some cases you also want to include additional task inputs that were added
 function getHandoffInputs(groupNum){
    var task_id = getEventJSONIndex(groupNum);
    var ev = flashTeamsJSON["events"][task_id];
