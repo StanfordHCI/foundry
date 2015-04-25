@@ -120,8 +120,7 @@ function showShortTaskOverview(groupNum){
         $('.task-modal-footer2').html(modal_footer);
         
         $('#task_modal2').modal('show'); 
-       
-       //$('.task-modal-body2').html(modal_body);
+
 
         logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
@@ -912,24 +911,24 @@ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
 
 //improves apperance of stacked task modals
 //http://gurde.com/stacked-bootstrap-modals/
-$(document)  
-  .on('show.bs.modal', '.modal', function(event) {
-    $(this).appendTo($('body'));
-  })
-  .on('shown.bs.modal', '.modal.in', function(event) {
-    setModalsAndBackdropsOrder();
-  })
-  .on('hidden.bs.modal', '.modal', function(event) {
-    setModalsAndBackdropsOrder();
-  });
+// $(document)  
+//   .on('show.bs.modal', '.modal', function(event) {
+//     $(this).appendTo($('body'));
+//   })
+//   .on('shown.bs.modal', '.modal.in', function(event) {
+//     setModalsAndBackdropsOrder();
+//   })
+//   .on('hidden.bs.modal', '.modal', function(event) {
+//     setModalsAndBackdropsOrder();
+//   });
 
-function setModalsAndBackdropsOrder() {  
-  var modalZIndex = 1040;
-  $('.modal.in').each(function(index) {
-    var $modal = $(this);
-    modalZIndex++;
-    $modal.css('zIndex', modalZIndex);
-    $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
-});
-  $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
-}
+// function setModalsAndBackdropsOrder() {  
+//   var modalZIndex = 1040;
+//   $('.modal.in').each(function(index) {
+//     var $modal = $(this);
+//     modalZIndex++;
+//     $modal.css('zIndex', modalZIndex);
+//     $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+// });
+//   $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
+// }
