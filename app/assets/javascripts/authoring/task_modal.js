@@ -371,7 +371,7 @@ function getTaskOverviewContent(groupNum){
 		
 		if(ev.outputs) {
 			//content += '<b>Deliverables:</b><br>';
-			content +=  '<hr /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
+			content +=  '<br /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
 			var outputs = ev.outputs.split(",");
 			for(var i=0;i<outputs.length;i++){
 				
