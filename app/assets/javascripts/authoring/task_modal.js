@@ -117,8 +117,10 @@ function showShortTaskOverview(groupNum){
         var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" style="float: right" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Go to Deliverables Folder</a>'
                             + '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: left" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>';
 
+        $('.task-modal-footer2').html(modal_footer);
+        
         $('#task_modal2').modal('show'); 
-       $('.task-modal-footer2').html(modal_footer);
+       
        //$('.task-modal-body2').html(modal_body);
 
         logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
@@ -426,7 +428,7 @@ function getTaskOverviewContent(groupNum){
                 input_ev_id = handoff_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
                 //content += '<p style="padding-top: 5px"><b><a onclick=showShortTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b><br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]</p>';
-                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showShortTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
                 if(input_ev['outputs'].length !=0){
                     content +='<br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]';
                 }
@@ -475,7 +477,7 @@ function getTaskOverviewContent(groupNum){
         for(var i=0; i<collab_inputs.length; i++){
                 input_ev_id = collab_inputs[i];
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
-                content += '<p style="padding-top: 5px"><b><a onclick=showTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
+                content += '<p style="padding-top: 5px"><b><a onclick=showShortTaskOverview(' + input_ev_id + ')>' + input_ev.title + '</a></b>';
                 if(input_ev['outputs'].length !=0){
                     content +='<br /><em>[Deliverables: </em> <a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a>]';
                 }
