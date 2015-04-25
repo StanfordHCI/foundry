@@ -114,7 +114,7 @@ function showShortTaskOverview(groupNum){
 
         $('#task-text2').html(taskOverviewContent);
 
-        var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" style="float: right" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Go to Deliverables Folder</a>'
+        var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: right" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Go to Deliverables Folder</a>'
                             + '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: left" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>';
 
         $('.task-modal-footer2').html(modal_footer);
