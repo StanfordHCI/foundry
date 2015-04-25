@@ -833,20 +833,13 @@ function getCollabInputs(groupNum){
 
 //returns an array of inputs of the task only from handoffs
 // getHandoffInputs returns: [[task_id, input]]
+// Note: this only returns inputs from handoffs but in some cases you also want to include additional task inputs that were added
 function getHandoffInputs(groupNum){
    var task_id = getEventJSONIndex(groupNum);
    var ev = flashTeamsJSON["events"][task_id];
 
    var events_before_ids = events_immediately_before(groupNum);
    var handoff_inputs=[];
-
-   // if(ev.inputs.length!=0) { 
-
-   //      var inputs = ev.inputs.split(",");
-   //      for(var i=0;i<inputs.length;i++){
-   //          handoff_inputs.push([groupNum, inputs[i] ]);    
-   //      }
-   //  }
 
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
