@@ -387,6 +387,11 @@ function getTaskOverviewContent(groupNum){
 
     var handoff_inputs = events_immediately_before(groupNum);
 
+    if(ev.inputs.length!=0) { 
+        handoff_inputs.push(parseInt(ev.id));
+        console.log('event has input');
+    }
+
     if(handoff_inputs.length!=0) {
         content += '<div class="row-fluid" >';  
         content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
@@ -834,6 +839,14 @@ function getHandoffInputs(groupNum){
 
    var events_before_ids = events_immediately_before(groupNum);
    var handoff_inputs=[];
+
+   // if(ev.inputs.length!=0) { 
+
+   //      var inputs = ev.inputs.split(",");
+   //      for(var i=0;i<inputs.length;i++){
+   //          handoff_inputs.push([groupNum, inputs[i] ]);    
+   //      }
+   //  }
 
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
