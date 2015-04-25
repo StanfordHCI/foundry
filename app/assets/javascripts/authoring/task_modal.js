@@ -395,7 +395,7 @@ function getTaskOverviewContent(groupNum){
                 var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
                 content += '<p style="padding-top: 5px">';
                 if(input_ev['outputs'].length ==0){
-                    content+= '<b>collaboration</b>';
+                    content+= '<b>prior task results</b>';
                 
                 }else{
                     content +='<b><a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a></b>';
