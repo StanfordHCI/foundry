@@ -389,7 +389,6 @@ function getTaskOverviewContent(groupNum){
 
     if(ev.inputs.length!=0) { 
         handoff_inputs.push(parseInt(ev.id));
-        console.log('event has input');
     }
 
     if(handoff_inputs.length!=0) {
