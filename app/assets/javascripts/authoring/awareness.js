@@ -766,6 +766,7 @@ var startTeam = function(firstTime){
         $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
         
         flashTeamsJSON["paused"]=false;
+        updateInteractionsPopovers();
 
         logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
