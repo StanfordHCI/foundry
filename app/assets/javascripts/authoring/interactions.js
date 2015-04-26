@@ -267,7 +267,7 @@ function drawHandoffPopover(handoffId, ev1, ev2) {
         title: 'Handoff from "' + ev1.title + '" to "' + ev2.title + '"',
         content: 'Description of Handoff Materials: '
         + getHandoffInfo(handoffId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + handoffId).on('click', function() { 
@@ -462,7 +462,7 @@ function drawCollabPopover(collabId, ev1, ev2) {
         title: 'Collaboration between "' + ev1.title + '" and "' + ev2.title + '"',
         content: 'Description of Collaborative Work: '
         + getCollabInfo(collabId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + collabId).on('click', function() { 
