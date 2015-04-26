@@ -186,6 +186,7 @@ function startFlashTeam() {
 function endTeam() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
+    logActivity("endTeam()",'End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     updateStatus(false);
     stopCursor();
     stopProjectStatus();
@@ -277,8 +278,6 @@ function renderEverything(firstTime) {
         type: 'get'
     }).done(function(data){
 
-       
-
         // firstTime will also be true in the case that flashTeamEndedorStarted, so
         // we make sure that it is false (i.e. true firstTime, upon page reload for user
         // before the team starts)
@@ -294,7 +293,12 @@ function renderEverything(firstTime) {
             
         //get user name and user role for the chat
         if(data == null){
-            //console.log("RETURNING BEFORE LOAD"); 
+            // if(firstTime){
+            //     renderChatbox(); 
+            //     renderProjectOverview(); 
+            //     //console.log("DATA NULL & FIRST TIME - RETURNING BEFORE LOAD"); 
+            // }
+            //console.log("DATA NULL - RETURNING BEFORE LOAD"); 
             // will only be run way at the beginning before any members or events are added
             // will only run in requester's page, because on members' pages, members array
             // length will be greater than zero
@@ -314,6 +318,7 @@ function renderEverything(firstTime) {
         // initialize the entry manager after flashTeamsJSON has been loaded
         window.entryManager = new window.EntryManager(flashTeamsJSON);
 
+        //renderChatbox(); 
         setCurrentMember();
         renderProjectOverview();
         
@@ -408,32 +413,47 @@ function renderEverything(firstTime) {
     });
 
     if(firstTime) {
+        logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
         listenForVisibilityChange();
     }
+
+    
 }
 
 function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
         window_visibility_change = "visibilitychange";
         window_visibility_state = "visibilityState";
+        logActivity("listenForVisibilityChange()",'Window Visibility Change -- document.hidden: ' + document.hidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.mozHidden !== "undefined") {
         window_visibility_change = "mozvisibilitychange";
         window_visibility_state = "mozVisibilityState";
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.mozHidden: ' + document.mozHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.msHidden !== "undefined") {
         window_visibility_change = "msvisibilitychange";
         window_visibility_state = "msVisibilityState";
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.msHidden: ' + document.msHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     } else if (typeof document.webkitHidden !== "undefined") {
         window_visibility_change = "webkitvisibilitychange";
         window_visibility_state = "webkitVisibilityState";
+        logActivity("listenForVisibilityChange()",'Window Visibility Change - document.webkitHidden: ' + document.webkitHidden, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     }
 
     // Add a listener for the next time that the page becomes visible
     document.addEventListener(window_visibility_change, function() {
         var state = document[window_visibility_state];
+
+        logActivity("listenForVisibilityChange() -- document.addEventListener(window_visibility_change, function()",'Window Visibility Change -- window_visibility_state: ' + state, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
+        //if(state == "hidden"){
+            //logActivity("Team Update",'Window Hidden', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        //}
+
         //if(state == "visible" && in_progress){
         if(state == "visible"){
             renderEverything(false);
+            //logActivity("Team Update",'Window Became Visible', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         }
     }, false);
 };  
@@ -540,7 +560,7 @@ var flashTeamUpdated = function(){
     var updated_project_overview = loadedStatus.flash_teams_json['projectoverview'];
 
     if(flashTeamsJSON['projectoverview'] != updated_project_overview){
-        console.log('project overview has been updated');
+        //console.log('project overview has been updated');
         return true;
     }
 
@@ -765,8 +785,13 @@ var startTeam = function(firstTime){
         $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
         
         flashTeamsJSON["paused"]=false;
+
+        logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+
         //added next line to disable the ticker
         updateStatus(true);
+
+        logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         //console.log("here2");
     }
 
@@ -1590,12 +1615,12 @@ var trackUpcomingEvent = function(){
 
         var overallTime;
         
-        if (currentUserEvents.length == 0 ){
-            overallTime = "You have not been assigned to any tasks yet.";
-            statusText.text(overallTime);
-            statusText.style("color", "black");  
-            return;
-        }
+        // if (currentUserEvents.length == 0 ){
+        //     overallTime = "You have not been assigned to any tasks yet.";
+        //     statusText.text(overallTime);
+        //     statusText.style("color", "black");  
+        //     return;
+        // }
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         

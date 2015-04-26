@@ -19,11 +19,13 @@ $('#show-online-button').click(function(e) {
   var chatContent = $('#right-sidebar .chat-content');
 
   if(!onlineUsers.is(':visible')) {
+      logActivity("$('#show-online-button').click(function(e)",'Clicked See Who is Online - To Show', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
       onlineUsers.css({
           top: $('.chat-header').outerHeight(),
           height: rightSidebarHeight - headerHeight,
       }).show();
   } else {
+      logActivity("$('#show-online-button').click(function(e)",'Clicked See Who is Online - To Hide', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
       onlineUsers.hide();
   }
 });

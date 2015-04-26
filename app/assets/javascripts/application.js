@@ -20,6 +20,7 @@
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
 //= require ./authoring/load
+//= require ./authoring/logging
 //= require ./authoring/timeline
 //= require ./authoring/events
 //= require ./authoring/EntryManager
@@ -51,7 +52,7 @@
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
 //= require ./authoring/jquery.cookie
-//= require ./authoring/video_chat
+// require ./authoring/video_chat
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
