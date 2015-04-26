@@ -304,9 +304,24 @@ function createDuplicateEvent(jsonevent){
 
     //if team is in edit mode, add the gDrive folder for this event
         //if(flashTeamsJSON["paused"] == true){
-            var event_index = getEventJSONIndex(newEvent.id); 
-            createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+            // var event_index = getEventJSONIndex(newEvent.id); 
+            // createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
         //}
+
+        //if team is in edit mode, add the gDrive folder for this event
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(newEvent.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
+    //if team has been ended and new events get added, add the gDrive folder for the newly added events
+    if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+        var event_index = getEventJSONIndex(newEvent.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
+    logActivity("createDuplicateEvent(jsonevent)",'Create Duplicate Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(event_index)]);
+
 
     // save
         updateStatus();
