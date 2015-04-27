@@ -251,6 +251,13 @@ function drawHandoff(handoffData) {
             else d3.select(this).style("stroke", "gray");
         });
 
+
+    //Draw a popover to display information about the collaboration
+    drawHandoffPopover(handoffId, ev1, ev2);
+}
+
+//Add a popover to the collaboration rect so the user can add notes and delete
+function drawHandoffPopover(handoffId, ev1, ev2) {
     //Popover that stores information about the handoff
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -260,15 +267,21 @@ function drawHandoff(handoffData) {
         title: 'Handoff from "' + ev1.title + '" to "' + ev2.title + '"',
         content: 'Description of Handoff Materials: '
         + getHandoffInfo(handoffId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + handoffId).on('click', function() { 
         logActivity("drawHandoff(handoffData)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
 
     });
-
 }
+
+// updates the handoff popover to either edit or read only mode depending on status of team
+function updateHandoffPopover(handoffId){
+    $("#interaction_" + handoffId).data('popover').options.content = 'Description of Handoff Materials: '
+        + getHandoffInfo(handoffId);
+}
+
 
 //Calculate where the physical handoff starts
 function handoffStart(firstEvent){
@@ -449,13 +462,19 @@ function drawCollabPopover(collabId, ev1, ev2) {
         title: 'Collaboration between "' + ev1.title + '" and "' + ev2.title + '"',
         content: 'Description of Collaborative Work: '
         + getCollabInfo(collabId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + collabId).on('click', function() { 
         logActivity("drawCollabPopover(collabId, ev1, ev2)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(collabId)]);
 
     });
+}
+
+// updates the collab popover to either edit or read only mode depending on status of team
+function updateCollabPopover(collabId){
+    $("#interaction_" + collabId).data('popover').options.content = 'Description of Collaborative Work: '
+        + getCollabInfo(collabId);
 }
 
 //TODO: COMMENT

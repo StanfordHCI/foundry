@@ -121,7 +121,7 @@ $("#flashTeamStartBtn").click(function(){
 });
 
 function disableTeamEditing() {
-   
+    updateInteractionsPopovers(); //update interaction popovers to read only mode
 
     $(".add-folder-button").addClass("disabled");
     $(".add-role").addClass("disabled");
@@ -136,7 +136,7 @@ function disableTeamEditing() {
 }
 
 function enableTeamEditing() {
-    
+    updateInteractionsPopovers(); //update interaction popovers to edit mode
     
     $(".add-folder-button").removeClass("disabled");
     $(".add-role").removeClass("disabled");
@@ -164,8 +164,6 @@ function startFlashTeam() {
     $("div#chat-box-container").css('display','');
     $("#flashTeamTitle").css('display','none');
     
-    
-
     disableTeamEditing();
     
     removeColabBtns();
@@ -785,6 +783,7 @@ var startTeam = function(firstTime){
         $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
         
         flashTeamsJSON["paused"]=false;
+        updateInteractionsPopovers();
 
         logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
@@ -1323,6 +1322,29 @@ var drawInteractions = function(tasks){
         drawCollaboration(remainingCollabs[k], overlap);
     }
 };
+
+//Updates all the interaction popovers that involve the "tasks"
+//Note: if "tasks" is undefined, updates all interaction popovers
+//This is used to update the interaction popovers to edit mode or read only depending on the state of the team
+var updateInteractionsPopovers = function(tasks){
+    //Find Remaining Interactions and Draw
+    var remainingHandoffs = getHandoffs(tasks);
+    var numHandoffs = remainingHandoffs.length;
+
+    var remainingCollabs = getCollabs(tasks);
+    var numCollabs = remainingCollabs.length;
+
+    for (var j = 0; j < numHandoffs; j++) {
+        var intId = remainingHandoffs[j].id
+        updateHandoffPopover(intId);
+    }
+
+    for (var k = 0; k < numCollabs; k++) {
+        var intId = remainingCollabs[k].id; 
+        updateCollabPopover(intId);
+    }
+};
+
 
 var moveTasksRight = function(tasks, amount, from_initial){
     var len = tasks.length;
