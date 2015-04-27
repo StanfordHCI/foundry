@@ -309,8 +309,9 @@ connectedRef.on('value', function(snap) {
 function setUserStatus(status) {
 	// Set our status in the list of online users.
 	currentStatus = status;
-	if (presname != undefined && status != undefined){
-		myUserRef.set({ name: presname, status: status });
+    statusTimestamp = new Date().getTime();
+	if (presname != undefined && status != undefined && chat_role != undefined){
+		myUserRef.set({ name: presname, status: status, role: chat_role, timestamp: statusTimestamp });
 	}
 }
 
@@ -321,6 +322,7 @@ function getMessageId(snapshot) {
 // Update our GUI to show someone"s online status.
 userListRef.on("child_added", function(snapshot) {
 	var user = snapshot.val();
+    console.log(user);
 	
 	$("<div/>")
 	  .attr("id", getMessageId(snapshot))
@@ -334,6 +336,24 @@ userListRef.on("child_added", function(snapshot) {
     //var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
     var numOnline = $("#presenceDiv").children().length;
     numOnlineElem.text(numOnline);
+
+    //notification title
+    var notif_title = user.name+' (' + user.role +') is now online ';
+    
+    //notification body
+    var notif_body = new Date().toUTCString();
+    
+    // true if the user added is the current user
+    var is_current_user = (chat_name == user.name);
+  
+    var showchatnotif = !is_current_user; // true if notifications should be shown
+
+    // checks if user added signed on after current user (e.g., don't show notifications for existing users on load)
+    // this is used to only create notifications for people who signed on from the time you logged in and forward 
+    if ((statusTimestamp < user.timestamp) && showchatnotif == true){
+        playSound("/assets/notify");
+        notifyMe(notif_title, notif_body, 'chat');
+    }
 });
 
 // Update our GUI to remove the status of a user who has left.

@@ -40,6 +40,11 @@ function showNotif(notif_title, notif_body, notif_tag){
 	closeNotif(last_notification); //close any notifications that might exist from previous sessions
 	
 	var notification = new Notification(notif_title, {body: notif_body, tag: notif_tag});
+
+  //automatically closes the notification after 5 seconds
+  notification.onshow = function () { 
+    setTimeout(notification.close.bind(notification), 5000); 
+  }
         
     notification.addEventListener('click', closeNotif(last_notification));
     
