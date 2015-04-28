@@ -291,7 +291,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     if(objectToDuplicate["docQs"]){
         var questions = [];
         for(var i=0; i < objectToDuplicate["docQs"].length; i++){
-             questions.push([objectToDuplicate["docQs"][i],""]);
+             questions.push([objectToDuplicate["docQs"][i][0],""]);
         }
         newEvent["docQs"] = questions;
 
@@ -340,6 +340,11 @@ function duplicateEvent(groupNumber){
     var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
 
     drawEvent(eventObj, true);
+
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(eventObj.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
 
     // save
     updateStatus();

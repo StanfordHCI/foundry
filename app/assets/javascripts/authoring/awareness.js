@@ -82,14 +82,10 @@ function removeColabBtns(){
 };
 
 function hideAllConfigIcons(bHide){
-    var events = flashTeamsJSON["events"];
-    for (var i = 0; i < events.length; i++){
-        var eventObj = events[i];
-        var groupNum = eventObj["id"];
-        var task_g = getTaskGFromGroupNum(groupNum);
-        var display  = bHide ?  "none" : "block";
-        task_g.selectAll(".icon-cog").attr("style","display:" + display);
-    }
+    if(bHide)
+        $(".icon-cog").hide();
+    else
+        $(".icon-cog").show();
 }
 
 function removeHandoffBtns(){
