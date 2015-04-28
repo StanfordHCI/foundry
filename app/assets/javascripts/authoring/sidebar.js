@@ -89,21 +89,16 @@ function saveProjectOverview(){
     
     		if (project_overview_input === "") {
         		project_overview_input =  "No project overview has been added yet.";
-				//alert("Please enter a project overview.");
-				//return;
 		}
 
-    logActivity("saveProjectOverview() - Before Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    logActivity('saveProjectOverview()',"saveProjectOverview() - Before Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
 	 
     flashTeamsJSON["projectoverview"] = project_overview_input;
-    
-    //console.log("saved projectoverview: " + flashTeamsJSON["projectoverview"]);
-    
+        
     updateStatus();
 
-    logActivity("saveProjectOverview() - After Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-
+    //logActivity('saveProjectOverview()', "saveProjectOverview() - After Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     
     showProjectOverview();
 }
@@ -118,8 +113,6 @@ function logSidebarClick(containerName){
 //var firebaseURL is saved in an ENV var and included in the globals partial
 
 var myDataRef = new Firebase(firebaseURL + flash_team_id +'/chats');
-
-//var currentdate = new Date(); 
 
 var name;
 
@@ -149,28 +142,6 @@ $('#messageInput').keydown(function(e){
 
 $('#sendChatButton').click(sendChatMessage);
 
-//load all chats that were sent before page was reloaded
-/*myDataRef.once('value', function(snapshot) {
-    var message = snapshot.val();
-    
-	if(message != null){
-		 displayChatMessage(message.name, message.uniq, message.role, message.date, message.text);
-    
-		 name = message.name;
-	}
-});*/
-
-/*myDataRef.on('child_added', function(snapshot) {
-    var message = snapshot.val();
-    //console.log(snapshot);
-    //console.log(message);
-    //console.log("MESSAGE NAME: " + message["name"]);
-
-    displayChatMessage(message.name, message.uniq, message.role, message.date, message.text);
-    
-    name = message.name;
-});
-*/
 var lastMessage = 0;
 var lastWriter;
 
@@ -185,18 +156,12 @@ function displayChatMessage(name, uniq, role, date, text) {
     
     // diff in milliseconds 
     var diff = Math.abs(new Date() - message_date);
-    
-    //diff in minutes
-    //console.log("minutes ago: " + diff/(1000*60)); 
-    
-    //notification text   
+
     //notification title
     var notif_title = name+': '+ text;
     
     //notification body
     var notif_body = dateform;
-    
-    
     
     // true if the message was sent by the current user
     var is_current_user_message = (current_user == 'Author' && role == 'Author') ||
@@ -204,7 +169,6 @@ function displayChatMessage(name, uniq, role, date, text) {
   
     var showchatnotif = !is_current_user_message; // true if notifications should be shown
 
-    
     // checks if last notification was less than 5 seconds ago
     // this is used to only create notifications for messages that were sent from the time you logged in and forward 
     // (e.g., no notifications for messages in the past)
@@ -289,7 +253,8 @@ connectedRef.on('value', function(snap) {
         // add this device to my connections list
         // this value could contain info about the device or a timestamp too
         var con = myConnectionsRef.push(true);
-        con.set({ name: presname, role: chat_role, timestamp: statusTimestamp, chat_uniq: chat_uniq });
+        //console.log("chat_uniq: " + chat_uniq);
+        con.set({ chat_uniq: chat_uniq, timestamp: statusTimestamp  });
 
         // when I disconnect, remove this device
         con.onDisconnect().remove();
@@ -318,8 +283,9 @@ function setUserStatus(status) {
 	// Set our status in the list of online users.
 	currentStatus = status;
     statusTimestamp = new Date().getTime();
-	if (presname != undefined && status != undefined && chat_role != undefined){
-		myUserRef.set({ name: presname, status: status, role: chat_role, timestamp: statusTimestamp, chat_uniq: chat_uniq });
+	if (chat_name != undefined && status != undefined && chat_role != undefined){
+        //console.log("name: " + name);
+		myUserRef.set({ name: chat_name, status: status, role: chat_role, timestamp: statusTimestamp, chat_uniq: chat_uniq });
 	}
 }
 
@@ -339,9 +305,8 @@ userListRef.on("child_added", function(snapshot) {
   
     // update display for num people online
     var numOnlineElem = $(".num-online");
+    
     // number of occurrences of the string "is online"
-    // TODO: is there a better way to do this?
-    //var numOnline = $("#presenceDiv").html().match(/is online/g || []).length;
     var numOnline = $("#presenceDiv").children().length;
     numOnlineElem.text(numOnline);
 
@@ -349,7 +314,7 @@ userListRef.on("child_added", function(snapshot) {
     var notif_title = user.name+' (' + user.role +') is now online ';
     
     //notification body
-    var notif_body = new Date().toUTCString();
+    var notif_body = new Date().toLocaleString();
     
     // true if the user added is the current user
     var is_current_user = (chat_name == user.name);
