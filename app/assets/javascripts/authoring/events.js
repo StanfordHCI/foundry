@@ -264,17 +264,21 @@ function createEvent(point, duration) {
 
 function newEventObject(snapPoint, duration, objectToDuplicate){
 
-    var documented_questions = []
+    var documented_questions = [];
     documented_questions[0] = "Please explain all other design or execution decisions made, along with the reason they were made";
     documented_questions[1] = "Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)";
+
+    var output_questions = [];
+    output_questions[0] = "Please write a brief (1 sentence) description of this deliverable";
 
     duration = duration || 60;
     var startTimeObj = getStartTime(snapPoint[0]);
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
-        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
-        "outputQs":{}};
+        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, 
+        "all_inputs":"", events_after : ""
+    };
 
 
     newEvent["title"]  = objectToDuplicate["title"] || "New Event" ;
@@ -288,6 +292,9 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     newEvent["dri"] = objectToDuplicate["dri"] || "";
     newEvent["pc"] =  objectToDuplicate["pc"]|| "";
     newEvent["notes"] = objectToDuplicate["notes"] || "";
+    newEvent ["inputs"] = objectToDuplicate["inputs"] || "";
+    newEvent ["outputs"] = objectToDuplicate["outputs"] || "";
+
     if(objectToDuplicate["docQs"]){
         var questions = [];
         for(var i=0; i < objectToDuplicate["docQs"].length; i++){
@@ -298,6 +305,20 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     }else{
         newEvent["docQs"] = [[documented_questions[0],""],[documented_questions[1], ""]];
     }
+
+    var outQs = {};
+    for (var key in objectToDuplicate.outputQs){
+
+        if (key != ""){
+            outQs[key] = [];
+            keyArray = objectToDuplicate.outputQs[key];
+
+            for (i = 0; i < keyArray.length; i++){
+                outQs[key].push([keyArray[i][0],""]);
+            }
+        }
+    }
+    newEvent.outputQs = outQs;
 
     return newEvent;
 }
