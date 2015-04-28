@@ -289,6 +289,7 @@ connectedRef.on('value', function(snap) {
         // add this device to my connections list
         // this value could contain info about the device or a timestamp too
         var con = myConnectionsRef.push(true);
+        con.set({ name: presname, role: chat_role, timestamp: statusTimestamp, chat_uniq: chat_uniq });
 
         // when I disconnect, remove this device
         con.onDisconnect().remove();
@@ -329,7 +330,7 @@ function getMessageId(snapshot) {
 // Update our GUI to show someone"s online status.
 userListRef.on("child_added", function(snapshot) {
 	var user = snapshot.val();
-    console.log(user);
+    //console.log(user);
 	
 	$("<div/>")
 	  .attr("id", getMessageId(snapshot))
