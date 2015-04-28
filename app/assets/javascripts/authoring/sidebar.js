@@ -357,7 +357,7 @@ userListRef.on("child_added", function(snapshot) {
 
     // checks if user added signed on after current user (e.g., don't show notifications for existing users on load)
     // this is used to only create notifications for people who signed on from the time you logged in and forward 
-    if ((statusTimestamp < user.timestamp) && showchatnotif == true){
+    if ((statusTimestamp < user.timestamp) && showchatnotif == true && current_user == "Author"){
         playSound("/assets/notify");
         notifyMe(notif_title, notif_body, 'chat');
     }
