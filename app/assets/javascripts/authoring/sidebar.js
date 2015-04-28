@@ -260,13 +260,20 @@ function displayChatMessage(name, uniq, role, date, text) {
     $('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
 };
 
+var chat_uniq;
+if(uniq != ""){
+    chat_uniq = uniq;
+}
+else{
+    chat_uniq = "author";
+}
 
 //*** online users
 // since I can connect from multiple devices or browser tabs, we store each connection instance separately
 // any time that connectionsRef's value is null (i.e. has no children) I am offline
-var myConnectionsRef = new Firebase(firebaseURL + flash_team_id + '/users/'+name+'/connections');
+var myConnectionsRef = new Firebase(firebaseURL + flash_team_id + '/users/'+chat_uniq+'/connections');
 // stores the timestamp of my last disconnect (the last time I was seen online)
-var lastOnlineRef = new Firebase(firebaseURL + flash_team_id + '/users/'+name+'/lastOnline');
+var lastOnlineRef = new Firebase(firebaseURL + flash_team_id + '/users/'+chat_uniq+'/lastOnline');
 var connectedRef = new Firebase(firebaseURL + '.info/connected');
 
 // Get a reference to the presence data in Firebase.
@@ -311,7 +318,7 @@ function setUserStatus(status) {
 	currentStatus = status;
     statusTimestamp = new Date().getTime();
 	if (presname != undefined && status != undefined && chat_role != undefined){
-		myUserRef.set({ name: presname, status: status, role: chat_role, timestamp: statusTimestamp });
+		myUserRef.set({ name: presname, status: status, role: chat_role, timestamp: statusTimestamp, chat_uniq: chat_uniq });
 	}
 }
 
