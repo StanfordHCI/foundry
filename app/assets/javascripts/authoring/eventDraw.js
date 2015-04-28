@@ -280,6 +280,40 @@ function drawBottom(eventObj) {
     
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
+
+    // icon for setting
+    var settingIcon = addToTaskFromData(events.settingIcon, eventObj, task_g);
+        
+        settingIcon.on("click", function(){ 
+
+            // toggle the element of duplicateEvent
+            var e = settingIcon;
+            var e = e[0];
+            e = e[0];
+            var rectObj = e.parentNode.getElementsByClassName("duprect");
+            var textObj = e.parentNode.getElementsByClassName("duptxt");
+            if(rectObj[0].style.display == "none"){
+                rectObj[0].style.display="block";
+                textObj[0].style.display="block";
+            }
+            else{
+                rectObj[0].style.display="none";
+                textObj[0].style.display="none";
+            }
+               
+        });
+
+    // rectangle for duplicate event
+    var duprect = addToTaskFromData(events.duprect, eventObj, task_g);
+
+    // text for duplicate event
+    var duptxt =  addToTaskFromData(events.duptxt, eventObj, task_g);
+        duptxt.on("click", function(){
+                var task_id = getEventJSONIndex(ev.id);
+                var eventObj = flashTeamsJSON["events"][task_id];
+                //Creating the New Event Copy
+                createDuplicateEvent(eventObj);
+        });
     
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
@@ -318,12 +352,14 @@ function drawBottom(eventObj) {
     handoffIconSvg.on("click", startWriteHandoff);
     
     var selector = ".event " + events.numMembersIcon.selector + ", " +
+                   ".event " + events.duprect.selector + ", " +
                    ".event " + events.uploadIcon.selector + ", " +
                    ".event " + events.collabIcon.selector + ", " +
                    ".event " + events.handoffIcon.selector;
     $(selector).each(function() {
           $(this).tooltip('destroy').tooltip();
     });
+
 }
 
 //

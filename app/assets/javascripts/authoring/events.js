@@ -260,6 +260,73 @@ function createEvent(point, duration) {
     updateStatus();
 };
 
+//Create and Draw Duplicate event
+//Add and save the event object to the json
+function createDuplicateEvent(jsonevent){
+    
+    var oldeventObj = jsonevent;
+        // toggle the element of duplicateEvent
+        var o = document.getElementById("g_"+jsonevent.id);
+        var duptxt = o.getElementsByClassName("duptxt");
+        var duprect = o.getElementsByClassName("duprect");
+
+        duptxt = duptxt[0];
+        duprect = duprect[0];
+
+        duptxt.style.display = "none";
+        duprect.style.display = "none";
+
+    var x =  parseInt(oldeventObj.x) + parseInt(getWidth(oldeventObj) + 4 );
+    var y =  oldeventObj.y;
+
+    // get coords where duplicate event should snap to
+    var snapPoint = calcSnap(x,y) ;
+
+    if(!checkWithinTimelineBounds(snapPoint)){ return; }
+    var startTimeObj = getStartTime(snapPoint[0]);
+
+
+    //Create the json object of duplicate event
+    var newEvent = {
+        "title":oldeventObj.title+"(Copy)", "id":createEventId(), 
+        "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
+        "startTime": startTimeObj["startTimeinMinutes"], "duration":oldeventObj.duration, 
+        "members": oldeventObj.members, timer: jsonevent.duration, task_startBtn_time:oldeventObj.task_startBtn_time, task_endBtn_time:oldeventObj.task_endBtn_time,
+        "dri":oldeventObj.dri, "pc":oldeventObj.pc, "notes":oldeventObj.notes, "startHr": startTimeObj["startHr"], "status":"not_started",
+        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":oldeventObj.completed_x, "inputs":oldeventObj.inputs, "all_inputs":oldeventObj.all_inputs, "outputs":oldeventObj.outputs, events_after : oldeventObj.events_after,
+        "docQs": oldeventObj.docQs,"outputQs":oldeventObj.outputQs,"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
+    
+    //add new event to flashTeams database  "oldeventObj.gdrive"
+        flashTeamsJSON.events.push(newEvent);
+
+    // render event on timeline
+        drawEvent(newEvent, true);
+
+    //if team is in edit mode, add the gDrive folder for this event
+        //if(flashTeamsJSON["paused"] == true){
+            // var event_index = getEventJSONIndex(newEvent.id); 
+            // createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        //}
+
+        //if team is in edit mode, add the gDrive folder for this event
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(newEvent.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
+    //if team has been ended and new events get added, add the gDrive folder for the newly added events
+    if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+        var event_index = getEventJSONIndex(newEvent.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
+    logActivity("createDuplicateEvent(jsonevent)",'Create Duplicate Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(event_index)]);
+
+
+    // save
+        updateStatus();
+}
+
 function checkWithinTimelineBounds(snapPoint) {
     return ((snapPoint[1] < 505) && (snapPoint[0] < (SVG_WIDTH-150)));
 };
