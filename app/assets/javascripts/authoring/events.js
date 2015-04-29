@@ -278,16 +278,16 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
-        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, events_after : ""
+        "y": snapPoint[1], timer:0, task_startBtn_time:-1, task_endBtn_time:-1, 
+        "status":"not_started", "gdrive":[], "completed_x":null, events_after : ""
     };
 
     newEvent["title"]  = objectToDuplicate["title"] || "New Event" ;
-    newEvent["y"] = (objectToDuplicate["y"] + RECTANGLE_HEIGHT + 20) || snapPoint[1];
     newEvent["members"] = objectToDuplicate["members"] || [];
-    newEvent["startTime"] = objectToDuplicate["startTime"] || startTimeObj["startTimeinMinutes"];
+    newEvent["startTime"] = startTimeObj["startTimeinMinutes"];
     newEvent["duration"] = objectToDuplicate["duration"] || duration;
-    newEvent["startHr"]  =  objectToDuplicate["startHr"] || startTimeObj["startHr"];
-    newEvent["startMin"]  =  objectToDuplicate["startMin"] || startTimeObj["startMin"];
+    newEvent["startHr"]  =  startTimeObj["startHr"];
+    newEvent["startMin"]  =  startTimeObj["startMin"];
     newEvent["row"] = Math.floor((newEvent["y"]-5)/_foundry.timeline.rowHeight);
     newEvent["dri"] = objectToDuplicate["dri"] || "";
     newEvent["pc"] =  objectToDuplicate["pc"]|| "";
@@ -363,17 +363,25 @@ function duplicateEvent(groupNumber){
     var task_id = getEventJSONIndex(groupNumber);
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
-    var snapPoint = [];
-    snapPoint[0] = eventToDuplicate["x"];
-    snapPoint[1] = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20; //use this to see which row the duplicate event would be copied too 
+
+    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
+    var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
+    
+    var y = eventToDuplicate["y"]; //keep event on same row as original event
+    //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
+    
+    var snapPoint = calcSnap(x,y); 
 
     //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
     if(!checkWithinTimelineBounds(snapPoint)){ 
-        alert('This event cannot be duplicated because there are not enough rows');
+        alert('This event cannot be duplicated because it exceeds the boundaries of the timeline');
         return; 
     }
 
-    var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
+    var eventObj = createEventObj(newEventObject([snapPoint[0], snapPoint[1]], eventToDuplicate["duration"], eventToDuplicate));
+
+
+    //var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
 
     drawEvent(eventObj, true);
 
