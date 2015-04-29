@@ -352,9 +352,14 @@ function showDropDown(){
         },
         items: {
             "view": {name: "View", icon: ""},
-            "edit": {name: "Edit", icon: ""},
+            "edit": {name: "Edit", icon: "", disabled: function(key, opt) { 
+                    return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
+                }
+            },
             "duplicate": {name: "Duplicate", icon: ""},
-            "confirmDelete": {name: "Delete", icon: ""}
+            "confirmDelete": {name: "Delete", icon: "", disabled: function(key, opt) { 
+                    return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
+                }}
         }
     });
 }
