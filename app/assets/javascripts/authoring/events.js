@@ -380,9 +380,6 @@ function duplicateEvent(groupNumber){
 
     var eventObj = createEventObj(newEventObject([snapPoint[0], snapPoint[1]], eventToDuplicate["duration"], eventToDuplicate));
 
-
-    //var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
-
     drawEvent(eventObj, true);
 
     if(flashTeamsJSON["paused"] == true){
