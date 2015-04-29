@@ -277,7 +277,8 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
         timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, 
-        "all_inputs":"", events_after : ""
+        //"all_inputs":"", 
+        events_after : ""
     };
 
 
@@ -293,6 +294,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     newEvent["pc"] =  objectToDuplicate["pc"]|| "";
     newEvent["notes"] = objectToDuplicate["notes"] || "";
     newEvent ["inputs"] = objectToDuplicate["inputs"] || "";
+    newEvent ["all_inputs"] = objectToDuplicate["inputs"] || ""; //only save inputs since inputs from handoffs and collabs aren't copied
     newEvent ["outputs"] = objectToDuplicate["outputs"] || "";
 
     if(objectToDuplicate["docQs"]){

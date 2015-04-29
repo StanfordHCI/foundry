@@ -281,7 +281,8 @@ function drawBottom(eventObj) {
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
-    if( !in_progress || flashTeamsJSON["paused"] ==true ){
+    // only show the config icon on the task if team is not in progress, if team is paused or if task is paused, completed or not started (e.g., not in progress)
+    if( !in_progress || (flashTeamsJSON["paused"] == true && eventObj.status != "started")){
         var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
         configIcon.on("click", onConfigClick);
     }
