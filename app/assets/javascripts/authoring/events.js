@@ -272,7 +272,9 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     output_questions[0] = "Please write a brief (1 sentence) description of this deliverable";
 
     duration = duration || 60;
+    
     var startTimeObj = getStartTime(snapPoint[0]);
+    
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
@@ -333,6 +335,9 @@ function createEventObj(eventObject) {
 
 function onConfigClick(event){
     CURRENT_EVENT_SELECTED = event.groupNum;
+
+    logActivity("onConfigClick(event)",'Clicked Event Config Icon', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(event.groupNum)]);
+
     showDropDown();
 }
 
@@ -358,6 +363,16 @@ function duplicateEvent(groupNumber){
     var task_id = getEventJSONIndex(groupNumber);
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
+    var snapPoint = [];
+    snapPoint[0] = eventToDuplicate["x"];
+    snapPoint[1] = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20; //use this to see which row the duplicate event would be copied too 
+
+    //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
+    if(!checkWithinTimelineBounds(snapPoint)){ 
+        alert('This event cannot be duplicated because there are not enough rows');
+        return; 
+    }
+
     var eventObj = createEventObj(newEventObject([eventToDuplicate["x"], eventToDuplicate["y"]],  eventToDuplicate["duration"], eventToDuplicate));
 
     drawEvent(eventObj, true);
@@ -367,15 +382,21 @@ function duplicateEvent(groupNumber){
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
+    logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
     // save
     updateStatus();
 }
 
 function viewEvent(groupNumber){
+    logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 }
 
 function editEvent(groupNumber){
+    logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 
        editTaskOverview(true, groupNumber);
@@ -447,6 +468,7 @@ function durationForWidth(width) {
 
 //Calculate and return start hour in minutes for some given x position of an event
 function startHrForX(X){
+    if(X < 0) X = 0;
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var hrs = Math.floor(parseFloat(roundedX)/parseFloat(RECTANGLE_WIDTH));
     return hrs;
@@ -454,6 +476,7 @@ function startHrForX(X){
 
 //Calculate and return leftover start minutes for some given x position of an event
 function startMinForX(X){
+    if(X < 0) X = 0;
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
     return mins;
