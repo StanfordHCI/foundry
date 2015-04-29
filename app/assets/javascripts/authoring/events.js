@@ -276,11 +276,8 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
-        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, 
-        //"all_inputs":"", 
-        events_after : ""
+        timer:0, task_startBtn_time:-1, task_endBtn_time:-1, "status":"not_started", "gdrive":[], "completed_x":null, events_after : ""
     };
-
 
     newEvent["title"]  = objectToDuplicate["title"] || "New Event" ;
     newEvent["y"] = (objectToDuplicate["y"] + RECTANGLE_HEIGHT + 20) || snapPoint[1];
