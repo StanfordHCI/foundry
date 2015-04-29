@@ -92,11 +92,11 @@ function startTask(groupNum) {
     //Close the task modal
     //$("#task_modal").modal('hide');
 
-    
+
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
-    $("#start-end-task").html('Complete');         
-    
+    $("#start-end-task").html('Complete');
+
 }
 
 //Fires on "Pause" button on task modal
@@ -154,7 +154,8 @@ function resumeTask(groupNum) {
     logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
-    drawEvent(eventObj); //Will update color	
+    drawEvent(eventObj); //Will update color
+
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');

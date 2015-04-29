@@ -13,5 +13,7 @@
  *= require_tree .
  *= stub hiring-panel
  *= stub font-awesome
-  *= stub panel-reg
+ *= stub panel-reg
+ *= require jquery-ui
+//= require jquery.contextMenu.css
  */

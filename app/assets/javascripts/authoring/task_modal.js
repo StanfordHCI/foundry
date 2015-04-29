@@ -143,12 +143,17 @@ function editTaskOverview(popover,groupNum){
     var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
+
+    var eventFormTitle = '';
+    if(title != "New Event"){
+        eventFormTitle = title;
+    }
    	
 	if(popover==true){
 		$('#task-edit-link').hide();
 		
 		//label
-		label = '<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'" >'	
+		label = '<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'"' + '" value="'+eventFormTitle+'" >'	
 		$('#task_modal_Label').html(label);
 
         //content
@@ -252,9 +257,9 @@ function getTaskOverviewForm(groupNum){
         + '<div class="row-fluid">' 
         + '<div class="span6">'
         + '<b>Event Start</b> <br>' 
-        + 'Hours : <input type="number" id="startHr" placeholder="' + startHr 
+        + 'Hours : <input type="number" id="startHr" value="' + startHr 
             + '" min="0" style="width:36px">         ' 
-        + 'Minutes : <input type="number" id="startMin" placeholder="' + startMin 
+        + 'Minutes : <input type="number" id="startMin" value="' + startMin 
             + '" min="0" step="15" max="45" style="width:36px"><br />'
 
         +'<br />'
@@ -264,9 +269,9 @@ function getTaskOverviewForm(groupNum){
     
         + '</div> <div class="span6">'
         + '<b>Total Runtime </b> <br />' 
-        + 'Hours : <input type = "number" id="hours" placeholder="'
+        + 'Hours : <input type = "number" id="hours" value="'
             +numHours+'" min="0" style="width:36px"/>         ' 
-        + 'Minutes : <input type = "number" id = "minutes" placeholder="'+minutesLeft
+        + 'Minutes : <input type = "number" id = "minutes" value="'+minutesLeft
             +'" style="width:36px" min="0" step="15" max="45"/> <br />'     
         +'<br />'
         + '<b>Directly-Responsible Individual</b><br><select class="driInput"' 
@@ -515,9 +520,9 @@ function getTaskOverviewContent(groupNum){
             content += "<b><i>" + key + "</i></b></br>";
             keyArray = ev.outputQs[key];
             for (i = 0; i < keyArray.length; i++){
-                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
+                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p><br />";
             }
-            content += "<br />";
+            //content += "<br />";
         }
     }
     //content += "<hr/>";

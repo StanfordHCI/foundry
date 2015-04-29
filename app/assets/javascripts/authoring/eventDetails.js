@@ -286,7 +286,47 @@ if(!window._foundry) {
             "font-family": "Helvetica"
         }
     },
-    
+    configIcon: {
+      selector: ".icon-cog",
+      tag: "image",
+      attrs: {
+          x: function(d) {
+              var attrs = events.numMembers.attrs;
+              return attrs.x(d) + 15;
+          },
+          y: function(d) {return d.y + events.bodyHeight - 18},
+          width: function(d) {
+              var groupNum = parseInt(d.id.replace("task_g_", ""));
+              var eventObj = getEventFromId(groupNum);
+              // set the width to zero if this is an hour long event
+              return eventObj.duration <= 60 ? 0 : 12;
+          },
+          height: 12,
+          "xlink:href": function(d) {
+              var groupNum = parseInt(d.id.replace("task_g_", ""));
+              var eventObj = getEventFromId(groupNum);
+              return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                  "/assets/icons/config/icon-cog.svg" : "/assets/icons/config/icon-cog_white.svg";
+          },
+          "class": "icon-cog",
+
+          // tooltip stuff
+          "data-toggle": "tooltip",
+          "data-placement": "bottom",
+          "data-container": "body",
+          "data-animation": false,
+          title: "Configuration"
+      },
+
+      style: {
+          opacity: function(d) {
+              var groupNum = parseInt(d.id.replace("task_g_", ""));
+              var eventObj = getEventFromId(groupNum);
+              return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                  events.iconOpacity : 1;
+          }
+      }
+    },
     uploadIcon: {
         selector: ".upload",
         tag: "image",
@@ -334,7 +374,6 @@ if(!window._foundry) {
             }
         }
     },
-    
     collabIcon: {
         selector: ".collab_btn",
         tag: "image",

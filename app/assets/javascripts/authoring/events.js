@@ -8,6 +8,7 @@
 var RECTANGLE_WIDTH = window._foundry.timeline.hourWidth || 100;
 var RECTANGLE_HEIGHT = 70;
 var DRAGBAR_WIDTH = 8;
+var CURRENT_EVENT_SELECTED = "";
 var GUTTER = 20;
 
 var dragged = false;
@@ -236,7 +237,7 @@ function createEvent(point, duration) {
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
-    var eventObj = createEventObj(snapPoint, duration);
+    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
 
     // render event on timeline
     drawEvent(eventObj, true);
@@ -260,6 +261,157 @@ function createEvent(point, duration) {
     updateStatus();
 };
 
+
+function newEventObject(snapPoint, duration, objectToDuplicate){
+
+    var documented_questions = [];
+    documented_questions[0] = "Please explain all other design or execution decisions made, along with the reason they were made";
+    documented_questions[1] = "Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)";
+
+    var output_questions = [];
+    output_questions[0] = "Please write a brief (1 sentence) description of this deliverable";
+
+    duration = duration || 60;
+    
+    var startTimeObj = getStartTime(snapPoint[0]);
+    
+    var newEvent = {
+        "id":createEventId(),
+        "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
+        "y": snapPoint[1], timer:0, task_startBtn_time:-1, task_endBtn_time:-1, 
+        "status":"not_started", "gdrive":[], "completed_x":null, events_after : ""
+    };
+
+    newEvent["title"]  = objectToDuplicate["title"] || "New Event" ;
+    newEvent["members"] = objectToDuplicate["members"] || [];
+    newEvent["startTime"] = startTimeObj["startTimeinMinutes"];
+    newEvent["duration"] = objectToDuplicate["duration"] || duration;
+    newEvent["startHr"]  =  startTimeObj["startHr"];
+    newEvent["startMin"]  =  startTimeObj["startMin"];
+    newEvent["row"] = Math.floor((newEvent["y"]-5)/_foundry.timeline.rowHeight);
+    newEvent["dri"] = objectToDuplicate["dri"] || "";
+    newEvent["pc"] =  objectToDuplicate["pc"]|| "";
+    newEvent["notes"] = objectToDuplicate["notes"] || "";
+    newEvent ["inputs"] = objectToDuplicate["inputs"] || "";
+    newEvent ["all_inputs"] = objectToDuplicate["inputs"] || ""; //only save inputs since inputs from handoffs and collabs aren't copied
+    newEvent ["outputs"] = objectToDuplicate["outputs"] || "";
+
+    if(objectToDuplicate["docQs"]){
+        var questions = [];
+        for(var i=0; i < objectToDuplicate["docQs"].length; i++){
+             questions.push([objectToDuplicate["docQs"][i][0],""]);
+        }
+        newEvent["docQs"] = questions;
+
+    }else{
+        newEvent["docQs"] = [[documented_questions[0],""],[documented_questions[1], ""]];
+    }
+
+    var outQs = {};
+    for (var key in objectToDuplicate.outputQs){
+
+        if (key != ""){
+            outQs[key] = [];
+            keyArray = objectToDuplicate.outputQs[key];
+
+            for (i = 0; i < keyArray.length; i++){
+                outQs[key].push([keyArray[i][0],""]);
+            }
+        }
+    }
+    newEvent.outputQs = outQs;
+
+    return newEvent;
+}
+
+//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
+function createEventObj(eventObject) {
+
+    //add new event to flashTeams database
+    flashTeamsJSON.events.push(eventObject);
+
+    return eventObject;
+};
+
+function onConfigClick(event){
+    CURRENT_EVENT_SELECTED = event.groupNum;
+
+    logActivity("onConfigClick(event)",'Clicked Event Config Icon', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(event.groupNum)]);
+
+    showDropDown();
+}
+
+function showDropDown(){
+    var menu = $.contextMenu({
+        selector: '.icon-cog',
+        trigger: 'left',
+        callback: function(key, options) {
+            //var m = "clicked: "  key;
+            //window.console && console.log(m) || alert(options.groupNum);
+            window[key + "Event"](CURRENT_EVENT_SELECTED);
+        },
+        items: {
+            "view": {name: "View", icon: ""},
+            "edit": {name: "Edit", icon: "", disabled: function(key, opt) { 
+                    return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
+                }
+            },
+            "duplicate": {name: "Duplicate", icon: ""},
+            "confirmDelete": {name: "Delete", icon: "", disabled: function(key, opt) { 
+                    return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
+                }}
+        }
+    });
+}
+
+function duplicateEvent(groupNumber){
+    var task_id = getEventJSONIndex(groupNumber);
+    var eventToDuplicate = flashTeamsJSON["events"][task_id];
+
+
+    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
+    var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
+    
+    var y = eventToDuplicate["y"]; //keep event on same row as original event
+    //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
+    
+    var snapPoint = calcSnap(x,y); 
+
+    //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
+    if(!checkWithinTimelineBounds(snapPoint)){ 
+        alert('This event cannot be duplicated because it exceeds the boundaries of the timeline');
+        return; 
+    }
+
+    var eventObj = createEventObj(newEventObject([snapPoint[0], snapPoint[1]], eventToDuplicate["duration"], eventToDuplicate));
+
+    drawEvent(eventObj, true);
+
+    if(flashTeamsJSON["paused"] == true){
+        var event_index = getEventJSONIndex(eventObj.id);
+        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    }
+
+    logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
+    // save
+    updateStatus();
+}
+
+function viewEvent(groupNumber){
+    logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
+    $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
+}
+
+function editEvent(groupNumber){
+    logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+
+    $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
+
+       editTaskOverview(true, groupNumber);
+}
+
 function checkWithinTimelineBounds(snapPoint) {
     return ((snapPoint[1] < 505) && (snapPoint[0] < (SVG_WIDTH-150)));
 };
@@ -278,30 +430,6 @@ function getDuration(leftX, rightX) {
     var durationInMinutes = parseInt((hrs*60)) + parseInt(min);
 
     return {"duration":durationInMinutes, "hrs":hrs, "min":min};
-};
-
-//task_startBtn_time and task_endBtn_time refer to the time when the start button and end button on the task is clicked.
-function createEventObj(snapPoint, duration) {
-    duration = duration || 60;
-    
-    var startTimeObj = getStartTime(snapPoint[0]);
-  
-    //Create the event json object
-    var newEvent = {
-        "title":"New Event", "id":createEventId(), 
-        "x": snapPoint[0]-4, "min_x": snapPoint[0], "y": snapPoint[1], //NOTE: -4 on x is for 1/15/15 render of events
-        "startTime": startTimeObj["startTimeinMinutes"], "duration":duration, 
-        "members":[], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
-        "dri":"", "pc":"", "notes":"", "startHr": startTimeObj["startHr"], "status":"not_started",
-        "startMin": startTimeObj["startMin"], "gdrive":[], "completed_x":null, "inputs":"", "all_inputs":"", "outputs":"", events_after : "",
-        "docQs": [["Please explain all other design or execution decisions made, along with the reason they were made",""], 
-        ["Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)",""]],
-        "outputQs":{},"row": Math.floor((snapPoint[1]-5)/_foundry.timeline.rowHeight)};
-    
-    //add new event to flashTeams database
-    flashTeamsJSON.events.push(newEvent);
-    
-    return newEvent;
 };
 
 //Create a unique event id based on the current time
@@ -350,6 +478,7 @@ function durationForWidth(width) {
 
 //Calculate and return start hour in minutes for some given x position of an event
 function startHrForX(X){
+    if(X < 0) X = 0;
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var hrs = Math.floor(parseFloat(roundedX)/parseFloat(RECTANGLE_WIDTH));
     return hrs;
@@ -357,6 +486,7 @@ function startHrForX(X){
 
 //Calculate and return leftover start minutes for some given x position of an event
 function startMinForX(X){
+    if(X < 0) X = 0;
     var roundedX = Math.round(X/STEP_WIDTH) * STEP_WIDTH;
     var mins = (parseFloat(roundedX) % parseFloat(RECTANGLE_WIDTH)) * 60 / parseFloat(RECTANGLE_WIDTH);
     return mins;

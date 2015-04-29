@@ -81,6 +81,13 @@ function removeColabBtns(){
     }
 };
 
+function hideAllConfigIcons(bHide){
+    if(bHide)
+        $(".icon-cog").hide();
+    else
+        $(".icon-cog").show();
+}
+
 function removeHandoffBtns(){
     var events = flashTeamsJSON["events"];
    for (var i = 0; i < events.length; i++){
@@ -119,6 +126,9 @@ function disableTeamEditing() {
     var selector = selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).hide();
+
+    hideAllConfigIcons(true);
+
 }
 
 function enableTeamEditing() {
@@ -132,6 +142,8 @@ function enableTeamEditing() {
     var selector = selectorPrefix + ".collab_btn, " +
                    selectorPrefix + ".handoff_btn";
     $(selector).show();
+
+    hideAllConfigIcons(false);
 }
 
 function startFlashTeam() {
@@ -149,7 +161,8 @@ function startFlashTeam() {
     $("#flashTeamTitle").css('display','none');
     
     disableTeamEditing();
-    
+
+    hideAllConfigIcons(true);
     removeColabBtns();
     removeHandoffBtns();
     save_tasksAfter_json();

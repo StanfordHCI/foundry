@@ -10,6 +10,7 @@ function confirm_show_docs(event_id){
     show_previous_doc(event_id);
   else
     confirm_show_docs_modal(event_id);
+
 };
 
 function confirm_show_docs_modal(event_id){
