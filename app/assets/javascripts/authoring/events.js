@@ -349,8 +349,9 @@ function showDropDown(){
             window[key + "Event"](CURRENT_EVENT_SELECTED);
         },
         items: {
-            "duplicate": {name: "Duplicate", icon: ""},
+            "view": {name: "View", icon: ""},
             "edit": {name: "Edit", icon: ""},
+            "duplicate": {name: "Duplicate", icon: ""},
             "confirmDelete": {name: "Delete", icon: ""}
         }
     });
@@ -373,8 +374,14 @@ function duplicateEvent(groupNumber){
     updateStatus();
 }
 
+function viewEvent(groupNumber){
+    $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
+}
+
 function editEvent(groupNumber){
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
+
+       editTaskOverview(true, groupNumber);
 }
 
 function checkWithinTimelineBounds(snapPoint) {

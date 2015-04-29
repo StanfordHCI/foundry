@@ -515,9 +515,9 @@ function getTaskOverviewContent(groupNum){
             content += "<b><i>" + key + "</i></b></br>";
             keyArray = ev.outputQs[key];
             for (i = 0; i < keyArray.length; i++){
-                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p>";
+                content += "<p><i>" + keyArray[i][0] + "</i></br>" + keyArray[i][1] + "</p><br />";
             }
-            content += "<br />";
+            //content += "<br />";
         }
     }
     //content += "<hr/>";
