@@ -1667,10 +1667,24 @@ var trackUpcomingEvent = function(){
                 //alert(upcomingEvent);
                 overallTime = "You can now start "+ ev.title +" task.";
                 statusText.style("color", "black");
+
+                $("#project-status-text").html(overallTime);
+                $("#project-status-text").css("margin-bottom", "10px");
+                $("#project-status-btn").attr('onclick', 'startTask('+ev.id+')');
+                $("#project-status-btn").addClass('btn-success');
+                $("#project-status-btn").css("margin-bottom", "20px");
+                $("#project-status-btn").html('Start Task');
             }
             else{
                 overallTime = "Your next task is "+ ev.title +".";
                 statusText.style("color", "black");
+
+                $("#project-status-text").html(overallTime);
+                $("#project-status-text").css("margin-bottom", "10px");
+                $("#project-status-btn").attr('onclick', 'showShortTaskOverview('+ev.id+')');
+                $("#project-status-btn").addClass('btn-primary');
+                $("#project-status-btn").css("margin-bottom", "20px");
+                $("#project-status-btn").html('View Task');
             }
         }
         
