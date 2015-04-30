@@ -1709,6 +1709,8 @@ var trackUpcomingEvent = function(){
 
         if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
             overallTime = "The team is being edited right now. " + overallTime;
+            $("#project-status-text").html(overallTime);
+            $("#project-status-text").css("margin-bottom", "10px");
         }
 
         statusText.text(overallTime);
