@@ -1665,41 +1665,44 @@ var trackUpcomingEvent = function(){
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
                 //alert(upcomingEvent);
-                overallTime = "You can now start "+ ev.title +" task.";
-                statusText.style("color", "black");
+                overallTime = "You can now start <span id=task-name-status>"+ ev.title +" </span> task.";
+                //statusText.style("color", "black");
 
-                $("#project-status-text").html(overallTime);
-                $("#project-status-text").css("margin-bottom", "10px");
-                $("#project-status-btn").attr('onclick', 'startTask('+ev.id+')');
-                $("#project-status-btn").addClass('btn-success');
-                $("#project-status-btn").css("margin-bottom", "20px");
-                $("#project-status-btn").html('Start Task');
+                updateSidebarButton(overallTime, ev.id, ev.status);
+                // $("#project-status-text").html(overallTime);
+                // $("#project-status-text").css("margin-bottom", "10px");
+                // $("#project-status-btn").attr('onclick', 'startTask('+ev.id+')');
+                // $("#project-status-btn").addClass('btn-success');
+                // $("#project-status-btn").css("margin-bottom", "20px");
+                // $("#project-status-btn").css("display", '');
+                // $("#project-status-btn").html('Start Task');
             }
             else{
                 overallTime = "Your next task is "+ ev.title +".";
-                statusText.style("color", "black");
+                //statusText.style("color", "black");
 
                 $("#project-status-text").html(overallTime);
                 $("#project-status-text").css("margin-bottom", "10px");
                 $("#project-status-btn").attr('onclick', 'showShortTaskOverview('+ev.id+')');
                 $("#project-status-btn").addClass('btn-primary');
                 $("#project-status-btn").css("margin-bottom", "20px");
+                $("#project-status-btn").css("display", '');
                 $("#project-status-btn").html('View Task');
             }
         }
         
         if( ev.status == "paused"){
             overallTime = "Your task is paused.";
-            statusText.style("color", "#006699");
+            //statusText.style("color", "#006699");
         }
         
         if( ev.status == "delayed"){
             overallTime = "Your task is delayed.";
-            statusText.style("color", "#f52020");
+            //statusText.style("color", "#f52020");
         }
         else if ( ev.status == "started"){
             overallTime = "Your task is in progress.";
-            statusText.style("color", "#40b8e4");
+            //statusText.style("color", "#40b8e4");
         }
         
         // Commenting this out because I include the project status information under the gdrive button
@@ -1713,8 +1716,18 @@ var trackUpcomingEvent = function(){
             $("#project-status-text").css("margin-bottom", "10px");
         }
 
-        statusText.text(overallTime);
+        //statusText.text(overallTime);
     }, fire_interval);
+}
+
+function updateSidebarButton(overallTime, groupNum, status){
+    $("#project-status-text").html(overallTime);
+    $("#project-status-text").css("margin-bottom", "10px");
+    $("#project-status-btn").attr('onclick', 'startTask(' + groupNum + ')');
+    $("#project-status-btn").addClass('btn-success');
+    $("#project-status-btn").css("margin-bottom", "20px");
+    $("#project-status-btn").css("display", '');
+    $("#project-status-btn").html('Start Task');
 }
 
 var getAllData = function(){
