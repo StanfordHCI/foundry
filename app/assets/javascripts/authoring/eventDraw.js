@@ -459,7 +459,7 @@ function drawShade(eventObj) {
 //
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
         return;
     }
     

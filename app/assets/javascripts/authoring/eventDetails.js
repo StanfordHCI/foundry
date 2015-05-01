@@ -125,6 +125,10 @@ if(!window._foundry) {
                 var timeStr = "PAUSED";
             }
 
+            else if(eventObj.status == "completed"){
+                var timeStr = "COMPLETED";
+            }
+
             else{
                 var time = eventObj.timer || eventObj.duration;
                 var sign = (time / Math.abs(time) < 0) ? "-" : "";
