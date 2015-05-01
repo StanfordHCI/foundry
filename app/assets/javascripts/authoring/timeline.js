@@ -39,7 +39,7 @@ var upcomingEvent;
 //Remove existing X-axis labels
 var numMins = -60;
 
-var timelineDiv = $('<div class="timeline"></div>');
+var timelineDiv = $('<div  ondrop="drop(event)" ondragover="allowDrop(event)" class="timeline"></div>');
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
 }).append(timelineDiv);

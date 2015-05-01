@@ -69,19 +69,15 @@ function drop(ev) {
 
 /* Calculates mouse coordinates relative to timeline svg so Event block can be drawn in correct spot*/
 function calcMouseCoords(event) {
-  var timelineX = document.getElementById("timeline-container").offsetLeft;
-  var timelineY = document.getElementById("timeline-container").offsetTop;
-
   var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
   var timelineScrollY = document.getElementById("timeline-container").scrollTop;
 
-  var absoluteX = event.pageX+timelineScrollX;
-  var absoluteY = event.pageY+timelineScrollY;
+  var x = event.pageX - $('.timeline-svg').offset().left + timelineScrollX;
 
-  var svgpointX = absoluteX - timelineX;
-  var svgpointY = absoluteY - timelineY;
+  var y = event.pageY - $('.timeline-svg').offset().top + timelineScrollY;
 
-  var svgpoint = [svgpointX, svgpointY];
+  var svgpoint = [x, y];
+  
   return svgpoint;
 }
 
