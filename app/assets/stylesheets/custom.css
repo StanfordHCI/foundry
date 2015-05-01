@@ -136,6 +136,15 @@ hr{
   margin-bottom: 10px;
 }
 
+#task-name-status{
+  text-decoration: underline;
+}
+
+#task-name-status:hover{
+  /*background: grey;*/
+  /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);*/
+}
+
 .project-status-btn{
   margin-top: 10px;
   margin-bottom: 10px;

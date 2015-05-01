@@ -1671,105 +1671,80 @@ var trackUpcomingEvent = function(){
        
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
-                //alert(upcomingEvent);
-                overallTime = "You can now start <span id=task-name-status>"+ ev.title +" </span> task.";
-                //statusText.style("color", "black");
+                overallTime = "You can now start <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a> task.";
 
                 updateSidebarText(overallTime, "black");
 
-                updateSidebarButton(ev.id, ev.status, 'startTask', 'Start Task', 'btn-success');
-                // $("#project-status-text").html(overallTime);
-                // $("#project-status-text").css("margin-bottom", "10px");
-                // $("#project-status-btn").attr('onclick', 'startTask('+ev.id+')');
-                // $("#project-status-btn").addClass('btn-success');
-                // $("#project-status-btn").css("margin-bottom", "20px");
-                // $("#project-status-btn").css("display", '');
-                // $("#project-status-btn").html('Start Task');
+                updateSidebarButton(ev.id, 'startTask', 'Start Task', 'btn-success');
             }
             else{
-                overallTime = "Your next task is "+ ev.title +".";
+                overallTime = "Your next task is <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a>.";
                 updateSidebarText(overallTime, "black");
-                //statusText.style("color", "black");
 
-                updateSidebarButton(ev.id, ev.status, 'showShortTaskOverview', 'View Task', 'btn-primary');
-
-                // $("#project-status-text").html(overallTime);
-                // $("#project-status-text").css("margin-bottom", "10px");
-                // $("#project-status-btn").attr('onclick', 'showShortTaskOverview('+ev.id+')');
-                // $("#project-status-btn").addClass('btn-primary');
-                // $("#project-status-btn").css("margin-bottom", "20px");
-                // $("#project-status-btn").css("display", '');
-                // $("#project-status-btn").html('View Task');
+                updateSidebarButton(ev.id, 'showShortTaskOverview', 'View Task', 'btn-primary');
             }
         }
         
         if( ev.status == "paused"){
-            overallTime = "Your task is paused.";
+            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is paused.";
             updateSidebarText(overallTime, "#006699");
 
-            updateSidebarButton(ev.id, ev.status, 'resumeTask', 'Resume Task', 'btn-warning');
+            updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-warning');
             //$("#project-status-text").css("color", "#006699");
             //statusText.style("color", "#006699");
         }
         
         if( ev.status == "delayed"){
-            overallTime = "Your task is delayed.";
+            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
             updateSidebarText(overallTime, "#f52020");
 
-            updateSidebarButton(ev.id, ev.status, 'confirmCompleteTask', 'Complete Task', 'btn-success');
-           // $("#project-status-text").css("color", "#f52020");
+            updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
-            updateSidebarButton(ev.id, ev.status, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
-            //statusText.style("color", "#f52020");
+            updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
         }
+
         else if ( ev.status == "started"){
-            overallTime = "Your task is in progress.";
+            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
             updateSidebarText(overallTime, "#40b8e4");
 
-            updateSidebarButton(ev.id, ev.status, 'confirmCompleteTask', 'Complete Task', 'btn-success');
-            //$("#project-status-text").css("color", "#40b8e4");
+            updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
-            updateSidebarButton(ev.id, ev.status, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
-
-            //statusText.style("color", "#40b8e4");
+            updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
         }
-        
-        // Commenting this out because I include the project status information under the gdrive button
-        // if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
-        //     overallTime = "The team is not started. " + overallTime;
-        // }
 
         if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
             overallTime = "The team is being edited right now. " + overallTime;
             updateSidebarText(overallTime);
-
-            //$("#project-status-text").html(overallTime);
-            //$("#project-status-text").css("margin-bottom", "10px");
         }
 
-        //statusText.text(overallTime);
     }, fire_interval);
 }
 
+// updates the project status text in the sidebar
 function updateSidebarText(overallTime, color){
-    //update the project status text in the sidebar
     $("#project-status-text").html(overallTime);
+
+    // if($("#task-name-status")){
+    //     $("#task-name-status").css("text-decoration", "underline");
+    // }
 
     if(color){
         $("#project-status-text").css("color", color);
+
+        if($("#task-name-status")){
+            $("#task-name-status").css("color", color);
+        }
     }
-
-    //$("#project-status-text").css("margin-bottom", "10px");
-
 }
 
-function updateSidebarButton(groupNum, status, functionName, btnText, btnClass, btnId){
+// updates the task buttons in the sidebar
+function updateSidebarButton(groupNum, functionName, btnText, btnClass, btnId){
     
     var buttonId = btnId || "project-status-btn"; 
 
     // hide the second status button unless it is explicitly called
     if(buttonId != "project-status-btn2"){
-        $("#project-status-btn2").css("display", 'none');
+        $("#project-status-btn2").css("display", "none");
     }
 
     //remove the last class on the button, which refers to the previous status button
@@ -1779,7 +1754,7 @@ function updateSidebarButton(groupNum, status, functionName, btnText, btnClass, 
 
     $("#" + buttonId).attr('onclick', functionName +'(' + groupNum + ')');
     
-    $("#" + buttonId).css("display", '');
+    $("#" + buttonId).css("display", "");
     $("#" + buttonId).html(btnText);
 }
 
