@@ -129,6 +129,17 @@ hr{
   resize:none;
   padding:5px;
   border:solid 1px #c3c3c3;
+}
+
+#project-status-text{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.project-status-btn{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
 #status-bar-container svg {
 	/* width: 280px; */
