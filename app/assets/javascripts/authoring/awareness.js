@@ -1671,23 +1671,31 @@ var trackUpcomingEvent = function(){
        
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
-                overallTime = "You can now start <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a> task.";
+                overallTime = "You can now start <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a> task.";
 
                 updateSidebarText(overallTime, "black");
 
-                updateSidebarButton(ev.id, 'startTask', 'Start Task', 'btn-success');
+                updateStatusAlertText(overallTime, 'alert-class');
+
+                updateSidebarButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-success');
             }
             else{
-                overallTime = "Your next task is <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a>.";
+                overallTime = "Your next task is <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a>.";
+                
                 updateSidebarText(overallTime, "black");
+
+                updateStatusAlertText(overallTime, 'alert-hide');
 
                 updateSidebarButton(ev.id, 'showShortTaskOverview', 'View Task', 'btn-primary');
             }
         }
         
         if( ev.status == "paused"){
-            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is paused.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is paused.";
+            
             updateSidebarText(overallTime, "#006699");
+
+            updateStatusAlertText(overallTime, 'alert-info');
 
             updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-warning');
             //$("#project-status-text").css("color", "#006699");
@@ -1695,8 +1703,11 @@ var trackUpcomingEvent = function(){
         }
         
         if( ev.status == "delayed"){
-            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
+            
             updateSidebarText(overallTime, "#f52020");
+
+            updateStatusAlertText(overallTime, 'alert-danger');
 
             updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
@@ -1704,8 +1715,10 @@ var trackUpcomingEvent = function(){
         }
 
         else if ( ev.status == "started"){
-            overallTime = "Your task <a href='#' id='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
             updateSidebarText(overallTime, "#40b8e4");
+
+            updateStatusAlertText(overallTime, 'alert-hide');
 
             updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
@@ -1717,6 +1730,7 @@ var trackUpcomingEvent = function(){
             updateSidebarText(overallTime);
         }
 
+
     }, fire_interval);
 }
 
@@ -1724,17 +1738,31 @@ var trackUpcomingEvent = function(){
 function updateSidebarText(overallTime, color){
     $("#project-status-text").html(overallTime);
 
-    // if($("#task-name-status")){
-    //     $("#task-name-status").css("text-decoration", "underline");
-    // }
-
     if(color){
         $("#project-status-text").css("color", color);
 
-        if($("#task-name-status")){
-            $("#task-name-status").css("color", color);
+        if($(".task-name-status")){
+            $(".task-name-status").css("color", color);
         }
     }
+}
+
+// updates the project status text and background of the alert div on top of timeline
+function updateStatusAlertText(overallTime, alertClass){
+
+    $("#project-status-alert-text").html(overallTime);
+
+    var lastClass = $("#project-status-alert").attr('class').split(' ').pop();
+    $("#project-status-alert").removeClass(lastClass);
+    $("#project-status-alert").addClass(alertClass);
+
+    if(alertClass =='alert-hide'){
+        $("#project-status-alert").css("display", "none");
+
+    }else{
+        $("#project-status-alert").css("display", "");
+    }
+    
 }
 
 // updates the task buttons in the sidebar

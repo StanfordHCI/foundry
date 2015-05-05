@@ -136,11 +136,11 @@ hr{
   margin-bottom: 10px;
 }
 
-#task-name-status{
+.task-name-status{
   text-decoration: underline;
 }
 
-#task-name-status:hover{
+.task-name-status:hover{
   /*background: grey;*/
   /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);*/
 }
