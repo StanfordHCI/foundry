@@ -20,6 +20,10 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
+    // if team hasn't started yet, don't show the google drive deliverables button in task footer
+    if(!in_progress){
+        $("#gdrive-footer-btn").css('display', 'none'); 
+    }
 
     // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.) 
     //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client

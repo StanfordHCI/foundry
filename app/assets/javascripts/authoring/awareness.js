@@ -1671,7 +1671,7 @@ var trackUpcomingEvent = function(){
        
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
-                overallTime = "You can now start <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a> task.";
+                overallTime = "You can now start <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a> task.";
 
                 updateSidebarText(overallTime, "black");
 
@@ -1680,18 +1680,18 @@ var trackUpcomingEvent = function(){
                 updateSidebarButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-success');
             }
             else{
-                overallTime = "Your next task is <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>"+ ev.title +"</a>.";
+                overallTime = "Your next task is <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a>.";
                 
                 updateSidebarText(overallTime, "black");
 
                 updateStatusAlertText(overallTime, 'alert-hide');
 
-                updateSidebarButton(ev.id, 'showShortTaskOverview', 'View Task', 'btn-primary');
+                updateSidebarButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
             }
         }
         
         if( ev.status == "paused"){
-            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is paused.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is paused.";
             
             updateSidebarText(overallTime, "#006699");
 
@@ -1703,7 +1703,7 @@ var trackUpcomingEvent = function(){
         }
         
         if( ev.status == "delayed"){
-            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
             
             updateSidebarText(overallTime, "#f52020");
 
@@ -1715,7 +1715,8 @@ var trackUpcomingEvent = function(){
         }
 
         else if ( ev.status == "started"){
-            overallTime = "Your task <a href='#' class='task-name-status' onclick='showShortTaskOverview(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
+            
             updateSidebarText(overallTime, "#40b8e4");
 
             updateStatusAlertText(overallTime, 'alert-hide');
