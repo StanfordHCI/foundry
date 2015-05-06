@@ -121,7 +121,7 @@ function pauseTask(groupNum) {
     drawEvent(eventObj); //Will update color
 	
 
-	//chaning start button to complete button on the task modal
+	//chaning resume button to pause button on the task modal
     $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
     $("#pause-resume-task").html('Resume Task'); 
 	

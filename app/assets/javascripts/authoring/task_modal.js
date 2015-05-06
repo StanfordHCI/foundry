@@ -135,6 +135,11 @@ function logShortTaskOverviewGDriveBtnClick(groupNum){
         logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
+function logTaskOverviewGDriveBtnClick(groupNum){
+        logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
+
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideShortTaskOverview(groupNum){
     logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);

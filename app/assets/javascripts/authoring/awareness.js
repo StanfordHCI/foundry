@@ -1716,7 +1716,7 @@ var trackUpcomingEvent = function(){
 
             updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
-            updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
+            updateSidebarButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-btn2');
         }
 
         else if ( ev.status == "started"){
