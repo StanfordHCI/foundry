@@ -69,13 +69,23 @@ var googleDriveLink = function(){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
         $("#authorize-button").html('Google Drive™ folder');
         $("#google-drive-button").toggleClass('gdrive-inactive', false);
+        $("#gFolder").css('display', '');
       }else{
         $("#authorize-button").html('Waiting for Google Drive™');
         $("#google-drive-button").toggleClass('gdrive-inactive', true);
+        $("#gFolder").css('display', '');
       }
     }else{
-      $("#authorize-button").html('Google Drive™ folder');
-      $("#google-drive-button").toggleClass('gdrive-inactive', false);
+      if (current_user == "Author"){
+        $("#authorize-button").html('Google Drive™ folder');
+        $("#google-drive-button").toggleClass('gdrive-inactive', false);
+        $("#gFolder").css('display', '');
+      }else{
+        $("#gFolder").css('display', 'none');
+      }
+
+
+      
     }
 
     gFolderBtn.onclick=function(){
