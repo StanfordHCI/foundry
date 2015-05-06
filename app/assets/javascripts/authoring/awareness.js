@@ -1683,6 +1683,8 @@ var trackUpcomingEvent = function(){
                 updateStatusAlertText(overallTime, 'alert-class');
 
                 updateSidebarButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-success');
+
+                updateAlertButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-success');
             }
             else{
                 overallTime = "Your next task is <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a>.";
@@ -1692,6 +1694,8 @@ var trackUpcomingEvent = function(){
                 updateStatusAlertText(overallTime, 'alert-hide');
 
                 updateSidebarButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
+
+                updateAlertButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
             }
         }
         
@@ -1702,9 +1706,10 @@ var trackUpcomingEvent = function(){
 
             updateStatusAlertText(overallTime, 'alert-info');
 
-            updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-warning');
-            //$("#project-status-text").css("color", "#006699");
-            //statusText.style("color", "#006699");
+            updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
+
+            updateAlertButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
+            
         }
         
         if( ev.status == "delayed"){
@@ -1717,6 +1722,9 @@ var trackUpcomingEvent = function(){
             updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
 
             updateSidebarButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-btn2');
+
+            updateAlertButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
+            updateAlertButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-alert-btn2');
         }
 
         else if ( ev.status == "started"){
@@ -1779,6 +1787,27 @@ function updateSidebarButton(groupNum, functionName, btnText, btnClass, btnId){
     // hide the second status button unless it is explicitly called
     if(buttonId != "project-status-btn2"){
         $("#project-status-btn2").css("display", "none");
+    }
+
+    //remove the last class on the button, which refers to the previous status button
+    var lastClass = $("#" + buttonId).attr('class').split(' ').pop();
+    $("#" + buttonId).removeClass(lastClass);
+    $("#" + buttonId).addClass(btnClass);
+
+    $("#" + buttonId).attr('onclick', functionName +'(' + groupNum + ')');
+    
+    $("#" + buttonId).css("display", "");
+    $("#" + buttonId).html(btnText);
+}
+
+// updates the task buttons in the alert div over the timeline
+function updateAlertButton(groupNum, functionName, btnText, btnClass, btnId){
+    
+    var buttonId = btnId || "project-status-alert-btn"; 
+
+    // hide the second status button unless it is explicitly called
+    if(buttonId != "project-status-alert-btn2"){
+        $("#project-status-alert-btn2").css("display", "none");
     }
 
     //remove the last class on the button, which refers to the previous status button
