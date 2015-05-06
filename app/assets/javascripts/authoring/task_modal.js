@@ -33,7 +33,7 @@ function showTaskOverview(groupNum){
         if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
-            $("#pause-resume-task").addClass('btn-default');
+            $("#pause-resume-task").addClass('btn-info');
             $("#pause-resume-task").css('display', '');
             
             
@@ -63,8 +63,8 @@ function showTaskOverview(groupNum){
            $("#pause-resume-task").css('display', 'none'); 
            $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
-            $("#start-end-task").addClass('btn-primary');
-            $("#start-end-task").html('Start'); 
+            $("#start-end-task").addClass('btn-warning');
+            $("#start-end-task").html('Start Task'); 
         }
     } else{
             $("#start-end-task").css('display', 'none');   
