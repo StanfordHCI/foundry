@@ -200,9 +200,10 @@ function drawMainRect(eventObj) {
                     return TASK_COMPLETE_COLOR;
             }
         })
+        .attr("fill-opacity", .6)
         .style("filter", "url(#box-shadow)")
         .call(drag);
-    
+
     if(eventObj.status === "not_started") {
         rect.style({
             stroke: TASK_NOT_START_STROKE_COLOR,
@@ -449,8 +450,10 @@ function drawShade(eventObj) {
                 currentUserEvents.push(eventObj);
             }
 
+            if(eventObj.status == 'completed') task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            else task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", 1);
             
-            task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            //task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             break;
         }
     }

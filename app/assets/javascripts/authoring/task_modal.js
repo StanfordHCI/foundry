@@ -65,7 +65,6 @@ function showTaskOverview(groupNum){
             $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-warning');
             $("#start-end-task").html('Start Task'); 
-            $("#gdrive-footer-btn").addClass('disabled')
         }
     } else{
             $("#start-end-task").css('display', 'none');   
