@@ -57,12 +57,12 @@ function handleAuthClick(event) {
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
 
-    if(in_progress){
-      $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
-    }
-    else{
-      $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-    }
+    // if(in_progress){
+    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+    // }
+    // else{
+    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+    // }
 
 
     if(!in_progress || !flashTeamsJSON.folder){

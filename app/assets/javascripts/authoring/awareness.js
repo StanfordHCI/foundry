@@ -188,6 +188,7 @@ function endTeam() {
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
     $("#flashTeamPauseBtn").css('display','none');
+    $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
 
@@ -337,7 +338,6 @@ function renderEverything(firstTime) {
 
         if(in_progress){
 
-
             colorBox();
             //console.log("flash team in progress");
             $("#flashTeamStartBtn").attr("disabled", "disabled");
@@ -354,10 +354,14 @@ function renderEverything(firstTime) {
             }
 
             loadData();
-            if(!isUser || memberType == "pc" || memberType == "client")
+            if(!isUser || memberType == "pc" || memberType == "client"){
                 renderMembersRequester();
-            else
+                $('#projectStatusText').html("The project is in progress.<br /><br />");
+                $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+            }else{
                 renderMembersUser();
+                $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+            }
 
             renderMembersUser();
 
@@ -776,7 +780,8 @@ var startTeam = function(firstTime){
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
-        $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+        //$("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+        $("#projectStatusText").html("The project is in progress.<br /><br />");
         
         flashTeamsJSON["paused"]=false;
         updateInteractionsPopovers();
