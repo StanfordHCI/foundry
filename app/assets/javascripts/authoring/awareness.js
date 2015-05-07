@@ -403,6 +403,10 @@ function renderEverything(firstTime) {
            
             loadData();
             
+            if(isUser){
+                disableTeamEditing();
+            }
+            
             if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
