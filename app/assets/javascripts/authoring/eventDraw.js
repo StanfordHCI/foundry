@@ -202,7 +202,22 @@ function drawMainRect(eventObj) {
         })
         .attr("fill-opacity", .6)
         .style("filter", "url(#box-shadow)")
-        .call(drag);
+        .call(drag)//;
+
+        //On mouseover, lower the opacity of the event
+        .on("mouseover", function() { 
+            if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", .6);
+            else d3.select(this).style("fill-opacity", .4);
+        })
+
+        //On mouseout, return event to default styling
+        .on("mouseout", function() { 
+            if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", 1);
+            else d3.select(this).style("fill-opacity", .6);
+        });
+
+    if (isWorkerTask(eventObj) || uniq == "") rect.style("fill-opacity", 1);
+
 
     if(eventObj.status === "not_started") {
         rect.style({
@@ -375,7 +390,7 @@ function drawEachHandoffForEvent(eventObj){
                 return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
             })
             .attr("stroke", function() {
-                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_BORDER_COLOR;
                 else return "gray";
             });
     }

@@ -11,7 +11,7 @@ var TASK_NOT_START_BORDER_COLOR = "#c7c7c7";
 var TASK_NOT_START_STROKE_COLOR = "rgba(82, 82, 82, 0.11)";
 
 //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
-var WORKER_TASK_NOT_START_COLOR = "#ffdd32";
+var WORKER_TASK_NOT_START_COLOR = "#fbeed5";//"#ffdd32";
 var WORKER_TASK_NOT_START_BORDER_COLOR = "#eacd72";
 
 //blue

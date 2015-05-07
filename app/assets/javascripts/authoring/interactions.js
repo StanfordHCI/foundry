@@ -235,7 +235,7 @@ function drawHandoff(handoffData) {
 
         //Highlight the handoffs relevant to a worker
         .attr("stroke", function() {
-            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR; 
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_BORDER_COLOR; 
             else return "gray";
         })
         .attr("stroke-width", 3)
@@ -251,7 +251,7 @@ function drawHandoff(handoffData) {
         //On mouseout, return handoff to default styling
         .on("mouseout", function() { 
             d3.select(this).style("stroke-opacity", .45);
-            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_COLOR);
+            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_BORDER_COLOR);
             else d3.select(this).style("stroke", "gray");
         });
 
