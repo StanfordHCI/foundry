@@ -39,6 +39,7 @@ function handleAuthResult(authResult) {
       $("#authorize-button").html('Log in to Google Drive™');
       $("#google-drive-button").toggleClass('gdrive-inactive', false);
       gFolderBtn.onclick = handleAuthClick; 
+      $("#gFolder").css('display', '');
     }
     else{
       googleDriveLink();
@@ -73,7 +74,8 @@ var googleDriveLink = function(){
       }else{
         $("#authorize-button").html('Waiting for Google Drive™');
         $("#google-drive-button").toggleClass('gdrive-inactive', true);
-        $("#gFolder").css('display', '');
+        if (memberType == "worker") $("#gFolder").css('display', 'none');
+        else $("#gFolder").css('display', '');
       }
     }else{
       if (current_user == "Author"){
