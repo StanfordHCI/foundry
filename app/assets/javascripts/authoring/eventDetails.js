@@ -104,8 +104,10 @@ if(!window._foundry) {
             "font-weight": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
-                    400 : 300;
+                //return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                    //400 : 300;
+                return eventObj.status === "not_started" && events.isWorkerTask(eventObj) ?
+                    600 : 400;
             },
             "letter-spacing": "1px",
             "font-size": "12px",
