@@ -542,6 +542,7 @@ function deleteInteraction(intId) {
     logActivity("deleteInteraction(intId)",'Delete Interaction', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
 
     flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
+    
     updateStatus();
 
     //Delete interaction visually

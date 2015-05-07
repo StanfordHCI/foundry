@@ -406,7 +406,7 @@ function renderEverything(firstTime) {
             if(isUser){
                 disableTeamEditing();
             }
-            
+
             if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
@@ -560,6 +560,7 @@ var flashTeamUpdated = function(){
     var updated_local_update = loadedStatus.local_update;
     var updated_members = loadedStatus.flash_teams_json['members'];
     var updated_project_overview = loadedStatus.flash_teams_json['projectoverview'];
+    var updated_interactions = loadedStatus.flash_teams_json['interactions'];
 
     if(flashTeamsJSON['projectoverview'] != updated_project_overview){
         //console.log('project overview has been updated');
@@ -646,6 +647,17 @@ var flashTeamUpdated = function(){
     // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
     // checks for content changes
     if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
+        return true;
+    }
+
+    // when an interaction is added, edited or removed, change should be reflected in all views
+    if (updated_interactions.length != flashTeamsJSON['interactions'].length) {
+        return true;
+    }
+
+    // when an interaction is added, edited or removed, change should be reflected in all views
+    // checks for content changes
+    if(updated_interactions.sort().join(',') !== flashTeamsJSON['interactions'].sort().join(',')){
         return true;
     }
 
