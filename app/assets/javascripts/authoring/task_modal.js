@@ -20,6 +20,10 @@ function showTaskOverview(groupNum){
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
     
+    // if team hasn't started yet, don't show the google drive deliverables button in task footer
+    if(!in_progress){
+        $("#gdrive-footer-btn").css('display', 'none'); 
+    }
 
     // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.) 
     //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client
@@ -29,7 +33,7 @@ function showTaskOverview(groupNum){
         if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
-            $("#pause-resume-task").addClass('btn-default');
+            $("#pause-resume-task").addClass('btn-info');
             $("#pause-resume-task").css('display', '');
             
             
@@ -59,8 +63,8 @@ function showTaskOverview(groupNum){
            $("#pause-resume-task").css('display', 'none'); 
            $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
-            $("#start-end-task").addClass('btn-primary');
-            $("#start-end-task").html('Start'); 
+            $("#start-end-task").addClass('btn-warning');
+            $("#start-end-task").html('Start Task'); 
         }
     } else{
             $("#start-end-task").css('display', 'none');   
@@ -114,8 +118,8 @@ function showShortTaskOverview(groupNum){
 
         $('#task-text2').html(taskOverviewContent);
 
-        var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: right" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Go to Deliverables Folder</a>'
-                            + '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: left" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>';
+        var modal_footer = '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: right" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>'
+                            + '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables Folder</a>';
 
         $('.task-modal-footer2').html(modal_footer);
         
@@ -130,6 +134,11 @@ function showShortTaskOverview(groupNum){
 function logShortTaskOverviewGDriveBtnClick(groupNum){
         logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
+
+function logTaskOverviewGDriveBtnClick(groupNum){
+        logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+}
+
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideShortTaskOverview(groupNum){

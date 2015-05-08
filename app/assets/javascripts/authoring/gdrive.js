@@ -39,6 +39,7 @@ function handleAuthResult(authResult) {
       $("#authorize-button").html('Log in to Google Drive™');
       $("#google-drive-button").toggleClass('gdrive-inactive', false);
       gFolderBtn.onclick = handleAuthClick; 
+      $("#gFolder").css('display', '');
     }
     else{
       googleDriveLink();
@@ -57,25 +58,36 @@ function handleAuthClick(event) {
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
 
-    if(in_progress){
-      $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
-    }
-    else{
-      $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-    }
+    // if(in_progress){
+    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+    // }
+    // else{
+    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+    // }
 
 
     if(!in_progress || !flashTeamsJSON.folder){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
         $("#authorize-button").html('Google Drive™ folder');
         $("#google-drive-button").toggleClass('gdrive-inactive', false);
+        $("#gFolder").css('display', '');
       }else{
         $("#authorize-button").html('Waiting for Google Drive™');
         $("#google-drive-button").toggleClass('gdrive-inactive', true);
+        if (memberType == "worker") $("#gFolder").css('display', 'none');
+        else $("#gFolder").css('display', '');
       }
     }else{
-      $("#authorize-button").html('Google Drive™ folder');
-      $("#google-drive-button").toggleClass('gdrive-inactive', false);
+      if (current_user == "Author"){
+        $("#authorize-button").html('Google Drive™ folder');
+        $("#google-drive-button").toggleClass('gdrive-inactive', false);
+        $("#gFolder").css('display', '');
+      }else{
+        $("#gFolder").css('display', 'none');
+      }
+
+
+      
     }
 
     gFolderBtn.onclick=function(){

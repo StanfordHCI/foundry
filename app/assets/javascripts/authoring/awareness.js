@@ -188,6 +188,7 @@ function endTeam() {
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
     $("#flashTeamPauseBtn").css('display','none');
+    $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
 
@@ -337,7 +338,6 @@ function renderEverything(firstTime) {
 
         if(in_progress){
 
-
             colorBox();
             //console.log("flash team in progress");
             $("#flashTeamStartBtn").attr("disabled", "disabled");
@@ -354,10 +354,14 @@ function renderEverything(firstTime) {
             }
 
             loadData();
-            if(!isUser || memberType == "pc" || memberType == "client")
+            if(!isUser || memberType == "pc" || memberType == "client"){
                 renderMembersRequester();
-            else
+                $('#projectStatusText').html("The project is in progress.<br /><br />");
+                $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
+            }else{
                 renderMembersUser();
+                $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+            }
 
             renderMembersUser();
 
@@ -399,6 +403,10 @@ function renderEverything(firstTime) {
            
             loadData();
             
+            if(isUser){
+                disableTeamEditing();
+            }
+
             if(!isUser || memberType == "pc" || memberType == "client") {
                 renderMembersRequester();
             }
@@ -552,6 +560,7 @@ var flashTeamUpdated = function(){
     var updated_local_update = loadedStatus.local_update;
     var updated_members = loadedStatus.flash_teams_json['members'];
     var updated_project_overview = loadedStatus.flash_teams_json['projectoverview'];
+    var updated_interactions = loadedStatus.flash_teams_json['interactions'];
 
     if(flashTeamsJSON['projectoverview'] != updated_project_overview){
         //console.log('project overview has been updated');
@@ -638,6 +647,17 @@ var flashTeamUpdated = function(){
     // when a task is paused, all views should reflect that it is paused (e.g., light blue tasks)
     // checks for content changes
     if(updated_paused_tasks.sort().join(',') !== paused_tasks.sort().join(',')){
+        return true;
+    }
+
+    // when an interaction is added, edited or removed, change should be reflected in all views
+    if (updated_interactions.length != flashTeamsJSON['interactions'].length) {
+        return true;
+    }
+
+    // when an interaction is added, edited or removed, change should be reflected in all views
+    // checks for content changes
+    if(updated_interactions.sort().join(',') !== flashTeamsJSON['interactions'].sort().join(',')){
         return true;
     }
 
@@ -776,7 +796,8 @@ var startTeam = function(firstTime){
         //googleDriveLink();
         //addAllTaskFolders();
         in_progress = true; // TODO: set before this?
-        $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+        //$("#projectStatusText").toggleClass('projectStatusText-inactive', true);
+        $("#projectStatusText").html("The project is in progress.<br /><br />");
         
         flashTeamsJSON["paused"]=false;
         updateInteractionsPopovers();
@@ -1652,8 +1673,15 @@ var trackUpcomingEvent = function(){
             currentUserEvents.splice(0,1);
             if (currentUserEvents.length == 0){
                 upcomingEvent = undefined;
-                statusText.style("color", "#3fb53f");
-                statusText.text("You've completed all your tasks!");
+
+                //updateSidebarText(overallTime, color);
+
+                $("#project-status-text").html("You've completed all your tasks!");
+                $("#project-status-text").css("margin-bottom", "10px");
+                $("#project-status-text").css("color", "#3fb53f");
+                
+                //statusText.style("color", "#3fb53f");
+                //statusText.text("You've completed all your tasks!");
                 return;
             }
             upcomingEvent = currentUserEvents[0].id;
@@ -1664,41 +1692,149 @@ var trackUpcomingEvent = function(){
        
         if( ev.status == "not_started" ){
             if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
-                //alert(upcomingEvent);
-                overallTime = "You can now start "+ ev.title +" task.";
-                statusText.style("color", "black");
+                overallTime = "You can now start <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a> task.";
+
+                updateSidebarText(overallTime, "black");
+
+                updateStatusAlertText(overallTime, 'alert-class');
+
+                updateSidebarButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
+
+                updateAlertButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
             }
             else{
-                overallTime = "Your next task is "+ ev.title +".";
-                statusText.style("color", "black");
+                overallTime = "Your next task is <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a>.";
+                
+                updateSidebarText(overallTime, "black");
+
+                updateStatusAlertText(overallTime, 'alert-hide');
+
+                updateSidebarButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
+
+                updateAlertButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
             }
         }
         
         if( ev.status == "paused"){
-            overallTime = "Your task is paused.";
-            statusText.style("color", "#006699");
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is paused.";
+            
+            updateSidebarText(overallTime, "#006699");
+
+            updateStatusAlertText(overallTime, 'alert-info');
+
+            updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
+
+            updateAlertButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
+            
         }
         
         if( ev.status == "delayed"){
-            overallTime = "Your task is delayed.";
-            statusText.style("color", "#f52020");
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
+            
+            updateSidebarText(overallTime, "#f52020");
+
+            updateStatusAlertText(overallTime, 'alert-danger');
+
+            updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
+
+            updateSidebarButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-btn2');
+
+            updateAlertButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
+            updateAlertButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-alert-btn2');
         }
+
         else if ( ev.status == "started"){
-            overallTime = "Your task is in progress.";
-            statusText.style("color", "#40b8e4");
+            overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
+            
+            updateSidebarText(overallTime, "#40b8e4");
+
+            updateStatusAlertText(overallTime, 'alert-hide');
+
+            updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
+
+            updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
         }
-        
-        // Commenting this out because I include the project status information under the gdrive button
-        // if(in_progress != true &&  (flashTeamsJSON["startTime"] == undefined) ){
-        //     overallTime = "The team is not started. " + overallTime;
-        // }
 
         if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
             overallTime = "The team is being edited right now. " + overallTime;
+            updateSidebarText(overallTime);
         }
 
-        statusText.text(overallTime);
+
     }, fire_interval);
+}
+
+// updates the project status text in the sidebar
+function updateSidebarText(overallTime, color){
+    $("#project-status-text").html(overallTime);
+
+    if(color){
+        $("#project-status-text").css("color", color);
+
+        if($(".task-name-status")){
+            $(".task-name-status").css("color", color);
+        }
+    }
+}
+
+// updates the project status text and background of the alert div on top of timeline
+function updateStatusAlertText(overallTime, alertClass){
+
+    $("#project-status-alert-text").html(overallTime);
+
+    var lastClass = $("#project-status-alert").attr('class').split(' ').pop();
+    $("#project-status-alert").removeClass(lastClass);
+    $("#project-status-alert").addClass(alertClass);
+
+    if(alertClass =='alert-hide'){
+        $("#project-status-alert").css("display", "none");
+
+    }else{
+        $("#project-status-alert").css("display", "");
+    }
+    
+}
+
+// updates the task buttons in the sidebar
+function updateSidebarButton(groupNum, functionName, btnText, btnClass, btnId){
+    
+    var buttonId = btnId || "project-status-btn"; 
+
+    // hide the second status button unless it is explicitly called
+    if(buttonId != "project-status-btn2"){
+        $("#project-status-btn2").css("display", "none");
+    }
+
+    //remove the last class on the button, which refers to the previous status button
+    var lastClass = $("#" + buttonId).attr('class').split(' ').pop();
+    $("#" + buttonId).removeClass(lastClass);
+    $("#" + buttonId).addClass(btnClass);
+
+    $("#" + buttonId).attr('onclick', functionName +'(' + groupNum + ')');
+    
+    $("#" + buttonId).css("display", "");
+    $("#" + buttonId).html(btnText);
+}
+
+// updates the task buttons in the alert div over the timeline
+function updateAlertButton(groupNum, functionName, btnText, btnClass, btnId){
+    
+    var buttonId = btnId || "project-status-alert-btn"; 
+
+    // hide the second status button unless it is explicitly called
+    if(buttonId != "project-status-alert-btn2"){
+        $("#project-status-alert-btn2").css("display", "none");
+    }
+
+    //remove the last class on the button, which refers to the previous status button
+    var lastClass = $("#" + buttonId).attr('class').split(' ').pop();
+    $("#" + buttonId).removeClass(lastClass);
+    $("#" + buttonId).addClass(btnClass);
+
+    $("#" + buttonId).attr('onclick', functionName +'(' + groupNum + ')');
+    
+    $("#" + buttonId).css("display", "");
+    $("#" + buttonId).html(btnText);
 }
 
 var getAllData = function(){

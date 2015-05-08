@@ -123,6 +123,10 @@ function leftResize(d) {
     ev.startMin = startMin;
     ev.startTime = startHr * 60 + startMin;
 
+    flashTeamsJSON['local_update'] = new Date().getTime();
+
+    updateStatus();
+
     drawEvent(ev, false);
 }
 
@@ -150,6 +154,10 @@ function rightResize(d) {
         return;
     }
     ev.duration = durationForWidth(newWidth);
+
+    flashTeamsJSON['local_update'] = new Date().getTime();
+
+    updateStatus();
 
     drawEvent(ev, false);
 }
@@ -197,6 +205,8 @@ function dragEventBlock(d) {
     }
     ev.row = newRow;
     ev.y = currentY+5;
+
+    flashTeamsJSON['local_update'] = new Date().getTime();
 
     updateStatus();
     drawEvent(ev, false);   

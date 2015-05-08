@@ -1,4 +1,19 @@
 <div id="timeline-header">
+  
+  <div class="alert alert-class" id="project-status-alert" style="margin-bottom: 5px; display:none">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <p> 
+    	<span id='project-status-alert-text'></span>
+
+    <button class="btn project-status-alert-btn btn-mini btn-default" id="project-status-alert-btn" style="float: right; margin-left: 5px; display: none">
+    	Project Status Button
+    </button>
+     <button class="btn project-status-alert-btn btn-mini btn-default" id="project-status-alert-btn2" style="float: right; display: none">
+    	Project Status Button
+    </button>
+    </p>
+</div>
+
   <% if @in_author_view %>
     <input type="button" class="btn" id="addTimeBtn" value="Add Time" onclick="addTime()">
     <div class="clear"></div>
