@@ -183,7 +183,7 @@ function showDocModal(ev_before, events_before, curr_event_id){
      $("#next-doc-modal").css('display', '');
     
     if( (events_before_index + 1) >= (events_before.length) ){
-      modal_footer = '<button class="btn btn-primary" data-dismiss="modal" onclick="startTask('+curr_event_id+')" aria-hidden="true">Start Task</button>';
+      modal_footer = '<button class="btn btn-warning" data-dismiss="modal" onclick="startTask('+curr_event_id+')" aria-hidden="true">Start Task</button>';
       //alert("second");
       //alert(events_before_index);
       if(events_before_index>0){

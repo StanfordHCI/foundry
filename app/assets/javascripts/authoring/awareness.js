@@ -1698,9 +1698,9 @@ var trackUpcomingEvent = function(){
 
                 updateStatusAlertText(overallTime, 'alert-class');
 
-                updateSidebarButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-warning');
+                updateSidebarButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
 
-                updateAlertButton(ev.id, 'confirm_show_docs', 'Start Task', 'btn-warning');
+                updateAlertButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
             }
             else{
                 overallTime = "Your next task is <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a>.";
