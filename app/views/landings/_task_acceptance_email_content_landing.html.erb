@@ -48,20 +48,13 @@
 					</p> -->
 
 					<p> 
-						As stated in the job description, you will have <b><em><%=@task_duration%></em></b> to complete this task and must start working within 30 minutes from now. Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+						As stated in the job description, you will be working in a team of three to complete the task, and your team will have <b><em><%=@task_duration%></em></b> to complete this task. You should be available and ready to work within 15 minutes of the hiring of your team (you will be sent an email confirming that your team has been hired). Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
 					</p>
 						
 						<p><b>Project overview:</b> <%= raw @project_overview%></p>
 						<p><b>Task description:</b> <%= raw @task_description%></p>
 						
 						<p>
-							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>. 
-						
-						<%if !@input_link.nil?%>
-						You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
-						</p>
-						<%end%>
-						
 						<p><b>Deliverable(s):</b> <%=@outputs%></p>
 						
 						<%if !@output_description.nil?%>
@@ -69,7 +62,7 @@
 						<%end%>
 						
 						<p>
-							<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work.</p>  Click the link below to sign up for this project on Foundry. 
+							<b>How to start:</b> We are asking you (and your team) to use our platform, Foundry, to keep track of your progress and submit your work.</p>  Click the link below to sign up for this project on Foundry. 
 						</p>
 						
 						<p><%=link_to "Click here to register for this position on Foundry", @invitationLink%></p>
