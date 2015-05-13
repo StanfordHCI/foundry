@@ -14,21 +14,17 @@
 				</div> <!-- end div class row -->
 				
 				<div class="row-fluid span11">
+
+<p>*Note: If you have any questions, please contact the research team at kartiks2@stanford.edu.</p>
 					<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. You will have to work with a team of two other workers to complete the task within the specified deadline. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
 						
 						<p><b>Project overview:</b> <%= raw @project_overview %></p>
-						<p><b>Task description:</b> <%= raw @task_description %></p>
+						<p><b>Task description and deliverables:</b> <%= raw @task_description %></p>
 						
-						<p><b>Deliverable(s):</b> <%=@outputs%></p>
-						
-						<%if !@output_description.empty?%>
-						<p><b>Deliverable information:</b> <%=@output_description%></p>
-						<%end%>
-						
-						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
+						<p><b>Deadline:</b>You will have 30 minutes to finish this task after the Foundry tour </p>
 						
 						
-						<p> We will send you an email as soon as we have hired your team. You must be available and ready to start working on this task within 15 minutes of the receipt of that email. If you are interested, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
+						<p> We will send you an email as soon as we have hired your team. You must be available and ready to start working on this task within 15 minutes of the receipt of that email. If you are interested, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, if you have been hired via oDesk, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
 							<p><p> URL: <%=link_to "I accept", @url%>. </p>
 						<p>
 							Best, <br />

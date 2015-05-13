@@ -48,18 +48,11 @@
 					</p> -->
 
 					<p> 
-						As stated in the job description, you will be working in a team of three to complete the task, and your team will have <b><em><%=@task_duration%></em></b> to complete this task. You should be available and ready to work within 15 minutes of the hiring of your team (you will be sent an email confirming that your team has been hired). Please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
+						As stated in the job description, you will be working in a team of three to complete the task, and your team will have <b><em>30 minutes</em></b> after the orientation to complete this task. You should be available and ready to work within 15 minutes of the hiring of your team (you will be sent an email confirming that your team has been hired). If you have been hired via Desk, please make sure to track your working hours on oDesk. For your reference, we have included the job description below:
 					</p>
 						
 						<p><b>Project overview:</b> <%= raw @project_overview%></p>
-						<p><b>Task description:</b> <%= raw @task_description%></p>
-						
-						<p>
-						<p><b>Deliverable(s):</b> <%=@outputs%></p>
-						
-						<%if !@output_description.nil?%>
-						<p><b>Deliverable information:</b> <%=@output_description%></p>
-						<%end%>
+						<p><b>Task description and deliverables:</b> <%= raw @task_description%></p>
 						
 						<p>
 							<b>How to start:</b> We are asking you (and your team) to use our platform, Foundry, to keep track of your progress and submit your work.</p>  Click the link below to sign up for this project on Foundry. 
