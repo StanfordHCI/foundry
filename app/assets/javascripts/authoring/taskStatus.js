@@ -30,8 +30,8 @@ var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 var TASK_PAUSED_COLOR =  "#a8cfde"; 
 var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
-var TASK_SUBMITTING_COLOR = "#32b575";
-var TASK_SUBMITTING_BORDER_COLOR = "#7de0cd"
+var TASK_SUBMITTING_COLOR = "#40b8e4";
+var TASK_SUBMITTING_BORDER_COLOR = "#45a1da"
 
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
@@ -123,7 +123,7 @@ function submitMode(groupNum){
 }
 
 //Fires on "Pause" button on task modal
-function resumeTask(groupNum) {
+function unSubmit(groupNum, completed) {
     
     //Close the first (task) modal
     $("#task_modal").modal('hide');
@@ -131,11 +131,17 @@ function resumeTask(groupNum) {
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     
-    if(isDelayed(groupNum)){
-        eventObj.status = "delayed";
-    } else{
-        eventObj.status = "started";
+    if (!completed){
+        if(isDelayed(groupNum)){
+            eventObj.status = "delayed";
+        } else{
+            eventObj.status = "started";
+        }    
     }
+    else{
+        eventObj.status = "completed";
+    }
+    
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
@@ -146,15 +152,15 @@ function resumeTask(groupNum) {
         paused_tasks.splice(idx, 1);
     }
 
-    logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    // logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
     drawEvent(eventObj); //Will update color
 
 
-    //chaning start button to complete button on the task modal
-    $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
-    $("#pause-resume-task").html('Take a Break'); 
+    // //chaning start button to complete button on the task modal
+    // $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
+    // $("#pause-resume-task").html('Take a Break'); 
     
 }
 
@@ -312,6 +318,7 @@ function confirmCompleteTask(groupNum) {
         logActivity("confirmCompleteTask(groupNum) - document.getElementById('saveButton').onclick=function()",'Confirm Complete Task - Clicked Save Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
         saveQuestions(groupNum);
+        unSubmit(groupNum, false);
     };
 }
 
@@ -549,7 +556,9 @@ var completeTask = function(groupNum){
         }
     }
 
-    eventToComplete.status = "completed";
+    unSubmit(groupNum, true);
+
+    // eventToComplete.status = "completed";
 
     logActivity("var completeTask = function(groupNum)",'Complete Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
