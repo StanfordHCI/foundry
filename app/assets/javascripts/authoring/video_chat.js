@@ -1,11 +1,10 @@
-var comm = new Icecomm('47SZFqOPw46qw5PrJxOWDSUrQYix/aoeRodBwfIPecrGHzkY');
+var comm = new Icecomm('yIkD3HFAWFNXV1qFkux9OqX8PPcAF8rLLQ6lM3hEJTFgcRI');
 
 function createVideoConf(room_name){
 	comm.connect(room_name);
 	
 	$("#vc").append('<video id="localVideo" autoplay></video>');
 
-	//$("#vc").html('<video id="localVideo" autoplay></video>');
 	$("#videoChatModal").modal('show');
 
   logActivity("createVideoConf(room_name)",('Created Video Conference - Room Name: ' + room_name), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
@@ -13,21 +12,20 @@ function createVideoConf(room_name){
 }
 
 
-comm.on('connected', function(options) {
-  createRemoteVideo(options.stream, options.callerID);
+comm.on('connected', function(peer) {
+  createRemoteVideo(peer.stream, peer.callerID);
 });
 
-comm.on('local', function(options) {
-  localVideo.src = options.stream;
+comm.on('local', function(peer) {
+  localVideo.src = peer.stream;
 });
 
-comm.on('disconnect', function(options) {
-  document.getElementById(options.callerID).remove();
+comm.on('disconnect', function(peer) {
+  document.getElementById(peer.callerID).remove();
 });
 
 function disconnectVC(){
 	comm.close();
-	//$("video").remove();
 	$("#videoChatModal").modal('hide');
   logActivity("disconnectVC()","Disconnected Video Conference", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
@@ -44,22 +42,6 @@ function createRemoteVideo(stream, key) {
   remoteVideo.id = key;
   remoteVideo.autoplay = true;
   $("#vc").append(remoteVideo);
-  ///document.body.appendChild(remoteVideo);
-  //$("#task-modal-body").html('<video id="localVideo" autoplay></video>');
 }
 
-/*
-comm.connect('custom room', {audio: false});
 
-comm.on('connected', function(options) {
-   document.body.appendChild(options.video);
-});
-
-comm.on('local', function(options) {
-  localVideo.src = options.stream;
-});
-
-comm.on('disconnect', function(options) {
-  document.getElementById(options.callerID).remove();
-});
-*/	
