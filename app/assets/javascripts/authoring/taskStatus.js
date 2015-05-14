@@ -105,6 +105,8 @@ function startTask(groupNum) {
 function submitMode(groupNum){
     //Close the first (task) modal
     $("#task_modal").modal('hide');
+
+    console.log("I don't get it");
     
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
@@ -115,8 +117,6 @@ function submitMode(groupNum){
     eventObj.latest_remaining_time = eventObj["timer"];
     
     paused_tasks.push(groupNum);
-
-    // logActivity("submitTask(groupNum)",'Pause Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
     drawEvent(eventObj); //Will update color
@@ -134,8 +134,10 @@ function unSubmit(groupNum, completed) {
     if (!completed){
         if(isDelayed(groupNum)){
             eventObj.status = "delayed";
+            eventObj.prevStat = "delayed";
         } else{
             eventObj.status = "started";
+            eventObj.prevStat = "started";
         }    
     }
     else{
@@ -155,13 +157,7 @@ function unSubmit(groupNum, completed) {
     // logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
-    drawEvent(eventObj); //Will update color
-
-
-    // //chaning start button to complete button on the task modal
-    // $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
-    // $("#pause-resume-task").html('Take a Break'); 
-    
+    drawEvent(eventObj); //Will update color    
 }
 
 //Fires on "Pause" button on task modal
@@ -203,8 +199,10 @@ function resumeTask(groupNum) {
     
     if(isDelayed(groupNum)){
         eventObj.status = "delayed";
+        eventObj.prevStat = "delayed";
     } else{
         eventObj.status = "started";
+        eventObj.prevStat = "started";
     }
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
@@ -323,6 +321,7 @@ function confirmCompleteTask(groupNum) {
 }
 
 function logCloseTaskDocModal(groupNum){
+    unSubmit(groupNum, false);
     logActivity("logCloseTaskDocModal(groupNum)",'Close Task Documentation Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 

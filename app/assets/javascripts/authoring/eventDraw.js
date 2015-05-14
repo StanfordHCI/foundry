@@ -195,6 +195,14 @@ function drawMainRect(eventObj) {
                 case "paused":
                     return TASK_PAUSED_COLOR;
                 case "submitting":
+                    if (eventObj.prevStat){
+                        if (eventObj["prevStat"] == "delayed"){
+                            return TASK_DELAY_COLOR;
+                        }
+                        else{
+                            return TASK_START_COLOR;
+                        }
+                    }
                     return TASK_SUBMITTING_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
@@ -252,6 +260,14 @@ function drawMainRect(eventObj) {
                 case "paused":
                     return TASK_PAUSED_BORDER_COLOR;
                 case "submitting":
+                    if (eventObj["prevStat"]){
+                        if (eventObj["prevStat"] == "delayed"){
+                            return TASK_DELAY_BORDER_COLOR;
+                        }
+                        else{
+                            return TASK_START_BORDER_COLOR;
+                        }
+                    }
                     return TASK_SUBMITTING_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
@@ -496,6 +512,7 @@ function drawTimer(eventObj){
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
+            eventObj["prevStat"] = "delayed";
              
             var groupNum = parseInt(eventObj["id"]);
             
