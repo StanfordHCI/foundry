@@ -11,7 +11,7 @@ var TASK_NOT_START_BORDER_COLOR = "#c7c7c7";
 var TASK_NOT_START_STROKE_COLOR = "rgba(82, 82, 82, 0.11)";
 
 //yellow (this for a worker's upcoming tasks highlighted in his/her timeline)
-var WORKER_TASK_NOT_START_COLOR = "#ffdd32";
+var WORKER_TASK_NOT_START_COLOR = "#fbeed5";//"#ffdd32";
 var WORKER_TASK_NOT_START_BORDER_COLOR = "#eacd72";
 
 //blue
@@ -92,11 +92,11 @@ function startTask(groupNum) {
     //Close the task modal
     //$("#task_modal").modal('hide');
 
-    
+
     //chaning start button to complete button on the task modal
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
-    $("#start-end-task").html('Complete');         
-    
+    $("#start-end-task").html('Complete');
+
 }
 
 //Fires on "Pause" button on task modal
@@ -121,7 +121,7 @@ function pauseTask(groupNum) {
     drawEvent(eventObj); //Will update color
 	
 
-	//chaning start button to complete button on the task modal
+	//chaning resume button to pause button on the task modal
     $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
     $("#pause-resume-task").html('Resume Task'); 
 	
@@ -154,7 +154,8 @@ function resumeTask(groupNum) {
     logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
-    drawEvent(eventObj); //Will update color	
+    drawEvent(eventObj); //Will update color
+
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');

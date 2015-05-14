@@ -17,13 +17,17 @@ var interaction_counter = undefined;
  */
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
+
+    var task_id = getEventJSONIndex(task2idNum);
+    var eventObj = flashTeamsJSON["events"][task_id];
  
    //Show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
-       var modal_footer =  '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
+       var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables Folder</a>' + 
+       '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        '<button class="btn " id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
        '<button class="btn " id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Take a Break</button>'+
        '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
@@ -231,7 +235,7 @@ function drawHandoff(handoffData) {
 
         //Highlight the handoffs relevant to a worker
         .attr("stroke", function() {
-            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_COLOR; 
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_BORDER_COLOR; 
             else return "gray";
         })
         .attr("stroke-width", 3)
@@ -247,10 +251,17 @@ function drawHandoff(handoffData) {
         //On mouseout, return handoff to default styling
         .on("mouseout", function() { 
             d3.select(this).style("stroke-opacity", .45);
-            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_COLOR);
+            if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_BORDER_COLOR);
             else d3.select(this).style("stroke", "gray");
         });
 
+
+    //Draw a popover to display information about the collaboration
+    drawHandoffPopover(handoffId, ev1, ev2);
+}
+
+//Add a popover to the collaboration rect so the user can add notes and delete
+function drawHandoffPopover(handoffId, ev1, ev2) {
     //Popover that stores information about the handoff
     $("#interaction_" + handoffId).popover({
         class: "handoffPopover", 
@@ -260,15 +271,21 @@ function drawHandoff(handoffData) {
         title: 'Handoff from "' + ev1.title + '" to "' + ev2.title + '"',
         content: 'Description of Handoff Materials: '
         + getHandoffInfo(handoffId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + handoffId).on('click', function() { 
         logActivity("drawHandoff(handoffData)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
 
     });
-
 }
+
+// updates the handoff popover to either edit or read only mode depending on status of team
+function updateHandoffPopover(handoffId){
+    $("#interaction_" + handoffId).data('popover').options.content = 'Description of Handoff Materials: '
+        + getHandoffInfo(handoffId);
+}
+
 
 //Calculate where the physical handoff starts
 function handoffStart(firstEvent){
@@ -449,13 +466,19 @@ function drawCollabPopover(collabId, ev1, ev2) {
         title: 'Collaboration between "' + ev1.title + '" and "' + ev2.title + '"',
         content: 'Description of Collaborative Work: '
         + getCollabInfo(collabId),
-        container: $("#timeline-container")
+        container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
     $("#interaction_" + collabId).on('click', function() { 
         logActivity("drawCollabPopover(collabId, ev1, ev2)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(collabId)]);
 
     });
+}
+
+// updates the collab popover to either edit or read only mode depending on status of team
+function updateCollabPopover(collabId){
+    $("#interaction_" + collabId).data('popover').options.content = 'Description of Collaborative Work: '
+        + getCollabInfo(collabId);
 }
 
 //TODO: COMMENT
@@ -519,6 +542,7 @@ function deleteInteraction(intId) {
     logActivity("deleteInteraction(intId)",'Delete Interaction', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
 
     flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
+    
     updateStatus();
 
     //Delete interaction visually

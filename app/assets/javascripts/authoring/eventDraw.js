@@ -200,9 +200,25 @@ function drawMainRect(eventObj) {
                     return TASK_COMPLETE_COLOR;
             }
         })
+        .attr("fill-opacity", .6)
         .style("filter", "url(#box-shadow)")
-        .call(drag);
-    
+        .call(drag)//;
+
+        //On mouseover, lower the opacity of the event
+        .on("mouseover", function() { 
+            if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", .6);
+            else d3.select(this).style("fill-opacity", .4);
+        })
+
+        //On mouseout, return event to default styling
+        .on("mouseout", function() { 
+            if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", 1);
+            else d3.select(this).style("fill-opacity", .6);
+        });
+
+    if (isWorkerTask(eventObj) || uniq == "") rect.style("fill-opacity", 1);
+
+
     if(eventObj.status === "not_started") {
         rect.style({
             stroke: TASK_NOT_START_STROKE_COLOR,
@@ -280,7 +296,14 @@ function drawBottom(eventObj) {
     
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
-    
+
+    // only show the config icon on the task if team is not in progress, if team is paused or if task is paused, completed or not started (e.g., not in progress)
+    if( !in_progress || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
+        var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
+        configIcon.on("click", onConfigClick);
+    }
+
+
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
     uploadIcon.on("click", function(){
@@ -367,7 +390,7 @@ function drawEachHandoffForEvent(eventObj){
                 return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
             })
             .attr("stroke", function() {
-                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_COLOR;
+                if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_BORDER_COLOR;
                 else return "gray";
             });
     }
@@ -442,8 +465,10 @@ function drawShade(eventObj) {
                 currentUserEvents.push(eventObj);
             }
 
+            if(eventObj.status == 'completed') task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            else task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", 1);
             
-            task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
+            //task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             break;
         }
     }
@@ -452,7 +477,7 @@ function drawShade(eventObj) {
 //
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
         return;
     }
     
