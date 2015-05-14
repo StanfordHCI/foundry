@@ -30,6 +30,9 @@ var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 var TASK_PAUSED_COLOR =  "#a8cfde"; 
 var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
+var TASK_SUBMITTING_COLOR = "#32b575";
+var TASK_SUBMITTING_BORDER_COLOR = "#7de0cd"
+
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
@@ -97,6 +100,62 @@ function startTask(groupNum) {
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');
 
+}
+
+function submitMode(groupNum){
+    //Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    eventObj.status = "submitting";
+    eventObj.task_pauseBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
+    
+    eventObj.latest_remaining_time = eventObj["timer"];
+    
+    paused_tasks.push(groupNum);
+
+    // logActivity("submitTask(groupNum)",'Pause Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
+    updateStatus();
+    drawEvent(eventObj); //Will update color
+}
+
+//Fires on "Pause" button on task modal
+function resumeTask(groupNum) {
+    
+    //Close the first (task) modal
+    $("#task_modal").modal('hide');
+    
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    
+    if(isDelayed(groupNum)){
+        eventObj.status = "delayed";
+    } else{
+        eventObj.status = "started";
+    }
+    eventObj.task_resumeBtn_time = (new Date).getTime();
+    eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
+    eventObj.latest_remaining_time = eventObj["timer"];
+    
+    //remove task from remaining and add to live task array
+    var idx = paused_tasks.indexOf(groupNum);
+    if (idx != -1) { // delayed task
+        paused_tasks.splice(idx, 1);
+    }
+
+    logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+   
+    updateStatus();
+    drawEvent(eventObj); //Will update color
+
+
+    //chaning start button to complete button on the task modal
+    $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
+    $("#pause-resume-task").html('Take a Break'); 
+    
 }
 
 //Fires on "Pause" button on task modal
@@ -182,6 +241,7 @@ function checkPausedTaskStatus(eventObj){
 
 //Alert firing on event complete buttons
 function confirmCompleteTask(groupNum) { 
+    submitMode(groupNum);
     //Close the first (task) modal
     $("#task_modal").modal('hide');
 

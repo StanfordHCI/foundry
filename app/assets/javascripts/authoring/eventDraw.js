@@ -194,6 +194,8 @@ function drawMainRect(eventObj) {
                     return TASK_START_COLOR;
                 case "paused":
                     return TASK_PAUSED_COLOR;
+                case "submitting":
+                    return TASK_SUBMITTING_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -249,6 +251,8 @@ function drawMainRect(eventObj) {
                     return TASK_START_BORDER_COLOR;
                 case "paused":
                     return TASK_PAUSED_BORDER_COLOR;
+                case "submitting":
+                    return TASK_SUBMITTING_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
@@ -477,7 +481,7 @@ function drawShade(eventObj) {
 //
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" || eventObj.status == "submitting") {
         return;
     }
     

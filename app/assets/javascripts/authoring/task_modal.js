@@ -30,7 +30,7 @@ function showTaskOverview(groupNum){
 	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
         
 
-        if(eventObj.status == "started" || eventObj.status == "delayed"){
+        if(eventObj.status == "started" || eventObj.status == "delayed" || eventObj.status == "submitting"){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
             $("#pause-resume-task").addClass('btn-info');
@@ -84,7 +84,7 @@ function showTaskOverview(groupNum){
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
-    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed" && eventObj.status != "submitting")) {
             $("#edit-save-task").css('display', '');
             
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');

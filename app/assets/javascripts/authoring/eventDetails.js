@@ -131,6 +131,10 @@ if(!window._foundry) {
                 var timeStr = "COMPLETED";
             }
 
+            else if (eventObj.status == "submitting"){
+                var timeStr = "SUBMITTING";
+            }
+
             else{
                 var time = eventObj.timer || eventObj.duration;
                 var sign = (time / Math.abs(time) < 0) ? "-" : "";
