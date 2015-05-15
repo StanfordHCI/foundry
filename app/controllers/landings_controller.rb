@@ -70,7 +70,7 @@ class LandingsController < ApplicationController
 
     uniq1 = params[:uniq]
     if uniq1!=@uniq 
-      @count = -2
+      @queuePosition = -2
       return
     end
 
