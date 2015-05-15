@@ -23,7 +23,6 @@ class MembersController < ApplicationController
     prev_uniq = params[:uniq]
     uniq = SecureRandom.uuid
     
-
     member = Member.where(:uniq => prev_uniq)[0]
     if member  != nil
       member.name = nil
@@ -47,7 +46,6 @@ class MembersController < ApplicationController
 
   def invited
   	uniq = params[:uniq]
-    @uniq = params[:uniq]
   	@id = params[:id]
   	if not uniq
   		render 'error'
