@@ -72,7 +72,7 @@ class LandingsController < ApplicationController
     if uniq1!=@uniq 
       @queuePosition = -2
       l = Landing.where(:uniq => uniq1)
-      l..destroy
+      l.destroy
       l.save
       return
     end
