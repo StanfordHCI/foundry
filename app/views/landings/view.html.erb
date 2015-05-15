@@ -1,5 +1,7 @@
 <% if @queuePosition==-1 %>
 <%= render partial: "error" %>
+<% elsif @queuePosition==-2 %>
+<%= render partial: "error1" %>
 <% elsif @queuePosition == 1 %>
 <%= render partial: "task_acceptance_email_content_landing", layout: "task_hiring_email" %>
 <% elsif @queuePosition == 0 %>

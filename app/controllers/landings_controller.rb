@@ -68,6 +68,12 @@ class LandingsController < ApplicationController
       end
     end
 
+    uniq1 = params[:uniq]
+    if uniq1!=@uniq 
+      @count = -2
+      return
+    end
+
     @relevantLanding1 = Array.new
     @relevantLanding1 = Landing.where(:id_team=>@id_team, :id_event=>@id_task, :task_member=>@task_member, :status=>'p')
 
