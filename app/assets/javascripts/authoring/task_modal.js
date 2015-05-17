@@ -30,7 +30,7 @@ function showTaskOverview(groupNum){
 	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
         
 
-        if(eventObj.status == "started" || eventObj.status == "delayed" || eventObj.status == "submitting"){
+        if(eventObj.status == "started" || eventObj.status == "delayed" || eventObj.submitting == true){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
             $("#pause-resume-task").addClass('btn-info');
@@ -351,6 +351,11 @@ function getTaskOverviewContent(groupNum){
                 if(ev.status == "not_started"){
                     content += '<span class="span6"><b>Task Status: </b> not started  </span>';
                     content += '<span class="span6" style="text-align:right"><b>Task Duration: </b>' + formatModalTime(ev.duration) + '</span>'; 
+                }
+                else if(ev.submitting == true){
+                    content += '<span class="span6"><b>Task Status: </b>paused </span>';
+                    content += '<span class="span6" style="text-align:right">'
+                            + '<b>Time Remaining: </b>' + formatModalTime(ev.timer) +' / ' + formatModalTime(ev.duration) + '</span>'; 
                 }
                 else{
                     content += '<span class="span6"><b>Task Status: </b>' + ev.status +' </span>';

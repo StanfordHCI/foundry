@@ -4,6 +4,19 @@
  * Formerly completeTask.js
  */
 
+window.onload = function (){
+    if (flashTeamsJSON){
+        if (flashTeamsJSON["events"]){
+            for (i = 0; i < flashTeamsJSON["events"].length; i++){
+                ev = flashTeamsJSON["events"][i];
+                console.log(ev.submitting);
+                if (localStorage["event" + ev.id]){
+                    unSubmit(ev.id, false);
+                }
+            }
+        }
+    }
+};
 
 //TASK STATUS COLORS
 var TASK_NOT_START_COLOR = "#e4e4e4";
@@ -105,12 +118,11 @@ function startTask(groupNum) {
 function submitMode(groupNum){
     //Close the first (task) modal
     $("#task_modal").modal('hide');
-
-    console.log("I don't get it");
     
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
-    eventObj.status = "submitting";
+    eventObj.submitting = true;
+    eventObj.status = "paused";
     eventObj.task_pauseBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
     
@@ -120,16 +132,18 @@ function submitMode(groupNum){
 
     updateStatus();
     drawEvent(eventObj); //Will update color
+    localStorage["event" + groupNum] = true;
 }
 
 //Fires on "Pause" button on task modal
 function unSubmit(groupNum, completed) {
     
-    //Close the first (task) modal
     $("#task_modal").modal('hide');
     
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
+
+    eventObj.submitting = false;
     
     if (!completed){
         if(isDelayed(groupNum)){
@@ -157,7 +171,8 @@ function unSubmit(groupNum, completed) {
     // logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
     updateStatus();
-    drawEvent(eventObj); //Will update color    
+    drawEvent(eventObj); //Will update color 
+    localStorage["event" + groupNum] = false;   
 }
 
 //Fires on "Pause" button on task modal
