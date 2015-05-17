@@ -230,10 +230,8 @@ function resumeTask(groupNum) {
     
     if(isDelayed(groupNum)){
         eventObj.status = "delayed";
-        eventObj.prevStat = "delayed";
     } else{
         eventObj.status = "started";
-        eventObj.prevStat = "started";
     }
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
@@ -462,7 +460,7 @@ function completeTaskModalText(eventToComplete) {
             questions = outputFilledQ[eventOutputs[i]];
             for (j = 0; j < questions.length; j++){
                 if (questions[j] != ""){
-                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
+                    modalText += '<p id="textoutput' + i + 'q' + j + '">' + questions[j][0] + '</p></br><textarea id = "output' + i + 'q' + j + '" class="outputForm" rows="4" onkeyup="keyUpFunc(); saveQuestions(' + eventToComplete.id + ')">' + questions[j][1] + '</textarea></br>';
                 }
             }
             modalText += "</div>"
@@ -479,7 +477,7 @@ function completeTaskModalText(eventToComplete) {
         else{
             var placeholderVal = generalFilledQ[i][1]; 
         }
-        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
+        modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="4" onkeyup="keyUpFunc(); saveQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
     } 
     modalText += "</div></form>";
     modalText+= "<em>Click 'Task Completed' to alert the PC and move on to the documentation questons.</em>";
