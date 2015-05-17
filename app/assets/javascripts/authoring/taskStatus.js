@@ -9,8 +9,9 @@ window.onload = function (){
         if (flashTeamsJSON["events"]){
             for (i = 0; i < flashTeamsJSON["events"].length; i++){
                 ev = flashTeamsJSON["events"][i];
-                console.log(ev.submitting);
+                console.log(ev.submitting + localStorage["event" + ev.id]);
                 if (localStorage["event" + ev.id]){
+                    console.log("LOCALSTORAGE" + localStorage["event" + ev.id]);
                     unSubmit(ev.id, false);
                 }
             }
@@ -121,7 +122,12 @@ function submitMode(groupNum){
     
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
-    eventObj.submitting = true;
+    if (eventObj.submitting){
+        eventObj.submitting += 1;
+    }
+    else{
+        eventObj.submitting = 1;
+    }
     eventObj.status = "paused";
     eventObj.task_pauseBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
@@ -143,36 +149,46 @@ function unSubmit(groupNum, completed) {
     var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
 
-    eventObj.submitting = false;
-    
-    if (!completed){
-        if(isDelayed(groupNum)){
-            eventObj.status = "delayed";
-            eventObj.prevStat = "delayed";
-        } else{
-            eventObj.status = "started";
-            eventObj.prevStat = "started";
-        }    
+    if (eventObj.submitting){
+        eventObj.submitting -= 1;
     }
     else{
-        eventObj.status = "completed";
+        eventObj.submitting = 0;
     }
-    
-    eventObj.task_resumeBtn_time = (new Date).getTime();
-    eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
-    eventObj.latest_remaining_time = eventObj["timer"];
-    
-    //remove task from remaining and add to live task array
-    var idx = paused_tasks.indexOf(groupNum);
-    if (idx != -1) { // delayed task
-        paused_tasks.splice(idx, 1);
-    }
+    updateStatus();
 
-    // logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
-   
+    localStorage.removeItem("event" + groupNum);
+    
+    if (eventObj.submitting <= 0){
+        eventObj.submitting = 0;
+        if (!completed){
+            if(isDelayed(groupNum)){
+                eventObj.status = "delayed";
+                eventObj.prevStat = "delayed";
+            } else{
+                eventObj.status = "started";
+                eventObj.prevStat = "started";
+            }    
+        }
+        else{
+            eventObj.status = "completed";
+        }
+        
+        eventObj.task_resumeBtn_time = (new Date).getTime();
+        eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
+        eventObj.latest_remaining_time = eventObj["timer"];
+        
+        //remove task from remaining and add to live task array
+        var idx = paused_tasks.indexOf(groupNum);
+        if (idx != -1) { // delayed task
+            paused_tasks.splice(idx, 1);
+        }
+
+        // logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+       
+    }
     updateStatus();
     drawEvent(eventObj); //Will update color 
-    localStorage["event" + groupNum] = false;   
 }
 
 //Fires on "Pause" button on task modal
