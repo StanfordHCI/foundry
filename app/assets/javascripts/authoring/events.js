@@ -374,7 +374,7 @@ function showDropDown(){
     });
 }
 
-function duplicateEvent(groupNumber){
+function duplicateEvent(groupNumber, closeModal){
     var task_id = getEventJSONIndex(groupNumber);
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
@@ -402,8 +402,13 @@ function duplicateEvent(groupNumber){
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
-    logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    if(closeModal == true){
+        $('#task_modal').modal('hide'); 
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
 
+    }else{
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    }
     // save
     updateStatus();
 }

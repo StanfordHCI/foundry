@@ -297,15 +297,18 @@ if(!window._foundry) {
       tag: "image",
       attrs: {
           x: function(d) {
+              var groupNum = parseInt(d.id.replace("task_g_", ""));
+              var eventObj = getEventFromId(groupNum);
               var attrs = events.numMembers.attrs;
-              return attrs.x(d) + 15;
+              //return attrs.x(d) + 15;
+              return eventObj.duration <= 60 ? attrs.x(d) - 4 : attrs.x(d) + 15;
           },
           y: function(d) {return d.y + events.bodyHeight - 18},
           width: function(d) {
               var groupNum = parseInt(d.id.replace("task_g_", ""));
               var eventObj = getEventFromId(groupNum);
-              // set the width to zero if this is an hour long event
-              return eventObj.duration <= 60 ? 0 : 12;
+              // set the width to zero if the duration of event is 45 mins or less
+              return eventObj.duration <= 45 ? 0 : 12;
           },
           height: 12,
           "xlink:href": function(d) {
