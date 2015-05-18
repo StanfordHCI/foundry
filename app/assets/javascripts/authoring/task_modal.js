@@ -57,7 +57,7 @@ function showTaskOverview(groupNum){
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
               $("#start-end-task").addClass('btn-success');
-              $("#start-end-task").prop('disabled', true)
+              $("#start-end-task").prop('disabled', true);
         }
         else{
            $("#pause-resume-task").css('display', 'none'); 
