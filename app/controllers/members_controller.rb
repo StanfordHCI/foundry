@@ -45,15 +45,15 @@ class MembersController < ApplicationController
   end
 
   def invited
-  	uniq = params[:uniq]
+  	@uniq = params[:uniq]
   	@id = params[:id]
-  	if not uniq
+  	if not @uniq
   		render 'error'
   	end
 
   	# already confirmed email, so log in user and redirect to flash team page
-  	if check_email_confirmed(uniq)
-  		login(uniq)
+  	if check_email_confirmed(@uniq)
+  		login(@uniq)
   	end
   end
 
