@@ -381,6 +381,7 @@ function renderMemberPopovers(members) {
 };
 
 function clickedMemInviteLink(mem_id){
+    $("#mPill_" + mem_id).popover("hide");
     logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
 
 }
