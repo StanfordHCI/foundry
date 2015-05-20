@@ -367,14 +367,14 @@ function showDropDown(){
                 }
             },
             "duplicate": {name: "Duplicate", icon: ""},
-            "confirmDelete": {name: "Delete", icon: "", disabled: function(key, opt) { 
-                    return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
-                }}
+            "confirmDelete": {name: "Delete", icon: ""//, disabled: function(key, opt) { 
+                    //return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
+                }//}
         }
     });
 }
 
-function duplicateEvent(groupNumber){
+function duplicateEvent(groupNumber, closeModal){
     var task_id = getEventJSONIndex(groupNumber);
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
@@ -402,8 +402,13 @@ function duplicateEvent(groupNumber){
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
-    logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    if(closeModal == true){
+        $('#task_modal').modal('hide'); 
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
 
+    }else{
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    }
     // save
     updateStatus();
 }
@@ -673,8 +678,13 @@ function deleteEvent(eventId){
     // Only log before because event won't exist after
     logActivity("deleteEvent(eventId)",'Delete Event - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
-    //Delete the event object from the json
+    
     var indexOfJSON = getEventJSONIndex(eventId);
+
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    var eventStatus = eventObj.status;
+
+    //Delete the event object from the json
     var events = flashTeamsJSON["events"];
     events.splice(indexOfJSON, 1);
     
@@ -693,6 +703,30 @@ function deleteEvent(eventId){
     for (var i = 0; i < intersToDel.length; i++) {
         var intId = intersToDel[i];
         deleteInteraction(intId);
+    }
+
+
+    if(eventStatus != 'not_started'){
+        if(live_tasks.indexOf(eventId) != -1){
+            live_tasks.splice(live_tasks.indexOf(eventId), 1);
+        }
+
+        if(paused_tasks.indexOf(eventId) != -1){
+            paused_tasks.splice(paused_tasks.indexOf(eventId), 1);
+        }
+
+        if(delayed_tasks.indexOf(eventId) != -1){
+            delayed_tasks.splice(delayed_tasks.indexOf(eventId), 1);
+        }
+
+        if(completed_red_tasks.indexOf(eventId) != -1){
+            completed_red_tasks.splice(completed_tasks.indexOf(eventId), 1);
+        }
+
+        if(drawn_blue_tasks.indexOf(eventId) != -1){
+            drawn_blue_tasks.splice(drawn_blue_tasks.indexOf(eventId), 1);
+        }
+
     }
 
     //Visually removes task from the timeline, in awareness.js
