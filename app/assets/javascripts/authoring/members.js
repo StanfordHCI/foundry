@@ -286,55 +286,37 @@ function renderMemberPopovers(members) {
 	        member_type = "worker";
         }
         
-        //console.log("member_id: " + member_id + " member_type: " + member_type);
 
         var content = '<form name="memberForm_' + member_id + '>'
         +'<div class="mForm_' + member_id + '">'
-        +'<div class="input-append" > ' 
-        +'<select class="category1Input" id="member' + member_id + '_category1">';
 
-        var newColor = "'"+member.color+"'";
-
-        var category1 = member.category1;
-        var category2 = member.category2;
-       
         
-        // add the drop-down for two-tiered oDesk job posting categories on popover
-        for (var key in oDeskCategories) {
-            //console.log("category1");
-            var option = document.createElement("option");
-            if(key == category1){
-                content += '<option value="' + key + '" selected>' + key + '</option>';
-            } else {
-                content += '<option value="' + key + '">' + key + '</option>';
-            }
-        }
-
-        //reload or build category2 based on previously selected category 1
-        content += '</select>';
-
-        if (category1 == "--oDesk Category--" || category1 == ""){
-            content += '<br><br><select class="category2Input" id="member' + member_id + '_category2" disabled="disabled">--oDesk Sub-Category--</select>';
+        content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
+        
+        if(member_type == "worker"){
+            content += '<option value="worker" selected>Worker</option>';
         } else{
-
-            content += '<br><br><select class="category2Input" id="member' + member_id + '_category2">'
-            for (var j=0; j<oDeskCategories[category1].length; j++) {
-                //console.log("category2");
-                var key2 = oDeskCategories[category1][j];
-
-                var option = document.createElement("option");
-                if(key2 == category2){
-                    content += '<option value="' + key2 + '" selected>' + key2 + '</option>';
-                }
-                else
-                    content += '<option value="' + key2 + '">' + key2 + '</option>';
-            }
-            content += '</select>';
+            content += '<option value="worker">Worker</option>';
         }
         
+        if(member_type == "pc"){
+            content += '<option value="pc" selected>Project Coordinator</option>';
+        } else{
+            content += '<option value="pc">Project Coordinator </option>';
+        }
         
+        if(member_type == "client"){
+            content += '<option value="client" selected>Client</option>';
+        } else{
+            content += '<option value="client">Client</option>';
+        }
+                    
+        content += '</select><br />';
 
-        content += '<br><br><input class="skillInput" id="addSkillInput_' + member_id + '" type="text" data-provide="typeahead" placeholder="New oDesk Skill" />'
+        
+        //Member skills from odesk skill categories
+        +'<div class="input-append" > '
+        content += '<br><input class="skillInput" id="addSkillInput_' + member_id + '" type="text" data-provide="typeahead" placeholder="New oDesk Skill" />'
         +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id + '" onclick="addSkill(' + member_id + ');">+</button>'
         +'</div>'
         +'<br>Skills:'  
@@ -350,27 +332,8 @@ function renderMemberPopovers(members) {
 
         content +='</ul>';
         
-		content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
-		
-		if(member_type == "worker"){
-        	content += '<option value="worker" selected>Worker</option>';
-        } else{
-            content += '<option value="worker">Worker</option>';
-        }
-        
-        if(member_type == "pc"){
-        	content += '<option value="pc" selected>Project Coordinator</option>';
-        } else{
-            content += '<option value="pc">Project Coordinator </option>';
-        }
-        
-        if(member_type == "client"){
-        	content += '<option value="client" selected>Client</option>';
-        } else{
-            content += '<option value="client">Client</option>';
-        }
-                    
-        content += '</select><br />';
+
+        var newColor = "'"+member.color+"'";
 
         content += 'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
         +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
@@ -428,11 +391,6 @@ function generateMemberPillClickHandlerFunction(mem_id) {
     };
 }
 
-function generateMemberCategoryChangeFunction(mem_id) {
-    return function() {
-        memberCategoryChange(mem_id);
-    }
-}
 
 function memberPillClick(mem_id) {
 
@@ -445,26 +403,8 @@ function memberPillClick(mem_id) {
         }
     });
     
-    $("#member" + mem_id + "_category1").off('change', generateMemberCategoryChangeFunction(mem_id));
-    $("#member" + mem_id + "_category1").on('change', generateMemberCategoryChangeFunction(mem_id));
 }
 
-function memberCategoryChange(mem_id) {
-    if ($("#member" + mem_id + "_category1").value === "--oDesk Category--") {
-        $("#member" + mem_id + "_category2").attr("disabled", "disabled");
-    } else {
-        $("#member" + mem_id + "_category2").removeAttr("disabled");
-        $("#member" + mem_id + "_category2").empty();
-
-        var category1Select = document.getElementById("member" + mem_id + "_category1");
-        var category1Name = category1Select.options[category1Select.selectedIndex].value;
-
-        for (var j = 0; j < oDeskCategories[category1Name].length; j++) {
-            var option = document.createElement("option");
-            $("#member" + mem_id + "_category2").append("<option>" + oDeskCategories[category1Name][j] + "</option>");
-        }
-    }
-}
 
 function newFolderObject(folderName, parentId) {
     return {
@@ -474,10 +414,9 @@ function newFolderObject(folderName, parentId) {
 
 function newMemberObject(memberName) {
     var color = colorBox.grabColor();
-    //return {"role":memberName, "id": memberCounter, "color":color, "skills":[], "category1":"", "category2":""};
     
     //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type
-    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
+    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "seenDocQs": []};
 };
 
 /**
@@ -588,29 +527,6 @@ function deleteSkill(memberId, pillId, skillName) {
 };
 
 
-//NOTE FROM DR: I THINK WE CAN ERASE THIS B/C THERE IS ANOTHER ONE BELOW WITH SAME EXACT NAME (BUT CHECK THAT CODE IS THE SAME)
-//Saves info and updates popover, no need to update JSON, done by individual item elsewhere
-/*
-function saveMemberInfo(popId) {
-    var indexOfJSON = getMemberJSONIndex(popId);
-
-    flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
-    flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
-    
-    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
-
-    var newColor = $("#color_" + popId).spectrum("get").toHexString();
-
-    updateMemberPillColor(newColor, popId);
-    renderMemberPillColor(popId);
-
-    $("#mPill_" + popId).popover("hide");
-    renderAllMemberLines();
-    renderMemberPopovers(flashTeamsJSON["members"]);
-};
-*/
-
-
 //Shows an alert asking to confirm delete member role
 function confirmDeleteMember(pillId) {
     var member = entryManager.getEntryById(pillId);
@@ -701,8 +617,7 @@ function deleteEntry(entryId) {
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
 function saveMemberInfo(memberId) {
     var member = entryManager.getEntryById(memberId);
-    member.category1 = document.getElementById("member" + memberId + "_category1").value;
-    member.category2 = document.getElementById("member" + memberId + "_category2").value;
+
     member.type = document.getElementById("member" + memberId + "_type").value;
     
     var newColor = $("#color_" + memberId).spectrum("get").toHexString();
