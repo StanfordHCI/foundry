@@ -155,6 +155,7 @@ function unSubmit(groupNum, completed) {
     else{
         eventObj.submitting = 0;
     }
+    flashTeamsJSON["local_update"] = new Date().getTime();
     updateStatus();
 
     localStorage.removeItem("event" + groupNum);
