@@ -3,12 +3,16 @@
  *
  */
 
-
 var memberCounter = undefined;
 var colorToChange = "#ff0000";
 var current = undefined;
 var isUser = false;
 var memberType; 
+
+//Fixes 'sticky popover' issue when you blur window and popover freezes
+ $(window).blur(function() {
+    closeOpenPopovers();
+ });
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
@@ -52,11 +56,6 @@ function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderAllMemberTabs();
-};
-
-function renderMembersUser() {
-    var members = flashTeamsJSON.members;
     renderAllMemberTabs();
 };
 
@@ -269,61 +268,57 @@ function renderCurrentFolderPills() {
     renderPills(currentFolder, entryManager.getCurrentFolderChildren());
 }
 
-
+//Create the popover for each member. Allows you to edit and delete members. 
 function renderMemberPopovers(members) {
+    //Loop over each member in the members array 
     var len = members.length;
     for (var i=0;i<len;i++){
         var member = members[i];
-        
         if(member.type === "folder") {
             continue;
         }
         
+        //Extract info from members
         var member_id = member.id;
         var member_name = member.role;
         var invitation_link = member.invitation_link;
         var member_type = member.type; 
         
+        //Default type is worker
         if(member_type==undefined){
 	        member_type = "worker";
         }
-        
 
+        //Create the main content of the popover
         var content = '<form name="memberForm_' + member_id + '>'
         +'<div class="mForm_' + member_id + '">'
 
-        
+        //Member type select menu
         content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
-        
         if(member_type == "worker"){
             content += '<option value="worker" selected>Worker</option>';
-        } else{
+        } else {
             content += '<option value="worker">Worker</option>';
         }
-        
         if(member_type == "pc"){
             content += '<option value="pc" selected>Project Coordinator</option>';
-        } else{
+        } else {
             content += '<option value="pc">Project Coordinator </option>';
         }
-        
         if(member_type == "client"){
             content += '<option value="client" selected>Client</option>';
-        } else{
+        } else {
             content += '<option value="client">Client</option>';
-        }
-                    
+        }   
         content += '</select><br />';
-
         
         //Member skills from odesk skill categories
         +'<div class="input-append" > '
         content += '<br><input class="skillInput" id="addSkillInput_' + member_id 
-            + '" type="text" data-provide="typeahead" placeholder="New oDesk Skill" />'
+            + '" type="text" data-provide="typeahead" placeholder="Add oDesk Skill" />'
             +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id 
             + '" onclick="addSkill(' + member_id + ');">+</button>'
         +'</div>'
-
         +'<br>Skills:'  
         +'<ul class="nav nav-pills" id="skillPills_' + member_id + '">';
         var skills_len = member.skills.length;
@@ -333,7 +328,6 @@ function renderMemberPopovers(members) {
             content+='<li class="active" id="sPill_mem' + member_id + '_skill' + memberSkillNumber + '"><a>' + skillName 
             + '<div class="close" onclick="deleteSkill(' + member_id + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>';
         }
-
         content +='</ul>';
         
 
@@ -343,10 +337,10 @@ function renderMemberPopovers(members) {
         +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
 
          +'<p><button class="btn btn-primary" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
-         +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>     '
-         +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     '
-         +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button><br><br>'
+         +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>      '
+         +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button> <br><br>'
          
+        +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     <br>'
         + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id 
             + ')" href="' + invitation_link + '" target="_blank">'
         + invitation_link
@@ -354,8 +348,8 @@ function renderMemberPopovers(members) {
         +'</p></form>' 
         +'</div>';
         
+        //Create the popover, fill with the content above
         $("#mPill_" + member_id).popover('destroy');
-
         $("#mPill_" + member_id).popover({
             placement: "right",
             html: "true",
@@ -370,7 +364,6 @@ function renderMemberPopovers(members) {
                 logActivity("renderMemberPopovers(members)",'Clicked Member Pill to Show Popover', 
                     new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
 
-               //$("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
                 $(this).typeahead({source: oSkills})
             });  
@@ -388,10 +381,8 @@ function renderMemberPopovers(members) {
 };
 
 function clickedMemInviteLink(mem_id){
-    $("#mPill_" + mem_id).popover("hide");
     logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), 
         current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
-
 }
 
 function generateMemberPillClickHandlerFunction(mem_id) {
