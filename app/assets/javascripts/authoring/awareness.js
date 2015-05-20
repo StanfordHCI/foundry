@@ -1715,7 +1715,7 @@ var trackUpcomingEvent = function(){
             }
         }
         
-        if( ev.status == "paused"){
+        if( ev.status == "paused" && ev.submitting <= 0){
             overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is paused.";
             
             updateSidebarText(overallTime, "#006699");

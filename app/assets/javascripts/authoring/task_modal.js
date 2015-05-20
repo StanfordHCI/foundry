@@ -39,6 +39,12 @@ function showTaskOverview(groupNum){
             
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
             $("#start-end-task").html('Complete');
+            // if (eventObj.submitting > 0 && !localStorage["event" + eventObj.id] && currentMemberTask(groupNum) == true){
+            //     $("#start-end-task").prop('disabled', true);                
+            // }
+            // else{
+            //     $("#start-end-task").prop('disabled', false);
+            // }
         } 
  
         
