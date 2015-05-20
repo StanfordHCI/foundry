@@ -106,6 +106,7 @@ class MembersController < ApplicationController
     name = params[:name]
     email = params[:email]
     uniq = params[:uniq]
+    @uniq = uniq
     emails = Array.new
     emails1 = Array.new
     emails = Landing.where(:id_team=>id, :email=>email, :uniq=>uniq, :status=>'s')
