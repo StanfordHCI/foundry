@@ -69,6 +69,7 @@
     };
     
     var addFolderClickFn = function(e) {
+        closeOpenPopovers();
         var $addFolderButton = $(this);
         
         // check if the team is currently in progress

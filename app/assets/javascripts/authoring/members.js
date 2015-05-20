@@ -479,17 +479,13 @@ function addMember() {
     
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
-   /* for(var i=0;i<events.length;i++){
-       drawPopover(events[i], true, false);
-    }*/
 
-   renderCurrentFolderPills();
-   // renderMemberPopovers(members);
-   logActivity("addMember()",'Added Member', new Date().getTime(), 
+    renderCurrentFolderPills();
+    logActivity("addMember()",'Added Member', new Date().getTime(), 
     current_user, chat_name, team_id, member_obj);
 
-   updateStatus();
-   inviteMember(member_obj.id);
+    updateStatus();
+    inviteMember(member_obj.id);
 };
 
 
