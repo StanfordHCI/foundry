@@ -23,7 +23,6 @@ class MembersController < ApplicationController
     prev_uniq = params[:uniq]
     uniq = SecureRandom.uuid
     
-
     member = Member.where(:uniq => prev_uniq)[0]
     if member  != nil
       member.name = nil
@@ -46,16 +45,15 @@ class MembersController < ApplicationController
   end
 
   def invited
-  	uniq = params[:uniq]
-    @uniq = params[:uniq]
+  	@uniq = params[:uniq]
   	@id = params[:id]
-  	if not uniq
+  	if not @uniq
   		render 'error'
   	end
 
   	# already confirmed email, so log in user and redirect to flash team page
-  	if check_email_confirmed(uniq)
-  		login(uniq)
+  	if check_email_confirmed(@uniq)
+  		login(@uniq)
   	end
   end
 
@@ -108,6 +106,7 @@ class MembersController < ApplicationController
     name = params[:name]
     email = params[:email]
     uniq = params[:uniq]
+    @uniq = uniq
     emails = Array.new
     emails1 = Array.new
     emails = Landing.where(:id_team=>id, :email=>email, :uniq=>uniq, :status=>'s')
