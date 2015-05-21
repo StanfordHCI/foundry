@@ -13,7 +13,7 @@
 	  	</div>
 	     
 	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
-		     <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: none" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/>
+		     <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/>
 	      
 	       <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Author Tour"/>
 	       <input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
@@ -24,7 +24,7 @@
      
      <% else %> <!-- else only show the start foundry tour button --> 
 	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
-	       <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: none" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> 
+	       <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> 
 	       <input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Worker Tour"/>
 	     </div> 
      
