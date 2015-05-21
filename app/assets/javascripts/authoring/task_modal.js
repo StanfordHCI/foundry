@@ -63,7 +63,7 @@ function showTaskOverview(groupNum){
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
               $("#start-end-task").addClass('btn-success');
-              $("#start-end-task").prop('disabled', true)
+              $("#start-end-task").prop('disabled', true);
         }
         else{
            $("#pause-resume-task").css('display', 'none'); 
@@ -79,9 +79,15 @@ function showTaskOverview(groupNum){
 
     if(uniq_u == "" || memberType == "pc" || memberType == "client"){
         $("#hire-task").css('display','');
+        $("#duplicate-task").css('display','');
     }
     else{
         $("#hire-task").css('display','none');
+        $("#duplicate-task").css('display','none');
+    }
+
+    if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" )){
+        $("#duplicate-task").css('display','');
     }
     
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
@@ -92,13 +98,14 @@ function showTaskOverview(groupNum){
 	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
     else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed" && eventObj.status != "submitting")) {
             $("#edit-save-task").css('display', '');
-            
+            //$("#duplicate-task").css('display','');
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
             $("#edit-save-task").html('Edit');
     }
 	else{
 		$("#edit-save-task").css('display', 'none');
 		$("#delete").css('display','none');
+        //$("#duplicate-task").css('display','none');
 	}
     logActivity("showTaskOverview(groupNum)",'Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
@@ -125,7 +132,7 @@ function showShortTaskOverview(groupNum){
         $('#task-text2').html(taskOverviewContent);
 
         var modal_footer = '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: right" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>'
-                            + '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables Folder</a>';
+                            + '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables</a>';
 
         $('.task-modal-footer2').html(modal_footer);
         
