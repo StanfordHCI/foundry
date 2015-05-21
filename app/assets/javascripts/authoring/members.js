@@ -329,7 +329,12 @@ function renderMemberPopovers(members) {
             + '<div class="close" onclick="deleteSkill(' + member_id + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>';
         }
         content +='</ul>';
+
         
+
+        //NEW, ALEXANDRA START HERE
+        //content += '<input type="text" value="' + "member.skills" + '" placeholder="Add skill" id="skills" />';
+        //$("#skills").tagsinput();
 
         var newColor = "'"+member.color+"'";
 
@@ -373,12 +378,15 @@ function renderMemberPopovers(members) {
         $("#mPill_" + member_id).on('click', generateMemberPillClickHandlerFunction(member_id));
         $("#mPill_" + member_id).off('click', generateMemberPillClickHandlerFunction(member_id));
 
-        // append oDesk Skills input to popover
-        $(document).ready(function() {
-            pressEnterKeyToSubmit("#addSkillInput_" + member_id, "#addSkillButton_" + member_id);
-        });
+       
     }
+
 };
+
+// append oDesk Skills input to popover
+        $(document).ready(function() {
+            pressEnterKeyToSubmit(".skillInput", ".addSkillButton");
+        });
 
 function clickedMemInviteLink(mem_id){
     logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), 
