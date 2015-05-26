@@ -364,6 +364,7 @@ function renderEverything(firstTime) {
             }
 
             renderMembersUser();
+            trackUpcomingEvent();
 
             //call this function if team is not in the edit mode 
             if(isUser){
@@ -1473,71 +1474,71 @@ offset of half of drag bar width when drawing red and blue boxes
 */
 // not being called for user's side
 // trying to fix issue of user's page not extending delayed box (and moving remaining tasks to the right)
-var trackLiveAndRemainingTasks = function() {
-    tracking_tasks_interval_id = setInterval(function(){
-        var tasks = computeLiveAndRemainingTasks();
-        var new_live_tasks = tasks["live"];
-        var new_remaining_tasks = tasks["remaining"];
+// var trackLiveAndRemainingTasks = function() {
+//     tracking_tasks_interval_id = setInterval(function(){
+//         var tasks = computeLiveAndRemainingTasks();
+//         var new_live_tasks = tasks["live"];
+//         var new_remaining_tasks = tasks["remaining"];
 
-        // extend already delayed boxes
-        extendDelayedBoxes();
+//         // extend already delayed boxes
+//         extendDelayedBoxes();
 
-        var at_least_one_task_started = false;
-        var at_least_one_task_delayed = false;
+//         var at_least_one_task_started = false;
+//         var at_least_one_task_delayed = false;
 
-        // detect any live task is now delayed or completed early
-        for (var i=0;i<live_tasks.length;i++){
-            var groupNum = parseInt(live_tasks[i]);
-            var task_g = getTaskGFromGroupNum (groupNum);
-            var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
-            var completed = ev.completed_x;
-            var task_rect_curr_width = parseFloat(getWidth(ev));
+//         // detect any live task is now delayed or completed early
+//         for (var i=0;i<live_tasks.length;i++){
+//             var groupNum = parseInt(live_tasks[i]);
+//             var task_g = getTaskGFromGroupNum (groupNum);
+//             var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+//             var completed = ev.completed_x;
+//             var task_rect_curr_width = parseFloat(getWidth(ev));
 
-            // delayed
-            if (new_live_tasks.indexOf(groupNum) == -1 && !completed) { // groupNum is no longer live
-                console.log("PREVIOUSLY LIVE TASK NOW DELAYED!");
-                drawRedBox(ev, task_g, false);
+//             // delayed
+//             if (new_live_tasks.indexOf(groupNum) == -1 && !completed) { // groupNum is no longer live
+//                 console.log("PREVIOUSLY LIVE TASK NOW DELAYED!");
+//                 drawRedBox(ev, task_g, false);
 
-                // add to delayed_tasks list
-                delayed_tasks.push(groupNum);
+//                 // add to delayed_tasks list
+//                 delayed_tasks.push(groupNum);
                 
-                // updateStatus is required to send the notification email when a task is delayed
-                delayed_tasks_time[groupNum]=(new Date).getTime();
+//                 // updateStatus is required to send the notification email when a task is delayed
+//                 delayed_tasks_time[groupNum]=(new Date).getTime();
 
-                at_least_one_task_delayed = true;
-            }
-        }
+//                 at_least_one_task_delayed = true;
+//             }
+//         }
       
         
 
        
 
-        var tasks_tmp = MoveLiveToRemaining(new_live_tasks,new_remaining_tasks);
-        new_live_tasks = tasks_tmp["live"];
-        new_remaining_tasks = tasks_tmp["remaining"];
+//         var tasks_tmp = MoveLiveToRemaining(new_live_tasks,new_remaining_tasks);
+//         new_live_tasks = tasks_tmp["live"];
+//         new_remaining_tasks = tasks_tmp["remaining"];
         
-        for (var j=0;j<remaining_tasks.length;j++){
-            var groupNum = parseInt(remaining_tasks[j]);
-            if (new_live_tasks.indexOf(groupNum) != -1) { // groupNum is now live
-                at_least_one_task_started = true;
-            }
-        }
+//         for (var j=0;j<remaining_tasks.length;j++){
+//             var groupNum = parseInt(remaining_tasks[j]);
+//             if (new_live_tasks.indexOf(groupNum) != -1) { // groupNum is now live
+//                 at_least_one_task_started = true;
+//             }
+//         }
 
-        live_tasks = new_live_tasks;
-        remaining_tasks = new_remaining_tasks;
+//         live_tasks = new_live_tasks;
+//         remaining_tasks = new_remaining_tasks;
        
         
 
-        if(at_least_one_task_delayed || at_least_one_task_started){
-            //updateStatus(true);
-            updateStatus();
-            if(at_least_one_task_delayed)
-                at_least_one_task_delayed = false;
-            if(at_least_one_task_started)
-                at_least_one_task_started = false;
-        }
-    }, fire_interval);
-};
+//         if(at_least_one_task_delayed || at_least_one_task_started){
+//             //updateStatus(true);
+//             updateStatus();
+//             if(at_least_one_task_delayed)
+//                 at_least_one_task_delayed = false;
+//             if(at_least_one_task_started)
+//                 at_least_one_task_started = false;
+//         }
+//     }, fire_interval);
+// };
 
 //moves live task to remaining task if prev task is delayed
 function MoveLiveToRemaining(new_live_tasks,new_remaining_tasks){
@@ -1650,7 +1651,7 @@ var trackUpcomingEvent = function(){
         return;
     }
     
-    setInterval(function(){
+    //setInterval(function(){
 
         var overallTime;
         
@@ -1761,7 +1762,7 @@ var trackUpcomingEvent = function(){
         }
 
 
-    }, fire_interval);
+    //}, fire_interval);
 }
 
 // updates the project status text in the sidebar

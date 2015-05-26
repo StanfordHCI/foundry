@@ -88,6 +88,7 @@ function startTask(groupNum) {
 
     updateStatus();
     drawEvent(eventObj); //Will update color
+    trackUpcomingEvent();
 
     //Close the task modal
     //$("#task_modal").modal('hide');
@@ -119,6 +120,7 @@ function pauseTask(groupNum) {
 
     updateStatus();
     drawEvent(eventObj); //Will update color
+    trackUpcomingEvent();
 	
 
 	//chaning resume button to pause button on the task modal
@@ -155,6 +157,7 @@ function resumeTask(groupNum) {
    
     updateStatus();
     drawEvent(eventObj); //Will update color
+    trackUpcomingEvent();
 
 
 	//chaning start button to complete button on the task modal
@@ -295,7 +298,7 @@ var allCompleted = function(eventToComplete){
     if (totalCheckboxes != checkedCheckboxes) {
         completed = false;
     }
-    return completed
+    return completed;
 }
 
 var keyUpFunc = function(eventToComplete){
@@ -503,6 +506,7 @@ var completeTask = function(groupNum){
     flashTeamsJSON['local_update'] = new Date().getTime();
     updateStatus();
     drawEvent(eventToComplete);
+    trackUpcomingEvent();
 
     //Message the PC that the task has been completed
     //TODO
