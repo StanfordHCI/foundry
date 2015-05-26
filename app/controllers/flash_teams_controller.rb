@@ -78,7 +78,7 @@ class FlashTeamsController < ApplicationController
 	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
 	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
 	    #copy.status = original.original_status
-	    copy.status = createDupTeamStatus(copy.id, original.original_status)
+	    copy.status = createDupTeamStatus(copy.id, original.status)
 	    
 	    # new_status = createDupTeamStatus(copy.id, original.original_status)
 # 	    new_status_json = new_status.to_s
@@ -109,7 +109,7 @@ class FlashTeamsController < ApplicationController
     end
     
     # update the google drive folder
-    original_status['flash_teams_json'].except!("folder")
+    #original_status['flash_teams_json'].except!("folder")
 
 	return original_status.to_json
 

@@ -165,7 +165,7 @@ function createTaskFolder(eventName, JSONId, parent_folder){
             "title" : eventName,
             "mimeType" : "application/vnd.google-apps.folder",
             "description" : "Shared Folder",
-            "parents": [{"id": parent_folder}]
+            "parents": [{"id": '0B86QFetn60H5fk5mOUpiNEE2LUlkSVFOV2Fka0poSGQ2TENXc0Rud0tXUHN1YjVjT1NFeDA'}]
          }
       });
       
