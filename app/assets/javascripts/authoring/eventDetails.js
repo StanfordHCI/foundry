@@ -123,7 +123,10 @@ if(!window._foundry) {
          * @returns {string} the event's duration in the format 'x hrs y min'
          */
         text: function(eventObj) {
-            if(eventObj.status == "paused"){
+            if (eventObj.submitting > 0){
+                var timeStr = "SUBMITTING";
+            }
+            else if(eventObj.status == "paused"){
                 var timeStr = "PAUSED";
             }
 

@@ -194,6 +194,16 @@ function drawMainRect(eventObj) {
                     return TASK_START_COLOR;
                 case "paused":
                     return TASK_PAUSED_COLOR;
+                case "submitting":
+                    if (eventObj.prevStat){
+                        if (eventObj["prevStat"] == "delayed"){
+                            return TASK_DELAY_COLOR;
+                        }
+                        else{
+                            return TASK_START_COLOR;
+                        }
+                    }
+                    return TASK_SUBMITTING_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
                 default:
@@ -249,6 +259,16 @@ function drawMainRect(eventObj) {
                     return TASK_START_BORDER_COLOR;
                 case "paused":
                     return TASK_PAUSED_BORDER_COLOR;
+                case "submitting":
+                    if (eventObj["prevStat"]){
+                        if (eventObj["prevStat"] == "delayed"){
+                            return TASK_DELAY_BORDER_COLOR;
+                        }
+                        else{
+                            return TASK_START_BORDER_COLOR;
+                        }
+                    }
+                    return TASK_SUBMITTING_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
                 default:
@@ -477,7 +497,7 @@ function drawShade(eventObj) {
 //
 function drawTimer(eventObj){
    
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" || eventObj.status == "submitting") {
         return;
     }
     
@@ -492,6 +512,7 @@ function drawTimer(eventObj){
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
+            eventObj["prevStat"] = "delayed";
              
             var groupNum = parseInt(eventObj["id"]);
             

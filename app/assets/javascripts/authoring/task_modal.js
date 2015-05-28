@@ -30,7 +30,7 @@ function showTaskOverview(groupNum){
 	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
         
 
-        if(eventObj.status == "started" || eventObj.status == "delayed"){
+        if(eventObj.status == "started" || eventObj.status == "delayed" || eventObj.submitting > 0){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
             $("#pause-resume-task").addClass('btn-info');
@@ -39,6 +39,12 @@ function showTaskOverview(groupNum){
             
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
             $("#start-end-task").html('Complete');
+            // if (eventObj.submitting > 0 && !localStorage["event" + eventObj.id] && currentMemberTask(groupNum) == true){
+            //     $("#start-end-task").prop('disabled', true);                
+            // }
+            // else{
+            //     $("#start-end-task").prop('disabled', false);
+            // }
         } 
  
         
@@ -90,7 +96,7 @@ function showTaskOverview(groupNum){
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
-    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed" && eventObj.status != "submitting")) {
             $("#edit-save-task").css('display', '');
             //$("#duplicate-task").css('display','');
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
@@ -358,6 +364,11 @@ function getTaskOverviewContent(groupNum){
                 if(ev.status == "not_started"){
                     content += '<span class="span6"><b>Task Status: </b> not started  </span>';
                     content += '<span class="span6" style="text-align:right"><b>Task Duration: </b>' + formatModalTime(ev.duration) + '</span>'; 
+                }
+                else if(ev.submitting > 0){
+                    content += '<span class="span6"><b>Task Status: </b>submitting </span>';
+                    content += '<span class="span6" style="text-align:right">'
+                            + '<b>Time Remaining: </b>' + formatModalTime(ev.timer) +' / ' + formatModalTime(ev.duration) + '</span>'; 
                 }
                 else{
                     content += '<span class="span6"><b>Task Status: </b>' + ev.status +' </span>';
