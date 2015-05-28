@@ -363,7 +363,7 @@ function renderEverything(firstTime) {
                 $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
             }
 
-            renderMembersUser();
+            renderAllMemberTabs();
             trackUpcomingEvent();
 
             //call this function if team is not in the edit mode 

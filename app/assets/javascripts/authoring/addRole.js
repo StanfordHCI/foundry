@@ -41,6 +41,7 @@
         if(e.keyCode === 13) {
             submitRole();
         } else if(isValidRole($input.val())) {
+            closeOpenPopovers();
             $indicator.addClass('spin-anim')
                 .attr('data-toggle', 'tooltip')
                 .tooltip('destroy').tooltip({
