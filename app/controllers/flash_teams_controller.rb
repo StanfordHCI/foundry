@@ -39,7 +39,7 @@ class FlashTeamsController < ApplicationController
     id = @flash_team[:id]
 
     # store in flash team
-    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
+    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"orig_id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
 
     if @flash_team.save
       #redirect_to @flash_team
@@ -76,7 +76,7 @@ class FlashTeamsController < ApplicationController
 	
 	    # Then create a copy from the original data
 	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
-	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"orig_id": ' + original.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
 	    #copy.status = original.original_status
 	    copy.status = createDupTeamStatus(copy.id, original.original_status)
 	    
@@ -95,24 +95,49 @@ class FlashTeamsController < ApplicationController
 
   
   def createDupTeamStatus(dup_id, orig_status)
-	original_status = JSON.parse(orig_status)
-	
-	# update the member invite links  
-	flash_team_members = original_status['flash_teams_json']['members']
-        
-    flash_team_members.each do |member|
-    	uniq = SecureRandom.uuid
-    	url = url_for :controller => 'members', :action => 'invited', :id => dup_id, :uniq => uniq
-    	
-    	member['uniq'] = uniq
-		member['invitation_link'] = url 		
-    end
-    
-    # update the google drive folder
-    original_status['flash_teams_json'].except!("folder")
+  	original_status = JSON.parse(orig_status)
+  	
+  	# update the member invite links  
+  	flash_team_members = original_status['flash_teams_json']['members']
+          
+      flash_team_members.each do |member|
+      	uniq = SecureRandom.uuid
+      	url = url_for :controller => 'members', :action => 'invited', :id => dup_id, :uniq => uniq
+      	
+      	member['uniq'] = uniq
+  		  member['invitation_link'] = url 		
+      end
+      
+      # update the google drive folder
+      original_status['flash_teams_json'].except!("folder")
 
-	return original_status.to_json
+  	return original_status.to_json
 
+  end
+
+  def duplicate_edit
+    if !session[:user].nil?
+      @user = session[:user]
+      
+      # Locate data from the original
+      original = FlashTeam.find(params[:id])
+  
+      # Then create a copy from the original data
+      copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
+      copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"orig_id": ' + original.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+      copy.status = original.status
+      
+      #copy.status = createDupTeamStatus(copy.id, original.original_status)
+      
+      copy.save
+      
+      # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
+  
+      # Redirect to the team
+      redirect_to edit_flash_team_path(copy)
+      #redirect_to :action => 'index'   
+
+    end #end if session not nil
   end
   
   def index
@@ -153,6 +178,13 @@ end
 				flash[:notice] = 'You cannot access this flash team.' 
 				redirect_to(flash_teams_path) and return 
 			end
+
+      team_json= JSON.parse(@flash_team.json)
+      if team_json['id'] != team_json['orig_id'] 
+        #flash[:notice] = 'This is a duplicate team.' 
+        @dup_edit_team = true
+        #INSERT DUP EDIT MODE CODE (OR SET VARIABLES HERE)
+      end
 		end
 			
   	else #else it is in worker view 
@@ -446,9 +478,10 @@ end
         flash_team_id = flash_team.id
         flash_team_json = JSON.parse(flash_team.json)
         author_name = flash_team_json["author"]
+        flash_team_orig_id = flash_team_json["orig_id"]
 
      respond_to do |format|
-      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}.to_json, status: :ok}
+      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :flash_team_orig_id => flash_team_orig_id, :author_name => author_name}.to_json, status: :ok}
     end
   end
 
@@ -868,7 +901,7 @@ end
     @flash_team_event = @flash_team_json['events'][@id_task]
     @flash_team_name = @flash_team_json['title']
     #tm = params[:task_member].split(',') role of recipient
-@task_member = params[:task_member]
+    @task_member = params[:task_member]
     @task_name = @flash_team_event['title']
     @project_overview = @flash_team_json['projectoverview']
     @task_description = @flash_team_event['notes']

@@ -1,4 +1,14 @@
 <div id="timeline-header">
+
+ <% if @dup_edit_team == true%>
+   <div class="alert span8" id="dup-edit-alert" style="margin-bottom: 1px;">
+      <!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
+      <p> 
+        <span id='dup-edit-alert-text'>You are editing a duplicated team.</span>
+      </p>
+    </div>
+ <% end %>
+
   
   <div class="alert alert-class" id="project-status-alert" style="margin-bottom: 5px; display:none">
     <button type="button" class="close" data-dismiss="alert">&times;</button>

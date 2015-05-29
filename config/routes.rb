@@ -84,6 +84,7 @@ Foundry::Application.routes.draw do
       get :task_portal
       get :settings
       get :duplicate
+      get :duplicate_edit
       post :settings
     end
   end

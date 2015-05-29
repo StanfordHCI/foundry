@@ -529,6 +529,7 @@ var renderChatbox = function(){
 var author_name; // save name of flash team author
 var team_name; // saves flash team name
 var team_id; // saves flash team id
+var team_orig_id; //saves flash team original id (useful to know source of duplicated teams)
 
 //returns author name, team name and team ID
 var getTeamInfo = function(){
@@ -540,6 +541,7 @@ var getTeamInfo = function(){
        author_name = data["author_name"];
        team_name = data["flash_team_name"]; 
        team_id =   data["flash_team_id"];
+       team_orig_id = data["flash_team_orig_id"];
     });
 };
 
