@@ -270,6 +270,12 @@ function renderCurrentFolderPills() {
 
 //Create the popover for each member. Allows you to edit and delete members. 
 function renderMemberPopovers(members) {
+
+    if(team_id != team_orig_id){
+        //disable the member popovers in dup edit mode
+        return;
+    }
+
     //Loop over each member in the members array 
     var len = members.length;
     for (var i=0;i<len;i++){
@@ -339,18 +345,30 @@ function renderMemberPopovers(members) {
         var newColor = "'"+member.color+"'";
 
         content += 'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
-        +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
+        +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>';
+        content += '<p>';
 
-         +'<p><button class="btn btn-primary" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
-         +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>      '
-         +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button> <br><br>'
+        // if(team_id != team_orig_id){
+        //      content += '<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button> <br><br>'
+        //     + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id 
+        //         + ')" href="' + invitation_link + '" target="_blank">'
+        //     + invitation_link
+        //     + '</a>';
+        // }else{
+            content +='<button class="btn btn-primary" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
+            +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>      '
+            +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button> <br><br>'
          
-        +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     <br>'
-        + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id 
-            + ')" href="' + invitation_link + '" target="_blank">'
-        + invitation_link
-        + '</a>'
-        +'</p></form>' 
+            +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     <br>'
+            + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id 
+                + ')" href="' + invitation_link + '" target="_blank">'
+            + invitation_link
+            + '</a>';
+        //}
+
+         
+
+        content +='</p></form>';
         +'</div>';
         
         //Create the popover, fill with the content above
