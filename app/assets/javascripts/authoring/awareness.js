@@ -359,11 +359,11 @@ function renderEverything(firstTime) {
                 $('#projectStatusText').html("The project is in progress.<br /><br />");
                 $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
             }else{
-                renderMembersUser();
+                renderAllMemberTabs();
                 $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
             }
 
-            renderMembersUser();
+            renderAllMemberTabs();
             trackUpcomingEvent();
 
             //call this function if team is not in the edit mode 

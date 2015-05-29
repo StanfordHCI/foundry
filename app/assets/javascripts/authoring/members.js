@@ -3,12 +3,16 @@
  *
  */
 
-
 var memberCounter = undefined;
 var colorToChange = "#ff0000";
 var current = undefined;
 var isUser = false;
 var memberType; 
+
+//Fixes 'sticky popover' issue when you blur window and popover freezes
+ $(window).blur(function() {
+    closeOpenPopovers();
+ });
 
 //WARNING: This has to be called once, and before any of the other colorBox functions!
 function colorBox() {
@@ -52,11 +56,6 @@ function renderMembersRequester() {
     var members = entryManager.getCurrentFolderChildren();
     renderCurrentFolderPills();
     renderMemberPopovers(members);
-    renderAllMemberTabs();
-};
-
-function renderMembersUser() {
-    var members = flashTeamsJSON.members;
     renderAllMemberTabs();
 };
 
@@ -189,14 +188,16 @@ function addPillDragFns($elem, $folderElems) {
             var entryId = $elem.attr("role-id");
             var destId = $mouseOverElem.attr("role-id");
             
-            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - Before', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
+            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - Before', 
+                new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
 
             entryManager.moveEntry(entryId, destId);
             $elem.remove();
             $mouseOverElem.removeClass("accepting");
             $mouseOverElem = undefined;
 
-            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - After', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
+            logActivity("addPillDragFns($elem, $folderElems)",'Drag Member to Folder - After', 
+                new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(entryId));
             
             renderCurrentFolderPills();
             updateStatus();
@@ -267,79 +268,59 @@ function renderCurrentFolderPills() {
     renderPills(currentFolder, entryManager.getCurrentFolderChildren());
 }
 
-
+//Create the popover for each member. Allows you to edit and delete members. 
 function renderMemberPopovers(members) {
+    //Loop over each member in the members array 
     var len = members.length;
     for (var i=0;i<len;i++){
         var member = members[i];
-        
         if(member.type === "folder") {
             continue;
         }
         
+        //Extract info from members
         var member_id = member.id;
         var member_name = member.role;
         var invitation_link = member.invitation_link;
         var member_type = member.type; 
         
+        //Default type is worker
         if(member_type==undefined){
 	        member_type = "worker";
         }
-        
-        //console.log("member_id: " + member_id + " member_type: " + member_type);
 
+        //Create the main content of the popover
         var content = '<form name="memberForm_' + member_id + '>'
         +'<div class="mForm_' + member_id + '">'
-        +'<div class="input-append" > ' 
-        +'<select class="category1Input" id="member' + member_id + '_category1">';
 
-        var newColor = "'"+member.color+"'";
-
-        var category1 = member.category1;
-        var category2 = member.category2;
-       
-        
-        // add the drop-down for two-tiered oDesk job posting categories on popover
-        for (var key in oDeskCategories) {
-            //console.log("category1");
-            var option = document.createElement("option");
-            if(key == category1){
-                content += '<option value="' + key + '" selected>' + key + '</option>';
-            } else {
-                content += '<option value="' + key + '">' + key + '</option>';
-            }
+        //Member type select menu
+        content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
+        if(member_type == "worker"){
+            content += '<option value="worker" selected>Worker</option>';
+        } else {
+            content += '<option value="worker">Worker</option>';
         }
-
-        //reload or build category2 based on previously selected category 1
-        content += '</select>';
-
-        if (category1 == "--oDesk Category--" || category1 == ""){
-            content += '<br><br><select class="category2Input" id="member' + member_id + '_category2" disabled="disabled">--oDesk Sub-Category--</select>';
-        } else{
-
-            content += '<br><br><select class="category2Input" id="member' + member_id + '_category2">'
-            for (var j=0; j<oDeskCategories[category1].length; j++) {
-                //console.log("category2");
-                var key2 = oDeskCategories[category1][j];
-
-                var option = document.createElement("option");
-                if(key2 == category2){
-                    content += '<option value="' + key2 + '" selected>' + key2 + '</option>';
-                }
-                else
-                    content += '<option value="' + key2 + '">' + key2 + '</option>';
-            }
-            content += '</select>';
+        if(member_type == "pc"){
+            content += '<option value="pc" selected>Project Coordinator</option>';
+        } else {
+            content += '<option value="pc">Project Coordinator </option>';
         }
+        if(member_type == "client"){
+            content += '<option value="client" selected>Client</option>';
+        } else {
+            content += '<option value="client">Client</option>';
+        }   
+        content += '</select><br />';
         
-        
-
-        content += '<br><br><input class="skillInput" id="addSkillInput_' + member_id + '" type="text" data-provide="typeahead" placeholder="New oDesk Skill" />'
-        +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id + '" onclick="addSkill(' + member_id + ');">+</button>'
+        //Member skills from odesk skill categories
+        +'<div class="input-append" > '
+        content += '<br><input class="skillInput" id="addSkillInput_' + member_id 
+            + '" type="text" data-provide="typeahead" placeholder="Add oDesk Skill" />'
+            +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id 
+            + '" onclick="addSkill(' + member_id + ');">+</button>'
         +'</div>'
         +'<br>Skills:'  
         +'<ul class="nav nav-pills" id="skillPills_' + member_id + '">';
-
         var skills_len = member.skills.length;
         for(var j=0;j<skills_len;j++){
             var memberSkillNumber = j+1;
@@ -347,60 +328,47 @@ function renderMemberPopovers(members) {
             content+='<li class="active" id="sPill_mem' + member_id + '_skill' + memberSkillNumber + '"><a>' + skillName 
             + '<div class="close" onclick="deleteSkill(' + member_id + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>';
         }
-
         content +='</ul>';
+
         
-		content += 'Member Type: <select name="membertype" id="member' + member_id + '_type">';
-		
-		if(member_type == "worker"){
-        	content += '<option value="worker" selected>Worker</option>';
-        } else{
-            content += '<option value="worker">Worker</option>';
-        }
-        
-        if(member_type == "pc"){
-        	content += '<option value="pc" selected>Project Coordinator</option>';
-        } else{
-            content += '<option value="pc">Project Coordinator </option>';
-        }
-        
-        if(member_type == "client"){
-        	content += '<option value="client" selected>Client</option>';
-        } else{
-            content += '<option value="client">Client</option>';
-        }
-                    
-        content += '</select><br />';
+
+        //NEW, ALEXANDRA START HERE
+        //content += '<input type="text" value="' + "member.skills" + '" placeholder="Add skill" id="skills" />';
+        //$("#skills").tagsinput();
+
+        var newColor = "'"+member.color+"'";
 
         content += 'Member Color: <input type="text" class="full-spectrum" id="color_' + member_id + '"/>'
         +'<p><script type="text/javascript"> initializeColorPicker(' + newColor +'); </script></p>'
 
-         +'<p><button class="btn btn-success" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
-         +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>     '
-         +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     '
-         +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button><br><br>'
+         +'<p><button class="btn btn-primary" type="button" onclick="saveMemberInfo(' + member_id + '); updateStatus();">Save</button>      '
+         +'<button class="btn btn-danger" type="button" onclick="confirmDeleteMember(' + member_id + ');">Delete</button>      '
+         +'<button class="btn btn-default" type="button" onclick="hideMemberPopover(' + member_id + ');">Cancel</button> <br><br>'
          
-        + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id + ')" href="' + invitation_link + '" target="_blank">'
+        +'<button class="btn btn-default" type="button" onclick="confirmReplaceMember(' + member_id + '); updateStatus();">Replace</button>     <br>'
+        + 'Invitation link: <a id="invitation_link_' + member_id + '" onclick="clickedMemInviteLink(' + member_id 
+            + ')" href="' + invitation_link + '" target="_blank">'
         + invitation_link
         + '</a>'
         +'</p></form>' 
         +'</div>';
         
+        //Create the popover, fill with the content above
         $("#mPill_" + member_id).popover('destroy');
-
         $("#mPill_" + member_id).popover({
             placement: "right",
             html: "true",
             class: "member",
             id: '"memberPopover' + member_id + '"',
             trigger: "click",
-            title: '<div data-pk="' + member_id + '" class="popover-mname">' + member_name + '</div><a href="#" class="edit-mname"><i class="icon-pencil"></i></a>',
+            title: '<div data-pk="' + member_id + '" class="popover-mname">' + member_name 
+                + '</div><a href="#" class="edit-mname"><i class="icon-pencil"></i></a>',
             content:  content,
             container: $("#member-container"),
             callback: function(){
-                logActivity("renderMemberPopovers(members)",'Clicked Member Pill to Show Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
+                logActivity("renderMemberPopovers(members)",'Clicked Member Pill to Show Popover', 
+                    new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(member_id));
 
-               //$("#member" + member_id + "_type").val(member_type);
                $(".skillInput").each(function () {
                 $(this).typeahead({source: oSkills})
             });  
@@ -410,16 +378,19 @@ function renderMemberPopovers(members) {
         $("#mPill_" + member_id).on('click', generateMemberPillClickHandlerFunction(member_id));
         $("#mPill_" + member_id).off('click', generateMemberPillClickHandlerFunction(member_id));
 
-        // append oDesk Skills input to popover
-        $(document).ready(function() {
-            pressEnterKeyToSubmit("#addSkillInput_" + member_id, "#addSkillButton_" + member_id);
-        });
+       
     }
+
 };
 
-function clickedMemInviteLink(mem_id){
-    logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+// append oDesk Skills input to popover
+        $(document).ready(function() {
+            pressEnterKeyToSubmit(".skillInput", ".addSkillButton");
+        });
 
+function clickedMemInviteLink(mem_id){
+    logActivity("clickedMemInviteLink(mem_id)", 'Clicked Member Invite Link', new Date().getTime(), 
+        current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
 }
 
 function generateMemberPillClickHandlerFunction(mem_id) {
@@ -428,15 +399,11 @@ function generateMemberPillClickHandlerFunction(mem_id) {
     };
 }
 
-function generateMemberCategoryChangeFunction(mem_id) {
-    return function() {
-        memberCategoryChange(mem_id);
-    }
-}
 
 function memberPillClick(mem_id) {
 
-    logActivity("memberPillClick(mem_id)", 'Clicked Member Pill', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
+    logActivity("memberPillClick(mem_id)", 'Clicked Member Pill', new Date().getTime(), 
+        current_user, chat_name, team_id, entryManager.getEntryById(mem_id));
 
     //Close all open popovers
     entryManager.eachMemberId(function(id) {
@@ -445,26 +412,8 @@ function memberPillClick(mem_id) {
         }
     });
     
-    $("#member" + mem_id + "_category1").off('change', generateMemberCategoryChangeFunction(mem_id));
-    $("#member" + mem_id + "_category1").on('change', generateMemberCategoryChangeFunction(mem_id));
 }
 
-function memberCategoryChange(mem_id) {
-    if ($("#member" + mem_id + "_category1").value === "--oDesk Category--") {
-        $("#member" + mem_id + "_category2").attr("disabled", "disabled");
-    } else {
-        $("#member" + mem_id + "_category2").removeAttr("disabled");
-        $("#member" + mem_id + "_category2").empty();
-
-        var category1Select = document.getElementById("member" + mem_id + "_category1");
-        var category1Name = category1Select.options[category1Select.selectedIndex].value;
-
-        for (var j = 0; j < oDeskCategories[category1Name].length; j++) {
-            var option = document.createElement("option");
-            $("#member" + mem_id + "_category2").append("<option>" + oDeskCategories[category1Name][j] + "</option>");
-        }
-    }
-}
 
 function newFolderObject(folderName, parentId) {
     return {
@@ -474,10 +423,9 @@ function newFolderObject(folderName, parentId) {
 
 function newMemberObject(memberName) {
     var color = colorBox.grabColor();
-    //return {"role":memberName, "id": memberCounter, "color":color, "skills":[], "category1":"", "category2":""};
     
-    //note from DR: for now i am setting the member type in the json as "worker" by default since the member popover doesn't load until after you add the role. If the role gets changed in the popover and the user presses the save button, it will update the json with the new member type
-    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", "skills":[], "category1":"", "category2":"", "seenDocQs": []};
+    return {"role":memberName, "id": generateMemberId(), "color":color, "type": "worker", 
+        "skills":[], "seenDocQs": []};
 };
 
 /**
@@ -497,7 +445,8 @@ function addFolder(folderName, parentId) {
     var folderObject = newFolderObject(folderName, parentId);
     entryManager.addEntry(folderObject);
 
-    logActivity("addFolder(folderName, parentId)",'Added Folder', new Date().getTime(), current_user, chat_name, team_id, folderObject);
+    logActivity("addFolder(folderName, parentId)",'Added Folder', new Date().getTime(), 
+        current_user, chat_name, team_id, folderObject);
     
     renderCurrentFolderPills();
     updateStatus();
@@ -538,16 +487,13 @@ function addMember() {
     
     //update event popovers to show the new member
     var events = flashTeamsJSON.events;
-   /* for(var i=0;i<events.length;i++){
-       drawPopover(events[i], true, false);
-    }*/
 
-   renderCurrentFolderPills();
-   // renderMemberPopovers(members);
-   logActivity("addMember()",'Added Member', new Date().getTime(), current_user, chat_name, team_id, member_obj);
+    renderCurrentFolderPills();
+    logActivity("addMember()",'Added Member', new Date().getTime(), 
+    current_user, chat_name, team_id, member_obj);
 
-   updateStatus();
-   inviteMember(member_obj.id);
+    updateStatus();
+    inviteMember(member_obj.id);
 };
 
 
@@ -564,17 +510,21 @@ function addSkill(memberId) {
     member.skills.push(skillName);
     var memberSkillNumber = member.skills.length;
 
-    logActivity("addSkill(memberId)",('Add Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("addSkill(memberId)",('Add Skill - skill name:' + skillName), new Date().getTime(), 
+        current_user, chat_name, team_id, member);
 
     
-    $("#skillPills_" + memberId).append('<li class="active" id="sPill_mem' + memberId + '_skill' + memberSkillNumber + '"><a>' + skillName 
-        + '<div class="close" onclick="deleteSkill(' + memberId + ', ' + memberSkillNumber + ', &#39' + skillName + '&#39)">  X</div></a></li>');
+    $("#skillPills_" + memberId).append('<li class="active" id="sPill_mem' + memberId + '_skill' 
+        + memberSkillNumber + '"><a>' + skillName 
+        + '<div class="close" onclick="deleteSkill(' + memberId + ', ' + memberSkillNumber + ', &#39' 
+        + skillName + '&#39)">  X</div></a></li>');
     $("#addSkillInput_" + memberId).val(this.placeholder);
 };
 
 function deleteSkill(memberId, pillId, skillName) {
 
-    logActivity("deleteSkill(memberId, pillId, skillName)",('Delete Skill - skill name:' + skillName), new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("deleteSkill(memberId, pillId, skillName)",('Delete Skill - skill name:' + skillName), 
+        new Date().getTime(), current_user, chat_name, team_id, member);
     //Remove skill pill
     $("#sPill_mem" + memberId + '_skill' + pillId).remove();
     //Update JSON
@@ -586,29 +536,6 @@ function deleteSkill(memberId, pillId, skillName) {
         }
     }
 };
-
-
-//NOTE FROM DR: I THINK WE CAN ERASE THIS B/C THERE IS ANOTHER ONE BELOW WITH SAME EXACT NAME (BUT CHECK THAT CODE IS THE SAME)
-//Saves info and updates popover, no need to update JSON, done by individual item elsewhere
-/*
-function saveMemberInfo(popId) {
-    var indexOfJSON = getMemberJSONIndex(popId);
-
-    flashTeamsJSON["members"][indexOfJSON].category1 = document.getElementById("member" + popId + "_category1").value;
-    flashTeamsJSON["members"][indexOfJSON].category2 = document.getElementById("member" + popId + "_category2").value;
-    
-    flashTeamsJSON["members"][indexOfJSON].type = document.getElementById("member" + popId + "_type").value;
-
-    var newColor = $("#color_" + popId).spectrum("get").toHexString();
-
-    updateMemberPillColor(newColor, popId);
-    renderMemberPillColor(popId);
-
-    $("#mPill_" + popId).popover("hide");
-    renderAllMemberLines();
-    renderMemberPopovers(flashTeamsJSON["members"]);
-};
-*/
 
 
 //Shows an alert asking to confirm delete member role
@@ -670,7 +597,8 @@ function deleteEntry(entryId) {
     $('#confirmAction').modal('hide');
     var entry = entryManager.getEntryById(entryId);
 
-    logActivity("deleteEntry(entryId)",'Delete Member', new Date().getTime(), current_user, chat_name, team_id, entry);
+    logActivity("deleteEntry(entryId)",'Delete Member', new Date().getTime(), 
+        current_user, chat_name, team_id, entry);
 
     if(entryManager.isMember(entry)) {
         // remove from members array with event object
@@ -701,8 +629,7 @@ function deleteEntry(entryId) {
 //Saves info and updates popover, no need to update JSON, done by individual item elsewhere
 function saveMemberInfo(memberId) {
     var member = entryManager.getEntryById(memberId);
-    member.category1 = document.getElementById("member" + memberId + "_category1").value;
-    member.category2 = document.getElementById("member" + memberId + "_category2").value;
+
     member.type = document.getElementById("member" + memberId + "_type").value;
     
     var newColor = $("#color_" + memberId).spectrum("get").toHexString();
@@ -714,12 +641,14 @@ function saveMemberInfo(memberId) {
     renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
     flashTeamsJSON['local_update'] = new Date().getTime();
-    logActivity("saveMemberInfo(memberId)",'Saved Member Info', new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("saveMemberInfo(memberId)",'Saved Member Info', new Date().getTime(), 
+        current_user, chat_name, team_id, member);
 };
 
 //Close the popover on a member to "cancel" the edit
 function hideMemberPopover(memberId) {
-    logActivity("hideMemberPopover(memberId)",'Closed Member Popover', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(memberId));
+    logActivity("hideMemberPopover(memberId)",'Closed Member Popover', new Date().getTime(), 
+        current_user, chat_name, team_id, entryManager.getEntryById(memberId));
     $("#mPill_" + memberId).popover("hide");
 }
 
@@ -739,7 +668,8 @@ function inviteMember(pillId) {
 function reInviteMember(pillId) {
     $('#confirmAction').modal('hide');
     
-    logActivity("reInviteMember(pillId)",'Reinvited Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
+    logActivity("reInviteMember(pillId)",'Reinvited Member', new Date().getTime(), 
+        current_user, chat_name, team_id, entryManager.getEntryById(pillId));
 
     var flash_team_id = $("#flash_team_id").val();
     var url = '/members/' + flash_team_id + '/reInvite';
@@ -760,8 +690,10 @@ function confirmReplaceMember(pillId) {
     label.innerHTML = "Replace Member?";
 
     var alertText = document.getElementById("confirmActionText");
-    alertText.innerHTML = "<b>Are you sure you want to replace " + memberToReplace + "? </b><br><font size = '2'>  The current " 
-                + memberToReplace + " will no longer have access to " + flashTeamsJSON["title"] + " and you will need to hire a new " + memberToReplace + ".</font>";
+    alertText.innerHTML = "<b>Are you sure you want to replace " + memberToReplace 
+        + "? </b><br><font size = '2'>  The current " 
+        + memberToReplace + " will no longer have access to " + flashTeamsJSON["title"] 
+        + " and you will need to hire a new " + memberToReplace + ".</font>";
 
     var deleteButton = document.getElementById("confirmButton");
     deleteButton.innerHTML = "Replace member";
@@ -770,7 +702,8 @@ function confirmReplaceMember(pillId) {
 
     //Calls reInviteMember function if user confirms the replace
     document.getElementById("confirmButton").onclick=function(){
-        logActivity("confirmReplaceMember(pillId)",'Confirmed Replace Member', new Date().getTime(), current_user, chat_name, team_id, entryManager.getEntryById(pillId));
+        logActivity("confirmReplaceMember(pillId)",'Confirmed Replace Member', new Date().getTime(), 
+            current_user, chat_name, team_id, entryManager.getEntryById(pillId));
         reInviteMember(pillId)
     };
 
@@ -872,7 +805,8 @@ function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
-    logActivity("updateRoleName(id, newValue)",'Updated Member Role Name', new Date().getTime(), current_user, chat_name, team_id, member);
+    logActivity("updateRoleName(id, newValue)",'Updated Member Role Name', new Date().getTime(), 
+        current_user, chat_name, team_id, member);
     flashTeamsJSON['local_update'] = new Date().getTime;
     updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);
