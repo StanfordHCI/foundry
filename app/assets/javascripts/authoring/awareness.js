@@ -42,6 +42,8 @@ var user_loaded_before_team_start = false;
 var window_visibility_state = null;
 var window_visibility_change = null;
 
+var chat_load_limit = 10;
+
 $(document).ready(function(){
     addCursor();
     cursor = timeline_svg.select(".cursor");
@@ -464,6 +466,10 @@ function listenForVisibilityChange(){
 // saves member object for current_user (undefined for author so we will set it to 'Author')
 var current_user;
 
+var message_html;
+var messageList;
+
+    
 //finds user name and sets current variable to user's index in array
 var renderChatbox = function(){
     var uniq_u=getParameterByName('uniq');
@@ -512,17 +518,19 @@ var renderChatbox = function(){
        // Set our initial online status.
 		setUserStatus(currentStatus);
 
-       myDataRef.on('child_added', function(snapshot) {
+        lastMessagesQuery = myDataRef.limit(chat_load_limit);
+        lastMessagesQuery.on('child_added', function(snapshot) {
+        //myDataRef.on('child_added', function(snapshot) {
                 var message = snapshot.val();
                 //console.log(snapshot);
                 //console.log(message);
                 //console.log("MESSAGE NAME: " + message["name"]);
 
                 displayChatMessage(message.name, message.uniq, message.role, message.date, message.text);
-                
+
                 name = message.name;
             });
-                   
+          
     });
 };
 

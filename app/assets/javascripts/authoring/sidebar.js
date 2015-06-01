@@ -224,6 +224,111 @@ function displayChatMessage(name, uniq, role, date, text) {
     $('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
 };
 
+function prependChatMessage(name, uniq, role, date, text) {
+    
+    if(name == undefined){
+        return;
+    }
+    
+    var message_date = new Date(date);
+    var dateform = message_date.toLocaleString();
+
+
+    //revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
+    //if(lastWriter!=name){
+        //lastMessage = (lastMessage+1)%2;
+      
+        var dateDiv = $('<div/>').addClass("date").text(dateform);
+        var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
+        var textDiv = $('<div/>', {"id": "m"+lastMessage, user: chat_name}).addClass("text").text(text);
+
+        var wrapperDiv = $('<div/>').addClass('message');
+      
+        var clearDiv = $('<div class="clear"></div>');
+      
+        // if(is_current_user_message) {
+        //   wrapperDiv.addClass('by-user');
+        //   dateDiv.addClass('m'+lastMessage);
+        // }
+      
+        wrapperDiv
+          .append(authorDiv)
+          .append(textDiv)
+          .append(clearDiv.clone());
+      
+        var messageFooterDiv = $('<div/>').addClass('message-footer');
+        messageFooterDiv
+          .append(authorDiv.clone().addClass('author')
+                    .removeClass('author-header'))
+          .append(dateDiv);
+        
+        wrapperDiv
+          .append(messageFooterDiv)
+          .append(clearDiv.clone());
+      
+        wrapperDiv.prependTo($('#messageList'));
+        
+    // } else{
+    //     var textP = $('<p/>').text(text);
+        
+    //     textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
+
+    //     $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
+    // }
+  
+    //lastWriter = name;
+    //lastDate = message_date;
+    //$('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
+};
+
+
+
+// Pagination for chat
+var i = 0; // Record variable.
+function moreMessages () { 
+    console.log('calling moreMessages');
+    i += chat_load_limit; // Record pagination updates. 
+    moreMessagesQuery = myDataRef; // Firebase reference.
+    moreMessagesQuery.on('value', function (snapshot) {
+      var data = snapshot.exportVal(); // Fetch all data from Firebase as an Object.
+      var keys = Object.keys(data).reverse(); // Due to the Keys are ordered from the oldest to the newest, it necessary to change its sequence in order to display Firebase data snapshots properly.
+      var total_keys = Object.keys(data).length;
+      var k = keys[i]; // Key from where to start counting. Be careful what Key you pick.
+      if (i < total_keys) { // Stop displaying messages when it reach the last one.
+        lastMessagesQuery = myDataRef.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
+        lastMessagesQuery.on('child_added', function (snapshot) {
+          var message = snapshot.val();
+          //$('<div/>').text(message.text).appendTo($('#messageList')).hide().fadeIn(1000); // Add set of messages (from the oldest to the newest) at the end of #messagesDiv.
+            prependChatMessage(message.name, message.uniq, message.role, message.date, message.text);
+
+        });
+      }  
+    });
+}
+
+
+//var message_html;
+//var messageList;
+// Load more messages when scroll reach the bottom.
+
+$('#messageList').scroll(function() { 
+    //message_html = $("#messageList").html();
+    //messageList = '<div id="messageList" style="height:589px">'+ message_html +'</div>';
+    //console.log('scrolling');
+//if ($('#messageList').scrollY == document.body.scrollHeight - $('#messageList').innerHeight) {
+if ($('#messageList').scrollTop() == 0) {
+   $('#messageList').children().first().addClass('messageList-first');
+  moreMessages();
+  //$('#messageList').first().before(messageList);
+    //$('#messageList').scrollTop($("#messageList").first().height());
+    $('#messageList').scrollTop($(".messageList-first").first().height());
+    // if ($('#messageList').length > 1) {
+    //     $('#messageList').last().remove();
+    // }  
+}
+}); 
+
+
 var chat_uniq;
 if(uniq != ""){
     chat_uniq = uniq;
