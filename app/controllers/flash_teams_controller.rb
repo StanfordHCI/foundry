@@ -915,12 +915,14 @@ end
   def send_edit_team_request
 
     @request_text = params[:editRequestText]
+    flash_team = FlashTeam.find(params[:id])
+    flash_team_name = flash_team.name
 
     respond_to do |format|
       format.json {render json: {:request_text => @request_text, :outcome => 'success'}.to_json, status: :ok}
     end
-    #render :inline => "<%= test %>"
-    #UserMailer.send_edit_team_request_email(@request_text).deliver
+
+    UserMailer.send_edit_team_request_email(flash_team_name, @request_text).deliver
 
   end
 
