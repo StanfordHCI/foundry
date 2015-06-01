@@ -911,4 +911,18 @@ end
       @member = Member.where(:uniq => @uniq, :email => @addresses[0], :email_confirmed => true)
     end
   end
+
+  def send_edit_team_request
+
+    @request_text = params[:editRequestText]
+
+    respond_to do |format|
+      format.json {render json: {:request_text => @request_text, :outcome => 'success'}.to_json, status: :ok}
+    end
+    #render :inline => "<%= test %>"
+    #UserMailer.send_edit_team_request_email(@request_text).deliver
+
+  end
+
+
 end

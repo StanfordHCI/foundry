@@ -79,3 +79,34 @@ $("#workerEditTeamBtn").click(function(){
     $('#workerRequestEdit').modal('show');
 
 });
+
+$("#requestEditSubmitBtn").click(function(){
+
+    //console.log($('#request-edit-form-text').val());
+
+    var edit_request_text = $('#request-edit-form-text').val();
+
+    console.log(edit_request_text);
+
+    var url = '/flash_teams/' + flash_team_id + '/send_edit_team_request';
+
+    var request = $.ajax({
+        url: url,
+        type: "post",
+        data: {editRequestText : edit_request_text }
+        }); //end var request
+       
+        request.done(function( data ) {
+
+            request_text = data["request_text"];
+            outcome = data["outcome"];
+
+            $("#requestEditText").html('request_text: ' + request_text + '<br /> outcome: ' + outcome);
+            //console.log(msg2);
+            //$("#requestEditText").html($('#request-edit-form-text').val() );
+            console.log('request form sent');
+            //$('#workerRequestEdit').modal('hide');
+        }); //end re
+
+});
+
