@@ -1,3 +1,4 @@
+
 $("#flashTeamPauseBtn").click(function(){
     
  	var bodyText = document.getElementById("confirmActionText");
@@ -72,3 +73,9 @@ function resumeFlashTeam(){
 
     logActivity("resumeFlashTeam() - After Update Status",'Save Edited Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }
+
+$("#workerEditTeamBtn").click(function(){
+
+    $('#workerRequestEdit').modal('show');
+
+});
