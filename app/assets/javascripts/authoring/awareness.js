@@ -1675,12 +1675,19 @@ var trackUpcomingEvent = function(){
             if (currentUserEvents.length == 0){
                 upcomingEvent = undefined;
 
-                //updateSidebarText(overallTime, color);
+                //overallTime = "You've completed all your tasks!";
+
+                //updateSidebarText("You've completed all your tasks!", "#3fb53f");
 
                 $("#project-status-text").html("You've completed all your tasks!");
                 $("#project-status-text").css("margin-bottom", "10px");
                 $("#project-status-text").css("color", "#3fb53f");
                 
+                $("#project-status-btn").css("display", "none");
+                $("#project-status-btn2").css("display", "none");
+                $("#project-status-alert").css("display", "none");
+                $("#project-status-alert-btn").css("display", "none");
+                $("#project-status-alert-btn2").css("display", "none");
                 //statusText.style("color", "#3fb53f");
                 //statusText.text("You've completed all your tasks!");
                 return;
