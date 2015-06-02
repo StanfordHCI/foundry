@@ -76,6 +76,16 @@ function resumeFlashTeam(){
 
 $("#workerEditTeamBtn").click(function(){
 
+    $('#request-edit-dropdown').val('-- SELECT REQUEST TYPE --');
+    $("#request-edit-dropdown").css('display','');
+    $("#requestEditSubmitBtn").css('display', '');
+    $("#request-edit-modal-cancel").html("Cancel");
+
+    var content = '<p>Please select which type of change you would like to make.</p>';
+    $('#request-edit-form-content').html(content);
+
+    $("#requestEditSubmitBtn").prop("disabled", true);
+
     $('#workerRequestEdit').modal('show');
 
 });
@@ -84,9 +94,37 @@ $("#requestEditSubmitBtn").click(function(){
 
     //console.log($('#request-edit-form-text').val());
 
-    var edit_request_text = $('#request-edit-form-text').val();
+    //var edit_request_text = $('#request-edit-form-text').val();
 
-    console.log(edit_request_text);
+    //console.log(edit_request_text);
+
+    var selected = $('#request-edit-dropdown').val();
+
+    var form_content = '<b>Type of Change: </b>' + selected + '<br /><br />';
+
+    if (selected == 'Add an Event'){
+        console.log('add');
+
+        form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
+                + '<br />'
+                + '<b>Duration: </b>' + $("#event-request-hours").val() + ' Hours  ' 
+                + $("#event-request-minutes").val() + ' Minutes <br />' 
+                + '<b>Description: </b>' + $("#event-request-description").val();
+    }
+    else if (selected == 'Edit an Event'){
+        console.log('edit');
+
+        form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
+                + '<br />'
+                + '<b>Description of changes to event: </b>' + $("#event-request-description").val();
+    }
+    else{
+        console.log('other');
+        form_content += '<b>Description of changes you would like to make to the team: </b>' + $('#request-edit-form-text').val();
+    }
+
+
+    var edit_request_text = form_content;
 
     var url = '/flash_teams/' + flash_team_id + '/send_edit_team_request';
 
@@ -97,8 +135,9 @@ $("#requestEditSubmitBtn").click(function(){
         }); //end var request
        
         request.done(function( data ) {
-
-            $("#requestEditText").html('Your request was sent to the project owner for review.');
+            $("#request-edit-dropdown").css('display','none');
+            $('#request-edit-form-content').html('Your request was sent to the project owner for review. <br /><br />' + edit_request_text );
+            //$("#requestEditText").html('Your request was sent to the project owner for review. <br />' + edit_request_text );
             $("#requestEditSubmitBtn").css('display', 'none');
             $("#request-edit-modal-cancel").html("Close");
 
@@ -109,6 +148,50 @@ $("#requestEditSubmitBtn").click(function(){
             //console.log('request form sent');
             //$('#workerRequestEdit').modal('hide');
         }); //end 
+
+});
+
+$('#request-edit-dropdown').change(function(){
+
+    var selected = $('#request-edit-dropdown').val();
+
+    console.log(selected);
+
+    var content; 
+
+    if (selected == '-- SELECT REQUEST TYPE --'){
+        console.log('select');
+        content = '<p>Please select which type of change you would like to make.</p>';
+        $("#requestEditSubmitBtn").prop("disabled", true);
+        
+    }
+    else if (selected == 'Add an Event'){
+        console.log('add');
+
+        content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Event Name"> <br />'
+                + 'Duration: <input type = "number" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
+                + '<input type = "number" id = "event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
+                + 'Description: <br /> <textarea class="input-block-level" rows="5" placeholder="Description of event" id="event-request-description"></textarea>';
+        
+        $("#requestEditSubmitBtn").prop("disabled", false);
+    }
+    else if (selected == 'Edit an Event'){
+        console.log('edit');
+
+        content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Name of Event to Change"> <br />'
+                + 'Description of changes to event: <br /> <textarea class="input-block-level" rows="5" placeholder="Describe what changes you would like to make to the event" id="event-request-description"></textarea>';
+        
+        $("#requestEditSubmitBtn").prop("disabled", false);
+    }
+    else{
+        console.log('other');
+        content = '<p>Description of changes you would like to make to the team:</p>'
+                +  '<textarea class="span6" rows="5" id="request-edit-form-text" placeholder="Describe what changes you would like to make to the team"></textarea>';
+        
+        $("#requestEditSubmitBtn").prop("disabled", false);
+    }
+
+    $('#request-edit-form-content').html(content);
 
 });
 
