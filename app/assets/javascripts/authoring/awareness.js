@@ -153,6 +153,7 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
     $("#flashTeamPauseBtn").css('display', '');
+    $("#workerEditTeamBtn").css('display', '');
   
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');

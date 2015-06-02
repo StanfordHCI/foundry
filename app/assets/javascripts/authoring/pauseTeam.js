@@ -98,15 +98,17 @@ $("#requestEditSubmitBtn").click(function(){
        
         request.done(function( data ) {
 
-            request_text = data["request_text"];
-            outcome = data["outcome"];
+            $("#requestEditText").html('Your request was sent to the project owner for review.');
+            $("#requestEditSubmitBtn").css('display', 'none');
+            $("#request-edit-modal-cancel").html("Close");
 
-            $("#requestEditText").html('request_text: ' + request_text + '<br /> outcome: ' + outcome);
-            //console.log(msg2);
-            //$("#requestEditText").html($('#request-edit-form-text').val() );
-            console.log('request form sent');
+            // request_text = data["request_text"];
+            // outcome = data["outcome"];
+            // $("#requestEditText").html('request_text: ' + request_text + '<br /> outcome: ' + outcome);
+
+            //console.log('request form sent');
             //$('#workerRequestEdit').modal('hide');
-        }); //end re
+        }); //end 
 
 });
 
