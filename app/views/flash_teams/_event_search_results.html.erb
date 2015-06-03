@@ -1,6 +1,15 @@
+<script>
+    eventObjects = <%= @events.to_json.html_safe %>
+    eventHash = {};
+    for(var i=0; i < eventObjects.length; i++ ){
+       eventHash[eventObjects[i].id] = eventObjects[i];
+    }
+</script>
 <% @events.each_with_index do |event, index| %>
-
-	<div data-hash="<%= @eventHashes[index] %>" class="event-block" draggable="true" ondragstart="dragEvent(event)" style="cursor:move;">
+    <script>
+        eventHash[<%= @eventHashes[index] %>] = event;
+    </script>
+    <div data-hash="<%= event["id"] %>" class="event-block" draggable="true" ondragstart="dragEvent(event)" style="cursor:move;">
 	
 		<div class="row-fluid">
 			<div class="span9">

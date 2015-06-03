@@ -39,7 +39,7 @@ var upcomingEvent;
 //Remove existing X-axis labels
 var numMins = -60;
 
-var timelineDiv = $('<div class="timeline"></div>');
+var timelineDiv = $('<div  ondrop="drop(event)" ondragover="allowDrop(event)" class="timeline"></div>');
 $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
 }).append(timelineDiv);
@@ -318,6 +318,8 @@ var timeline_svg = d3TimelineElem.append("svg")
           timeline.selection.svg.attr("y")
         ];
 
+        console.log("PointX= " + timeline.selection.svg.attr("x") + ", PointY=" + timeline.selection.svg.attr("y"));
+
         var duration = timeline.getRangeDuration(
             timeline.rangeStartMarker,
             timeline.rangeEndMarker
@@ -339,8 +341,8 @@ var timeline_svg = d3TimelineElem.append("svg")
       updateNumRows: function(numRows) {
         this.numRows = numRows;
         redrawTimeline();
-      },
-    },
+      }
+    }
   };
 })();
 

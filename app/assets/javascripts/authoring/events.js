@@ -374,18 +374,21 @@ function showDropDown(){
     });
 }
 
-function duplicateEvent(groupNumber, closeModal){
+function duplicateEvent(groupNumber, closeModal, objectToDuplicate){
     var task_id = getEventJSONIndex(groupNumber);
-    var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
+    var eventToDuplicate, snapPoint;
 
-    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
-    var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
-    
-    var y = eventToDuplicate["y"]; //keep event on same row as original event
-    //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
-    
-    var snapPoint = calcSnap(x,y); 
+    if (typeof objectToDuplicate === 'undefined'){
+        eventToDuplicate = flashTeamsJSON["events"][task_id];
+        var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 ));
+        var y = eventToDuplicate["y"]; //keep event on same row as original event
+        snapPoint = calcSnap(x,y);
+    }else{
+        eventToDuplicate = objectToDuplicate
+        snapPoint = calcSnap(objectToDuplicate["x"],objectToDuplicate["y"]);
+    }
+
 
     //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
     if(!checkWithinTimelineBounds(snapPoint)){ 

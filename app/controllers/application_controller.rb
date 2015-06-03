@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 	  end
 	  
 	  redirect_to(:controller => :users, :action => :login) and return unless session[:member]
-		  
+		  0
 	  if session[:member][:mem_type].nil? || session[:member][:mem_type] == "worker"
 		  	valid_user = false	
 	  elsif session[:member][:mem_type] == "author" || "pc" || "client"
@@ -23,5 +23,5 @@ class ApplicationController < ActionController::Base
 			valid_user = false
 	  end
  		valid_user	
-   end
+	end
 end

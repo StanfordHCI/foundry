@@ -58,10 +58,12 @@ function drop(ev) {
   var targetHash = ev.dataTransfer.getData('eventHash');
 
   //calculates mouse coordinates relative to timeline svg to draw dragged event in corresponding location
-  var mouseCoords = calcMouseCoords(ev); 
+  var mouseCoords = calcMouseCoords(ev);
 
-  //added createdragevent (and changed eventJSONId to eventJSONindex) here instead of compMember to test:
-  createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
+  //createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
+  eventHash[targetHash]["x"]  = mouseCoords[0];
+  eventHash[targetHash]["y"]  = mouseCoords[1];
+  duplicateEvent(targetHash, false, eventHash[targetHash]);
 
   //compares two members. Currently both are sample Member JSONs from MembersJSONArray, but should compared a team member from dragged Event and an existing team member in flash-team
   //compMember(MembersJSONArray[0], MembersJSONArray[2], mouseCoords, eventJSONindex); //TO BE CHANGED
@@ -69,20 +71,17 @@ function drop(ev) {
 
 /* Calculates mouse coordinates relative to timeline svg so Event block can be drawn in correct spot*/
 function calcMouseCoords(event) {
-  var timelineX = document.getElementById("timeline-container").offsetLeft;
-  var timelineY = document.getElementById("timeline-container").offsetTop;
+    var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
+    var timelineScrollY = document.getElementById("timeline-container").scrollTop;
 
-  var timelineScrollX = document.getElementById("timeline-container").scrollLeft;
-  var timelineScrollY = document.getElementById("timeline-container").scrollTop;
+    var x = event.pageX - $('.timeline-svg').offset().left + timelineScrollX;
 
-  var absoluteX = event.pageX+timelineScrollX;
-  var absoluteY = event.pageY+timelineScrollY;
 
-  var svgpointX = absoluteX - timelineX;
-  var svgpointY = absoluteY - timelineY;
+    var y = event.pageY - $('.timeline-svg').offset().top + timelineScrollY;
 
-  var svgpoint = [svgpointX, svgpointY];
-  return svgpoint;
+    var svgpoint = [x, y];
+
+    return svgpoint;
 }
 
 /* Creates event block on timeline with according pop up information*/
