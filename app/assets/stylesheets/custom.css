@@ -200,3 +200,8 @@ in flash_teams.css.scss? */
     font-weight: bold;
     font-size: 12px;
 }
+
+
+.request-change-link{
+  padding-bottom: 8px;
+}

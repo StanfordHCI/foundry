@@ -74,49 +74,86 @@ function resumeFlashTeam(){
     logActivity("resumeFlashTeam() - After Update Status",'Save Edited Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 }
 
+// $("#workerEditTeamBtn").click(function(){
+
+//     $('#request-edit-dropdown').val('-- SELECT REQUEST TYPE --');
+//     $("#request-edit-dropdown").css('display','');
+//     $("#requestEditSubmitBtn").css('display', '');
+//     $("#request-edit-modal-cancel").html("Cancel");
+
+//     var content = '<p>Please select which type of change you would like to make.</p>';
+//     $('#request-edit-form-content').html(content);
+
+//     $("#requestEditSubmitBtn").prop("disabled", true);
+
+//     $('#workerRequestEdit').modal('show');
+
+// });
+
+// $("#request-change-task-not-ready").click(function(){
+
+//     $('#request-edit-dropdown').val('-- SELECT REQUEST TYPE --');
+//     $("#request-edit-dropdown").css('display','');
+//     $("#requestEditSubmitBtn").css('display', '');
+//     $("#request-edit-modal-cancel").html("Cancel");
+
+//     var content = '<p>Please select which type of change you would like to make.</p>';
+//     $('#request-edit-form-content').html(content);
+
+//     $("#requestEditSubmitBtn").prop("disabled", true);
+
+//     $('#workerRequestEdit').modal('show');
+
+// });
+
 $("#workerEditTeamBtn").click(function(){
-
-    $('#request-edit-dropdown').val('-- SELECT REQUEST TYPE --');
-    $("#request-edit-dropdown").css('display','');
-    $("#requestEditSubmitBtn").css('display', '');
-    $("#request-edit-modal-cancel").html("Cancel");
-
-    var content = '<p>Please select which type of change you would like to make.</p>';
-    $('#request-edit-form-content').html(content);
-
-    $("#requestEditSubmitBtn").prop("disabled", true);
-
-    $('#workerRequestEdit').modal('show');
-
+    updateRequestChangeModal('-- SELECT REQUEST TYPE --');
 });
 
+$("#request-change-task-not-ready").click(function(){
+    updateRequestChangeModal('Task Not Ready');
+});
+
+$("#request-change-edit-task").click(function(){
+    updateRequestChangeModal('Edit an Event');
+});
+
+$("#request-change-more-time").click(function(){
+    updateRequestChangeModal('Need More Time');
+});
+
+
 $("#requestEditSubmitBtn").click(function(){
-
-    //console.log($('#request-edit-form-text').val());
-
-    //var edit_request_text = $('#request-edit-form-text').val();
-
-    //console.log(edit_request_text);
 
     var selected = $('#request-edit-dropdown').val();
 
     var form_content = '<b>Type of Change: </b>' + selected + '<br /><br />';
 
     if (selected == 'Add an Event'){
-        console.log('add');
 
         form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Duration: </b>' + $("#event-request-hours").val() + ' Hours  ' 
                 + $("#event-request-minutes").val() + ' Minutes <br />' 
                 + '<b>Description: </b>' + $("#event-request-description").val();
-    }
-    else if (selected == 'Edit an Event'){
+    }else if (selected == 'Edit an Event'){
         console.log('edit');
 
         form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of changes to event: </b>' + $("#event-request-description").val();
+    }else if (selected == 'Task Not Ready'){
+        console.log('edit');
+
+        form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
+                + '<br />'
+                + '<b>Description of why task is not ready and changes needed: </b>' + $("#event-request-description").val();
+    }else if (selected == 'Need More Time'){
+        console.log('edit');
+
+        form_content += '<b>Event Name: </b>' + $("#event-request-name").val() 
+                + '<br />'
+                + '<b>Description of how much more time you need and why: </b>' + $("#event-request-description").val();
     }
     else{
         console.log('other');
@@ -155,36 +192,45 @@ $('#request-edit-dropdown').change(function(){
 
     var selected = $('#request-edit-dropdown').val();
 
-    console.log(selected);
+    updateRequestChangeModal(selected);
+});
+
+function updateRequestChangeModal(selected){
 
     var content; 
 
+    $('#request-edit-dropdown').val(selected);
+
     if (selected == '-- SELECT REQUEST TYPE --'){
-        console.log('select');
         content = '<p>Please select which type of change you would like to make.</p>';
         $("#requestEditSubmitBtn").prop("disabled", true);
         
     }
     else if (selected == 'Add an Event'){
-        console.log('add');
-
         content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Event Name"> <br />'
                 + 'Duration: <input type = "number" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
                 + '<input type = "number" id = "event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
                 + 'Description: <br /> <textarea class="input-block-level" rows="5" placeholder="Description of event" id="event-request-description"></textarea>';
         
         $("#requestEditSubmitBtn").prop("disabled", false);
+    }else if (selected == 'Task Not Ready'){
+        content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Name of Event to Change"> <br />'
+                + 'Description of why task is not ready and changes needed: <br /> <textarea class="input-block-level" rows="5" placeholder="Describe why the task is not ready to be started and what changes need to be made to the task or workflow" id="event-request-description"></textarea>';
+        
+        $("#requestEditSubmitBtn").prop("disabled", false);
+    }else if (selected == 'Need More Time'){
+        content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Name of Event to Change"> <br />'
+                + 'Description of how much more time you need and why: <br /> <textarea class="input-block-level" rows="5" placeholder="Describe how much more time you need to complete the task and why" id="event-request-description"></textarea>';
+        
+        $("#requestEditSubmitBtn").prop("disabled", false);
     }
     else if (selected == 'Edit an Event'){
-        console.log('edit');
-
         content = 'Event Name: <input type="text" class="input-xlarge" id="event-request-name" placeholder="Name of Event to Change"> <br />'
                 + 'Description of changes to event: <br /> <textarea class="input-block-level" rows="5" placeholder="Describe what changes you would like to make to the event" id="event-request-description"></textarea>';
         
         $("#requestEditSubmitBtn").prop("disabled", false);
     }
     else{
-        console.log('other');
         content = '<p>Description of changes you would like to make to the team:</p>'
                 +  '<textarea class="span6" rows="5" id="request-edit-form-text" placeholder="Describe what changes you would like to make to the team"></textarea>';
         
@@ -193,5 +239,9 @@ $('#request-edit-dropdown').change(function(){
 
     $('#request-edit-form-content').html(content);
 
-});
+    $("#request-edit-dropdown").css('display','');
+    $("#requestEditSubmitBtn").css('display', '');
+    $("#request-edit-modal-cancel").html("Cancel");
+    $('#workerRequestEdit').modal('show');
+}
 
