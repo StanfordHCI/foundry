@@ -146,6 +146,7 @@ $("#requestEditSubmitBtn").click(function(){
         }); //end var request
        
         request.done(function( data ) {
+            $("#request-edit-help-block").css('display','none');
             $("#request-edit-dropdown").css('display','none');
             $('#request-edit-form-content').html('Your request was sent to the project owner for review. <br /><br />' + edit_request_text );
             $("#requestEditSubmitBtn").css('display', 'none');
@@ -208,6 +209,7 @@ function updateRequestChangeModal(selected){
     $("#requestEditSubmitBtn").prop("disabled", disabled);
     $('#request-edit-form-content').html(content);
 
+    $("#request-edit-help-block").css('display','');
     $("#request-edit-dropdown").css('display','');
     $("#requestEditSubmitBtn").css('display', '');
     $("#request-edit-modal-cancel").html("Cancel");
