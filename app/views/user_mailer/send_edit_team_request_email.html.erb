@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h3>Requested change to the <%= @flash_team_name %> team </h3>
+    <p>
+      The change request below was submitted by a member of the <%= @flash_team_name %> team.
+    </p>
+
+    <p>
+      <%= @request_text.html_safe %>
+    </p>
+
+    <p> Sincerely, <br />
+	    The Foundry Team 
+    </p>
+    
+  </body>
+</html>

@@ -153,6 +153,7 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
     $("#flashTeamPauseBtn").css('display', '');
+    $("#workerEditTeamBtn").css('display', '');
   
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
@@ -343,6 +344,7 @@ function renderEverything(firstTime) {
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
+            $("#workerEditTeamBtn").css('display',''); 
             
             if(flashTeamsJSON["paused"]){
                 $("#flashTeamResumeBtn").css('display','');
