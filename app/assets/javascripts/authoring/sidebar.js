@@ -144,6 +144,7 @@ $('#sendChatButton').click(sendChatMessage);
 
 var lastMessage = 0;
 var lastWriter;
+var lastDate;
 
 function displayChatMessage(name, uniq, role, date, text) {
     
@@ -179,7 +180,7 @@ function displayChatMessage(name, uniq, role, date, text) {
 
 	//revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
     if(lastWriter!=name){
-        lastMessage = (lastMessage+1)%2;
+        lastMessage = (lastMessage+1)%2 + diff;
       
         var dateDiv = $('<div/>').addClass("date").text(dateform);
         var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
@@ -192,6 +193,9 @@ function displayChatMessage(name, uniq, role, date, text) {
         if(is_current_user_message) {
           wrapperDiv.addClass('by-user');
           dateDiv.addClass('m'+lastMessage);
+        }
+        else{
+          dateDiv.addClass('o'+lastMessage);  
         }
       
         wrapperDiv
@@ -217,6 +221,7 @@ function displayChatMessage(name, uniq, role, date, text) {
         textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
 
         $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
+        $('.date.o' + lastMessage).text(dateform);
     }
   
     lastWriter = name;
