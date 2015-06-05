@@ -17,7 +17,6 @@
 
   <% end %>
 
-
     <div id = 'project-status-text-div' style="margin-bottom: 25px;">
 
           <p id = 'project-status-text'></p>
@@ -25,6 +24,14 @@
           <button class="btn project-status-btn btn-block btn-default" id="project-status-btn" style="display: none">Project Status Button</button>
           <button class="btn project-status-btn btn-block btn-default" id="project-status-btn2" style="display: none">Project Status Button</button>
     </div>
+
+    <% if @in_expert_view && @author_runtime != false %>
+       <div id = 'request-change-div' style="margin-bottom: 25px;">
+            <p class ='request-change-link'><a id="request-change-task-not-ready">A task isn't ready to start</a></p> 
+            <p class ='request-change-link'><a id="request-change-edit-task">I want to edit a task</a></p>
+            <p class ='request-change-link'><a id="request-change-more-time">I need more time</a></p>
+      </div>
+    <% end %>
 
 
     
