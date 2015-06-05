@@ -4,17 +4,16 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Edit team request for the <%= @flash_team_name %> project </h1>
-    
+    <h3>Requested change to the <%= @flash_team_name %> team </h3>
+        
     <p>Hi, </p>
     
     <p>
-      A worker has submitted a request to make a change to the team.
+      The change request below was submitted for the <%= @flash_team_name %> team.
     </p>
 
-    <p>Request Text: <br />
-    <%= @request_text.html_safe %>
-
+    <p>
+      <%= @request_text.html_safe %>
     </p>
 
     <p> Sincerely, <br />
