@@ -195,8 +195,8 @@ function updateRequestChangeModal(selected){
                 + 'Description of how much more time you need and why: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe how much more time you need to complete the task and why" id="event-request-description"></textarea>';
         disabled = false;
     }
-    else if (selected == 'Edit an Event'){
-        content = 'Event Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Event to Change"> <br />'
+    else if (selected == 'Edit a Task'){
+        content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of changes to task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what changes you would like to make to the task" id="event-request-description"></textarea>';
         disabled = false;
     }
