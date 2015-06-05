@@ -122,7 +122,7 @@ $("#requestEditSubmitBtn").click(function(){
     }else if (selected == 'Task Not Ready'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
-                + '<b>Description of why task is not ready and changes needed: </b>' + $("#event-request-description").val();
+                + '<b>Description of why task is not ready and the requested changes: </b>' + $("#event-request-description").val();
     }else if (selected == 'Need More Time'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
@@ -186,7 +186,7 @@ function updateRequestChangeModal(selected){
         disabled = false;
     }else if (selected == 'Task Not Ready'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
-                + 'Description of why task is not ready and changes needed: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe why the task is not ready to be started and what changes need to be made to the task or workflow" id="event-request-description"></textarea>';
+                + 'Description of why task is not ready and the requested changes: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe why the task is not ready to be started and what changes need to be made to the task or workflow" id="event-request-description"></textarea>';
         
         disabled = false; 
     }else if (selected == 'Need More Time'){

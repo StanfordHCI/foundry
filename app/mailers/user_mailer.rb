@@ -128,7 +128,7 @@ class UserMailer < ActionMailer::Base
     @flash_team_name = flash_team_name
     @request_text = request_text
               
-    mail(:to => ENV['DEFAULT_EMAIL'], :subject => 'A worker has requested a change to the ' + @flash_team_name + ' project')
+    mail(:to => ENV['DEFAULT_EMAIL'], :subject => 'Requested change to the ' + @flash_team_name + ' project')
   end
 
   
