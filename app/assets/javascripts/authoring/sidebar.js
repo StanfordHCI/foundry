@@ -192,11 +192,9 @@ function displayChatMessage(name, uniq, role, date, text) {
       
         if(is_current_user_message) {
           wrapperDiv.addClass('by-user');
-          dateDiv.addClass('m'+lastMessage);
         }
-        else{
-          dateDiv.addClass('o'+lastMessage);  
-        }
+        
+        dateDiv.addClass('m'+lastMessage);
       
         wrapperDiv
           .append(authorDiv)
@@ -220,8 +218,7 @@ function displayChatMessage(name, uniq, role, date, text) {
         
         textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
 
-        $('.date.m' + lastMessage).text(dateform);  // this date isn't updated
-        $('.date.o' + lastMessage).text(dateform);
+        $('.date.m' + lastMessage).text(dateform);  
     }
   
     lastWriter = name;
