@@ -80,6 +80,7 @@ Foundry::Application.routes.draw do
       post :get_team_info
       post :delayed_task_finished_email
       post :create
+      post :send_edit_team_request
       #get :hire_form
       get :task_portal
       get :settings

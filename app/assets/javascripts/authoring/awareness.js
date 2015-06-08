@@ -155,6 +155,7 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
     $("#flashTeamPauseBtn").css('display', '');
+    $("#workerEditTeamBtn").css('display', '');
   
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
@@ -345,6 +346,7 @@ function renderEverything(firstTime) {
             $("#flashTeamStartBtn").attr("disabled", "disabled");
             $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above 
             $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above 
+            $("#workerEditTeamBtn").css('display',''); 
             
             if(flashTeamsJSON["paused"]){
                 $("#flashTeamResumeBtn").css('display','');
@@ -1683,12 +1685,19 @@ var trackUpcomingEvent = function(){
             if (currentUserEvents.length == 0){
                 upcomingEvent = undefined;
 
-                //updateSidebarText(overallTime, color);
+                //overallTime = "You've completed all your tasks!";
+
+                //updateSidebarText("You've completed all your tasks!", "#3fb53f");
 
                 $("#project-status-text").html("You've completed all your tasks!");
                 $("#project-status-text").css("margin-bottom", "10px");
                 $("#project-status-text").css("color", "#3fb53f");
                 
+                $("#project-status-btn").css("display", "none");
+                $("#project-status-btn2").css("display", "none");
+                $("#project-status-alert").css("display", "none");
+                $("#project-status-alert-btn").css("display", "none");
+                $("#project-status-alert-btn2").css("display", "none");
                 //statusText.style("color", "#3fb53f");
                 //statusText.text("You've completed all your tasks!");
                 return;

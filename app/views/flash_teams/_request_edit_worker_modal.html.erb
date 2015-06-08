@@ -1,0 +1,29 @@
+<!-- Request edit modal (pops up when worker wants to propose a change to the team) -->
+		<div id="workerRequestEdit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="Request Edit" aria-hidden="true">
+  			<div class="modal-header">
+    			<button type="button" class="close request-edit-modal-cancel" data-dismiss="modal" aria-hidden="true">×</button>
+    			<h3 id="requestEditLabel">Request a Change</h3>
+  			</div>
+  			<div id = "requestEditText" class="modal-body">
+          <p id='request-edit-help-block'><em><span class="help-block">Your request will get sent to the project owner for review.</span></em></p>
+
+          <select id='request-edit-dropdown'>
+              <option>-- SELECT REQUEST TYPE -- </option>
+              <option>Add a Task</option>
+              <option>Edit a Task</option>
+              <option>Task Not Ready</option>
+              <option>Need More Time</option>
+              <option>Other</option>
+          </select>
+
+          <div id="request-edit-form-content">
+            <p>Please select which type of change you would like to make.</p>
+          </div>
+
+  			</div>
+  			<div class="modal-footer">
+    			<button class="btn request-edit-modal-cancel" id="request-edit-modal-cancel" data-dismiss="modal" aria-hidden="true" >Cancel</button> 
+    			<button id= "requestEditSubmitBtn" class="btn btn-success">Submit Request</button>
+          <!-- <button id= "confirmButton" class="btn btn-danger" ></button> -->
+  			</div>
+		</div>
