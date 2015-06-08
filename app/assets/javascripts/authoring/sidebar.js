@@ -287,6 +287,72 @@ function prependChatMessage(name, uniq, role, date, text) {
     //$('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
 };
 
+// var lastWriter_prep;
+// function prependChatMessage(name, uniq, role, date, text) {
+    
+//     if(name == undefined){
+//         return;
+//     }
+
+//     // true if the message was sent by the current user
+//     var is_current_user_message = (current_user == 'Author' && role == 'Author') ||
+//                                   (current_user.uniq == uniq);
+    
+//     var message_date = new Date(date);
+//     var dateform = message_date.toLocaleString();
+
+//     // diff in milliseconds 
+//     var diff = Math.abs(new Date() - message_date);
+
+
+//     //revise condition to include OR if timestamp of last message (e.g., lastDate) was over 10 minutes ago
+//     //if(lastWriter_prep!=name){
+//         lastMessage = (lastMessage+1)%2 + diff;
+      
+//         var dateDiv = $('<div/>').addClass("date").text(dateform);
+//         var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
+//         var textDiv = $('<div/>', {"id": "m"+lastMessage, user: chat_name}).addClass("text").text(text);
+
+//         var wrapperDiv = $('<div/>').addClass('message');
+      
+//         var clearDiv = $('<div class="clear"></div>');
+      
+//         if(is_current_user_message) {
+//           wrapperDiv.addClass('by-user');
+          
+//         }
+
+//         dateDiv.addClass('m'+lastMessage);
+      
+//         wrapperDiv
+//           .append(authorDiv)
+//           .append(textDiv)
+//           .append(clearDiv.clone());
+      
+//         var messageFooterDiv = $('<div/>').addClass('message-footer');
+//         messageFooterDiv
+//           .append(authorDiv.clone().addClass('author')
+//                     .removeClass('author-header'))
+//           .append(dateDiv);
+        
+//         wrapperDiv
+//           .append(messageFooterDiv)
+//           .append(clearDiv.clone());
+      
+//         wrapperDiv.prependTo($('#messageList'));
+        
+//     // } else{
+//     //     var textP = $('<p/>').text(text);
+        
+//     //     textP.prependTo($('#messageList div[user="' + chat_name + '"]').first());
+
+//     //     //$('.date.m' + lastMessage).text(dateform);  // this date isn't updated
+//     // }
+  
+//     // lastWriter_prep = name;
+//     //lastDate = message_date;
+//     //$('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
+// };
 
 
 // Pagination for chat
@@ -301,8 +367,8 @@ function moreMessages () {
       var total_keys = Object.keys(data).length;
       var k = keys[i]; // Key from where to start counting. Be careful what Key you pick.
       if (i < total_keys) { // Stop displaying messages when it reach the last one.
-        //lastMessagesQuery = myDataRef.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
-        lastMessagesQuery = myDataRef.endAt(null, k).limit(8);
+        lastMessagesQuery = moreMessagesQuery.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
+        //lastMessagesQuery = myDataRef.endAt(null, k).limit(8);
         lastMessagesQuery.on('child_added', function (snapshot) {
           var message = snapshot.val();
           //$('<div/>').text(message.text).appendTo($('#messageList')).hide().fadeIn(1000); // Add set of messages (from the oldest to the newest) at the end of #messagesDiv.
