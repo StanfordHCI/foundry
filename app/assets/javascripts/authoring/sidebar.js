@@ -144,7 +144,6 @@ $('#sendChatButton').click(sendChatMessage);
 
 var lastMessage = 0;
 var lastWriter;
-var lastDate;
 
 function displayChatMessage(name, uniq, role, date, text) {
     
@@ -222,7 +221,6 @@ function displayChatMessage(name, uniq, role, date, text) {
     }
   
     lastWriter = name;
-    lastDate = message_date;
     $('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight;
 };
 
