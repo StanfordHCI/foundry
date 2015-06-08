@@ -229,6 +229,10 @@ function prependChatMessage(name, uniq, role, date, text) {
     if(name == undefined){
         return;
     }
+
+    // true if the message was sent by the current user
+    var is_current_user_message = (current_user == 'Author' && role == 'Author') ||
+                                  (current_user.uniq == uniq);
     
     var message_date = new Date(date);
     var dateform = message_date.toLocaleString();
@@ -246,10 +250,12 @@ function prependChatMessage(name, uniq, role, date, text) {
       
         var clearDiv = $('<div class="clear"></div>');
       
-        // if(is_current_user_message) {
-        //   wrapperDiv.addClass('by-user');
-        //   dateDiv.addClass('m'+lastMessage);
-        // }
+        if(is_current_user_message) {
+          wrapperDiv.addClass('by-user');
+          
+        }
+
+        dateDiv.addClass('m'+lastMessage);
       
         wrapperDiv
           .append(authorDiv)
@@ -295,7 +301,8 @@ function moreMessages () {
       var total_keys = Object.keys(data).length;
       var k = keys[i]; // Key from where to start counting. Be careful what Key you pick.
       if (i < total_keys) { // Stop displaying messages when it reach the last one.
-        lastMessagesQuery = myDataRef.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
+        //lastMessagesQuery = myDataRef.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
+        lastMessagesQuery = myDataRef.endAt(null, k).limit(8);
         lastMessagesQuery.on('child_added', function (snapshot) {
           var message = snapshot.val();
           //$('<div/>').text(message.text).appendTo($('#messageList')).hide().fadeIn(1000); // Add set of messages (from the oldest to the newest) at the end of #messagesDiv.
@@ -317,11 +324,17 @@ $('#messageList').scroll(function() {
     //console.log('scrolling');
 //if ($('#messageList').scrollY == document.body.scrollHeight - $('#messageList').innerHeight) {
 if ($('#messageList').scrollTop() == 0) {
+   var scrollHeight = $('#messageList')[0].scrollHeight;
    $('#messageList').children().first().addClass('messageList-first');
   moreMessages();
   //$('#messageList').first().before(messageList);
     //$('#messageList').scrollTop($("#messageList").first().height());
-    $('#messageList').scrollTop($(".messageList-first").first().height());
+    $('#messageList')[0].scrollTop = $('#messageList')[0].scrollHeight - scrollHeight;
+    
+
+    //$('#messageList').scrollTop($(".messageList-first").first().height());
+    
+
     // if ($('#messageList').length > 1) {
     //     $('#messageList').last().remove();
     // }  
