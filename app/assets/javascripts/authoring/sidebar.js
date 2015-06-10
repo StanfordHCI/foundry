@@ -272,7 +272,7 @@ function prependChatMessage(name, uniq, role, date, text) {
           .append(messageFooterDiv)
           .append(clearDiv.clone());
       
-        wrapperDiv.prependTo($('#messageList'));
+        wrapperDiv.appendTo($('#messageList'));
         
     // } else{
     //     var textP = $('<p/>').text(text);
@@ -364,11 +364,14 @@ function moreMessages () {
     moreMessagesQuery.on('value', function (snapshot) {
       var data = snapshot.exportVal(); // Fetch all data from Firebase as an Object.
       var keys = Object.keys(data).reverse(); // Due to the Keys are ordered from the oldest to the newest, it necessary to change its sequence in order to display Firebase data snapshots properly.
+      //console.log(keys);
+      //var keys = Object.keys(data); 
       var total_keys = Object.keys(data).length;
       var k = keys[i]; // Key from where to start counting. Be careful what Key you pick.
       if (i < total_keys) { // Stop displaying messages when it reach the last one.
         lastMessagesQuery = moreMessagesQuery.endAt(null, k).limit(chat_load_limit); // Messages from a Key to the oldest.
         //lastMessagesQuery = myDataRef.endAt(null, k).limit(8);
+        //lastMessagesQuery = moreMessagesQuery.startAt(null, k).limit(chat_load_limit); 
         lastMessagesQuery.on('child_added', function (snapshot) {
           var message = snapshot.val();
           //$('<div/>').text(message.text).appendTo($('#messageList')).hide().fadeIn(1000); // Add set of messages (from the oldest to the newest) at the end of #messagesDiv.
