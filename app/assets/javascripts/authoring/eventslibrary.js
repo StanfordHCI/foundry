@@ -63,6 +63,7 @@ function drop(ev) {
   //createDragEvent(mouseCoords[0], mouseCoords[1], targetHash);
   eventHash[targetHash]["x"]  = mouseCoords[0];
   eventHash[targetHash]["y"]  = mouseCoords[1];
+  eventHash[targetHash]["members"] = [];
   duplicateEvent(targetHash, false, eventHash[targetHash]);
 
   //compares two members. Currently both are sample Member JSONs from MembersJSONArray, but should compared a team member from dragged Event and an existing team member in flash-team

@@ -7,7 +7,7 @@
 </script>
 <% @events.each_with_index do |event, index| %>
     <script>
-        eventHash[<%= @eventHashes[index] %>] = event;
+        eventHash["<%= @eventHashes[index] %>"] = event;
     </script>
     <div data-hash="<%= event["id"] %>" class="event-block" draggable="true" ondragstart="dragEvent(event)" style="cursor:move;">
 	
