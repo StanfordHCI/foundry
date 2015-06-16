@@ -1666,6 +1666,9 @@ var trackUpcomingEvent = function(){
 
         currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
         
+        if (currentUserEvents.length == 0){
+            return;
+        }
 
         var ev = flashTeamsJSON["events"][getEventJSONIndex(currentUserEvents[0].id)];
         upcomingEvent = ev.id;
