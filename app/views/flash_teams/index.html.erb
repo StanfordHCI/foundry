@@ -10,7 +10,7 @@
 
 <meta charset="utf-8">
 <div class="row-fluid">
-  <h1 class="span9">Flash Teams Library</h1>
+  <h2 class="span9">Flash Teams Library</h2>
  
   <p class="span3">
 
@@ -53,17 +53,21 @@
 
         if team_status == true
           team_status = "In Progress"
+          team_status_class = "text-info"
         else
           team_status = "Not Started"
+          team_status_class = "muted"
         end
 
       else
         project_overview = "No project overview has been added."
         team_status = "Not Started"
+        team_status_class = "muted"
       end 
     %>
 
-    <span class="span3">Team Status: <%= team_status %></span> 
+    <span class="span2 <%= team_status_class %>"><%= team_status %></span> 
+    <span class="span1 text-right"><%= link_to '', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %></span>
     
     <!-- <br /> -->
     </p>
@@ -119,6 +123,8 @@
 
 <script>
   $(document).ready(function() {
-    $('.name').editable();
+    $('.name').editable({
+      placement: "right"
+    });
   });
 </script>
