@@ -17,17 +17,17 @@
   
     <!-- <br /> -->
 
-    <span class="span12 text-right"> <%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> </span>
+    <span class="span12 text-right" style="padding-top: 5px;"> Logged in as <%= @user.username %> (<%= link_to 'Logout', users_logout_path %>)</span>
 
     <!-- <span class="span2"> <%# link_to 'Logout', users_logout_path %> </span> -->
 
   </p>
 </div>
 
-<div class="row-fluid">
+<div class="row-fluid" style="margin-bottom: 10px;">
   <p> 
-    <h4><span class="span11">Welcome, <%= @user.username %>!</span></h4>
-    <span class="span1 text-right"> <%= link_to 'Logout', users_logout_path %> </span>
+    <span class="span8" style="padding-top: 5px;"> <%= @flash_teams.length %> Teams </span>
+    <span class="span4 text-right"><%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> </span>
   </p>
 </div>
 
@@ -73,8 +73,12 @@
       end 
     %>
 
-    <span class="span2 <%= team_status_class %>"><%= team_status %></span> 
-    <span class="span1 text-right"><%= link_to '', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %></span>
+    <span class="span3 text-right <%= team_status_class %>">
+      <%= team_status %> 
+      <span style="padding-left:10px;"><%= link_to '', flash_team_path(flash_team), 
+      :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %></span>
+    
+    </span>
     
     <!-- <br /> -->
     </p>
@@ -84,7 +88,7 @@
     
     <!-- <br /> -->
 
-    <span class="span3"><%= link_to 'Edit', edit_flash_team_path(flash_team) %>
+    <span class="span3 text-right" style="padding-right: 25px;"><%= link_to 'Edit', edit_flash_team_path(flash_team) %>
 
     <%= link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %>
 
