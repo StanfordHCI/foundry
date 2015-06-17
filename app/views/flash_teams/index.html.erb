@@ -1,4 +1,4 @@
-<div style="padding: 5px 20px;">
+<div class="container-fluid" style="padding: 5px 20px;">
 
 <!-- Warning for invalid login --> 
 <% if flash[:notice] %>
@@ -9,13 +9,84 @@
 
 
 <meta charset="utf-8">
-<h1>Flash Teams Library</h1>
+<div class="row-fluid">
+  <h1 class="span9">Flash Teams Library</h1>
  
-<p><%= link_to 'New Flash Team', new_flash_team_path %></p>
+  <p class="span3">
 
-<p><%= link_to 'Logout', users_logout_path %></p>
+  
+    <!-- <br /> -->
 
-<table class="table table-striped">
+    <span class="span7"> <%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> </span>
+
+    <span class="span2"> <%= link_to 'Logout', users_logout_path %> </span>
+
+  </p>
+</div>
+
+<!-- <div class="row"> -->
+  <% @flash_teams.each do |flash_team| %>
+  <div class="row-fluid" style="border: 1px black solid; padding: 5px; margin-top: 5px;">
+    <p>
+    <span class="span9">[#<%= flash_team.id %>]  
+
+    <a href="#" class="name" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name"><%= flash_team.name %></a></span>
+
+    <!-- <br /> -->
+
+    <% 
+
+      if !flash_team.status.nil?
+
+        status = JSON.parse(flash_team.status) 
+
+        flash_team_json = status['flash_teams_json']
+
+        if !flash_team_json['projectoverview'].nil? 
+          project_overview = flash_team_json['projectoverview'] 
+          team_status = flash_team_json['flash_team_in_progress']
+        else
+          project_overview = "No project overview has been added."
+        end
+
+        team_status = flash_team_json['status']
+
+        if team_status == true
+          team_status = "In Progress"
+        else
+          team_status = "Not Started"
+        end
+
+      else
+        project_overview = "No project overview has been added."
+        team_status = "Not Started"
+      end 
+    %>
+
+    <span class="span3">Team Status: <%= team_status %></span> 
+    
+    <!-- <br /> -->
+    </p>
+    <p>
+    <span class="span9"><%= project_overview %></span> 
+
+    
+    <!-- <br /> -->
+
+    <span class="span3"><%= link_to 'Edit', edit_flash_team_path(flash_team) %>
+
+    <%= link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %>
+
+    <%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %></span>
+
+
+    </p>
+  </div>
+
+  <% end %>
+<!-- </div> -->
+
+<!-- <table class="table table-striped">
   <thead>
     <tr>
       <th>ID</th>
@@ -31,15 +102,13 @@
     <tr>
       <td><%= flash_team.id %></td>
       <td><a href="#" class="name" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name"><%= flash_team.name %></a></td>
-      <!-- <td><%= flash_team.name %></td> -->
-      <!-- <td><%= link_to 'Show', flash_team %></td> -->
       <td><%= link_to 'Edit', edit_flash_team_path(flash_team) %></td>
   	  <td><%= link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %></td>
       <td><%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %></td>
     </tr>
   <% end %>
   </tbody>
-</table>
+</table> -->
 </div>
 
   <%= javascript_include_tag "/assets/jquery" %>
