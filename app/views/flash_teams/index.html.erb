@@ -17,10 +17,17 @@
   
     <!-- <br /> -->
 
-    <span class="span7"> <%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> </span>
+    <span class="span12 text-right"> <%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> </span>
 
-    <span class="span2"> <%= link_to 'Logout', users_logout_path %> </span>
+    <!-- <span class="span2"> <%# link_to 'Logout', users_logout_path %> </span> -->
 
+  </p>
+</div>
+
+<div class="row-fluid">
+  <p> 
+    <h4><span class="span11">Welcome, <%= @user.username %>!</span></h4>
+    <span class="span1 text-right"> <%= link_to 'Logout', users_logout_path %> </span>
   </p>
 </div>
 
