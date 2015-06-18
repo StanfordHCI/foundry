@@ -107,6 +107,14 @@ class WorkersController < ApplicationController
   	
   	@worker = Worker.new
   end
+
+  def apply
+    session.delete(:return_to)
+    session.delete(:ref_page)
+    session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+    
+    @worker = Worker.new
+  end
   
   def edit
   	if valid_user?(save_loc: false)
@@ -139,7 +147,7 @@ class WorkersController < ApplicationController
     
   private
   def worker_params
-    params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :timezone_utc, :additional_info, :panel)
+    params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :hourly_rate, :timezone_utc, :additional_info, :panel)
   end
 
 end
