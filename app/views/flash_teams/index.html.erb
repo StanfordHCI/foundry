@@ -75,7 +75,9 @@
 
     <span class="span3 text-right <%= team_status_class %>">
       <%= team_status %> 
-      <span style="padding-left:10px;"><%= link_to '', flash_team_path(flash_team), 
+      <span style="padding-left:10px;">
+
+      <%= link_to '', flash_team_path(flash_team), 
       :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %></span>
     
     </span>
