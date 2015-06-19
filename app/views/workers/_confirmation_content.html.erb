@@ -1,6 +1,12 @@
 <div class="row-fluid">
+
+<div class="alert alert-success" id='copy-conf-alert' style="display: none;">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Copied!</strong> Your Application ID has been copied to your clipboard.
+</div>
 	
 <p class="span12" id="confirmation-text">
+
 <span class="span6">
 
 <!-- Param: <%# params[:conf_type] %> -->
@@ -16,7 +22,14 @@
 
 	<br /><br />
 
-	<span id="app-conf-code"> <%= worker.panel + '-' + worker.id.to_s %> </span> <br />
+	<span id="app-conf-code"> <%= worker.panel + '_' + worker.id.to_s %> </span> 
+
+	<button class="btn btn-default" id="copy-button-filt" data-clipboard-text="<%= worker.panel + '_' + worker.id.to_s %>" title="Click to copy app ID to clipboard.">Copy to Clipboard</button>
+
+	<%= javascript_include_tag "ZeroClipboard" %>
+	<script> ZeroClipboard.config( { swfPath: "/assets/ZeroClipboard.swf" } ); </script>
+
+	<br />
 
 <% else %>
 	Thank you for signing up! You should start receiving job notifications soon. 
@@ -30,3 +43,17 @@
 </span>
 </p>
 </div>
+
+<script>
+	
+	var client_filt = new ZeroClipboard( document.getElementById("copy-button-filt") );
+	
+	client_filt.on( "ready", function( readyEvent ) {
+	  //alert( "ZeroClipboard SWF is ready!" );
+	
+	  client_filt.on( "aftercopy", function( event ) {
+	    //alert("Copied app ID to clipboard: " + event.data["text/plain"] );
+	    $("#copy-conf-alert").css('display', '');
+	  } );
+	} );
+</script>
