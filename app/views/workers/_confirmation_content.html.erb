@@ -1,4 +1,32 @@
 <div class="row-fluid">
 	
-<p class="span12" id="confirmation-text">Thank you for signing up! You should start receiving job notifications soon. <br /> <br /> Don't forget to add stanfordhci.odesk@gmail.com to your address book <br /> to prevent job notifications from going to your spam folder.</p>
+<p class="span12" id="confirmation-text">
+<span class="span6">
+
+<!-- Param: <%# params[:conf_type] %> -->
+
+<% if params[:conf_type] == 'apply' %>
+
+	<% worker = Worker.find(params[:id]) %>
+
+	Thank you for applying! <br /><br /><br />
+
+	<b>Please enter the following application ID in your
+	Upwork application to confirm your application: </b>
+
+	<br /><br />
+
+	<span id="app-conf-code"> <%= worker.panel + '-' + worker.id.to_s %> </span> <br />
+
+<% else %>
+	Thank you for signing up! You should start receiving job notifications soon. 
+
+<% end %>
+
+	<br /> <br /> 
+
+	Don't forget to add stanfordhci.odesk@gmail.com to your address book to prevent job notifications from going to your spam folder.
+
+</span>
+</p>
 </div>

@@ -813,6 +813,8 @@ end
    
    	#@show_right_sidebar = false
    	@panels_active = "active"
+
+    @panelcode = false
    	
    	session.delete(:return_to)
    	session[:return_to] ||= request.original_url
@@ -823,7 +825,7 @@ end
    	@id_team = params[:id]
    	@id_task = params[:event_id].to_i
    	
-	@flash_team = FlashTeam.find(params[:id])
+	  @flash_team = FlashTeam.find(params[:id])
    	    
    	# Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
@@ -893,7 +895,7 @@ end
     @flash_team_event = @flash_team_json['events'][@id_task]
     @flash_team_name = @flash_team_json['title']
     #tm = params[:task_member].split(',') role of recipient
-@task_member = params[:task_member]
+    @task_member = params[:task_member]
     @task_name = @flash_team_event['title']
     @project_overview = @flash_team_json['projectoverview']
     @task_description = @flash_team_event['notes']

@@ -27,7 +27,8 @@
 			<th>Name</th>
 			<th>Email</th>
 			<th>Skype Username</th>
-			<th>oDesk Profile URL</th>
+			<th>Upwork/Elance Profile URL</th>
+			<th>Hourly Rate</th>
 			<th>Timezone in UTC/GMT</th>
 			<th>Worker Local Time</th>
 			<th>Additional Info</th>
@@ -45,6 +46,7 @@
 			        <td><%= worker.email %></td>
 			        <td><%= worker.skype_username %></td>
 			        <td><%= worker.odesk_url %></td>
+			        <td><%= worker.hourly_rate %></td>
 			        <td><%= worker.timezone_utc %></td>
 			        <td><%= t.in_time_zone(worker.timezone_utc) %></td>
 			        <!--  <td><%# I18n.l t.to_time.in_time_zone(worker.timezone_utc), format: :long %></td> -->
