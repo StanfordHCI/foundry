@@ -13,6 +13,8 @@ class WorkersController < ApplicationController
 	  	
 	  	@fw = Worker.all.pluck(:email)
   	end
+
+    @panelcode = false
   	  	  	  	  	
   end
   
@@ -87,8 +89,12 @@ class WorkersController < ApplicationController
   	
   	if session[:ref_page][:controller] == "workers" && session[:ref_page][:action] == "register"
   		#redirect_to :action => 'confirmation', :id => @worker.id
-  		redirect_to :action => 'confirmation'
+  		redirect_to :action => 'confirmation', :conf_type => 'register'
   	end
+
+    if session[:ref_page][:controller] == "workers" && session[:ref_page][:action] == "apply"
+      redirect_to :action => 'confirmation', :conf_type => 'apply', :id => @worker.id
+    end
   	
   	if session[:ref_page][:controller] == "flash_teams" && session[:ref_page][:action] == "panels"
   		redirect_to session.delete(:return_to)
@@ -106,6 +112,18 @@ class WorkersController < ApplicationController
   	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
   	
   	@worker = Worker.new
+
+    @panelcode = true
+  end
+
+  def apply
+    session.delete(:return_to)
+    session.delete(:ref_page)
+    session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
+    
+    @worker = Worker.new
+
+    #@panelcode = true
   end
   
   def edit
@@ -139,7 +157,7 @@ class WorkersController < ApplicationController
     
   private
   def worker_params
-    params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :timezone_utc, :additional_info, :panel)
+    params.require(:worker).permit(:name, :email, :skype_username, :odesk_url, :hourly_rate, :timezone_utc, :additional_info, :panel)
   end
 
 end

@@ -1,1 +1,7 @@
-<%= render partial: "confirmation_content", layout: "panel_reg_layout" %>
+<% if params[:conf_type] == 'apply' %>
+	<%= render partial: "confirmation_content", layout: "panel_app_layout" %>
+
+<% else %>
+	<%= render partial: "confirmation_content", layout: "panel_reg_layout" %>
+
+<% end %>

@@ -1,0 +1,72 @@
+
+            <div class="container-fluid"  id="signupform">
+				<div class="row-fluid span12">
+
+					<!--
+<h1>Panel Registration</h1>
+
+						</br>
+-->
+
+						<div class="row-fluid">
+							<p class="span7" id="topText">
+
+							Thank you for your interest in joining our panel! In order to apply, you must fill out this form. Once you submit the form, you will see a application ID on the confirmation page. Please enter that application ID into your Upwork application.
+
+							<br /><br />
+
+							Once you submit this form and apply via Upwork, we will review your application and get back to you with a decision. 
+
+							If you are invited to join the panel, you will receive information on how to complete the panel registration process. We look forward to working with you!
+
+							</p>
+						</div>
+						</br>
+						<!-- <div id = "launchDiv">
+							<b>To Launch Training, Enter your Panel Code</b></br>
+							<input type="text" id="password"></input></br>
+							<button type="button" class="btn btn-primary btn-lg" id="launchButton" onclick="openModal()">
+							  Launch 
+							</button>
+						</div> -->
+
+						
+					<div class = "appFormDiv">
+						<h4><b>Application Form</b></h4></br>
+						<%#render partial: "new_content" %>
+
+						<div class="row span7" id="panelregform">
+						<%= form_for(@worker) do |f| %>
+						    <%= f.label :name, "Name*: " %>
+						    <%= f.text_field :name, :required => :true %> <br />
+
+						    <%= f.label :email, "Email*: " %>
+						    <%= f.text_field :email, :required => :true %> <br />
+						    
+						    <%= f.label :skype_username, "Skype Username*: " %>
+						    <%= f.text_field :skype_username, :required => :true %> <br />
+						    
+						    <%= f.label :odesk_url, "Upwork Profile URL*: " %>
+						    <%= f.text_field :odesk_url, :required => :true %> <br />
+
+						   	<%= f.label :hourly_rate, "Hourly Rate*: " %>
+						    <%= f.text_field :hourly_rate, :required => :true %> <br /> 
+						    
+						    <%= f.label :timezone_utc, "Your Timezone (in UTC/GMT)*: " %>
+						    <%= f.time_zone_select(:timezone_utc, nil, {include_blank: "-- Select Timezone --"}, {:required => :true, style: "width: 315px;"}) %><br />
+
+						    <%= f.label :panel, "Panel Code*: " %>
+						    <%= f.text_field :panel, :required => :true, :readonly => true, :value => params[:panel] %> <br />
+						    
+						    <%= f.label :additional_info, "Anything else you want us to know?" %> <br />
+						    <%= f.text_area :additional_info, :rows =>2 %> <br />
+
+						    <%= f.submit "Submit", :class => "btn btn-success", :id => "panel-reg-btn"%>
+						<% end %>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+

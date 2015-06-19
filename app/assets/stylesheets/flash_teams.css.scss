@@ -102,6 +102,7 @@
 
 #panelregform{
 	margin-left: 5px;
+	margin-bottom: 30px;
 }
 
 #panelregform input{
@@ -119,5 +120,17 @@
 
 #panelregform label{
 	display: inline; font-weight: bold; padding-right: 5px; 
+}
+
+#app-conf-code{
+	font-size: 18px;
+	font-weight: bold;
+	border: 1px black solid;
+	padding: 10px;
+	margin-right: 10px;
+}
+
+#confirmation-text{
+	margin-bottom: 30px;
 }
 
