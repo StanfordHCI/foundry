@@ -39,19 +39,18 @@
 		<h4><b>Or Select Specific Workers:</b></h4>
 			<table class="table table-bordered" style="word-break: break-word;">
 			    <thead>
+					<th class="span1"><i class="icon-ok"></i></th>
 					<th class="span3">Name</th>
 					<th class="span5">Email</th>
 					<th class="span2">Panel</th>
-					<th class="span1"><i class="icon-ok"></i></th>
 			    </thead>
 			    <tbody>
 					<% @workers.each do |worker| %>
 					    <tr>
+					        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 					        <td><%= worker.name %></td>
 					        <td><%= worker.email %></td>
 					        <td><%= worker.panel %></td>
-					        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-					        
 					    </tr>
 					<% end %>
 			    </tbody>

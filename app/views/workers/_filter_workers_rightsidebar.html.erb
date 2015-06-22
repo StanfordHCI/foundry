@@ -25,19 +25,18 @@
 	<!-- <table class="table table-bordered table-striped" style="background-color: white;"> -->
 	<table class="table table-bordered" style="word-break: break-word;">
 	    <thead>
+			<th><i class="icon-ok"></i></th>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Panel</th>
-			<th><i class="icon-ok"></i></th>
 	    </thead>
 	    <tbody>
 			<% @workers.each do |worker| %>
 			    <tr>
+			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 			        <td><%= worker.name %></td>
 			        <td><%= worker.email %></td>
 			        <td><%= worker.panel %></td>
-			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
-			        
 			    </tr>
 			<% end %>
 	    </tbody>

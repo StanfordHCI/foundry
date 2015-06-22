@@ -1,5 +1,11 @@
+	<% if !@abc.nil? 
+		sel_emails = @abc.uniq.length 
+	else
+		sel_emails = 0
+	end %>
 
-	<b><em>Emails for selected workers:</em></b>
+	
+	<b><em>Emails for selected workers (<%= sel_emails %> selected):</em></b>
 
 	<br />
 

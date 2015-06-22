@@ -1,7 +1,10 @@
 
 <div id="panel_results">
 	<p>
-	<b><em>Emails for all workers this panel:</em></b>
+
+	
+
+	<b><em>Emails for all workers this panel (<%= @fw.uniq.length%> total):</em></b>
 
 	<br />
 	<!-- <% @fw.to_s.gsub('"', '')%> -->
@@ -27,6 +30,7 @@
     word-wrap: break-word; overflow: auto"> -->
 	<table class="table table-bordered table-striped" style="overflow: auto">
 	    <thead>
+			<th><i class="icon-ok"></i></th>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Skype Username</th>
@@ -37,7 +41,6 @@
 			<th>Worker Local Time</th>
 			<th>Additional Info</th>
 			<th>Panel</th>
-			<th>Select</th>
 			<th>Edit / Delete</th>
 	    </thead>
 	    
@@ -46,6 +49,7 @@
 	    <tbody>
 			<% @workers.each do |worker| %>
 			    <tr>
+			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 			        <td><%= worker.name %></td>
 			        <td><%= worker.email %></td>
 			        <td><%= worker.skype_username %></td>
@@ -59,7 +63,6 @@
 			        <!-- <td><%# ActiveSupport::TimeZone[worker.timezone_utc] %></td> -->
 			        <td><%= worker.additional_info %></td>
 			        <td><%= worker.panel %></td>
-			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
 					<td><a class="icon-edit" data-toggle="modal" href="#modal-window" data-remote-target="#modal-window .modal-body" data-load-remote="<%= edit_worker_path(worker) %> #panelregform"></a>
 			        | <a class="icon-remove" data-method="delete" href="<%=worker_path(worker)%>/destroy"></a>
 			        <%# link_to "", worker, :action => :destroy, :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %> </td> 
