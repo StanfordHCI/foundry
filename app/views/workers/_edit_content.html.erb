@@ -9,8 +9,11 @@
     <%= f.label :skype_username, "Skype Username*: " %>
     <%= f.text_field :skype_username, :required => :true %> <br />
     
-    <%= f.label :odesk_url, "oDesk Profile URL*: " %>
+    <%= f.label :odesk_url, "Upwork/Elance Profile URL*: " %>
     <%= f.text_field :odesk_url, :required => :true %> <br />
+
+    <%= f.label :hourly_rate, "Hourly Rate*: " %>
+    <%= f.text_field :hourly_rate, :required => :true %> <br /> 
     
     <%= f.label :timezone_utc, "Your Timezone (in UTC/GMT)*: " %>
     <%= f.time_zone_select(:timezone_utc, nil, {include_blank: "-- Select Timezone --"}, {:required => :true, style: "width: 315px;"}) %><br />
