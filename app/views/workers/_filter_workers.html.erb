@@ -22,14 +22,18 @@
 
 <h4><b>Or Select Specific Workers:</b></h4>
 <div>
-	<table class="table table-bordered table-striped" style="word-break: break-word;">
+	<!-- <table class="table table-bordered table-striped" style="word-break: break-word;"> -->
+	<!-- <table class="table table-bordered table-striped" style="table-layout: fixed;
+    word-wrap: break-word; overflow: auto"> -->
+	<table class="table table-bordered table-striped" style="overflow: auto">
 	    <thead>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Skype Username</th>
-			<th>Upwork/Elance Profile URL</th>
+			<th>Profile URL</th>
 			<th>Hourly Rate</th>
-			<th>Timezone in UTC/GMT</th>
+			<!-- <th>Timezone in UTC/GMT</th> -->
+			<th>Timezone in UTC</th>
 			<th>Worker Local Time</th>
 			<th>Additional Info</th>
 			<th>Panel</th>
@@ -45,7 +49,9 @@
 			        <td><%= worker.name %></td>
 			        <td><%= worker.email %></td>
 			        <td><%= worker.skype_username %></td>
-			        <td><%= worker.odesk_url %></td>
+			        <!-- <td><a href="<%= worker.odesk_url %>">URL</a></td> -->
+			        <!-- <td><%= worker.odesk_url %></td> -->
+			        <td><a href="<%= worker.odesk_url %>" target="_blank"><%= worker.odesk_url %></a></td>
 			        <td><%= worker.hourly_rate %></td>
 			        <td><%= worker.timezone_utc %></td>
 			        <td><%= t.in_time_zone(worker.timezone_utc) %></td>

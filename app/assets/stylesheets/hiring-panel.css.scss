@@ -401,10 +401,7 @@ ul.top-menu > li > a:hover, ul.top-menu > li > a:focus {
 /* FORMS CONFIGURATION */
 .form-panel {
 	background: #ffffff;
-	/*
-margin: 10px;
-	padding: 10px;
-*/
+    overflow:auto;
 	margin: 10px 0px;
 	padding: 10px;
 	//box-shadow: 0px 3px 2px #aab2bd;
