@@ -72,9 +72,9 @@
   <p>
     <span class="span9">
      
-    <!-- <a href="<%=edit_flash_team_path(flash_team) %>" class="model" id="model_<%= flash_team.id %>" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter team name" style="font-size: 18px;"><%= flash_team.name %></a> -->
+    <a href="<%=edit_flash_team_path(flash_team) %>" class="model" id="model_<%= flash_team.id %>" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter team name" style="font-size: 18px;"><%= flash_team.name %></a>
 
-    <a href="" class="name" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name" style="font-size: 18px;"><%= flash_team.name %></a>
+    <!-- <a href="" class="name" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name" style="font-size: 18px;"><%= flash_team.name %></a> -->
 
     <span class=" <%= team_status_class %>"> (<%= team_status %>) </span> [#<%= flash_team.id %>] 
 
@@ -84,8 +84,10 @@
 
    <span class="span3 text-right">
 
-      <!-- <a id="container">Rename</a>  |  --> 
-      <b><%= link_to 'Go to Team', edit_flash_team_path(flash_team) %></b>
+    <a href="" class="name" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name" style="font-size: 18px;">Rename</a>
+
+      <!-- <a class="controller" onclick='openRenameModal(event, <%= flash_team.id %>)'>Rename</a>  --> <!-- |   -->
+      <!-- <b><%= link_to 'Go to Team', edit_flash_team_path(flash_team) %></b> -->
 
       <%# link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %>
         |  <%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %>
@@ -117,24 +119,58 @@
 
 <script>
   $(document).ready(function() {
-    $('.name').editable({
-      placement: "right"
-    });
+    // $('.name').editable({
+    //   placement: "right"
+    // });
 
-//   $('#model').editable({
+  $('.name').editable({
+      placement: "right",
+      success: function(response, newValue) {
+          console.log(newValue);
+      }
+    //   display: function(value) {
+    //     $('.model').text(value);
+    // }
+    });
+//   $('.model').editable({
 //     // send: 'never',  
 //     // title: 'Enter username',
 //     placement: 'right',
 //     toggle: 'manual',
 //     display: function(value) {
-//         $('#model').text(value);
+//         $('.model').text(value);
 //     }
 // });
 
-// $('#controller').click(function(e){
+
+
+// $('.controller').click(function(e){
 //     e.stopPropagation();
-//     $('#model').editable('toggle');
+//     $('.model').editable('toggle');
+// });
+
+//   $('.controller').click(function(e){
+//     e.stopPropagation();
+//     console.log(this);
+//     //$('.model').editable('toggle');
 // });
 
   });
+
+   function openRenameModal(event, id){
+    //alert(event.type);
+    event.stopPropagation();
+    event.preventDefault();
+    $('#model_' + id).editable({
+      mode: 'popup',
+      placement: "right",
+      toggle: 'show',
+      display: function(value) {
+        $('#model_' + id).text(value);
+      }
+    });
+
+    //('#model_' + id).removeClass("editable-click");
+    //$('#model_' + id).addClass("editable editable-open");
+  }
 </script>
