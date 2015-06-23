@@ -77,7 +77,12 @@
                       </a>
                       <ul class="sub">
                           <li class=<%=@task_avail_active%>><%=link_to "Task Available", controller: "flash_teams", action: "hire_form"%> </li>
+
                           <li class=<%=@list_queue_active%>><%=link_to "Hiring queue", @url1%> </li>
+                      </ul>
+
+                      <ul class="sub">
+                          <li class=<%=@starter_task_active%>><%=link_to "Starter Task", controller: "flash_teams", action: "starter_task"%> </li>
                       </ul>
                   </li>
 
