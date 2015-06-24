@@ -76,6 +76,25 @@ class UserMailer < ActionMailer::Base
   		    	  
   	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
   end
+
+  def send_starter_task_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, compensation_info, url)
+  
+    #@message = message.html_safe
+    @flash_team_name = flash_team_name
+    @task_member = task_member
+    @task_name = task_name
+    @project_overview = project_overview
+    @task_description = task_description
+    @all_inputs = all_inputs
+    @input_link = input_link
+    @outputs = outputs
+    @output_description = output_description
+    @task_duration = task_duration
+    @compensation_info = compensation_info
+    @url = url
+              
+    mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
+  end
   
   def send_task_acceptance_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, foundry_url)
   

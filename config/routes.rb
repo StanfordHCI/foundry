@@ -91,6 +91,7 @@ Foundry::Application.routes.draw do
   end
 
   get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'
+  get '/flash_teams/:id/:event_id/hire_form/starter_task' => 'flash_teams#starter_task'
 
   get '/flash_teams/:id/:event_id/hire_form/task_rejection' => 'flash_teams#task_rejection'
   get '/flash_teams/:id/:event_id/hire_form/task_acceptance' => 'flash_teams#task_acceptance'
@@ -99,6 +100,7 @@ Foundry::Application.routes.draw do
 get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
 
   get '/landings/:id/:event_id/remove' => 'landings#remove'
+  post '/flash_teams/:id/:event_id/hire_form/send_starter_task' => 'flash_teams#send_starter_task'
   post '/flash_teams/:id/:event_id/hire_form/send_task_acceptance' => 'flash_teams#send_task_acceptance'
   post '/flash_teams/:id/:event_id/hire_form/send_task_rejection' => 'flash_teams#send_task_rejection'
   post '/flash_teams/:id/:event_id/hire_form/send_task_available' => 'flash_teams#send_task_available'

@@ -1,0 +1,156 @@
+<div class="row-fluid">
+	
+	<h3><i class="fa fa-angle-right"></i> Hiring Emails</h3>
+          	
+  	<!-- INPUT MESSAGES -->
+  	<div class="row-fluid">
+  		<div id="email-form-div" class="form-panel span8">
+  			<div>
+		  	  	<div class="row-fluid">
+		  	  		<div class="span7">
+		  	  			<p class="mb" style="font-size:18px;"><i class="fa fa-angle-right"></i> Starter Task Email </p>
+					</div>
+					
+					<div class="span5">
+						<p class="mb"><a id="hidePanelsLink" style="font-size:14px; float: right;" onclick="hideRightPanels()">Hide Panels</a></p>
+					</div>
+				</div> <!-- end div class row -->
+	
+          	  <%= form_tag({action: "send_starter_task", method: "post", name: "taskOverviewForm"},{:class => "hiring-email-form"}) do %>
+                      <div class="row-fluid span12">
+                          <%= label_tag(:sender_email, "From:", :class => 'span2') %>
+						  <div class="span10">
+						  	<%= text_field_tag(:sender_email, "", :placeholder => ENV['DEFAULT_EMAIL'], :class => 'span11') %>
+							</div>
+                      </div>
+                      
+                      <div class="row-fluid span12">
+                          <%= label_tag(:recipient_email, "To:", :class => 'span2') %>
+                          
+						  <div class="span10">
+						  	<%= text_area_tag(:recipient_email, "", :placeholder => "Enter recipient email addresses by selecting their emails from the panel or typing them manually (emails must be separated by a comma)", :rows =>3, :class => 'span11', :required => true ) %>
+							</div>
+						
+                      </div>
+                      
+                       <div class="row-fluid span12">
+                          <%= label_tag(:subject, "Subject:", :class => 'span2') %>
+						  <div class="span10">
+						  	<%= text_field_tag(:subject, @starter_task_email_subject, :class => 'span11', :required => true) %>
+							</div>
+                      </div>
+
+					<div class="row-fluid span12">
+						  <div class="span11">
+							  <p>
+								This is an email from the Stanford HCI Group regarding your interest in joining our 
+
+								<select name="task_member" required="required">
+									<option value="">-- SELECT MEMBER ROLE --</option>
+									<%@task_members.each do |task_member|%>
+										<%=options_for_select([[task_member['role'], task_member['role']]])%>
+										
+									<%end%>
+								</select> 
+								
+								panel. We are excited to hear you are interested in working with us!
+								<!-- for the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task for the <em><%=@flash_team_json['title']%></em> project 
+								has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within 
+								the specified deadline. -->
+							</p>
+							<p>
+							In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
+							</p>
+							<p>
+							The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
+							</p>
+						</div>
+					</div>
+                      
+		            <div class="row-fluid span12">
+						<div class="span11">
+							<%= label_tag(:project_overview, "Project Overview:") %>
+							<%= text_area_tag(:project_overview, @flash_team_json['projectoverview'], :class => 'span12', :rows =>5, :required => true) %>
+						</div>
+					</div>
+		                              
+		            <div class="row-fluid span12">
+						<div class="span11">			
+							<%= label_tag(:task_description, "Task Description:") %>
+							<%= text_area_tag(:task_description, @flash_team_event['notes'], :class => 'span12', :rows =>5, :required => true) %>
+						</div>
+					</div>
+		                              
+		            <div class="row-fluid span12">
+						<div class="span11">				
+							<p>
+								<%= label_tag(:all_inputs, "Input(s):") %>
+								For this task, you will receive the following input(s):
+								<%= text_field_tag(:all_inputs, @flash_team_event['all_inputs'], :class => 'span6') %>. You can access the input(s) at the following link:
+								<%= text_field_tag(:input_link, "", :placeholder => "OPTIONAL: [INSERT LINK TO INPUT]", :class => 'span12') %>
+							</p>
+						</div>
+					</div>
+		                              
+		            <div class="row-fluid span12">
+						<div class="span11">
+							<p>
+								<%= label_tag(:outputs, "Deliverable(s):") %>
+								<%= text_field_tag(:outputs, @flash_team_event['outputs'], :class => 'span12') %>
+							</p>
+							<p>
+								<%=label_tag(:output_description, "Deliverable Information (optional):") %>
+								<%= text_area_tag(:output_description, "", :placeholder => "OPTIONAL: [INSERT BRIEF DESCRIPTION OF OUTPUT]", :class => 'span12', :rows =>3) %>
+							</p>
+						</div>
+					</div>
+		                              
+		            <div class="row-fluid span12">
+						<div class="span11">
+							<p>
+								<%= label_tag(:task_duration, "Task Duration:") %>
+								You will have <%= text_field_tag(:task_duration, @task_duration, :class => 'span5', :required => true)%> to finish this task.
+							</p>
+						</div>
+					</div>
+
+					<div class="row-fluid span12">
+						<div class="span11">
+							<p>
+								<% compensation_content = "You will be paid for " + @task_duration + " of your time. Please make sure to track your time on Upwork in order to get paid." 
+								%>
+
+								<%=label_tag(:compensation_info, "Compensation & Hiring Information (optional):") %>
+								<%= text_area_tag(:compensation_info, compensation_content, :class => 'span12', :rows =>3) %>
+							</p>
+						</div>
+					</div>
+		                              
+		            <div class="row-fluid span12">
+						<div class="span11">
+
+
+							<p> To complete the starter task, click on the URL below. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork, signing in to Foundry via the link sent to you via email and clicking the start button on your task. </p>
+
+							<p>If you have any questions as you working on the task, please send us an email at stanfordhci.odesk@gmail.com.</p>
+
+							<p>URL placeholder (URL will be generated once this form is submitted) </p>
+					<p>
+						Best, <br />
+						Stanford HCI Research Team
+						<br /><br />
+					</p>
+										 
+					<%= button_tag("Send Task Available Email", :type => 'submit', :class => 'btn btn-primary') %>
+		 	 
+					</div>
+					</div>
+				<% end %>
+			</div><!-- /form-panel -->
+ 		</div><!-- /span7 -->
+  		
+  	
+ 		<%= render :partial => "task_hiring_right_sidebar" %>  
+  			
+  	</div><!-- /row -->
+</div>

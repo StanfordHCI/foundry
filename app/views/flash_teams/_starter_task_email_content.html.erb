@@ -9,13 +9,12 @@
   			<div>
 		  	  	<div class="row-fluid">
 		  	  		<div class="span7">
-		  	  			<p style="font-size:18px;"><i class="fa fa-angle-right"></i> A task is available! </p>
+		  	  			<p style="font-size:18px;"><i class="fa fa-angle-right"></i> Starter Task Information! </p>
 					</div>
 				</div> <!-- end div class row -->
 				
 				<div class="row-fluid span11">
-					<p>This is an email from the Stanford HCI Group notifying you that a job requiring a <%=@task_member%> for the <%=@task_name%> task for the <%=@flash_team_name%> project has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within the specified deadline.</p>
-
+					<p>This is an email from the Stanford HCI Group regarding your interest in joining our  <%=@task_member%> panel. We are excited to hear you are interested in working with us!</p>
 					<p>
 					In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
 					</p>
@@ -27,14 +26,19 @@
 						<p><b>Task description:</b> <%= raw @task_description %></p>
 						
 						<p>
+							<%if !@all_inputs.empty?%>
 							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
+							<% end %>
 						
 						<%if !@input_link.empty?%>
 							You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
-						</p>
-						<%end%>
 						
+						<%end%>
+						</p>
+						
+						<%if !@outputs.empty?%>
 						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+						<% end %>
 						
 						<%if !@output_description.empty?%>
 						<p><b>Deliverable information:</b> <%=@output_description%></p>
@@ -42,9 +46,16 @@
 						
 						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
 						
+						<%if !@compensation_info.empty?%>
+						<p><b>Compensation Information:</b> <%=@compensation_info%></p>
+						<%end%>
 						
-						<p> If you are available and ready to start working on this task within 30 minutes of being hired, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
-							<p><p> URL: <%=link_to "I accept", @url%>. </p>
+						<p> To complete the starter task, click on the URL below. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork, signing in to Foundry via the link sent to you via email and clicking the start button on your task. </p>
+
+						<p>If you have any questions as you working on the task, please send us an email at stanfordhci.odesk@gmail.com.</p>
+						<p>URL placeholder (URL will be generated once this form is submitted) </p>
+
+						<p> URL: <%=link_to "I accept", @url%>. </p>
 						<p>
 							Best, <br />
 							Stanford HCI Research Team
