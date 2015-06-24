@@ -2,7 +2,6 @@ class LandingsController < ApplicationController
   def view
     if params[:starter_task] == "true"
       @starter_task = true
-      #flash[:notice] = "starter task"
     else
       @starter_task = "false"
     end
