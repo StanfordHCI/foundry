@@ -2,8 +2,12 @@
 <%= render partial: "error" %>
 <% elsif @queuePosition==-2 %>
 <%= render partial: "error1" %>
-<% elsif @queuePosition == 1 %>
-<%= render partial: "task_acceptance_email_content_landing", layout: "task_hiring_email" %>
+<% elsif @queuePosition == 1 || @starter_task == true%>
+	<% if @starter_task == true %>
+		<%= render partial: "starter_task_acceptance_email_content_landing", layout: "task_hiring_email" %>
+	<% else %>
+		<%= render partial: "task_acceptance_email_content_landing", layout: "task_hiring_email" %>
+	<% end %>
 <% elsif @queuePosition == 0 %>
 <%= render partial: "task_rejection_email_content_landing", layout: "task_hiring_email" %>
 <% else %>

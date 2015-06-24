@@ -1,5 +1,11 @@
 class LandingsController < ApplicationController
   def view
+    if params[:starter_task] == "true"
+      @starter_task = true
+      #flash[:notice] = "starter task"
+    else
+      @starter_task = "false"
+    end
     @id_team = params[:id]
     @id_task = params[:event_id].to_i
     @flash_team = FlashTeam.find(params[:id])
