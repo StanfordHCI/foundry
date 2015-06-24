@@ -118,6 +118,16 @@ function insertFoundryLink(sel){
 	$("#foundry_member_url").val(foundry_member_url);
 }
 
+function showMemberTasks(sel){
+	link = sel.value.split(',');
+	console.log('sel: ' + sel.value);
+	console.log('link: ' + link[1].substring(2, link[1].length-2));
+	// foundry_member_url = link[1].substring(2, link[1].length-2);
+	// console.log("link: " + link[1].substring(2, link[1].length-2));
+
+	// $("#foundry_member_url").val(foundry_member_url);
+}
+
 function hideRightPanels(){	
 	$("#hidePanelsLink").html('View Panels');
 	$("#right-sidebar-wrapper").css('display', 'none');

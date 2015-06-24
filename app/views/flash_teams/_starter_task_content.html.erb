@@ -8,7 +8,7 @@
   			<div>
 		  	  	<div class="row-fluid">
 		  	  		<div class="span7">
-		  	  			<p class="mb" style="font-size:18px;"><i class="fa fa-angle-right"></i> Task Available Email </p>
+		  	  			<p class="mb" style="font-size:18px;"><i class="fa fa-angle-right"></i> Starter Task Email </p>
 					</div>
 					
 					<div class="span5">
@@ -43,19 +43,27 @@
 					<div class="row-fluid span12">
 						  <div class="span11">
 							  <p>
-								This is an email from the Stanford HCI Group notifying you that a job requiring a 
+								This is an email from the Stanford HCI Group regarding your interest in joining our 
 
 								<select name="task_member" required="required">
 									<option value="">-- SELECT MEMBER ROLE --</option>
 									<%@task_members.each do |task_member|%>
 										<%=options_for_select([[task_member['role'], task_member['role']]])%>
+										
 									<%end%>
 								</select> 
 								
-								for the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task for the <em><%=@flash_team_json['title']%></em> project 
+								panel. We are excited to hear you are interested in working with us!
+								<!-- for the <%=text_field_tag(:task_name,  @flash_team_event['title'], :class => 'span4') %> task for the <em><%=@flash_team_json['title']%></em> project 
 								has become available. Please take a look at the following job description to see if you are interested in and qualified to complete this task within 
-								the specified deadline.
-							</p>	
+								the specified deadline. -->
+							</p>
+							<p>
+							In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
+							</p>
+							<p>
+							The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
+							</p>
 						</div>
 					</div>
                       
@@ -105,11 +113,25 @@
 							</p>
 						</div>
 					</div>
+
+					<div class="row-fluid span12">
+						<div class="span11">
+							<p>
+								<% compensation_content = "You will be paid for " + @task_duration + " of your time. Please make sure to track your time on Upwork in order to get paid." 
+								%>
+
+								<%=label_tag(:compensation_info, "Compensation & Hiring Information (optional):") %>
+								<%= text_area_tag(:compensation_info, compensation_content, :class => 'span12', :rows =>3) %>
+							</p>
+						</div>
+					</div>
 		                              
 		            <div class="row-fluid span12">
-						<div class="span11">							  
-													<p> If you are available and ready to start working on this task within 30 minutes of being hired, click on the following URL. On clicking this URL, you will be redirected to a page with realtime updates about your hiring status. If you are hired, you will have to confirm your email address (make sure to use the same email address), following which you will be granted access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on oDesk and signing in to Foundry via the link sent to you. If you are not hired, you will be notified for future opportunities.</p>
-							<p><p> URL placeholder (URL will be generated once this form is submitted) </p>
+						<div class="span11">
+
+
+							<p> To complete the starter task, click on the following URL. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork and signing in to Foundry via the link sent to you via email. </p>
+							<p>URL placeholder (URL will be generated once this form is submitted) </p>
 					<p>
 						Best, <br />
 						Stanford HCI Research Team

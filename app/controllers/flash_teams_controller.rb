@@ -741,6 +741,7 @@ end
     @output_description = params[:output_description]
     
     @task_duration = params[:task_duration]
+    @compensation_info = params[:compensation_info]
     
     #@message = params[:message]
 
@@ -769,7 +770,7 @@ end
       newLanding.uniq = @uniq
       newLanding.save
       @url = url_for :controller => 'landings', :action => 'view', :id => @id_team, :event_id => @id_task.to_s, :task_member => @task_member, :uniq => @uniq, :email => email.strip
-      UserMailer.send_starter_task_email(@sender_email, email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @url).deliver
+      UserMailer.send_starter_task_email(@sender_email, email, @subject, @flash_team_name, @task_member, @task_name, @project_overview, @task_description, @all_inputs, @input_link, @outputs, @output_description, @task_duration, @compensation_info, @url).deliver
     end
   
    end

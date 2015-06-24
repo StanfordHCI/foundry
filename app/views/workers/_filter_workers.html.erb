@@ -31,6 +31,7 @@
 	<table class="table table-bordered table-striped" style="overflow: auto">
 	    <thead>
 			<th><i class="icon-ok"></i></th>
+			<th>Id</th>
 			<th>Name</th>
 			<th>Email</th>
 			<th>Skype Username</th>
@@ -50,6 +51,7 @@
 			<% @workers.each do |worker| %>
 			    <tr>
 			        <td><%= check_box_tag("workers[#{worker.id}]", worker.id) %></td>
+			        <td><%= worker.id %></td>
 			        <td><%= worker.name %></td>
 			        <td><%= worker.email %></td>
 			        <td><%= worker.skype_username %></td>
