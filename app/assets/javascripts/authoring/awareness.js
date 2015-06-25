@@ -4,6 +4,7 @@
  */
 
 var poll_interval = 5000; // 20 seconds
+var poll_interval = 50000; // 20 seconds
 var poll_interval_id;
 
 //var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline. 
