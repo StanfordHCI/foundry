@@ -812,17 +812,3 @@ function updateRoleName(id, newValue) {
     $('#mPill_' + id + ' .name').html(newValue);
 }
 
-//Populate the autocomplete function for the event members
-//TO BE DELETED, WILL BE CHANGING TO A CHECKBOX SYSTEM
-function addMemAuto() {
-    var memberArray = [];
-    entryManager.eachMemberId(function(id) {
-        memberArray.push(entryManager.getEntryById(id).role);
-    });
-    
-    $(".eventMemberInput").each(function() {
-        $(this).autocomplete({
-            source: memberArray
-        });
-    })
-};
