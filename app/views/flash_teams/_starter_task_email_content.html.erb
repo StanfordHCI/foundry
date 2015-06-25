@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	
-	<h3><i class="fa fa-angle-right"></i> Task Available Email</h3>
+	<!-- <h3><i class="fa fa-angle-right"></i> Task Available Email</h3> -->
           	
   	<!-- INPUT MESSAGES -->
   	<div class="row-fluid">
@@ -14,52 +14,59 @@
 				</div> <!-- end div class row -->
 				
 				<div class="row-fluid span11">
-					<p>This is an email from the Stanford HCI Group regarding your interest in joining our  <%=@task_member%> panel. We are excited to hear you are interested in working with us!</p>
 					<p>
-					In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
+						This is an email from the Stanford HCI Group regarding your interest in joining our  <%=@task_member%> panel. We are excited to hear you are interested in working with us!
+					</p>
+
+					<p>
+						In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
 					</p>
 					<p>
-					The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
+						The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
 					</p>
 						
-						<p><b>Project overview:</b> <%= raw @project_overview %></p>
-						<p><b>Task description:</b> <%= raw @task_description %></p>
+					<p><b>Project overview:</b> <%= raw @project_overview %></p>
+					<p><b>Task description:</b> <%= raw @task_description %></p>
 						
-						<p>
-							<%if !@all_inputs.empty?%>
-							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
-							<% end %>
-						
-						<%if !@input_link.empty?%>
-							You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
-						
-						<%end%>
-						</p>
-						
-						<%if !@outputs.empty?%>
-						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+					<p>
+						<%if !@all_inputs.empty?%>
+						<b>Input(s):</b> For this task, you will receive the following input(s): <%=@all_inputs%>. 
 						<% end %>
+					
+					<%if !@input_link.empty?%>
+						You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
+					
+					<%end%>
+					</p>
 						
-						<%if !@output_description.empty?%>
+					<%if !@outputs.empty?%>
+						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+					<% end %>
+					
+					<%if !@output_description.empty?%>
 						<p><b>Deliverable information:</b> <%=@output_description%></p>
-						<%end%>
-						
-						<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
-						
-						<%if !@compensation_info.empty?%>
+					<%end%>
+					
+					<p><b>Deadline:</b>You will have <%=@task_duration%> to finish this task </p>
+					
+					<%if !@compensation_info.empty?%>
 						<p><b>Compensation Information:</b> <%=@compensation_info%></p>
-						<%end%>
+					<%end%>
 						
-						<p> To complete the starter task, click on the URL below. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork, signing in to Foundry via the link sent to you via email and clicking the start button on your task. </p>
+					<p> 
+						To complete the starter task, click on the URL below. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork, signing in to Foundry via the link sent to you via email and clicking the start button on your task. 
+					</p>
 
-						<p>If you have any questions as you working on the task, please send us an email at stanfordhci.odesk@gmail.com.</p>
-						<p>URL placeholder (URL will be generated once this form is submitted) </p>
+					<p>
+						If you have any questions as you are working on the task, please send us an email at <%=ENV['DEFAULT_EMAIL']%>.
+					</p>
 
-						<p> URL: <%=link_to "I accept", @url%>. </p>
-						<p>
-							Best, <br />
-							Stanford HCI Research Team
-						</p>
+					<p>URL: <%=link_to "I accept", @url%>.</p>
+
+					<p>
+						Best, <br />
+						Stanford HCI Research Team
+					</p>
 					
 				</div>
 	
