@@ -779,10 +779,6 @@ function currentMemberTask(groupNum){
     }
 }
 
-$(document).ready(function() {
-    pressEnterKeyToSubmit("#addMemberInput", "#addMemberButton");
-});
-
 $(document).on('click', '.edit-mname', function(e) {
     e.stopPropagation();
     e.preventDefault();
