@@ -27,7 +27,6 @@
 //= require ./authoring/events
 //= require ./authoring/EntryManager
 //= require ./authoring/members
-//= require ./authoring/popovers
 //= require ./authoring/helper
 //= require ./authoring/idle
 //= require ./authoring/awareness

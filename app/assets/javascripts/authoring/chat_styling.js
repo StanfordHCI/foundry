@@ -39,10 +39,10 @@ $('#show-online-button').click(function(e) {
   }
 });
 
+//Bold the show online text on hover
 $("#show-online-button").mouseover(function() {
   $("#show-online-button").css("font-weight", "bold");
 });
-
 $("#show-online-button").mouseout(function() {
   $("#show-online-button").css("font-weight", "normal");
 });
