@@ -74,7 +74,7 @@ class UserMailer < ActionMailer::Base
   	@task_duration = task_duration
   	@url = url
   		    	  
-  	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
+  	mail(:from => sender_email, :bcc => [recipient_email, ENV['DEFAULT_EMAIL']], :subject => subject)
   end
 
   def send_starter_task_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, compensation_info, url)
@@ -93,7 +93,7 @@ class UserMailer < ActionMailer::Base
     @compensation_info = compensation_info
     @url = url
               
-    mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
+    mail(:from => sender_email, :bcc => [recipient_email, ENV['DEFAULT_EMAIL']], :subject => subject)
   end
   
   def send_task_acceptance_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name, project_overview, task_description, all_inputs, input_link, outputs, output_description, task_duration, foundry_url)
@@ -111,7 +111,7 @@ class UserMailer < ActionMailer::Base
   	@task_duration = task_duration
   	@foundry_url = foundry_url
   		    	  
-  	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
+  	mail(:from => sender_email, :bcc => [recipient_email, ENV['DEFAULT_EMAIL']], :subject => subject)
   end
   
   def send_task_rejection_email(sender_email, recipient_email, subject, flash_team_name, task_member, task_name)
@@ -121,7 +121,7 @@ class UserMailer < ActionMailer::Base
   	@task_member = task_member
   	@task_name = task_name
   		    	  
-  	mail(:from => sender_email, :bcc => recipient_email, :subject => subject)
+  	mail(:from => sender_email, :bcc => [recipient_email, ENV['DEFAULT_EMAIL']], :subject => subject)
   end
 
   def send_first_in_queue(email, task_member, task_name, flash_team_name, wait_time, removalURL, task_duration, project_overview, task_description, inputs, input_link, outputs, output_description, invitationLink)
