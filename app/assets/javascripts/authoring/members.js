@@ -683,6 +683,7 @@ function reInviteMember(pillId) {
     });
 };
 
+//Open alert to ask if you want to replace a members unique link and thus deny access to an old member
 function confirmReplaceMember(pillId) {
     var memberToReplace = entryManager.getEntryById(pillId).role;
 
@@ -740,6 +741,7 @@ function initializeColorPicker(newColor) {
     });
 }
 
+//Generate unique member id based on time
 function generateMemberId() {
     return String((new Date()).getTime());
 }
@@ -779,6 +781,7 @@ function currentMemberTask(groupNum){
     }
 }
 
+//Ready function for pen icon to edit role name of a member
 $(document).on('click', '.edit-mname', function(e) {
     e.stopPropagation();
     e.preventDefault();
@@ -797,6 +800,7 @@ $(document).on('click', '.edit-mname', function(e) {
     $(target).editable('toggle');
 });
 
+//Called when you save a member's updated role name, changes in database then updates display
 function updateRoleName(id, newValue) {
     var member = entryManager.getEntryById(id);
     member.role = newValue;
