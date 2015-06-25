@@ -21,6 +21,7 @@
 //= require ./bootstrap/bootstrap.min
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
+//= require private_pub
 //= require ./authoring/load
 //= require ./authoring/logging
 //= require ./authoring/timeline
