@@ -955,9 +955,8 @@ function writeDRIMembers(idNum, driId){
     return DRIString;
 }
 
-// Adds/updates the PC dropdown on the event popover/modal
+// Adds/updates the PC dropdown on the task modal
 function writePCMembers(idNum, PCId){
-
     var indexOfJSON = getEventJSONIndex(idNum);
     var PCString = '<option value="0">-- Choose PC --</option>';
     var eventPC = PCId;
@@ -977,7 +976,7 @@ function writePCMembers(idNum, PCId){
     return PCString;
 }
 
-// returns the id of the selected DRI in the DRI dropdown menu on the event popover 
+// returns the id of the selected DRI in the DRI dropdown menu on the task modal
 function getDRI(groupNum) {    
     var dri = document.getElementById("driEvent");
     var driId;
@@ -991,8 +990,9 @@ function getDRI(groupNum) {
     return driId;
 }
 
+//Returns the id of the selected PC in the PC dropdown menu on the task modal 
 function getPC(groupNum){
-      var pc = document.getElementById("pcEvent");
+    var pc = document.getElementById("pcEvent");
     var pcId;
    
     if (pc == null){
@@ -1004,7 +1004,7 @@ function getPC(groupNum){
     return pcId;
 }
 
-//Adds member checkboxes onto the popover of an event, checks if a member is involved in event
+//Adds member checkboxes onto the task modal, checks if a member is involved in event
 function writeEventMembers(eventObj) {
     var memberString = "";
     var evMembers = eventObj.members;
