@@ -5,9 +5,10 @@
   	<div class="row-fluid">
   		<div class="form-panel span12">
   			<p>
-  				<b>We are excited to hear you are interested in joining the <%=@task_member%> panel! <!-- to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. --> </b>
-  				</p>
-  			<p><em>Please read the following information carefully as it contains important information for completing the starter task. </em>
+  				<b>We are excited to hear you are interested in joining the <%=@task_member%> panel! </b>
+  			</p>
+  			<p>
+  				<em>Please read the following information carefully as it contains important information for completing the starter task. </em>
   			</p>
 
   		</div>
@@ -16,15 +17,12 @@
 
   	<div class="row-fluid">
   		<div class="form-panel form-panel-instructions span12">
-  			<!-- <p>
-  				<em>Please read the following information carefully.</em> If at any time you would like to decline this position and be removed from the hiring queue (only for this position), we ask that you <%=link_to "click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>. 
-  			</p> -->
 
   			<p>
-			In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
+				In order to join the panel, we request that you complete a starter task to make sure that you have the skills and experiences needed to complete the types of tasks that will be made available. Once you complete the starter task, we will review your deliverable and make a decision. If you are invited to join the panel, you will receive a link to access the panel on boarding and confirm your membership. At that point, you will start receiving jobs as they become available.
 			</p>
 			<p>
-			The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
+				The starter task is designed to also give you exposure and experience with Foundry, our workflow management and collaboration platform. The information about the project, your starter task and compensation for your time is below. Once you accept the task, you will be taken to Foundry, which will provide you with more information.	
 			</p>
   		</div>
   	</div>
@@ -41,18 +39,6 @@
 				
 				<div class="row-fluid span11">
 
-					<!-- <p>
-						Congratulations!  You are at No. 1 position in the hiring queue for the <%=@task_member%> role to work on the <%=@task_name%> task as part of the <%=@flash_team_name%> project. 
-
-						<br /><br />
-
-						<em>Please read the following information carefully.</em> You should complete the entire registration process (including confirming your email account) within the next <%=@wait_time%> to retain your position in the hiring queue. However, to reinforce again, you must read the following information very carefully-the originally allocated 10 minutes is a lot of time. 
-
-						<br /><br />
-						<em>Please do not close this page;</em> this page will refresh every 60 seconds with the remaining time to help you pace yourself. If at any time you would like to decline this position and be removed from the hiring queue (only for this position), we ask that you <%=link_to "click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%>. 
-
-					</p> -->
-
 					<p> 
 						As stated in the job description, you will have <b><em><%=@task_duration%></em></b> to complete this task. Please make sure to track your working hours on Upwork and to start your task on Foundry. Additional information regarding compensation can be found in the email describing the starter task. For your reference, we have included the job description below:
 					</p>
@@ -61,39 +47,41 @@
 						<p><b>Task description:</b> <%= raw @task_description%></p>
 						
 						<p>
-						<%if !@inputs.empty?%>
-							<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>.
-						<% end %> 
-						
-						<%if !@input_link.nil?%>
-						You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
-						<%end%>
+							<%if !@inputs.empty?%>
+								<b>Input(s):</b> For this task, you will receive the following input(s): <%=@inputs%>.
+							<% end %> 
+							
+							<%if !@input_link.nil?%>
+								You can access the input(s) at the following link: <a href="<%=@input_link%>"><%=@input_link%></a>
+							<%end%>
 						</p>
 						
 						<%if !@outputs.empty?%>
-						<p><b>Deliverable(s):</b> <%=@outputs%></p>
+							<p><b>Deliverable(s):</b> <%=@outputs%></p>
 						<% end %>
 						
 						<%if !@output_description.nil?%>
-						<p><b>Deliverable information:</b> <%=@output_description%></p>
+							<p><b>Deliverable information:</b> <%=@output_description%></p>
 						<%end%>
 						
 						<p>
-							<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work.</p>  Click the link below to sign up for this project on Foundry. 
+							<b>How to start:</b> We are asking you to use our platform, Foundry, to keep track of your progress and submit your work. Click the link below to sign up for this project on Foundry. 
 						</p>
 						
 						<p><%=link_to "Click here to register for this position on Foundry", @invitationLink%></p>
 
-						
 						<p>
-							After you sign up, you will receive a unique link to the project, which you should use to access your task, keep track of your progress and submit your work. If you are unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us (stanfordhci.odesk@gmail.com) if you have any remaining questions.
+							After you sign up, you will receive a unique link to the project, which you should use to access your task, keep track of your progress and submit your work. If you are unfamiliar with Foundry, view the Foundry tour by clicking the "Start Foundry Tour" button on the top left of the page.  Feel free to contact us (<%=ENV['DEFAULT_EMAIL']%>) if you have any remaining questions.
 						</p>  
 						
-			<p>If you would not like to join the panel any more, <%=link_to "Click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%> to decline the starter task.</p>
+						<p>
+							If you would not like to join the panel any more, <%=link_to "Click here", @removalURL, :data=>{:confirm=>"Are you sure you want to be removed from the hiring queue?"}%> to decline the starter task.
+						</p>
 
 			
 						<p>
-							Thank you for involvement in this project and we look forward to receiving your work!						</p>
+							Thank you for involvement in this project and we look forward to receiving your work!
+						</p>
 
 						<p>
 							Best, <br />
