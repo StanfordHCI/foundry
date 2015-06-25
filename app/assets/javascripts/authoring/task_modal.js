@@ -597,6 +597,30 @@ function formatModalTime(timeInMins){
     return timeStr;
 }
 
+function createOptionsButton(groupNum){
+
+    var ev_index = getEventJSONIndex(groupNum);
+    var ev_title = flashTeamsJSON["events"][ev_index].title; 
+
+    var optionsBtn = '<div class="btn-group dropup">'
+                + '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">'
+                    + 'Options'
+                    + '<span class="caret"></span>'
+                + '</a>'
+                + '<ul class="dropdown-menu">'
+                    + '<li><a tabindex="-1" href="#" id="duplicate-task" onclick="duplicateEvent('+ groupNum +', true)">Duplicate</a></li>';
+           if(flashTeamsJSON.folder != undefined){         
+                optionsBtn += '<li><a tabindex="-1" href="#" id="new-gdrive-proj-folder" '
+                    + 'onclick="createTaskFolder(\'' + ev_title + ' - ' + groupNum + '\', ' + ev_index + ', \'' + flashTeamsJSON.folder[0] + '\')"'
+                    + '>New GDrive Folder</a></li>';
+            }
+
+        optionsBtn += '</ul>'
+                    + '</div>';
+    
+    return optionsBtn;
+}
+
 function saveTaskOverview(groupNum){
 	var task_index = getEventJSONIndex(groupNum); 
 	var ev = flashTeamsJSON["events"][task_index];
