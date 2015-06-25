@@ -1,0 +1,10 @@
+development:
+  server: "https://flashfayetest.herokuapp.com/faye"
+  secret_token: "reallysecrettoken"
+test:
+  server: "https://flashfayetest.herokuapp.com/faye"
+  secret_token: "reallysecrettoken"
+production:
+  server: "https://flashfayetest.herokuapp.com/faye"
+  secret_token: "reallysecrettoken"
+  signature_expiration: 3600 # one hour
