@@ -4,7 +4,6 @@
  */
 var json_transaction_id = 0;
 
-var poll_interval = 5000; // 20 seconds
 var poll_interval = 50000; // 20 seconds
 var poll_interval_id;
 
