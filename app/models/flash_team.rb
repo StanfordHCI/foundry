@@ -4,6 +4,10 @@ class FlashTeam < ActiveRecord::Base
 
   has_many :tasks
   has_many :members
+
+  after_save do
+    PrivatePub.publish_to('/data/updated', JSON.parse(self.status))
+  end
 end
 
 def get_all_flash_teams
