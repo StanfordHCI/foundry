@@ -138,6 +138,7 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
   #resources :workers
   get '/workers/index' => 'workers#index' 
   get '/workers/register' => 'workers#register' 
+  get '/workers/register/:id' => 'workers#register' 
   get '/workers/confirmation' => 'workers#confirmation'
   get '/workers/apply' => 'workers#apply' 
   get '/workers/apply/:panel' => 'workers#apply'

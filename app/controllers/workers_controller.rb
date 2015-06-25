@@ -111,7 +111,17 @@ class WorkersController < ApplicationController
   	session.delete(:ref_page)
   	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
   	
-  	@worker = Worker.new
+    if params[:id]
+      @worker = Worker.find(params[:id])
+      if @worker.panel[0,2] == "wo"
+        @placeholder = @worker.panel
+      else 
+        @placeholder = "wo_" + @worker.panel
+      end
+      @disabled = "disabled"
+  	else
+      @worker = Worker.new
+    end
 
     @panelcode = true
   end
@@ -139,7 +149,11 @@ class WorkersController < ApplicationController
     
     if worker.save
         #redirect_to :action => 'show', :id => worker.id, alert: "Worker created successfully."
-        redirect_to session.delete(:return_to)
+        if session[:ref_page][:controller] == "workers" && session[:ref_page][:action] == "register"
+          redirect_to :action => 'confirmation', :conf_type => 'register'
+        else
+          redirect_to session.delete(:return_to)
+        end
     else
         #redirect_to :action => 'edit', :id => worker.id, alert: "Error updating worker." 
         redirect_to edit_worker_path(worker), alert: "Error updating worker."
