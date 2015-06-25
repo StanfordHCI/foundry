@@ -132,9 +132,9 @@
 
 							<p> To complete the starter task, click on the URL below. On clicking this URL, you will be redirected to a page with information about the task. You should then click on 'Accept' and confirm your email address (make sure to use the same email address), which will grant you access to the <%=@task_name%> task on Foundry. Further, you must confirm that you have started working by accepting the contract on Upwork, signing in to Foundry via the link sent to you via email and clicking the start button on your task. </p>
 
-							<p>If you have any questions as you working on the task, please send us an email at stanfordhci.odesk@gmail.com.</p>
+							<p>If you have any questions as you working on the task, please send us an email at <%=ENV['DEFAULT_EMAIL']%>.</p>
 
-							<p>URL placeholder (URL will be generated once this form is submitted) </p>
+							<p>URL placeholder (URL will be generated once this form is submitted). </p>
 					<p>
 						Best, <br />
 						Stanford HCI Research Team
