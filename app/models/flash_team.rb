@@ -6,7 +6,11 @@ class FlashTeam < ActiveRecord::Base
   has_many :members
 
   after_save do
-    PrivatePub.publish_to('/data/updated', JSON.parse(self.status))
+    PrivatePub.publish_to('/data/updated', self.status_json)
+  end
+
+  def status_json
+    JSON.parse((self.status.presence || '{}'))
   end
 end
 
