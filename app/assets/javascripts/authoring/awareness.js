@@ -726,6 +726,15 @@ var poll = function(){
     }, poll_interval); // every 5 seconds currently
 };
 
+var initFaye = function() {
+  PrivatePub.subscribe("/data/updated", function(data, channel) {
+      if (data) {
+        renderFlashTeamsJSON(data, false);
+      }
+  });
+}
+
+
 var recordStartTime = function(){
     flashTeamsJSON["startTime"] = (new Date).getTime();
     updateStatus(true);
