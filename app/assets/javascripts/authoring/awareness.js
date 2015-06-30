@@ -47,8 +47,7 @@ $(document).ready(function(){
     addCursor();
     cursor = timeline_svg.select(".cursor");
     //console.log("THIS FUNCTION HITS");
-    renderEverything(true);
-    initFaye();
+    $("#flash_team_id").requestUpdates(true);
 });
 
 var addCursor = function(){
@@ -300,12 +299,13 @@ function renderFlashTeamsJSON(data, firstTime) {
 
 
     // Using transaction ID to avoid updatin client which is already updated.
-    console.log("global" + json_transaction_id)
+    console.log("global " + json_transaction_id)
     var currentTransactionID = json_transaction_id || 0
-    console.log("current" + currentTransactionID)
+    console.log("current " + currentTransactionID)
     var givenTransactionID = data.json_transaction_id || 1
-    console.log("given" + givenTransactionID)
+    console.log("given " + givenTransactionID)
     if(currentTransactionID >= givenTransactionID) return;
+    console.log("Rendering...")
     json_transaction_id = givenTransactionID
 
     loadedStatus = data;
@@ -421,25 +421,25 @@ function renderFlashTeamsJSON(data, firstTime) {
 }
 
 // firstTime=true means page is reloaded
-function renderEverything(firstTime) {
-    colorBox();
-    getTeamInfo();
-    var flash_team_id = $("#flash_team_id").val();
-    var url = '/flash_teams/' + flash_team_id + '/get_status';
-    $.ajax({
-        url: url,
-        type: 'get'
-    }).done(function (data) {
-        renderFlashTeamsJSON(data, firstTime);
-    })
+function renderEverything(data, firstTime) {
+    renderFlashTeamsJSON(data, firstTime);
 
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
+        initTimer();
         listenForVisibilityChange();
     }
 
-    
+
+}
+
+// render events to show timer changes
+// TODO rework to draw timers only 
+function initTimer() {
+    setInterval(function(){
+        drawEvents(true);
+    }, 5000)    
 }
 
 function listenForVisibilityChange(){
@@ -473,11 +473,11 @@ function listenForVisibilityChange(){
 
         //if(state == "visible" && in_progress){
         if(state == "visible"){
-            renderEverything(false);
+            $("#flash_team_id").requestUpdates(false);
             //logActivity("Team Update",'Window Became Visible', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         }
     }, false);
-};  
+};
 
 // saves member object for current_user (undefined for author so we will set it to 'Author')
 var current_user;
@@ -686,54 +686,9 @@ var flashTeamUpdated = function(){
 var poll = function(){
     //console.log("POLLING");
     return setInterval(function(){
-        //console.log("MAKING POLL NOW...");
-        var flash_team_id = $("#flash_team_id").val();
-        var url = '/flash_teams/' + flash_team_id + '/get_status';
-        $.ajax({
-            url: url,
-            type: 'get'
-        }).done(function(data){
-            if(data == null) return;
-            loadedStatus = data;
-
-            //console.log("inside poll function");
-            if(flashTeamEndedorStarted()) {
-                //stopPolling();
-                /*if(isUser) {
-                    // to solve the case where the user already loaded the page
-                    // and so already has the chatbox and has already started polling
-                    user_poll = true;
-                }
-                renderEverything(true);
-                */
-                renderEverything(false);
-            } else if (flashTeamUpdated()) {
-                //stopPolling();
-                //console.log("FLASH TEAM UPDATED..CALLING renderEverything(FALSE)");
-                renderEverything(false);
-            } else {
-                drawStartedEvents();
-                //console.log("Flash team not updated and not ended");
-
-                 //show the documentation of the previous task for the workers and the PCs.
-               /* if (isUser || memberType == "pc"){
-                    show_previous_doc();
-                    //updateStatus();
-                }*/
-
-            }
-      });
+        $("#flash_team_id").requestUpdates(false);
     }, poll_interval); // every 5 seconds currently
 };
-
-var initFaye = function() {
-  PrivatePub.subscribe("/data/updated", function(data, channel) {
-      if (data) {
-        renderFlashTeamsJSON(data, false);
-      }
-  });
-}
-
 
 var recordStartTime = function(){
     flashTeamsJSON["startTime"] = (new Date).getTime();

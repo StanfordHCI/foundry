@@ -59,4 +59,5 @@
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
+//= require ./authoring/request_updates
 

@@ -108,7 +108,7 @@
 <%= javascript_include_tag "https://apis.google.com/js/client.js?onload=handleClientLoad" %>
 <%= javascript_include_tag "https://apis.google.com/js/api.js"%>
 
-<%= subscribe_to "/data/updated" %>
+<%= subscribe_to "/flash_team/#{@flash_team.id}/updated" %>
 
 <script>
   (function() {

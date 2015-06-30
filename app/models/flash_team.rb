@@ -6,7 +6,7 @@ class FlashTeam < ActiveRecord::Base
   has_many :members
 
   after_save do
-    PrivatePub.publish_to('/data/updated', self.status_json)
+    PrivatePub.publish_to("/flash_team/#{self.id}/updated", self.status_json)
   end
 
   def status_json
