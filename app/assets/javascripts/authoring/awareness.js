@@ -340,9 +340,9 @@ function renderFlashTeamsJSON(data, firstTime) {
     }
 
 
+    colorBox();
     if(in_progress){
 
-        colorBox();
         //console.log("flash team in progress");
         $("#flashTeamStartBtn").attr("disabled", "disabled");
         $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above
