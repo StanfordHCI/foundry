@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby `cat .ruby-version`.strip
 
-gem 'private_pub'
+gem 'private_pub', github: 'aratak/private_pub'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'

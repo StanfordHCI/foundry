@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/aratak/private_pub.git
+  revision: 40380696bd7475e69097bd36543916acdc524f8d
+  specs:
+    private_pub (1.0.3)
+      faye
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -128,13 +135,11 @@ GEM
     oauth (0.4.7)
     pg (0.17.1)
     polyglot (0.3.5)
-    private_pub (1.0.3)
-      faye
     pusher (0.14.4)
       httpclient (~> 2.5)
       multi_json (~> 1.0)
       signature (~> 0.1.8)
-    rack (1.5.2)
+    rack (1.5.5)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.0.1)
@@ -221,7 +226,7 @@ DEPENDENCIES
   launchy (>= 2.1.1)
   oauth
   pg (= 0.17.1)
-  private_pub
+  private_pub!
   pusher
   rails (= 4.0.1)
   rails_12factor
