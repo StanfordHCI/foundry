@@ -49,6 +49,7 @@ $(document).ready(function(){
     colorBox();
     //console.log("THIS FUNCTION HITS");
     $("#flash_team_id").requestUpdates(true);
+    $("#flash_team_id").getTeamInfo();
 });
 
 var addCursor = function(){
@@ -542,23 +543,6 @@ var renderChatbox = function(){
                 name = message.name;
             });
 
-    });
-};
-
-var author_name; // save name of flash team author
-var team_name; // saves flash team name
-var team_id; // saves flash team id
-
-//returns author name, team name and team ID
-var getTeamInfo = function(){
-    var url = '/flash_teams/' + flash_team_id + '/get_team_info';
-    $.ajax({
-       url: url,
-       type: 'post'
-    }).done(function(data){
-       author_name = data["author_name"];
-       team_name = data["flash_team_name"];
-       team_id =   data["flash_team_id"];
     });
 };
 
@@ -1878,37 +1862,45 @@ var constructStatusObj = function(){
     return localStatus;
 };
 
+var timer = null;
+
 var updateStatus = function(flash_team_in_progress){
-
-    json_transaction_id++
-    var localStatus = constructStatusObj();
-
-    //if flashTeam hasn't been started yet, update the original status in the db
-    if(flashTeamsJSON["startTime"] == undefined){
-	    //console.log("NO START TIME!");
-		updateOriginalStatus();
+    if (timer) {
+        clearTimeout(timer); //cancel the previous timer.
+        timer = null;
     }
+    timer = setTimeout(function(){
 
-    if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
-        localStatus.flash_team_in_progress = flash_team_in_progress;
-    } else {
+        json_transaction_id++
+        var localStatus = constructStatusObj();
 
-        localStatus.flash_team_in_progress = in_progress;
-    }
-    localStatus.latest_time = (new Date).getTime();
-    var localStatusJSON = JSON.stringify(localStatus);
-    //console.log("updating string: " + localStatusJSON);
+        //if flashTeam hasn't been started yet, update the original status in the db
+        if(flashTeamsJSON["startTime"] == undefined){
+    	    //console.log("NO START TIME!");
+    		updateOriginalStatus();
+        }
 
-    var flash_team_id = $("#flash_team_id").val();
-    var authenticity_token = $("#authenticity_token").val();
-    var url = '/flash_teams/' + flash_team_id + '/update_status';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-    }).done(function(data){
-        //console.log("UPDATED FLASH TEAM STATUS");
-    });
+        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
+            localStatus.flash_team_in_progress = flash_team_in_progress;
+        } else {
+
+            localStatus.flash_team_in_progress = in_progress;
+        }
+        localStatus.latest_time = (new Date).getTime();
+        var localStatusJSON = JSON.stringify(localStatus);
+        //console.log("updating string: " + localStatusJSON);
+
+        var flash_team_id = $("#flash_team_id").val();
+        var authenticity_token = $("#authenticity_token").val();
+        var url = '/flash_teams/' + flash_team_id + '/update_status';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+        }).done(function(data){
+            //console.log("UPDATED FLASH TEAM STATUS");
+        });
+    }, 2000);
 };
 
 //this function updates the original status of the flash team in the database, which is
