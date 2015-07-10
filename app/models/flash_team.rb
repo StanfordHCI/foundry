@@ -13,7 +13,7 @@ class FlashTeam < ActiveRecord::Base
   def get_team_info
     flash_team_name = self.name
     flash_team_id = self.id
-    flash_team_json = JSON.parse(self.json)
+    flash_team_json = self.json.present? ? JSON.parse(self.json) : {}
     author_name = flash_team_json["author"]
     {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}
   end
