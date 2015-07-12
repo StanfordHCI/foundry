@@ -3,4 +3,10 @@ class Task < ActiveRecord::Base
   has_and_belongs_to_many :members
   has_and_belongs_to_many :handoffs
   has_and_belongs_to_many :collaborations
+
+  def get_data
+    parsed_data = JSON.parse((self.data_json.presence || '{}'))
+    parsed_data['_id'] = self.id
+    parsed_data
+  end
 end

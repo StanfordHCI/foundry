@@ -19,7 +19,23 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def status_json
-    JSON.parse((self.status.presence || '{}'))
+    parsed_data = JSON.parse((self.status.presence || '{}'))
+    parsed_data['flash_teams_json']['events'] = self.tasks.map(&:get_data)
+    parsed_data.to_json
+  end
+
+  def status=(data)
+    parsed_data = JSON.parse(data)
+    events = parsed_data['flash_teams_json']['events']
+    events.each do |event|
+      task = self.tasks.find_or_initialize_by_id event['_id']
+      if task.data_json != event.to_json
+        task.data_json = event.to_json
+        task.save
+      end
+    end
+    parsed_data['flash_teams_json'].delete 'events'
+    write_attribute :status, parsed_data.to_json
   end
 end
 

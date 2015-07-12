@@ -187,7 +187,7 @@ end
 	#note: member info is stored in status json in flash_teams_json
 		
     #customize user views
-    status = @flash_team.status 
+    status = @flash_team.status_json
     if status == nil
       @author_runtime=false
     else
