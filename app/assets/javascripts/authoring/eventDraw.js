@@ -500,10 +500,10 @@ function drawTimer(eventObj){
             }
             delayed_tasks.push(groupNum);
             drawEvent(eventObj);
+            updateStatus(true);
         }
 
         eventObj["timer"] = remaining_time;
-        updateStatus(true);
     }
 
     else if( eventObj.status == "delayed" ){
@@ -512,7 +512,6 @@ function drawTimer(eventObj){
         var remaining_time = eventObj.latest_remaining_time - time_passed;
 
         eventObj["timer"] = remaining_time;
-        updateStatus(true);
     }
 }
 

@@ -1,0 +1,8 @@
+development: &defaults
+  server: <%= ENV.fetch("FAYE_SERVER_URL", "https://flashfayetest.herokuapp.com/faye") %>
+  secret_token: <%= ENV.fetch("FAYE_SECRET", "reallysecrettoken") %>
+test:
+  <<: *defaults
+production:
+  <<: *defaults
+  signature_expiration: 3600 # one hour
