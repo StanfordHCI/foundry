@@ -116,6 +116,9 @@ GEM
       railties (>= 3.2.16)
     jquery_context_menu-rails (0.0.4)
       jquery-rails
+    js-routes (1.0.1)
+      railties (>= 3.2)
+      sprockets-rails
     json (1.8.2)
     jwt (1.4.1)
     kgio (2.9.3)
@@ -234,6 +237,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   jquery_context_menu-rails
+  js-routes
   launchy (>= 2.1.1)
   oauth
   pg (= 0.17.1)
