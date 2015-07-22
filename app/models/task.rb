@@ -9,4 +9,12 @@ class Task < ActiveRecord::Base
     parsed_data['_id'] = self.id
     parsed_data
   end
+
+  after_destroy do
+    PrivatePub.publish_to("/flash_team/#{self.flash_team.id}/event_deleted", self.id)
+  end
+
+  after_create do
+    PrivatePub.publish_to("/flash_team/#{self.flash_team.id}/event_created", self.get_data)
+  end
 end
