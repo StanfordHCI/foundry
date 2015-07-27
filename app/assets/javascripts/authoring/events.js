@@ -223,49 +223,35 @@ function calcSnap(mouseX, mouseY) {
 
 // drag on timeline => creates new event and draws it
 function newEvent(point, duration) {
+    // get coords where event should snap to
+    var snapPoint = calcSnap(point[0], point[1]);
+    // create event object
+    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
+
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
         return;
     }
 
-    if(isUser) { // user page
-       return;
-    }
+    if(isUser) {return};  // user page
+
     if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
 
-    createEvent(point, duration);
-};
-
-//Draw a new event and add the event object to the json
-function createEvent(point, duration) {
-    // get coords where event should snap to
-    var snapPoint = calcSnap(point[0], point[1]);
-  
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
-
+    saveEvent(eventObj);
     logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
-
-
-    // save
-    updateStatus();
 };
 
-function newEvent(point, duration) {
-    // create event object
-    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
-
-    saveEvent(eventObj);
-}
-
 function saveEvent(eventObj) {
+    var authenticity_token = $("#authenticity_token").val();
     $.ajax({
         url: Routes.flash_team_events_path(flashTeamsJSON.id),
         type: 'post',
-        data: {"authenticity_token": authenticity_token, event: eventObj}
+        data: {"authenticity_token": authenticity_token, "event": eventObj}
     }).done(function(data){
         eventObj = data
         // render event on timeline
@@ -688,13 +674,14 @@ function deleteEvent(eventId){
     //Hide the editing task modal
     $('#confirmAction').modal('hide');
     
-    destroyTask(eventObj._id)
+    destroyTask(eventId)
     // updateStatus();
 }
 
 function destroyTask(eventId) {
+    var eventObj = flashTeamsJSON["events"][eventId];
     $.ajax({
-        url: Routes.flash_team_event_path(flashTeamsJSON.id, eventId),
+        url: Routes.flash_team_event_path(flashTeamsJSON.id, eventObj._id),
         type: 'delete',
         data: {"authenticity_token": authenticity_token}
     }).done(function(data){
