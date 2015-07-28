@@ -119,6 +119,12 @@ $("#requestEditSubmitBtn").click(function(){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of changes to task: </b>' + $("#event-request-description").val();
+    }else if (selected == 'Redo a Task'){
+        form_content = '<b>Task Name: </b>' + $("#event-request-name").val() + '<br />'
+                + '<b>Description of what is wrong with this deliverable: </b>' + $("#event-request-description").val() + '<br />'
+                + '<b>Would you like to drop this worker from the panel? </b>' + $("#event-request-drop-worker-panel").val() + '<br />'
+                + '<b>Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker? </b>' + $("#event-request-worker-selection").val();
+        disabled = false; 
     }else if (selected == 'Task Not Ready'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
@@ -127,6 +133,16 @@ $("#requestEditSubmitBtn").click(function(){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of how much more time you need and why: </b>' + $("#event-request-description").val();
+    }else if (selected == 'Add a Module'){
+        form_content = '<b>Module Name: </b>' + $("#event-request-name").val() + '<br />'
+                + '<b>Due Date: </b>' + $("#event-request-module-deadline").val() + '<br />' 
+                + '<b>Number of workers required for module: </b>' + $("#event-request-num-workers").val() + '<br />' 
+                + '<b>Description of module: </b>' +  $("#event-request-description").val();
+        disabled = false;
+    }else if (selected == 'Edit a Module'){
+        form_content = '<b>Module Name: </b>' + $("#event-request-name").val() + '<br />'
+                + '<b>Description of changes to task: </b>' + $("#event-request-description").val();
+        disabled = false;
     }
     else{
         form_content += '<b>Description of changes you would like to make to the team: </b>' + $('#request-edit-form-text').val();
@@ -193,8 +209,8 @@ function updateRequestChangeModal(selected){
     }else if (selected == 'Redo a Task'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of what is wrong with this deliverable: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what is wrong with this deliverable and why the task needs to be redone" id="event-request-description"></textarea>'
-                + 'Would you like to drop this worker from the panel? <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Please state whether you would like to drop the worker who completed this task from the panel" id="event-request-drop-worker-panel"></textarea>';
-                + 'Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker?<br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe who should complete this task (same worker or new one) and how new workers (if chosen) should be hired" id="event-request-worker-selection"></textarea>';
+                + 'Would you like to drop this worker from the panel? <br /> <textarea class="request-change-input input-block-level" rows="2" value="" placeholder="Please state whether you would like to drop the worker who completed this task from the panel" id="event-request-drop-worker-panel"></textarea>'
+                + 'Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker?<br /> <textarea class="request-change-input input-block-level" rows="3" value="" placeholder="Describe who should complete this task (same worker or new one) and how new workers (if chosen) should be hired" id="event-request-worker-selection"></textarea>';
         
         disabled = false; 
     }else if (selected == 'Need More Time'){ //THIS OPTION IS CURRENTLY COMMENTED OUT IN DROPDOWN
