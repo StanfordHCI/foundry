@@ -183,21 +183,37 @@ function updateRequestChangeModal(selected){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Task Name"> <br />'
                 + 'Duration: <input type="number" class="request-change-input" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
                 + '<input type = "number" class="request-change-input" id="event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
-                + 'Description: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of task" id="event-request-description"></textarea>';
+                + 'Description of task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of task" id="event-request-description"></textarea>';
         disabled = false;
     }else if (selected == 'Task Not Ready'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of why task is not ready and the requested changes: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe why the task is not ready to be started and what changes need to be made to the task or workflow" id="event-request-description"></textarea>';
         
         disabled = false; 
-    }else if (selected == 'Need More Time'){
+    }else if (selected == 'Redo a Task'){
+        content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
+                + 'Description of what is wrong with this deliverable: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what is wrong with this deliverable and why the task needs to be redone" id="event-request-description"></textarea>'
+                + 'Would you like to drop this worker from the panel? <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Please state whether you would like to drop the worker who completed this task from the panel" id="event-request-drop-worker-panel"></textarea>';
+                + 'Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker?<br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe who should complete this task (same worker or new one) and how new workers (if chosen) should be hired" id="event-request-worker-selection"></textarea>';
+        
+        disabled = false; 
+    }else if (selected == 'Need More Time'){ //THIS OPTION IS CURRENTLY COMMENTED OUT IN DROPDOWN
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of how much more time you need and why: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe how much more time you need to complete the task and why" id="event-request-description"></textarea>';
         disabled = false;
-    }
-    else if (selected == 'Edit a Task'){
+    }else if (selected == 'Edit a Task'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of changes to task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what changes you would like to make to the task" id="event-request-description"></textarea>';
+        disabled = false;
+    }else if (selected == 'Add a Module'){
+        content = 'Module Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Module Name"> <br />'
+                + 'Due Date: <input type="text" class="request-change-input" id="event-request-module-deadline" value="" placeholder="Date to be completed" /> <br />' 
+                + 'Number of workers required for module: <input type="number" class="request-change-input" id="event-request-num-workers" value="" min="0" placeholder="00" style="width: 36px"/> workers <br />' 
+                + 'Description of module: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of module" id="event-request-description"></textarea>';
+        disabled = false;
+    }else if (selected == 'Edit a Module'){
+        content = 'Module Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Module to Change"> <br />'
+                + 'Description of changes to task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what changes you would like to make to the module" id="event-request-description"></textarea>';
         disabled = false;
     }
     else{
