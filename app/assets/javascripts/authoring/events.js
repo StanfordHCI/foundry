@@ -223,54 +223,53 @@ function calcSnap(mouseX, mouseY) {
 
 // drag on timeline => creates new event and draws it
 function newEvent(point, duration) {
+    // get coords where event should snap to
+    var snapPoint = calcSnap(point[0], point[1]);
+    // create event object
+    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
+
     // interactions
     if(DRAWING_HANDOFF==true || DRAWING_COLLAB==true) {
         alert("Please click on another event or the same event to cancel");
         return;
     }
 
-    if(isUser) { // user page
-       return;
-    }
+    if(isUser) {return};  // user page
+
     if(in_progress && flashTeamsJSON["paused"]!=true){
         return;
     }
 
-    createEvent(point, duration);
-};
-
-//Draw a new event and add the event object to the json
-function createEvent(point, duration) {
-    // get coords where event should snap to
-    var snapPoint = calcSnap(point[0], point[1]);
-  
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
-    // create event object
-    var eventObj = createEventObj(newEventObject(snapPoint, duration , {}));
-
-    // render event on timeline
-    drawEvent(eventObj, true);
-
-    //if team is in edit mode, add the gDrive folder for this event
-    if(flashTeamsJSON["paused"] == true){
-        var event_index = getEventJSONIndex(eventObj.id);
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
-    }
-
-    //if team has been ended and new events get added, add the gDrive folder for the newly added events
-    if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
-        var event_index = getEventJSONIndex(eventObj.id);
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
-    }
-
+    saveEvent(eventObj);
     logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
-
-
-    // save
-    updateStatus();
 };
 
+function saveEvent(eventObj) {
+    var authenticity_token = $("#authenticity_token").val();
+    $.ajax({
+        url: Routes.flash_team_events_path(flashTeamsJSON.id),
+        type: 'post',
+        data: {"authenticity_token": authenticity_token, "event": eventObj}
+    }).done(function(data){
+        eventObj = data
+        // render event on timeline
+        drawEvent(eventObj, true);
+
+        //if team is in edit mode, add the gDrive folder for this event
+        if(flashTeamsJSON["paused"] == true){
+            var event_index = getEventJSONIndex(eventObj.id);
+            createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        }
+
+        //if team has been ended and new events get added, add the gDrive folder for the newly added events
+        if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+            var event_index = getEventJSONIndex(eventObj.id);
+            createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        }    
+    });    
+}
 
 function newEventObject(snapPoint, duration, objectToDuplicate){
 
@@ -675,6 +674,23 @@ function deleteEvent(eventId){
     //Hide the editing task modal
     $('#confirmAction').modal('hide');
     
+    destroyTask(eventId)
+    // updateStatus();
+}
+
+function destroyTask(eventId) {
+    var eventObj = flashTeamsJSON["events"][eventId];
+    $.ajax({
+        url: Routes.flash_team_event_path(flashTeamsJSON.id, eventObj._id),
+        type: 'delete',
+        data: {"authenticity_token": authenticity_token}
+    }).done(function(data){
+        //Visually removes task from the timeline, in awareness.js
+        deleteTask(eventId)
+    });    
+}
+
+function deleteTask(evenId) {
     // Only log before because event won't exist after
     logActivity("deleteEvent(eventId)",'Delete Event - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
@@ -728,12 +744,8 @@ function deleteEvent(eventId){
         }
 
     }
-
-    //Visually removes task from the timeline, in awareness.js
     removeTask(eventId);
-    updateStatus();
 }
-
 
 //This function is used to truncate the event title string since html tags cannot be attached to svg
 String.prototype.trunc = String.prototype.trunc ||

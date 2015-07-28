@@ -7,6 +7,8 @@ require 'securerandom'
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
+  before_filter :check_owner, only: :edit
+  before_filter :remember_return_path, only: [:edit, :panels]
 
 	def new
 	# check to see if the user id exists in the database 
@@ -160,94 +162,40 @@ rescue_from ActiveRecord::RecordNotFound do
   render 'member_doesnt_exist'   # or e.g. redirect_to :action => :index
 end
  
-  def edit
-  
-  	session.delete(:return_to)
-	session[:return_to] ||= request.original_url
-	  
-  if !params.has_key?("uniq") #if in author view
-	  	if session[:user].nil? 
-			@user = nil 
-			@title = "Invalid User ID"
-			@flash_team = nil
-			redirect_to(welcome_index_path) and return		
-		else 
-			@flash_team = FlashTeam.find(params[:id])
-			
-			if @flash_team.user_id != session[:user].id 
-				flash[:notice] = 'You cannot access this flash team.' 
-				redirect_to(flash_teams_path) and return 
-			end
-		end
-			
-  	else #else it is in worker view 
-    	@flash_team = FlashTeam.find(params[:id])
-    end 
-    
-	#note: member info is stored in status json in flash_teams_json
+  def edit  
+	  #note: member info is stored in status json in flash_teams_json
 		
     #customize user views
-    status = @flash_team.status 
+    status = @flash_team.status_json
     if status == nil
       @author_runtime=false
     else
-      json_status= JSON.parse(status)
-      if json_status["flash_team_in_progress"] == nil
+      # status= JSON.parse(status)
+      if status["flash_team_in_progress"] == nil
         @author_runtime=false
       else
-        @author_runtime=json_status["flash_team_in_progress"]
+        @author_runtime=status["flash_team_in_progress"]
       end
     end
 
-    if params.has_key?("uniq")
-     @in_expert_view = true
-     @in_author_view = false
+    @in_author_view = !@in_expert_view = params.has_key?("uniq")
 
-     uniq = params[:uniq]
-    
-     Member.find_by! uniq: uniq
-     #if !(Member.exist(:uniq => uniq))  #role has been reinvited and doesn't exist anymore
-     #   render 'member_doesnt_exist'
-     #end 
-
-     member = Member.where(:uniq => uniq)[0]
-     @user_name = member.name
-     
-          
-     
-    flash_team_members = json_status['flash_teams_json']['members']
+    if @in_expert_view
+      member = Member.where(uniq: params[:uniq]).first
+      @user_name = member.name
+      
+      flash_team_members = status['flash_teams_json']['members']
         
-    flash_team_members.each do |member|
-    	if(member['uniq'] == uniq)
-    		@member_type = member['type']
-    		@member_role = member['role']
-    	end
-    end
-    
-    #create session to use for hiring panel
-     #session[:member] = member.uniq
-     session.delete(:member)
-	 session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
-
-
-
-    else
-     @in_expert_view = false
-     @in_author_view = true
-    end
-    #end
-
-    flash_teams = FlashTeam.all
-    @events_array = []
-    flash_teams.each do |flash_team|
-      next if flash_team.json.blank?
-      flash_team_json = JSON.parse(flash_team.json)
-      flash_team_events = flash_team_json["events"]
-      flash_team_events.each do |flash_team_event|
-        @events_array << flash_team_event
+      flash_team_members.each do |member|
+      	if(member['uniq'] == params[:uniq])
+      		@member_type = member['type']
+      		@member_role = member['role']
+      	end
       end
+      
+      session.delete(:member)
+	    session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
     end
-    @events_json = @events_array.to_json
   end
 
   def rename
@@ -297,7 +245,7 @@ end
   def get_status
     @flash_team = FlashTeam.find(params[:id])
     respond_to do |format|
-      format.json {render json: @flash_team.status, status: :ok}
+      format.json {render json: @flash_team.status_json, status: :ok}
     end
   end
 
@@ -937,9 +885,6 @@ end
 
     @panelcode = false
    	
-   	session.delete(:return_to)
-   	session[:return_to] ||= request.original_url
-  	
    	session.delete(:ref_page)
    	session[:ref_page] ||= {:controller => params[:controller], :action => params[:action]}
 
@@ -1074,5 +1019,30 @@ end
 
   end
 
+protected
 
+  def remember_return_path
+    session.delete(:return_to)
+    session[:return_to] ||= request.original_url    
+  end
+
+  def flash_team
+    @flash_team ||= FlashTeam.find(params[:id])
+  end
+
+  def check_owner
+    if !params.has_key?("uniq") #if in author view
+      if session[:user].nil? 
+        @user = nil 
+        @title = "Invalid User ID"
+        @flash_team = nil
+        redirect_to(welcome_index_path) and return    
+      else 
+        if flash_team.user_id != session[:user].id 
+          flash[:notice] = 'You cannot access this flash team.' 
+          redirect_to(flash_teams_path) and return 
+        end
+      end     
+    end 
+  end
 end

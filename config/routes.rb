@@ -88,6 +88,7 @@ Foundry::Application.routes.draw do
       get :clone
       post :settings
     end
+    resources :events
   end
 
   get '/flash_teams/:id/:event_id/hire_form' => 'flash_teams#hire_form'

@@ -30,12 +30,12 @@ $.fn.requestUpdates = function(firstTime) {
     }).done(function(data){
         if(data == null) return;
         loadedStatus = data;
-
-        if(flashTeamEndedorStarted() || flashTeamUpdated()) {
-            renderEverything(loadedStatus, firstTime);
-        } else {
-            drawStartedEvents();
-        }
+        renderEverything(loadedStatus, firstTime);
+        // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
+        //     renderEverything(loadedStatus, firstTime);
+        // } else {
+        //     drawStartedEvents();
+        // }
   });
 
 }
@@ -55,6 +55,26 @@ $.fn.subscribeToFlashTeamInfo = function() {
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
             saveFlashTeam(data)
+        }
+    });
+}
+
+$.fn.subscribeToEventDeleted = function() {
+    url = "/flash_team/" + $(this).val() + "/event_deleted"
+    PrivatePub.subscribe(url, function(data, channel) {
+        if (data) {
+            deleteTask(data.id)
+        }
+    });
+}
+
+$.fn.subscribeToEventCreated = function() {
+    url = "/flash_team/" + $(this).val() + "/event_created"
+    PrivatePub.subscribe(url, function(data, channel) {
+        if (data) {
+            var eventObj = createEventObj(data);
+            // render event on timeline
+            drawEvent(eventObj, true);
         }
     });
 }
