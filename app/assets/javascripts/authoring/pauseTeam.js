@@ -102,7 +102,7 @@ $("#request-change-more-time").click(function(){
 $("#requestEditSubmitBtn").click(function(){
 
     var selected = $('#request-edit-dropdown').val();
-    var title =  $('#request-edit-dropdown').text;
+    var title =  $('#request-edit-dropdown option:selected').text();
 
     var form_content = '<b>Type of Change: </b>' + title;
     form_content += '<br /> <em>Name of Requester:</em> ' + chat_name; 
