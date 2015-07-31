@@ -8,15 +8,16 @@
           <p id='request-edit-help-block'><em><span class="help-block">Your request will get sent to the project owner for review.</span></em></p>
 
           <select id='request-edit-dropdown'>
-              <option>-- SELECT REQUEST TYPE -- </option>
-              <option>Add a Task</option>
-              <option>Edit a Task</option>
+              <option value="" selected>-- SELECT REQUEST TYPE -- </option>
+              <option value="taskAutoHire">Add a Task (Automated Hire)</option>
+              <option value="taskWarmHire">Add a Task (Warm Hire)</option>
+              <option value="taskEdit">Edit a Task</option>
               <!-- <option>Task Not Ready</option> -->
-              <option>Redo a Task</option>
-              <option>Add a Module</option>
-              <option>Edit a Module</option>
-              <option>Need More Time</option>
-              <option>Other</option>
+              <option value="taskRedo">Redo a Task</option>
+              <option value="moduleAdd">Add a Module</option>
+              <option value="moduleEdit">Edit a Module</option>
+              <option value="needMoreTime">Need More Time</option>
+              <option value="other">Other</option>
           </select>
 
           <div id="request-edit-form-content">
