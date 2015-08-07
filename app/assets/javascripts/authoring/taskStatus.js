@@ -98,6 +98,9 @@ function startTask(groupNum) {
     $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
     $("#start-end-task").html('Complete');
 
+    // Message Slack
+    postToSlack(eventObj, "started");
+
 }
 
 //Fires on "Pause" button on task modal
@@ -126,6 +129,8 @@ function pauseTask(groupNum) {
 	//chaning resume button to pause button on the task modal
     $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
     $("#pause-resume-task").html('Resume Task'); 
+
+    postToSlack(eventObj, "paused");
 	
 }
 
@@ -163,6 +168,8 @@ function resumeTask(groupNum) {
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
     $("#pause-resume-task").html('Take a Break'); 
+
+    postToSlack(eventObj, "resumed");
 	
 }
 
@@ -508,6 +515,9 @@ var completeTask = function(groupNum){
     drawEvent(eventToComplete);
     trackUpcomingEvent();
 
+    // Message Slack that it's been done
+    postToSlack(eventToComplete, "completed");
+
     //Message the PC that the task has been completed
     //TODO
 
@@ -515,3 +525,47 @@ var completeTask = function(groupNum){
     //TODO
 
 };
+
+/**
+ * Messages the relevant slack channel that the task is started or finished.
+ * Requires a private slack Incoming Webhook integration URL, or it will post to the StanfordHCI slack.
+ */
+
+var postToSlack = function(event, update) {
+    var title = event['title'];
+    var user = chat_name;
+    var teamUrl = 'http://foundry-app.herokuapp.com/flash_teams/'+flash_team_id+'/'
+
+    // HACK HACK HACK for summer deployment. 
+    //Eventually teams need to have a place they can store the private URLs
+    var channel = "#flashteams-foundry";  
+    var notification_group = "@channel";
+    var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
+    if (flashTeamsJSON['id'] == 178) { // trauma
+        channel = '#general';
+        notification_group = '@everyone';
+        private_slack_url = slackPrivateUrls['trauma'];
+    } else if (flashTeamsJSON['id'] == 155) { // accenture
+        channel = '#general';
+        notification_group = '@everyone';
+        private_slack_url = slackPrivateUrls['accenture'];
+    } else if (flashTeamsJSON['id'] == 158) { // true story
+        channel = '#general';
+        notification_group = '@everyone';
+        private_slack_url = slackPrivateUrls['truestory'];
+    }
+
+    var slackMsg = "";
+    if (update == "completed") {
+        slackMsg = notification_group + ': ' + user + ' has completed *' + title + '* on Foundry. <' + teamUrl + '|See the submission on Foundry.> Congratulate \'em! The next task is ready to start!';
+    } else if (update == "started") {
+        slackMsg = notification_group + ': ' + user + ' has started *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Wish \'em luck!';
+    } else if (update == "paused") {
+        slackMsg = notification_group + ': ' + user + ' has paused *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Let \'em know you hope to see them back soon!';
+    } else if (update == "resumed") {
+        slackMsg = notification_group + ': ' + user + ' has resumed *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Issue a hearty \'Welcome back\'!';
+    }
+
+    var payload = 'payload={\"channel\": \"#flashteams-foundry\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
+    $.post(private_slack_url, payload);
+}
