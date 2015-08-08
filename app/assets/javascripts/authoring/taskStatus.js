@@ -534,7 +534,8 @@ var completeTask = function(groupNum){
 var postToSlack = function(event, update) {
     var title = event['title'];
     var user = chat_name;
-    var teamUrl = 'http://foundry-app.herokuapp.com/flash_teams/'+flash_team_id+'/'
+    var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit';
+    //var teamUrl = 'http://foundry-app.herokuapp.com/flash_teams/'+flash_team_id+'/';
 
     // HACK HACK HACK for summer deployment. 
     //Eventually teams need to have a place they can store the private URLs
@@ -555,15 +556,22 @@ var postToSlack = function(event, update) {
         private_slack_url = slackPrivateUrls['truestory'];
     }
 
+    var defaultMsg = notification_group + ': ' + user + ' has ' + update + ' *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.>';
+
     var slackMsg = "";
+
     if (update == "completed") {
-        slackMsg = notification_group + ': ' + user + ' has completed *' + title + '* on Foundry. <' + teamUrl + '|See the submission on Foundry.> Congratulate \'em! The next task is ready to start!';
+        //slackMsg = notification_group + ': ' + user + ' has completed *' + title + '* on Foundry. <' + teamUrl + '|See the submission on Foundry.> Congratulate \'em! The next task is ready to start!';
+        slackMsg = defaultMsg + ' Congratulate \'em! The next task is ready to start!';
     } else if (update == "started") {
-        slackMsg = notification_group + ': ' + user + ' has started *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Wish \'em luck!';
+        //slackMsg = notification_group + ': ' + user + ' has started *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Wish \'em luck!';
+        slackMsg = defaultMsg + ' Wish \'em luck!';
     } else if (update == "paused") {
-        slackMsg = notification_group + ': ' + user + ' has paused *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Let \'em know you hope to see them back soon!';
+        //slackMsg = notification_group + ': ' + user + ' has paused *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Let \'em know you hope to see them back soon!';
+        slackMsg = defaultMsg + ' Let \'em know you hope to see them back soon!';
     } else if (update == "resumed") {
-        slackMsg = notification_group + ': ' + user + ' has resumed *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Issue a hearty \'Welcome back\'!';
+        //slackMsg = notification_group + ': ' + user + ' has resumed *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Issue a hearty \'Welcome back\'!';
+        slackMsg = defaultMsg +  ' Issue a hearty \'Welcome back\'!';
     }
 
     var payload = 'payload={\"channel\": \"#flashteams-foundry\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
