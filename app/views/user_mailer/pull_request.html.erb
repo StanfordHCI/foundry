@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi <%= @user.username %>!</h1>
+    <p>
+      The user <%= @fork_user.username %> wants to merge changes to your team.
+      Please <%= link_to 'Review the changes', @review_url %>. 
+    </p>
+  </body>
+</html>
