@@ -574,6 +574,6 @@ var postToSlack = function(event, update) {
         slackMsg = defaultMsg +  ' Issue a hearty \'Welcome back\'!';
     }
 
-    var payload = 'payload={\"channel\": \"#flashteams-foundry\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
+    var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
     $.post(private_slack_url, payload);
 }
