@@ -162,15 +162,19 @@ end
  
   def edit
   
-  	session.delete(:return_to)
+  session.delete(:return_to)
 	session[:return_to] ||= request.original_url
 	  
   if !params.has_key?("uniq") #if in author view
-	  	if session[:user].nil? 
-			@user = nil 
-			@title = "Invalid User ID"
-			@flash_team = nil
-			redirect_to(welcome_index_path) and return		
+    if session[:user].nil? 
+       if !session[:uniq].nil?
+        redirect_to :controller => 'flash_teams', :action => 'edit', :id => params[:id], :uniq => session[:uniq] and return
+			 else
+        @user = nil 
+  			@title = "Invalid User ID"
+  			@flash_team = nil
+  			redirect_to(welcome_index_path) and return
+       end		
 		else 
 			@flash_team = FlashTeam.find(params[:id])
 			
@@ -182,6 +186,7 @@ end
 			
   	else #else it is in worker view 
     	@flash_team = FlashTeam.find(params[:id])
+      session[:uniq] = params[:uniq]
     end 
     
 	#note: member info is stored in status json in flash_teams_json
@@ -612,7 +617,6 @@ end
    		@task_name = params[:task_name]
    		@project_overview = params[:project_overview]
    		@task_description = params[:task_description]
-   		
    		
    		@all_inputs = params[:all_inputs]
    		@input_link = params[:input_link]
