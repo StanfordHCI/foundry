@@ -186,6 +186,7 @@ end
 			
   	else #else it is in worker view 
     	@flash_team = FlashTeam.find(params[:id])
+      session[:uniq] = params[:uniq]
     end 
     
 	#note: member info is stored in status json in flash_teams_json
