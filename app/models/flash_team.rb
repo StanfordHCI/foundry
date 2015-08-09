@@ -4,6 +4,9 @@ class FlashTeam < ActiveRecord::Base
 
   has_many :tasks
   has_many :members
+  belongs_to :origin, class_name: 'FlashTeam'
+  has_many :forks, class_name: 'FlashTeam', foreign_key: :origin_id
+  belongs_to :user
 
   after_save do
     PrivatePub.publish_to("/flash_team/#{self.id}/updated", self.status_json)
@@ -20,6 +23,10 @@ class FlashTeam < ActiveRecord::Base
 
   def status_json
     JSON.parse((self.status.presence || '{}'))
+  end
+
+  def fork?
+    origin.present?
   end
 end
 

@@ -85,6 +85,8 @@ Foundry::Application.routes.draw do
       get :task_portal
       get :settings
       get :duplicate
+      get :fork
+      get :pull
       get :clone
       post :settings
     end

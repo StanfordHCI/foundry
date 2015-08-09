@@ -20,6 +20,9 @@
 	       <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
 	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 	        <input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
+          <%= link_to 'Fork Team', fork_flash_team_path(@flash_team), class: 'btn btn-primary' %>
+          <%= link_to 'Pull Request', pull_flash_team_path(@flash_team), class: 'btn btn-primary' if @flash_team.fork? %>
+          <%= link_to 'Merge Pull Request', edit_flash_team_path(@flash_team.origin), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
 	        <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
 	     </div> 
      
