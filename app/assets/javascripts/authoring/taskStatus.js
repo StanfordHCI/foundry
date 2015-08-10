@@ -539,8 +539,8 @@ var postToSlack = function(event, update) {
 
     // HACK HACK HACK for summer deployment. 
     //Eventually teams need to have a place they can store the private URLs
-    var channel = "#flashteams-foundry";  
-    var notification_group = "@channel";
+    var channel = "#foundry-notifications";  
+    var notification_group = "Update";
     var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
     if (flashTeamsJSON['id'] == 178) { // trauma
         channel = '#general';
