@@ -556,16 +556,16 @@ var postToSlack = function(event, update) {
         private_slack_url = slackPrivateUrls['truestory'];
     }
 
-    var defaultMsg = notification_group + ': ' + user + ' has ' + update + ' *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.>';
+    var defaultMsg = user + ' has ' + update + ' *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.>';
 
     var slackMsg = "";
 
     if (update == "completed") {
         //slackMsg = notification_group + ': ' + user + ' has completed *' + title + '* on Foundry. <' + teamUrl + '|See the submission on Foundry.> Congratulate \'em! The next task is ready to start!';
-        slackMsg = defaultMsg + ' Congratulate \'em! The next task is ready to start!';
+        slackMsg = notification_group + ': ' + defaultMsg + ' Congratulate \'em! The next task is ready to start!';
     } else if (update == "started") {
         //slackMsg = notification_group + ': ' + user + ' has started *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Wish \'em luck!';
-        slackMsg = defaultMsg + ' Wish \'em luck!';
+        slackMsg = notification_group + ': ' + defaultMsg + ' Wish \'em luck!';
     } else if (update == "paused") {
         //slackMsg = notification_group + ': ' + user + ' has paused *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Let \'em know you hope to see them back soon!';
         slackMsg = defaultMsg + ' Let \'em know you hope to see them back soon!';
