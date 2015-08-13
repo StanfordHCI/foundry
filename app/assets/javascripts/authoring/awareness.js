@@ -315,7 +315,6 @@ function renderFlashTeamsJSON(data, firstTime) {
     in_progress = loadedStatus.flash_team_in_progress;
     flashTeamsJSON = loadedStatus.flash_teams_json;
 
-
     // initialize the entry manager after flashTeamsJSON has been loaded
     window.entryManager = new window.EntryManager(flashTeamsJSON);
 
@@ -746,6 +745,7 @@ var loadData = function(){
 
     drawBlueBoxes();
     drawRedBoxes();
+    drawOrangeBoxes();
     drawDelayedTasks();
     drawInteractions(); //START HERE, INT DEBUG
     googleDriveLink();
@@ -945,11 +945,50 @@ var drawRedBox = function(ev, task_g, use_cursor){
     return red_width;
 };
 
+var drawOrangeBox = function(ev, task_g, use_cursor){
+
+    var groupNum = ev.id;
+    var events = window._foundry.events;
+    var width = getWidth(ev) - 2 * events.marginLeft;
+    var existingOrangeBox = task_g.selectAll("#changed_rect_" + groupNum);
+    if(existingOrangeBox[0].length == 0) {
+        task_g.append("rect")
+            .attr("class", "changed_rectangle")
+            .attr("x", function(d) {return d.x})
+            .attr("y", function(d) {return d.y})
+            .attr("id", function(d) {
+                return "changed_rect_" + groupNum; })
+            .attr("groupNum", groupNum)
+            .attr("height", RECTANGLE_HEIGHT)
+            .attr("width", width)
+            .attr("fill", "#FFA500")
+            .attr("fill-opacity", .6)
+            .attr("stroke", "#5F5A5A")
+    } else {
+        existingOrangeBox
+            .attr("width", width);
+    }
+
+    return width;
+};
+
+
 var drawBlueBoxes = function(){
     for (var i=0;i<drawn_blue_tasks.length;i++){
         var ev = flashTeamsJSON["events"][getEventJSONIndex(drawn_blue_tasks[i])];
         var task_g = getTaskGFromGroupNum(drawn_blue_tasks[i]);
         drawBlueBox(ev, task_g);
+    }
+};
+
+var drawOrangeBoxes = function(){
+    var changed_events_ids = flashTeamsJSON.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids)
+    if(changed_events_ids) {
+        for (var i=0;i<changed_events_ids.length;i++){
+            var ev = flashTeamsJSON["events"][getEventJSONIndex(changed_events_ids[i])];
+            var task_g = getTaskGFromGroupNum(changed_events_ids[i]);
+            drawOrangeBox(ev, task_g);
+        }
     }
 };
 

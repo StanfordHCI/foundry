@@ -224,11 +224,10 @@ end
 	#note: member info is stored in status json in flash_teams_json
 		
     #customize user views
-    status = @flash_team.status 
-    if status == nil
+    json_status = @flash_team.status_json
+    if json_status == {}
       @author_runtime=false
     else
-      json_status= JSON.parse(status)
       if json_status["flash_team_in_progress"] == nil
         @author_runtime=false
       else
@@ -334,7 +333,7 @@ end
   def get_status
     @flash_team = FlashTeam.find(params[:id])
     respond_to do |format|
-      format.json {render json: @flash_team.status, status: :ok}
+      format.json {render json: @flash_team.status_json, status: :ok}
     end
   end
 
