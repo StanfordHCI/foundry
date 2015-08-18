@@ -542,15 +542,15 @@ var postToSlack = function(event, update) {
     var channel = "#foundry-notifications";  
     var notification_group = "Update";
     var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
-    if (flashTeamsJSON['id'] == 178) { // trauma
+    if (flashTeamsJSON['id'] == 178 || flashTeamsJSON['id'] == 636) { // trauma
         channel = '#general';
         notification_group = '@everyone';
         private_slack_url = slackPrivateUrls['trauma'];
-    } else if (flashTeamsJSON['id'] == 155) { // accenture
+    } else if (flashTeamsJSON['id'] == 155 || flashTeamsJSON['id'] == 637) { // accenture
         channel = '#general';
         notification_group = '@everyone';
         private_slack_url = slackPrivateUrls['accenture'];
-    } else if (flashTeamsJSON['id'] == 158) { // true story
+    } else if (flashTeamsJSON['id'] == 158 || flashTeamsJSON['id'] == 651) { // true story
         channel = '#general';
         notification_group = '@everyone';
         private_slack_url = slackPrivateUrls['truestory'];
