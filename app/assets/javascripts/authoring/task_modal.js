@@ -85,12 +85,12 @@ function showTaskOverview(groupNum){
     }
     
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
-		$("#edit-save-task").css('display', '');
+		$("#edit-save-task").css('display', '')
 		
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
-	} //only the author can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
-    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" ) && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+	} //only the author, PC OR CLIENT (as of 8/21/2015) can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
+    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
             $("#edit-save-task").css('display', '');
             //$("#duplicate-task").css('display','');
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
