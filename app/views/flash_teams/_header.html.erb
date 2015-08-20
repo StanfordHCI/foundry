@@ -28,7 +28,17 @@
 	       <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> 
 	       <input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Worker Tour"/>
 	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
+	     
+	       <% if @member_type == 'pc' || @member_type == 'client' %>
+		   		<input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
+				<input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
+				<input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
+   		<% end %>
+
+
 	     </div> 
      
    <% end %>
+
+
 </header>
