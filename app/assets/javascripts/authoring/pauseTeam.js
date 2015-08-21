@@ -168,6 +168,8 @@ $("#requestEditSubmitBtn").click(function(){
             $("#requestEditSubmitBtn").css('display', 'none');
             $("#request-edit-modal-cancel").html("Close");
         }); //end ajax call
+
+    postToSlack({ title: selected}, "requested a change");
 });
 
 $('#request-edit-dropdown').change(function(){
