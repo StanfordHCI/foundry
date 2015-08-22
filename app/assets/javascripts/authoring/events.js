@@ -229,7 +229,8 @@ function newEvent(point, duration) {
         return;
     }
 
-    if(isUser) { // user page
+    //if(isUser) { // user page
+    if(isUser && memberType != "pc" && memberType != "client"){
        return;
     }
     if(in_progress && flashTeamsJSON["paused"]!=true){
