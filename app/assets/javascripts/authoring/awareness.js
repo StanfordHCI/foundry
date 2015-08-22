@@ -301,13 +301,13 @@ function renderFlashTeamsJSON(data, firstTime) {
 
 
     // Using transaction ID to avoid updatin client which is already updated.
-    console.log("global " + json_transaction_id)
+    //console.log("global " + json_transaction_id)
     var currentTransactionID = json_transaction_id || 0
-    console.log("current " + currentTransactionID)
+    //console.log("current " + currentTransactionID)
     var givenTransactionID = data.json_transaction_id || 1
-    console.log("given " + givenTransactionID)
+    //console.log("given " + givenTransactionID)
     if(currentTransactionID >= givenTransactionID) return;
-    console.log("Rendering...")
+    //console.log("Rendering...")
     json_transaction_id = givenTransactionID
 
     loadedStatus = data;
@@ -429,6 +429,7 @@ function renderEverything(data, firstTime) {
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
+        //console.log('in firstTime renderEverything');
         initTimer();
         listenForVisibilityChange();
     }
@@ -438,11 +439,27 @@ function renderEverything(data, firstTime) {
 
 // render events to show timer changes
 // TODO rework to draw timers only
+// function initTimer() {
+//     setInterval(function(){
+//         //drawEvents(true);
+//         //drawStartedEvents();
+//         drawStartedEvTimers();
+//         console.log('initTimer calling drawStartedEvTimers');
+//     }, 5000)
+// }
+
 function initTimer() {
-    setInterval(function(){
-        drawEvents(true);
-    }, 5000)
-}
+     setTimeout(function(){
+        try {
+            //drawStartedEvTimers();
+            drawStartedEvents();
+        } catch (e) {
+            console.log(e);
+        }
+        initTimer();
+        
+     }, 5000)
+ }
 
 function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
@@ -816,6 +833,7 @@ var startTeam = function(firstTime){
 // };
 
 var drawEvents = function(editable){
+    //console.log('drawEvents is being called');
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
         //console.log("DRAWING EVENT " + i + ", with editable: " + editable);
@@ -826,12 +844,25 @@ var drawEvents = function(editable){
 };
 
 var drawStartedEvents = function(){
+    //console.log('drawStartedEvents is being called');
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
         if(ev.status == "started" || ev.status == "delayed" ){
             drawEvent(ev);
         }
         //drawPopover(ev, editable, false);
+    }
+};
+
+
+// not being called right now
+var drawStartedEvTimers = function(){
+    //console.log('drawStartedEvents is being called');
+    for(var i=0;i<flashTeamsJSON.events.length;i++){
+        var ev = flashTeamsJSON.events[i];
+        if(ev.status == "started" || ev.status == "delayed" ){
+            drawTimer(ev);
+        }
     }
 };
 
