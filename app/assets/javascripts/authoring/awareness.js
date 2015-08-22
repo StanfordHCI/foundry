@@ -451,7 +451,8 @@ function renderEverything(data, firstTime) {
 function initTimer() {
      setTimeout(function(){
         try {
-            drawStartedEvTimers();
+            //drawStartedEvTimers();
+            drawStartedEvents();
         } catch (e) {
             console.log(e);
         }
