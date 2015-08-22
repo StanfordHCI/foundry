@@ -439,14 +439,26 @@ function renderEverything(data, firstTime) {
 
 // render events to show timer changes
 // TODO rework to draw timers only
+// function initTimer() {
+//     setInterval(function(){
+//         //drawEvents(true);
+//         //drawStartedEvents();
+//         drawStartedEvTimers();
+//         console.log('initTimer calling drawStartedEvTimers');
+//     }, 5000)
+// }
+
 function initTimer() {
-    setInterval(function(){
-        //drawEvents(true);
-        //drawStartedEvents();
-        drawStartedEvTimers();
-        console.log('initTimer calling drawStartedEvTimers');
-    }, 5000)
-}
+     setTimeout(function(){
+        try {
+            drawStartedEvTimers();
+        } catch (e) {
+            console.log(e);
+        }
+        initTimer();
+        
+     }, 5000)
+ }
 
 function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
