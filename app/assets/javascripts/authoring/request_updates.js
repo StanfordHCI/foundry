@@ -34,7 +34,7 @@ $.fn.requestUpdates = function(firstTime) {
         if(flashTeamEndedorStarted() || flashTeamUpdated()) {
             renderEverything(loadedStatus, firstTime);
         } else {
-            console.log('requestUpdates calling drawStartedEvents');
+            //console.log('requestUpdates calling drawStartedEvents');
             drawStartedEvents();
         }
   });
@@ -46,7 +46,7 @@ $.fn.subscribeToFlashTeamUpdate = function() {
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
           renderEverything(data, false);
-          console.log('subscribeToFlashTeamUpdate calling drawStartedEvents');
+          //console.log('subscribeToFlashTeamUpdate calling drawStartedEvents');
           drawStartedEvents();
         }
     });
