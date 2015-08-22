@@ -374,7 +374,7 @@ function renderFlashTeamsJSON(data, firstTime) {
         trackUpcomingEvent();
 
         //call this function if team is not in the edit mode
-        if(isUser && memberType != "pc" && memberType == "client"){
+        if(isUser && memberType != "pc" && memberType != "client"){
             disableTeamEditing();
         }
         else if(!flashTeamsJSON["paused"]){
@@ -411,7 +411,7 @@ function renderFlashTeamsJSON(data, firstTime) {
 
         loadData();
 
-        if(isUser && memberType != "pc" && memberType == "client"){
+        if(isUser && memberType != "pc" && memberType != "client"){
             disableTeamEditing();
         }
 
