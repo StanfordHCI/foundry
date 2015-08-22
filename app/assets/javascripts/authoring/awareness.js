@@ -429,6 +429,7 @@ function renderEverything(data, firstTime) {
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
         poll_interval_id = poll();
+        console.log('in firstTime renderEverything');
         initTimer();
         listenForVisibilityChange();
     }
@@ -440,7 +441,10 @@ function renderEverything(data, firstTime) {
 // TODO rework to draw timers only
 function initTimer() {
     setInterval(function(){
-        drawEvents(true);
+        //drawEvents(true);
+        //drawStartedEvents();
+        drawStartedEvTimers();
+        console.log('initTimer calling drawStartedEvTimers');
     }, 5000)
 }
 
@@ -816,6 +820,7 @@ var startTeam = function(firstTime){
 // };
 
 var drawEvents = function(editable){
+    console.log('drawEvents is being called');
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
         //console.log("DRAWING EVENT " + i + ", with editable: " + editable);
@@ -826,12 +831,23 @@ var drawEvents = function(editable){
 };
 
 var drawStartedEvents = function(){
+    console.log('drawStartedEvents is being called');
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
         if(ev.status == "started" || ev.status == "delayed" ){
             drawEvent(ev);
         }
         //drawPopover(ev, editable, false);
+    }
+};
+
+var drawStartedEvTimers = function(){
+    console.log('drawStartedEvents is being called');
+    for(var i=0;i<flashTeamsJSON.events.length;i++){
+        var ev = flashTeamsJSON.events[i];
+        if(ev.status == "started" || ev.status == "delayed" ){
+            drawTimer(ev);
+        }
     }
 };
 
