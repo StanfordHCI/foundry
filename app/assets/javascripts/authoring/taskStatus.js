@@ -542,7 +542,7 @@ var postToSlack = function(event, update) {
     var channel = "#foundry-notifications";  
     var notification_group = "Update";
     var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
-    if (flashTeamsJSON['id'] == 178 || flashTeamsJSON['id'] == 636) { // trauma
+    if (flashTeamsJSON['id'] == 178 || flashTeamsJSON['id'] == 636 || flashTeamsJSON['id'] == 685 || flashTeamsJSON['id'] == 786) { // trauma
         channel = '#general';
         notification_group = '@everyone';
         private_slack_url = slackPrivateUrls['trauma'];
