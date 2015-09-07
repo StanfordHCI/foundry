@@ -1,6 +1,8 @@
 /* helper.js
  * ---------------------------------
- * 
+ * Creates the initial json structure, also includes some miscellaneous helper functions.
+ * Calculate the total hours a team takes for the timeline render, enter to submit, 
+ * hide awareness code, and save the team. 
  */
 
 //MAKE SURE THE JSON IS UPDATED IN ITS CURRENT VERSION EVERYWHERE
@@ -11,8 +13,8 @@ var flashTeamsJSON = {
     "members": [],       //{"id", "role", "skills":[], "color", "category1", "category2"}
     "folders": [],
     "interactions" : [],  //{"event1", "event2", "type", "description", "id"}
-    "author": document.getElementById("ft-author-name").innerHTML//,
-   // "original_status": "original status",
+    "author": document.getElementById("ft-author-name").innerHTML //,
+    //"original_status": "original status",
     //"original_json": "original json"
 };
 
@@ -38,7 +40,7 @@ function findTotalHours() {
     }
     //NOTE: the above cut off minutes past the hour, must add at least 1 extra hour to return val
     totalHours++; 
-    return totalHours + 2; //THE 2 IS ARBITRARY FOR PADDING
+    return totalHours + 2; //2 is arbitrary for padding
 }
 
 
@@ -51,8 +53,7 @@ function hideAwareness() {
 }
 
 function saveFlashTeam() {
-	console.log("Saving flash team");
-    
+	//console.log("Saving flash team");
     var flash_team_id = $("#flash_team_id").val();
     var authenticity_token = $("#authenticity_token").val();
     var url = '/flash_teams/' + flash_team_id + '/update_json';

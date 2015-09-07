@@ -18,7 +18,6 @@ window.dependencyAPI = {
 	 */
 	getDependencyMaps: function(interactions){
 		if (this.checkInteractionsChanged(interactions)) {
-			console.log("Interactions changed from " + this.latest_interactions.join() + " to " + interactions.join());
 			// clear the maps because interactions have changed
 			this.forward_dependency_map = {};
 			this.backward_dependency_map = {};

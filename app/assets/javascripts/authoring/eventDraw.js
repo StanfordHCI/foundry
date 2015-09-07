@@ -9,7 +9,6 @@
  //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
     // Start off by redrawing the timeline if we need to, so the events
-    
     // subtract two so there's always at least one empty row
     // (event.row is 0 indexed)
     if(eventObj.row >= window._foundry.timeline.numRows - 2) {
@@ -33,7 +32,7 @@ function drawEvent(eventObj) {
     drawTimer(eventObj);
 };
 
-//
+//Draw the d3 group that contains all of the task elements 
 function drawG(eventObj) {
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
@@ -258,7 +257,7 @@ function drawMainRect(eventObj) {
         .call(drag);
 };
 
-//
+//Draw the title, duration, and line
 function drawTop(eventObj) {
     var events = window._foundry.events;
     
@@ -284,7 +283,7 @@ function drawTop(eventObj) {
     
 }
 
-//
+//Draw the icons including: member, member number, upload, config, draw collab, draw handoff
 function drawBottom(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
@@ -297,12 +296,13 @@ function drawBottom(eventObj) {
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
-    // only show the config icon on the task if team is not in progress, if team is paused or if task is paused, completed or not started (e.g., not in progress)
-    if( !in_progress || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
+    //config icon
+    // only show the config icon on the task if team is not in progress, 
+    // if team is paused or if task is paused, completed or not started (e.g., not in progress)
+    if( !in_progress || (flashTeamsJSON["paused"] == true)){ 
         var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
         configIcon.on("click", onConfigClick);
     }
-
 
     // upload icon
     var uploadIcon = addToTaskFromData(events.uploadIcon, eventObj, task_g);
@@ -317,20 +317,21 @@ function drawBottom(eventObj) {
 
         if(ev.gdrive.length > 0){
           if (in_progress || (!in_progress && current_user == "Author" && flashTeamsJSON["startTime"])){
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', new Date().getTime(), 
+                current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             window.open(ev.gdrive[1]);
             } else{
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), 
+                current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             alert("The flash team must be running for you to upload a file!");  
             }
         }
         else{
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), 
+                current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             alert("The flash team must be running for you to upload a file!");  
         }
     });
-
-
     
     // collaboration icon
     var collabIconSvg = addToTaskFromData(events.collabIcon, eventObj, task_g);
@@ -349,7 +350,7 @@ function drawBottom(eventObj) {
     });
 }
 
-//
+//Draw the right and left handles that let you resize the event
 function drawDragHandles(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
@@ -362,7 +363,7 @@ function drawDragHandles(eventObj) {
     rightHandleSvg.call(drag_right);
 }
 
-//
+//Draw each handoff entering or leaving and event
 function drawEachHandoffForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
     var eventHandoffs = getHandoffsForEvent(eventObj["id"]);
@@ -396,7 +397,7 @@ function drawEachHandoffForEvent(eventObj){
     }
 }
 
-//
+//Draw each collab associated with an event
 function drawEachCollabForEvent(eventObj){
     var interactions = flashTeamsJSON["interactions"];
     for (var i = 0; i < interactions.length; i++){
@@ -458,7 +459,6 @@ function drawShade(eventObj) {
     //if they are the CURRENT member
     for (var i=0; i<members.length; i++) {
         var member_id = members[i];
-        //debugger;
         if (current_user.id == member_id){
             if (currentUserIds.indexOf(groupNum) < 0){
                 currentUserIds.push(groupNum);
@@ -468,16 +468,15 @@ function drawShade(eventObj) {
             if(eventObj.status == 'completed') task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             else task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", 1);
             
-            //task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             break;
         }
     }
 }
 
-//
+//If the task is in progress, draw the remaining time
 function drawTimer(eventObj){
-   
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
+    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" 
+        || eventObj.status == "completed" ) {
         return;
     }
     
@@ -508,11 +507,9 @@ function drawTimer(eventObj){
     }
 
     else if( eventObj.status == "delayed" ){
-
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
         var remaining_time = eventObj.latest_remaining_time - time_passed;
-
 
         eventObj["timer"] = remaining_time;
     }
