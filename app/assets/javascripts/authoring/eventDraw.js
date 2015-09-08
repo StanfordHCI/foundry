@@ -8,29 +8,33 @@
 
  //Creates graphical elements from array of data (task_rectangles)
 function drawEvent(eventObj) {
-    // Start off by redrawing the timeline if we need to, so the events
-    
-    // subtract two so there's always at least one empty row
-    // (event.row is 0 indexed)
-    if(eventObj.row >= window._foundry.timeline.numRows - 2) {
-      window._foundry.timeline.updateNumRows(eventObj.row + 2);
-    }
-    
-    drawG(eventObj);
-    
-    drawMemberTabs(eventObj);
+    //release thread
+    setTimeout(function(){
+        // Start off by redrawing the timeline if we need to, so the events
+        
+        // subtract two so there's always at least one empty row
+        // (event.row is 0 indexed)
 
-    drawMainRect(eventObj);
-    drawTop(eventObj);
-    drawBottom(eventObj);
-    
-    drawDragHandles(eventObj);
-    
-    drawEachHandoffForEvent(eventObj);
-    drawEachCollabForEvent(eventObj);
-    
-    drawShade(eventObj);
-    drawTimer(eventObj);
+        if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+          window._foundry.timeline.updateNumRows(eventObj.row + 2);
+        }
+        
+        drawG(eventObj);
+        
+        drawMemberTabs(eventObj);
+
+        drawMainRect(eventObj);
+        drawTop(eventObj);
+        drawBottom(eventObj);
+        
+        drawDragHandles(eventObj);
+        
+        drawEachHandoffForEvent(eventObj);
+        drawEachCollabForEvent(eventObj);
+        
+        drawShade(eventObj);
+        drawTimer(eventObj);
+    }, 0)
 };
 
 //
