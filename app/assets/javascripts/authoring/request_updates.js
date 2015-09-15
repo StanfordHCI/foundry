@@ -28,7 +28,7 @@ $.fn.requestUpdates = function(firstTime) {
         url: url,
         type: 'get'
     }).done(function(data){
-        if(data == null) return;
+        if(data == null || !data.flash_teams_json) return;
         loadedStatus = data;
 
         if(flashTeamEndedorStarted() || flashTeamUpdated()) {
