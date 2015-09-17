@@ -4,34 +4,22 @@
 #require 'google/api_client/auth/installed_app'
 require 'securerandom'
 
+
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
+  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
 
 	def new
-	# check to see if the user id exists in the database 
-		#if User.where(:id => params[:user_id]).blank? #user id does not exist 
-		if !session[:user].nil?
-			#@user = User.find(params[:id])
-			@user = session[:user]
-			@flash_team = FlashTeam.new
-		else
-			@user = nil 
-			@title = "Invalid User ID"
-			flash[:notice] = "You must be logged in to create a team."
-			redirect_to(:controller => :users, :action => :new)
-			return 
-		end
-			
+		@flash_team = FlashTeam.new
 	end
 
   def create 
-  	if !session[:user].nil?
     name = flash_team_params(params[:flash_team])[:name]
 
     author = flash_team_params(params[:flash_team])[:author]
     
-    @user = session[:user]
+    @user = User.find session[:user_id]
     
     @flash_team = FlashTeam.create(:name => name, :author => author, :user_id => @user.id)
 
@@ -47,11 +35,9 @@ class FlashTeamsController < ApplicationController
     else
       render 'new'
     end
-    end #end if session user not nil 
   end
 
   def show
-  	if session[:user].nil?
 		@user = nil 
 		@title = "Invalid User ID"
 		@flash_team = nil
@@ -59,38 +45,35 @@ class FlashTeamsController < ApplicationController
   	else
     	@flash_team = FlashTeam.find(params[:id])
     
-		if @flash_team.user_id != session[:user].id
+		if @flash_team.user_id != session[:user_id]
 			flash[:notice] = 'You cannot access this flash team.' 
     		redirect_to(flash_teams_path)
 		end
-	end
   end
 
 
   def duplicate
-  	if !session[:user].nil?
-	  	@user = session[:user]
-	  	
-	    # Locate data from the original
-	    original = FlashTeam.find(params[:id])
-	
-	    # Then create a copy from the original data
-	    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
-	    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-	    #copy.status = original.original_status
-	    copy.status = createDupTeamStatus(copy.id, original.original_status, "duplicate")
-	    
-	    # new_status = createDupTeamStatus(copy.id, original.original_status)
+  	@user = User.find session[:user_id]
+  	
+    # Locate data from the original
+    original = FlashTeam.find(params[:id])
+
+    # Then create a copy from the original data
+    copy = FlashTeam.create(:name => original.name + " Copy", :author => original.author, :user_id => @user.id)
+    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+    #copy.status = original.original_status
+    copy.status = createDupTeamStatus(copy.id, original.original_status, "duplicate")
+    
+    # new_status = createDupTeamStatus(copy.id, original.original_status)
 # 	    new_status_json = new_status.to_s
 # 	    copy.status = new_status_json
-	    copy.save
-	    
-	    
-	    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
-	
-	    # Redirect to the list of things
-	    redirect_to :action => 'index'   
-    end #end if session not nil
+    copy.save
+    
+    
+    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
+
+    # Redirect to the list of things
+    redirect_to :action => 'index'   
   end
 
   
@@ -118,40 +101,26 @@ class FlashTeamsController < ApplicationController
   end
 
   def clone
-    if !session[:user].nil?
-      @user = session[:user]
-      
-      # Locate data from the original
-      original = FlashTeam.find(params[:id])
-  
-      # Then create a copy from the original data
-      copy = FlashTeam.create(:name => original.name + " Clone", :author => original.author, :user_id => @user.id)
-      copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-      #copy.status = original.original_status
-      copy.status = createDupTeamStatus(copy.id, original.status, "clone")
-      
-      copy.save
-      
-      
-      # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
-  
-      # Redirect to the list of things
-      redirect_to :action => 'index'   
-    end #end if session not nil
+    @user = User.find session[:user_id]
+
+    # Locate data from the original
+    original = FlashTeam.find(params[:id])
+
+    # Then create a copy from the original data
+    copy = FlashTeam.create(:name => original.name + " Clone", :author => original.author, :user_id => @user.id)
+    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+    #copy.status = original.original_status
+    copy.status = createDupTeamStatus(copy.id, original.status, "clone")
+
+    copy.save
+    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
+
+    # Redirect to the list of things
+    redirect_to :action => 'index'
   end
   
   def index
-  		# check to see if the user id exists in the database 
-		if session[:user].nil?
-			@user = nil 
-			@title = "Invalid User ID"
-			@flash_teams = nil
-			redirect_to(welcome_index_path)
-		else
-			@user = User.find(session[:user].id)
-			
-			@flash_teams = FlashTeam.where(:user_id => @user.id).order(:id).reverse_order	
-		end
+		@flash_teams = FlashTeam.where(:user_id => @user.id).order(:id).reverse_order	
   end
 
 
@@ -166,7 +135,7 @@ end
 	session[:return_to] ||= request.original_url
 	  
   if !params.has_key?("uniq") #if in author view
-    if session[:user].nil? 
+    if session[:user_id].nil? 
        if !session[:uniq].nil?
         redirect_to :controller => 'flash_teams', :action => 'edit', :id => params[:id], :uniq => session[:uniq] and return
 			 else
@@ -178,7 +147,7 @@ end
 		else 
 			@flash_team = FlashTeam.find(params[:id])
 			
-			if @flash_team.user_id != session[:user].id 
+			if @flash_team.user_id != session[:user_id]
 				flash[:notice] = 'You cannot access this flash team.' 
 				redirect_to(flash_teams_path) and return 
 			end

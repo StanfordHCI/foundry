@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 # creating an account 	
 	def new 
 	
-		if !session[:user].nil?  # redirect user to their team library if he or she visits the registration screen but is already logged in
+		if !session[:user_id].nil?  # redirect user to their team library if he or she visits the registration screen but is already logged in
 			redirect_to(:controller => :flash_teams, :action => :index)
 		end		
 	
@@ -19,8 +19,8 @@ class UsersController < ApplicationController
 		@user.save()
 		
 		if @user.save
-			session[:user] = @user
-			flash[:notice] = "Account created! Welcome, #{session[:user].username}!"
+			session[:user_id] = @user.id
+			flash[:notice] = "Account created! Welcome, #{@user.username}!"
 			
 			session.delete(:member)
 			session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
@@ -42,7 +42,7 @@ class UsersController < ApplicationController
 	def login 
 	
 		# redirect user to their team library if he or she visits the login screen but is already logged in
-		if !session[:user].nil?
+		if !session[:user_id].nil?
 			redirect_to(:controller => :flash_teams, :action => :index)
 		end		
 		
@@ -57,12 +57,12 @@ class UsersController < ApplicationController
 		if User.exists?(:username => params[:login].downcase) # check to see if the login exists in the database 
 			@user = User.find_by_username(params[:login].downcase)
 			
-				session[:user] = @user  #store user id in the session
+				session[:user_id] = @user.id  #store user id in the session
 				
 				session.delete(:member)
 				session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
 
-				flash[:notice] = "Welcome back, #{session[:user].username}!"
+				flash[:notice] = "Welcome back, #{@user.username}!"
 								
 				if !session[:return_to].nil?
 					redirect_to(session[:return_to])
@@ -81,7 +81,7 @@ class UsersController < ApplicationController
 	def logout 
 		reset_session #destroy session
 		#session[:user] = nil
-		session.delete(:user)
+		session.delete(:user_id)
 		flash[:notice] = "Succesfully logged out."
 		#redirect_to(:action => :new) # redirect user to the login screen 
 		redirect_to(welcome_index_path)
