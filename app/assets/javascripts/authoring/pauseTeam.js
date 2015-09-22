@@ -77,69 +77,78 @@ function resumeFlashTeam(){
 $("#workerEditTeamBtn").click(function(){
     logActivity("$('#workerEditTeamBtn').click(function()",'Clicked Request Change to Team Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
-    updateRequestChangeModal('-- SELECT REQUEST TYPE --');
+    updateRequestChangeModal('');
 });
 
 $("#request-change-task-not-ready").click(function(){
     logActivity("$('#request-change-task-not-ready').click(function()","Clicked 'Task is Not Ready to Start' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
-    updateRequestChangeModal('Task Not Ready');
+    updateRequestChangeModal('taskNotReady');
 });
 
 $("#request-change-edit-task").click(function(){
     logActivity("$('#request-change-edit-task').click(function()","Clicked 'I want to edit the task' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
-    updateRequestChangeModal('Edit a Task');
+    updateRequestChangeModal('taskEdit');
 });
 
 $("#request-change-more-time").click(function(){
     logActivity("$('#request-change-more-time').click(function()","Clicked 'I need more time' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
-    updateRequestChangeModal('Need More Time');
+    updateRequestChangeModal('needMoreTime');
 });
 
 
 $("#requestEditSubmitBtn").click(function(){
 
     var selected = $('#request-edit-dropdown').val();
+    var title =  $('#request-edit-dropdown option:selected').text();
 
-    var form_content = '<b>Type of Change: </b>' + selected;
+    var form_content = '<b>Type of Change: </b>' + title;
     form_content += '<br /> <em>Name of Requester:</em> ' + chat_name; 
     form_content += '<br /> <em>Role of Requester:</em> ' + chat_role; 
     form_content += '<br /><br />';
 
-    if (selected == 'Add a Task'){
+    if (selected == 'taskAutoHire'){
 
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Duration: </b>' + $("#event-request-hours").val() + ' Hours  ' 
                 + $("#event-request-minutes").val() + ' Minutes <br />' 
                 + '<b>Description: </b>' + $("#event-request-description").val();
-    }else if (selected == 'Edit a Task'){
+    }else if (selected == 'taskWarmHire'){
+        form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
+                + '<br />'
+                + '<b>Duration: </b>' + $("#event-request-hours").val() + ' Hours  ' 
+                + $("#event-request-minutes").val() + ' Minutes <br />' 
+                + '<b>Description: </b>' + $("#event-request-description").val()
+                + '<br /><b>Name of panel member that you would like to hire: </b>' + $("#panel-member-name").val()
+                + '<br /><b>Active Time spent on deciding on panel member (for our experimental logs): </b>' + $("#time-spent-deciding").val();
+    }else if (selected == 'taskEdit'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of changes to task: </b>' + $("#event-request-description").val();
-    }else if (selected == 'Redo a Task'){
+    }else if (selected == 'taskRedo'){
         form_content = '<b>Task Name: </b>' + $("#event-request-name").val() + '<br />'
                 + '<b>Description of what is wrong with this deliverable: </b>' + $("#event-request-description").val() + '<br />'
                 + '<b>Would you like to drop this worker from the panel? </b>' + $("#event-request-drop-worker-panel").val() + '<br />'
                 + '<b>Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker? </b>' + $("#event-request-worker-selection").val();
         disabled = false; 
-    }else if (selected == 'Task Not Ready'){
+    }else if (selected == 'taskNotReady'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of why task is not ready and the requested changes: </b>' + $("#event-request-description").val();
-    }else if (selected == 'Need More Time'){
+    }else if (selected == 'needMoreTime'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
                 + '<b>Description of how much more time you need and why: </b>' + $("#event-request-description").val();
-    }else if (selected == 'Add a Module'){
+    }else if (selected == 'moduleAdd'){
         form_content = '<b>Module Name: </b>' + $("#event-request-name").val() + '<br />'
                 + '<b>Due Date: </b>' + $("#event-request-module-deadline").val() + '<br />' 
                 + '<b>Number of workers required for module: </b>' + $("#event-request-num-workers").val() + '<br />' 
                 + '<b>Description of module: </b>' +  $("#event-request-description").val();
         disabled = false;
-    }else if (selected == 'Edit a Module'){
+    }else if (selected == 'moduleEdit'){
         form_content = '<b>Module Name: </b>' + $("#event-request-name").val() + '<br />'
                 + '<b>Description of changes to task: </b>' + $("#event-request-description").val();
         disabled = false;
@@ -194,42 +203,53 @@ function updateRequestChangeModal(selected){
 
     $('#request-edit-dropdown').val(selected);
 
-    if (selected == '-- SELECT REQUEST TYPE --'){
+    if (selected == ''){
         content = '<p>Please select which type of change you would like to make.</p>';
         disabled = true;        
-    }else if (selected == 'Add a Task'){
+    }else if (selected == 'taskAutoHire'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Task Name"> <br />'
                 + 'Duration: <input type="number" class="request-change-input" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
                 + '<input type = "number" class="request-change-input" id="event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
                 + 'Description of task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of task" id="event-request-description"></textarea>';
         disabled = false;
-    }else if (selected == 'Task Not Ready'){
+    }else if (selected == 'taskWarmHire'){
+        var panelsButtonContent = '<br />'
+        if(current_user == "Author"){panelsButtonContent = '<br /> <a href="/workers/index" target="_blank" class="btn btn-default">View Panels</a> <br /><br />'}
+        content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Task Name"> <br />'
+                + 'Duration: <input type="number" class="request-change-input" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
+                + '<input type = "number" class="request-change-input" id="event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
+                + 'Description of task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of task" id="event-request-description"></textarea>'
+                + panelsButtonContent
+                + 'Name of panel member: <input type = "text" class="request-change-input input-block-level" id="panel-member-name" value="" placeholder="Name of panel member that you would like to hire."/><br />'
+                + 'Time spent on deciding: <input type = "text" class="request-change-input input-block-level" id="time-spent-deciding" value="" placeholder="Active time spent on deciding on panel member (for our experimental logs)."/><br />';
+        disabled = false;
+    }else if (selected == 'taskNotReady'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of why task is not ready and the requested changes: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe why the task is not ready to be started and what changes need to be made to the task or workflow" id="event-request-description"></textarea>';
         
         disabled = false; 
-    }else if (selected == 'Redo a Task'){
+    }else if (selected == 'taskRedo'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of what is wrong with this deliverable: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what is wrong with this deliverable and why the task needs to be redone" id="event-request-description"></textarea>'
                 + 'Would you like to drop this worker from the panel? <br /> <textarea class="request-change-input input-block-level" rows="2" value="" placeholder="Please state whether you would like to drop the worker who completed this task from the panel" id="event-request-drop-worker-panel"></textarea>'
                 + 'Who would you like to redo this task, the same worker or a new worker? If a new worker is desired, would you like to warm hire or automatically hire this new worker?<br /> <textarea class="request-change-input input-block-level" rows="3" value="" placeholder="Describe who should complete this task (same worker or new one) and how new workers (if chosen) should be hired" id="event-request-worker-selection"></textarea>';
         
         disabled = false; 
-    }else if (selected == 'Need More Time'){ //THIS OPTION IS CURRENTLY COMMENTED OUT IN DROPDOWN
+    }else if (selected == 'needMoreTime'){ //THIS OPTION IS CURRENTLY COMMENTED OUT IN DROPDOWN
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of how much more time you need and why: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe how much more time you need to complete the task and why" id="event-request-description"></textarea>';
         disabled = false;
-    }else if (selected == 'Edit a Task'){
+    }else if (selected == 'taskEdit'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
                 + 'Description of changes to task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what changes you would like to make to the task" id="event-request-description"></textarea>';
         disabled = false;
-    }else if (selected == 'Add a Module'){
+    }else if (selected == 'moduleAdd'){
         content = 'Module Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Module Name"> <br />'
                 + 'Due Date: <input type="text" class="request-change-input" id="event-request-module-deadline" value="" placeholder="Date to be completed" /> <br />' 
                 + 'Number of workers required for module: <input type="number" class="request-change-input" id="event-request-num-workers" value="" min="0" placeholder="00" style="width: 36px"/> workers <br />' 
                 + 'Description of module: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of module" id="event-request-description"></textarea>';
         disabled = false;
-    }else if (selected == 'Edit a Module'){
+    }else if (selected == 'moduleEdit'){
         content = 'Module Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Module to Change"> <br />'
                 + 'Description of changes to task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Describe what changes you would like to make to the module" id="event-request-description"></textarea>';
         disabled = false;
