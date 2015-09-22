@@ -7,7 +7,7 @@ require 'securerandom'
 
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
-  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
+  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index, :fork, :pull]
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
 
 	def new
@@ -77,36 +77,29 @@ class FlashTeamsController < ApplicationController
   end
 
   def fork
-    if !session[:user].nil?
-      @user = session[:user]
+    # Locate data from the original
+    original = FlashTeam.find(params[:id])
 
-      # Locate data from the original
-      original = FlashTeam.find(params[:id])
+    # Then create a copy from the original data
+    copy = FlashTeam.create(:name => original.name + " Fork", :author => original.author, :user_id => @user.id, origin: original)
+    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
+    copy.status = createDupTeamStatus(copy.id, original.original_status, "duplicate")
 
-      # Then create a copy from the original data
-      copy = FlashTeam.create(:name => original.name + " Fork", :author => original.author, :user_id => @user.id, origin: original)
-      copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-      copy.status = createDupTeamStatus(copy.id, original.original_status, "duplicate")
-
-      if copy.save
-        flash.now[:notice] = "Team #{original.name} successfuly forked."
-        redirect_to edit_flash_team_url(copy)
-      else
-        flash.now[:error] = "Team #{original.name} fork failed."
-        redirect_to flash_teams_url
-      end
-    end #end if session not nil
+    if copy.save
+      flash.now[:notice] = "Team #{original.name} successfuly forked."
+      redirect_to edit_flash_team_url(copy)
+    else
+      flash.now[:error] = "Team #{original.name} fork failed."
+      redirect_to flash_teams_url
+    end
   end
 
   def pull
-    if !session[:user].nil?
-      @user = session[:user]
-      @fork = FlashTeam.find(params[:id])
+    @fork = FlashTeam.find(params[:id])
 
-      UserMailer.pull_request(params[:id], edit_flash_team_url(@fork, show_diff: true)).deliver
-      flash.now[:notice] = "Pull request been successfully sent."
-      redirect_to edit_flash_team_url(@fork)
-    end #end if session not nil
+    UserMailer.pull_request(params[:id], edit_flash_team_url(@fork, show_diff: true)).deliver
+    flash.now[:notice] = "Pull request been successfully sent."
+    redirect_to edit_flash_team_url(@fork)
   end
   
   def createDupTeamStatus(dup_id, orig_status, type)
