@@ -122,8 +122,8 @@ $("#requestEditSubmitBtn").click(function(){
                 + '<b>Duration: </b>' + $("#event-request-hours").val() + ' Hours  ' 
                 + $("#event-request-minutes").val() + ' Minutes <br />' 
                 + '<b>Description: </b>' + $("#event-request-description").val()
-                + '<b>Name of panel member that you would like to hire: </b>' + $("#panel-member-name").val()
-                + '<br /><b>Active Time Spend on Deciding on Panel Member (for our experimental logs): </b>' + $("#time-spend-deciding").val();
+                + '<br /><b>Name of panel member that you would like to hire: </b>' + $("#panel-member-name").val()
+                + '<br /><b>Active Time spent on deciding on panel member (for our experimental logs): </b>' + $("#time-spent-deciding").val();
     }else if (selected == 'taskEdit'){
         form_content += '<b>Task Name: </b>' + $("#event-request-name").val() 
                 + '<br />'
@@ -214,14 +214,14 @@ function updateRequestChangeModal(selected){
         disabled = false;
     }else if (selected == 'taskWarmHire'){
         var panelsButtonContent = '<br />'
-        if(current_user == "Author"){panelsButtonContent = '<br /> <a href="/workers/index" target="_blank" class="btn btn-default">Panels</a> <br />'}
+        if(current_user == "Author"){panelsButtonContent = '<br /> <a href="/workers/index" target="_blank" class="btn btn-default">View Panels</a> <br /><br />'}
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Task Name"> <br />'
                 + 'Duration: <input type="number" class="request-change-input" id="event-request-hours" value="" min="0" placeholder="00" style="margin-left: 10px; width:36px;"/> Hours' 
                 + '<input type = "number" class="request-change-input" id="event-request-minutes" value="" placeholder="00" style=" margin-left: 15px; width:36px" min="0" step="15" max="45"/> Minutes <br />' 
                 + 'Description of task: <br /> <textarea class="request-change-input input-block-level" rows="5" value="" placeholder="Description of task" id="event-request-description"></textarea>'
                 + panelsButtonContent
                 + 'Name of panel member: <input type = "text" class="request-change-input input-block-level" id="panel-member-name" value="" placeholder="Name of panel member that you would like to hire."/><br />'
-                + 'Time Spend on Deciding: <input type = "text" class="request-change-input input-block-level" id="time-spend-deciding" value="" placeholder="Active Time Spend on Deciding on Panel Member (for our experimental logs)."/><br />';
+                + 'Time spent on deciding: <input type = "text" class="request-change-input input-block-level" id="time-spent-deciding" value="" placeholder="Active time spent on deciding on panel member (for our experimental logs)."/><br />';
         disabled = false;
     }else if (selected == 'taskNotReady'){
         content = 'Task Name: <input type="text" class="request-change-input input-xlarge" id="event-request-name" value="" placeholder="Name of Task to Change"> <br />'
