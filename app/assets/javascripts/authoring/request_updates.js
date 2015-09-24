@@ -31,12 +31,11 @@ $.fn.requestUpdates = function(firstTime) {
         if(data == null || !data.flash_teams_json) return;
         loadedStatus = data;
 
-        if(flashTeamEndedorStarted() || flashTeamUpdated()) {
-            renderEverything(loadedStatus, firstTime);
-        } else {
-            //console.log('requestUpdates calling drawStartedEvents');
-            drawStartedEvents();
-        }
+        // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
+        renderEverything(loadedStatus, firstTime);
+        // } else {
+        //     drawStartedEvents();
+        // }
   });
 
 }

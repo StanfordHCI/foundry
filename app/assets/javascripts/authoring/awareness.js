@@ -343,7 +343,6 @@ function renderFlashTeamsJSON(data, firstTime) {
 
     colorBox();
     if(in_progress){
-
         //console.log("flash team in progress");
         $("#flashTeamStartBtn").attr("disabled", "disabled");
         $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above
@@ -392,7 +391,6 @@ function renderFlashTeamsJSON(data, firstTime) {
 
     } else {
         //console.log("flash team not in progress");
-
         if(flashTeamsJSON["startTime"] == undefined){
 
             //console.log("NO START TIME!");
@@ -456,7 +454,7 @@ function initTimer() {
             console.log(e);
         }
         initTimer();
-        
+
      }, 5000)
  }
 
@@ -982,14 +980,16 @@ var drawBlueBoxes = function(){
 };
 
 var drawOrangeBoxes = function(){
-    var changed_events_ids = flashTeamsJSON.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids)
-    if(changed_events_ids) {
-        for (var i=0;i<changed_events_ids.length;i++){
-            var ev = flashTeamsJSON["events"][getEventJSONIndex(changed_events_ids[i])];
-            var task_g = getTaskGFromGroupNum(changed_events_ids[i]);
-            drawOrangeBox(ev, task_g);
+    setTimeout(function () {
+        var changed_events_ids = flashTeamsJSON.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids)
+        if(changed_events_ids) {
+            for (var i=0;i<changed_events_ids.length;i++){
+                var ev = flashTeamsJSON["events"][getEventJSONIndex(changed_events_ids[i])];
+                var task_g = getTaskGFromGroupNum(changed_events_ids[i]);
+                drawOrangeBox(ev, task_g);
+            }
         }
-    }
+    }, 100)
 };
 
 var drawRedBoxes = function(){
