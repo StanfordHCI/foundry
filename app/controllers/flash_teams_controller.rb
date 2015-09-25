@@ -77,7 +77,6 @@ class FlashTeamsController < ApplicationController
   end
 
   def fork
-    binding.pry
     # Locate data from the original
     original = FlashTeam.find(params[:id])
 
