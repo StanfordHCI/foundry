@@ -83,7 +83,7 @@ class FlashTeamsController < ApplicationController
     # Then create a copy from the original data
     copy = FlashTeam.create(:name => original.name + " Fork", :author => original.author, :user_id => @user.id, origin: original)
     copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-    copy.status = createDupTeamStatus(copy.id, original.original_status, "duplicate")
+    copy.status = createDupTeamStatus(copy.id, original.status, "clone")
 
     if copy.save
       flash.now[:notice] = "Team #{original.name} successfuly forked."
