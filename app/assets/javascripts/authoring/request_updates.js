@@ -32,7 +32,9 @@ $.fn.requestUpdates = function(firstTime) {
         loadedStatus = data;
 
         // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
-        renderEverything(loadedStatus, firstTime);
+        // renderEverything(loadedStatus, firstTime);
+        var flashTeam = FlashTeam.create(loadedStatus);
+        flashTeam.render();
         // } else {
         //     drawStartedEvents();
         // }
