@@ -4,9 +4,6 @@
  */
 var json_transaction_id = 0;
 
-var poll_interval = 50000; // 20 seconds
-var poll_interval_id;
-
 //var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline.
 //var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
 var fire_interval = 180; // change back to 180
@@ -188,7 +185,6 @@ function endTeam() {
     updateStatus(false);
     stopCursor();
     stopProjectStatus();
-    stopPolling();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
     $("#flashTeamPauseBtn").css('display','none');
@@ -235,11 +231,6 @@ $("#flashTeamEndBtn").click(function(){
 
 });
 
-
-function stopPolling() {
-    //console.log("STOPPED POLLING");
-    window.clearInterval(poll_interval_id);
-};
 
 function stopTrackingTasks() {
     //console.log("STOPPED TRACKING TASKS");
@@ -425,9 +416,6 @@ function renderEverything(data, firstTime) {
 
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-        poll_interval_id = poll();
-        //console.log('in firstTime renderEverything');
-        initTimer();
         listenForVisibilityChange();
     }
 
@@ -444,19 +432,6 @@ function renderEverything(data, firstTime) {
 //         console.log('initTimer calling drawStartedEvTimers');
 //     }, 5000)
 // }
-
-function initTimer() {
-     setTimeout(function(){
-        try {
-            //drawStartedEvTimers();
-            drawStartedEvents();
-        } catch (e) {
-            console.log(e);
-        }
-        initTimer();
-
-     }, 5000)
- }
 
 function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
@@ -680,13 +655,6 @@ var flashTeamUpdated = function(){
     }
 
     return false; // returns false if none of the above conditions are true, which assumes that the flash team has not been updated
-};
-
-var poll = function(){
-    //console.log("POLLING");
-    return setInterval(function(){
-        $("#flash_team_id").requestUpdates(false);
-    }, poll_interval); // every 5 seconds currently
 };
 
 var recordStartTime = function(){
