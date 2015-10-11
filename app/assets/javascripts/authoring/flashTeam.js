@@ -1,3 +1,6 @@
+var currentTeam = null;
+var oldTeam = null;
+
 FlashTeam = function () {
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
@@ -127,6 +130,12 @@ FlashTeam = function () {
             renderMembersRequester();
         }
     }
+  }
+
+  this.updateInfo = function(data) {
+    this["author"] = data["author_name"];
+    this["title"]  = data["flash_team_name"];
+    this["id"]     = data["flash_team_id"];
   }
 }
 

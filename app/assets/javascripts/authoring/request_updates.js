@@ -1,7 +1,3 @@
-var author_name; // save name of flash team author
-var team_name; // saves flash team name
-var team_id; // saves flash team id
-
 //returns author name, team name and team ID
 $.fn.getTeamInfo = function(){
     var flash_team_id = $(this).val();
@@ -10,16 +6,9 @@ $.fn.getTeamInfo = function(){
        url: url,
        type: 'post'
     }).done(function(data){
-        saveFlashTeam(data)
+        currentTeam.updateInfo(data);
     });
 };
-
-var saveFlashTeam = function(data){
-    flashTeamsJSON["author"] = author_name = data["author_name"];
-    flashTeamsJSON["title"] = team_name = data["flash_team_name"];
-    flashTeamsJSON["id"] = team_id =   data["flash_team_id"];
-}
-
 
 $.fn.requestUpdates = function(firstTime) {
     var flash_team_id = $(this).val();
@@ -33,8 +22,8 @@ $.fn.requestUpdates = function(firstTime) {
 
         // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
         // renderEverything(loadedStatus, firstTime);
-        var flashTeam = FlashTeam.create(loadedStatus);
-        flashTeam.render();
+        currentTeam = FlashTeam.create(loadedStatus);
+        currentTeam.render();
         // } else {
         //     drawStartedEvents();
         // }
@@ -46,9 +35,12 @@ $.fn.subscribeToFlashTeamUpdate = function() {
     url = "/flash_team/" + $(this).val() + "/updated"
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
-          renderEverything(data, false);
+            oldTeam = currentTeam;
+            currentTeam =  = FlashTeam.create(loadedStatus);
+            currentTeam.render(false);
+          // renderEverything(data, false);
           //console.log('subscribeToFlashTeamUpdate calling drawStartedEvents');
-          drawStartedEvents();
+          // drawStartedEvents();
         }
     });
 }
