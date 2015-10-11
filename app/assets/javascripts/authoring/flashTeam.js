@@ -39,9 +39,6 @@ FlashTeam = function () {
     //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
     if(firstTime){
         this.renderChatbox();
-
-        //============== continue ======================//
-        renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
     }
 
     in_progress = this.flash_team_in_progress;
@@ -52,10 +49,12 @@ FlashTeam = function () {
 
     //renderChatbox();
     setCurrentMember();
-    renderProjectOverview();
+    projectOverview = ProjectOverview.new(this)
+    projectOverview.render();
 
     if(firstTime) {
         //setCurrentMember(); //commented this out because we now always call setCurrentMember() in case changes are made during project
+        //!!!!!!!!!!!!!!!!!continue!!!!!!!!!!!!!!!!!!!!//
         initializeTimelineDuration();
         //renderProjectOverview(); //commented this out because we now always call setCurrentMember() in case changes are made during project
     }
