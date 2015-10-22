@@ -162,7 +162,7 @@ FlashTeam = function (data) {
 
       this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
       this.drawBoxes(this.completed_red_tasks , drawRedBox);
-      this.drawBoxes(this.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids, drawOrangeBox));
+      this.drawBoxes(this.diffEvents());
 
       //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
       drawDelayedTasks();
@@ -170,6 +170,11 @@ FlashTeam = function (data) {
       //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
       googleDriveLink();
   };
+
+  this.diffEvents = function() {
+    if(!this.diff) { return [] }
+    return this.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids, drawOrangeBox)
+  }
 
   this.drawBoxes = function(collection, renderer) {
     for (var i=0;i<collection.length;i++){
