@@ -13,7 +13,7 @@ Chat = function() {
       this.setUserStatus("online ★");
 
       this.draw(data);
-    }
+    })
   }
 
 // A helper function to let us set our own status

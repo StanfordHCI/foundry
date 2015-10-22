@@ -22,7 +22,7 @@ $.fn.requestUpdates = function(firstTime) {
 
         // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
         // renderEverything(loadedStatus, firstTime);
-        currentTeam = FlashTeam.create(loadedStatus);
+        currentTeam = new FlashTeam(loadedStatus);
         currentTeam.render();
         // } else {
         //     drawStartedEvents();
@@ -36,7 +36,7 @@ $.fn.subscribeToFlashTeamUpdate = function() {
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
             oldTeam = currentTeam;
-            currentTeam =  = FlashTeam.create(loadedStatus);
+            currentTeam = new FlashTeam(loadedStatus);
             currentTeam.render(false);
           // renderEverything(data, false);
           //console.log('subscribeToFlashTeamUpdate calling drawStartedEvents');

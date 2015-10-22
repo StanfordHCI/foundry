@@ -67,7 +67,7 @@ ProjectOverview = function () {
     }
   }
 
-  this.save = fucntion() {
+  this.save = function() {
     // retrieve project overview from form
     var project_overview_input = $("#projectOverviewInput").val();
     if (project_overview_input === "") {

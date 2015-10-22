@@ -1,12 +1,14 @@
 var currentTeam = null;
 var oldTeam = null;
 
-FlashTeam = function () {
+FlashTeam = function (data) {
+  this.wrap(data);
+
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
-    if(this.rendered?) return;
+    if(this.rendered()) return;
     //console.log("Rendering...")
-    renderJSON(firstTime);
+    this.renderJSON(firstTime);
 
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
@@ -14,14 +16,14 @@ FlashTeam = function () {
     }
   }
 
-  this.rendered? = function() {
+  this.rendered = function() {
     // Using transaction ID to avoid updatin client which is already updated.
     //console.log("global " + json_transaction_id)
-    var currentTransactionID = json_transaction_id || 0
+    var currentTransactionID = oldTeam ? oldTeam.json_transaction_id : 0
     //console.log("current " + currentTransactionID)
-    var givenTransactionID = data.json_transaction_id || 1
+    var givenTransactionID = this.json_transaction_id || 1
     //console.log("given " + givenTransactionID)
-    json_transaction_id = givenTransactionID
+    // json_transaction_id = givenTransactionID
     return (currentTransactionID >= givenTransactionID);
   }
 
@@ -49,16 +51,15 @@ FlashTeam = function () {
 
     //renderChatbox();
     setCurrentMember();
-    projectOverview = ProjectOverview.new(this)
+    projectOverview = new ProjectOverview(this)
     projectOverview.render();
 
     if(firstTime) {
         //setCurrentMember(); //commented this out because we now always call setCurrentMember() in case changes are made during project
-        //!!!!!!!!!!!!!!!!!continue!!!!!!!!!!!!!!!!!!!!//
+        //!!!!!!!!!!!!!!!!!back later!!!!!!!!!!!!!!!!!!!!//
         initializeTimelineDuration();
         //renderProjectOverview(); //commented this out because we now always call setCurrentMember() in case changes are made during project
     }
-
 
     // is this the user, and has he/she loaded the page
     // before the team started
@@ -89,7 +90,9 @@ FlashTeam = function () {
             $("#flashTeamResumeBtn").css('display','none');
         }
 
-        loadData();
+        this.drawTasks();
+
+        //!!!!!!!!!!! continue !!!!!!!!!!!!!!!!!!//
         if(!isUser || memberType == "pc" || memberType == "client"){
             renderMembersRequester();
             $('#projectStatusText').html("The project is in progress.<br /><br />");
@@ -111,15 +114,13 @@ FlashTeam = function () {
         }
     } else {
         //console.log("flash team not in progress");
-        if(flashTeamsJSON["startTime"] == undefined){
+        if(this["startTime"] == undefined){
 
             //console.log("NO START TIME!");
             updateOriginalStatus();
         }
-        if(!flashTeamsJSON)
-            return;
 
-        loadData();
+        this.drawTasks();
 
         if(isUser && memberType != "pc" && memberType != "client"){
             disableTeamEditing();
@@ -136,10 +137,138 @@ FlashTeam = function () {
     this["title"]  = data["flash_team_name"];
     this["id"]     = data["flash_team_id"];
   }
+
+  //!!!!!!!!!!!!!!! continue !!!!!!!!!!!!!!!!!//
+  // loadData
+  this.drawTasks = function() {
+      // position cursor before getting the new task arrays
+      // because once the new task arrays are updated,
+      // trackLiveAndRemainingTasks is immediately going to
+      // operate on them, while the current cursor here is
+      // not yet where it should be in time (its behind)
+      var latest_time;
+      if (in_progress){
+          latest_time = (new Date()).getTime();
+      } else {
+          latest_time = this.latest_time; // really only useful at end
+      }
+
+      live_tasks = loadedStatus.live_tasks;
+      paused_tasks = loadedStatus.paused_tasks;
+      remaining_tasks = loadedStatus.remaining_tasks;
+      delayed_tasks = loadedStatus.delayed_tasks;
+
+      drawEvents(!in_progress);
+
+      this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
+      this.drawBoxes(this.completed_red_tasks , drawRedBox);
+      this.drawBoxes(this.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids, drawOrangeBox));
+
+      //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
+      drawDelayedTasks();
+      drawInteractions(); //START HERE, INT DEBUG
+      //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
+      googleDriveLink();
+  };
+
+  this.drawBoxes = function(collection, renderer) {
+    for (var i=0;i<collection.length;i++){
+        var ev = this["events"][getEventJSONIndex(collection[i])];
+        var task_g = getTaskGFromGroupNum(collection[i]);
+
+        renderer(ev, task_g);
+    }
+
+  }
+
+  this.updateStatus = function(flash_team_in_progress) {
+    if (timer) {
+        clearTimeout(timer); //cancel the previous timer.
+        timer = null;
+    }
+    timer = setTimeout(function(){
+
+        json_transaction_id++
+        var localStatus = this.constructStatusObj();
+
+        //if flashTeam hasn't been started yet, update the original status in the db
+        if(flashTeamsJSON["startTime"] == undefined){
+          updateOriginalStatus();
+        }
+
+        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
+            localStatus.flash_team_in_progress = flash_team_in_progress;
+        } else {
+
+            localStatus.flash_team_in_progress = in_progress;
+        }
+        localStatus.latest_time = (new Date).getTime();
+        var localStatusJSON = JSON.stringify(localStatus);
+        //console.log("updating string: " + localStatusJSON);
+
+        var flash_team_id = $("#flash_team_id").val();
+        var authenticity_token = $("#authenticity_token").val();
+        var url = '/flash_teams/' + flash_team_id + '/update_status';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+        }).done(function(data){
+            //console.log("UPDATED FLASH TEAM STATUS");
+        });
+    }, 2000);
+  }
+
+  this.updateOriginalStatus = function() {
+    //console.log("in updateOriginalStatus");
+    var localStatus = this.constructStatusObj();
+
+    localStatus.latest_time = (new Date).getTime();
+    var localStatusJSON = JSON.stringify(localStatus);
+    //console.log("updating string: " + localStatusJSON);
+
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_original_status';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+    }).done(function(data){
+        //console.log("UPDATED FLASH TEAM STATUS");
+    });
+  }
+
+  this.constructStatusObj = function() {
+    var flashTeamsJSON = this.flash_teams_json
+    flashTeamsJSON["id"] = this.id; //previously: = $("#flash_team_id").val();
+    flashTeamsJSON["title"] = this.name; //previously: = document.getElementById("ft-name").innerHTML;
+    flashTeamsJSON["author"] = this.author;
+    flashTeamsJSON["status"] = this.in_progress;
+
+    var localStatus = {};
+
+    localStatus.json_transaction_id = json_transaction_id || 1;
+
+    localStatus.local_update = flashTeamsJSON["local_update"];
+    localStatus.team_paused = flashTeamsJSON["paused"];
+    localStatus.task_groups = this.task_groups;
+    localStatus.live_tasks = this.live_tasks;
+    localStatus.paused_tasks = this.paused_tasks;
+    localStatus.remaining_tasks = this.remaining_tasks;
+    localStatus.delayed_tasks = this.delayed_tasks;
+    localStatus.drawn_blue_tasks = this.drawn_blue_tasks;
+    localStatus.completed_red_tasks = this.completed_red_tasks;
+    localStatus.flash_teams_json = flashTeamsJSON;
+
+    //delayed_task_time is required for sending notification emails on delay
+    localStatus.delayed_tasks_time = delayed_tasks_time;
+    localStatus.dri_responded = dri_responded;
+
+    return localStatus;
+  };
+
+
 }
 
-FlashTeam.create = function(parent) {
-  var flashTeam = new FlashTeam();
-  flashTeam.prototype = parent;
-  return flashTeam;
-}
+FlashTeam.prototype = new Wrapper()
