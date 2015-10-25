@@ -49,7 +49,8 @@ $.fn.subscribeToFlashTeamInfo = function() {
     url = "/flash_team/" + $(this).val() + "/info"
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
-            saveFlashTeam(data)
+            currentTeam.updateInfo(data);
+            // saveFlashTeam(data)
         }
     });
 }

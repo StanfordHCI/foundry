@@ -154,7 +154,7 @@ rescue_from ActiveRecord::RecordNotFound do
   render 'member_doesnt_exist'   # or e.g. redirect_to :action => :index
 end
 
-  def edit
+def edit
 
   session.delete(:return_to)
 	session[:return_to] ||= request.original_url
@@ -198,24 +198,17 @@ end
     end
 
     if params.has_key?("uniq")
-     @in_expert_view = true
-     @in_author_view = false
+      @in_expert_view = true
+      @in_author_view = false
 
-     uniq = params[:uniq]
+      uniq = params[:uniq]
 
-     Member.find_by! uniq: uniq
-     #if !(Member.exist(:uniq => uniq))  #role has been reinvited and doesn't exist anymore
-     #   render 'member_doesnt_exist'
-     #end
+      Member.find_by! uniq: uniq
+      member = Member.where(:uniq => uniq)[0]
+      @user_name = member.name
+      flash_team_members = json_status['flash_teams_json']['members']
 
-     member = Member.where(:uniq => uniq)[0]
-     @user_name = member.name
-
-
-
-    flash_team_members = json_status['flash_teams_json']['members']
-
-    flash_team_members.each do |member|
+      flash_team_members.each do |member|
     	if(member['uniq'] == uniq)
     		@member_type = member['type']
     		@member_role = member['role']
@@ -224,27 +217,15 @@ end
 
     #create session to use for hiring panel
      #session[:member] = member.uniq
-     session.delete(:member)
-	 session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
-
-
-
+      session.delete(:member)
+	    session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
     else
-     @in_expert_view = false
-     @in_author_view = true
+      @in_expert_view = false
+      @in_author_view = true
     end
     #end
 
-    flash_teams = FlashTeam.all
-    @events_array = []
-    flash_teams.each do |flash_team|
-      next if flash_team.json.blank?
-      flash_team_json = JSON.parse(flash_team.json)
-      flash_team_events = flash_team_json["events"]
-      flash_team_events.each do |flash_team_event|
-        @events_array << flash_team_event
-      end
-    end
+    @events_array = FlashTeam.all.map(&:events).flatten.compact
     @events_json = @events_array.to_json
   end
 
