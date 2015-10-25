@@ -168,7 +168,7 @@ function startFlashTeam() {
     removeHandoffBtns();
     save_tasksAfter_json();
 
-    startTeam(true);
+    currentTeam.start(true);
 
     //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json.
     //This is used for the notification emails.
@@ -177,7 +177,7 @@ function startFlashTeam() {
     //googleDriveLink();
 }
 
-
+/* moved to TeamControl class
 function endTeam() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
@@ -191,7 +191,7 @@ function endTeam() {
     $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
-
+*/
 
 //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json.
 //This is used for the notification emails.
@@ -226,7 +226,7 @@ $("#flashTeamEndBtn").click(function(){
     label.innerHTML = "End Team?";
     $('#confirmAction').modal('show');
 
-    document.getElementById("confirmButton").onclick=function(){endTeam()};
+    document.getElementById("confirmButton").onclick=function(){currentTeam.end()};
 
 
 });
@@ -411,6 +411,8 @@ function renderFlashTeamsJSON(data, firstTime) {
 }
 
 // firstTime=true means page is reloaded
+/* moved to FlashTeam class
+
 function renderEverything(data, firstTime) {
     renderFlashTeamsJSON(data, firstTime);
 
@@ -421,7 +423,7 @@ function renderEverything(data, firstTime) {
 
 
 }
-
+*/
 // render events to show timer changes
 // TODO rework to draw timers only
 // function initTimer() {
@@ -729,6 +731,7 @@ var checkProjectFolder = function(){
 */
 
 // user must call this startTeam(true, )
+/* moved to TeamControl class
 var startTeam = function(firstTime){
     //console.log("STARTING TEAM");
     //console.log("here1");
@@ -780,15 +783,16 @@ var startTeam = function(firstTime){
 
 
         //Next line is commented out after disabling the ticker
-        /*project_status_handler = setProjectStatusMoving();
-        trackLiveAndRemainingTasks();
-        trackUpcomingEvent();*/
+        //project_status_handler = setProjectStatusMoving();
+        //trackLiveAndRemainingTasks();
+        //trackUpcomingEvent();
     }
 
 
     //Next line is commented out after disabling the ticker
     //load_statusBar(status_bar_timeline_interval);
 };
+*/
 
 // var googleDriveLink = function(){
 //     var gFolderLink = document.getElementById("gFolder");
@@ -1683,6 +1687,7 @@ var getAllTasks = function(){
     return all_tasks;
 };
 
+/* moved to FlashTeam
 var constructStatusObj = function(){
     flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
     flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
@@ -1710,6 +1715,7 @@ var constructStatusObj = function(){
 
     return localStatus;
 };
+*/
 
 var timer = null;
 

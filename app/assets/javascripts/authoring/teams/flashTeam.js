@@ -2,7 +2,9 @@ var currentTeam = null;
 var oldTeam = null;
 
 FlashTeam = function (data) {
-  this.wrap(data);
+  this.extendWith(data);
+  this.extendWith(Logger.prototype)
+  this.extendWith(new TeamControl())
 
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
@@ -117,7 +119,7 @@ FlashTeam = function (data) {
         if(this["startTime"] == undefined){
 
             //console.log("NO START TIME!");
-            updateOriginalStatus();
+            this.updateOriginalStatus();
         }
 
         this.drawTasks();
@@ -191,14 +193,15 @@ FlashTeam = function (data) {
         clearTimeout(timer); //cancel the previous timer.
         timer = null;
     }
+    var self = this;
     timer = setTimeout(function(){
 
         json_transaction_id++
-        var localStatus = this.constructStatusObj();
+        var localStatus = self.constructStatusObj();
 
         //if flashTeam hasn't been started yet, update the original status in the db
         if(flashTeamsJSON["startTime"] == undefined){
-          updateOriginalStatus();
+          self.updateOriginalStatus();
         }
 
         if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
@@ -272,8 +275,6 @@ FlashTeam = function (data) {
 
     return localStatus;
   };
-
-
 }
 
-FlashTeam.prototype = new Wrapper()
+extend(FlashTeam, Wrapper)

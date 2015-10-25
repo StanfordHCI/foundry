@@ -1,6 +1,6 @@
 /* events.js
  * ---------------------------------------------
- * 
+ *
  * See eventDraw.js to see all the functions that draw an event
  * See eventDetails.js for detailed piece drawing (i.e., duration)
  */
@@ -53,7 +53,7 @@ var drag = d3.behavior.drag()
                     outOfRange = true;
                     break;
                 }
-            } 
+            }
             if (outOfRange) {
                 alert("Sorry, " + event1.title + " cannot end before " + event2.title + " begins.");
                 flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
@@ -68,21 +68,21 @@ var drag = d3.behavior.drag()
                 event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
                 event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
                 var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
-                
+
                 if (overlap <= 0) {
-                    alert("Sorry, " + event1.title + " and " + event2.title 
+                    alert("Sorry, " + event1.title + " and " + event2.title
                         + " must overlap to have a collaboration.");
                     flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                     drawEvent(originalEV, false);
                     break;
                 }
             }
-            
+
             updateStatus();
         } else {
             // click
             eventMousedown(d.groupNum);
-        } 
+        }
     });
 
 // leftResize: resize the rectangle by dragging the left handle
@@ -99,7 +99,7 @@ function leftResize(d) {
 
     // get event object
     var ev = getEventFromId(groupNum);
-    
+
     // get new left x
     var width = getWidth(ev);
     var rightX = ev.x + width;
@@ -110,15 +110,15 @@ function leftResize(d) {
     var newWidth = width + (ev.x - newX);
     if (newWidth < 30)
         return;
-    
+
     // update x and draw event
     ev.x = newX;
     ev.min_x = newX;
     ev.duration = durationForWidth(newWidth);
-    
+
     var startHr = startHrForX(newX);
     var startMin = startMinForX(newX);
-  
+
     ev.startHr = startHr;
     ev.startMin = startMin;
     ev.startTime = startHr * 60 + startMin;
@@ -184,7 +184,7 @@ function dragEventBlock(d) {
     var dragX = d3.event.x - (d3.event.x%(STEP_WIDTH)) - DRAGBAR_WIDTH/2;
     var newX = Math.max((0 - (DRAGBAR_WIDTH/2)), Math.min(SVG_WIDTH-width, dragX));
     if (d3.event.dx + d.x < 0) newX = (0 - (DRAGBAR_WIDTH/2));
-    
+
     ev.x = newX;
     ev.min_x = newX;
 
@@ -209,7 +209,7 @@ function dragEventBlock(d) {
     flashTeamsJSON['local_update'] = new Date().getTime();
 
     updateStatus();
-    drawEvent(ev, false);   
+    drawEvent(ev, false);
 }
 
 //VCom Calculates where to snap event block to when created
@@ -218,7 +218,7 @@ function calcSnap(mouseX, mouseY) {
     var snapX = timeline.stepWidth * Math.floor(mouseX/timeline.stepWidth);
     var snapY = 5 + timeline.rowHeight * Math.floor(mouseY/timeline.rowHeight);
     return [snapX, snapY];
-    
+
 }
 
 // drag on timeline => creates new event and draws it
@@ -244,7 +244,8 @@ function newEvent(point, duration) {
 function createEvent(point, duration) {
     // get coords where event should snap to
     var snapPoint = calcSnap(point[0], point[1]);
-  
+    var flashTeamsJSON = currentTeam.flash_teams_json;
+
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
     // create event object
@@ -265,7 +266,8 @@ function createEvent(point, duration) {
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
-    logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
+    // logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
+    currentTeam.logActivity("createEvent(point, duration)",'Create Event', flashTeamsJSON["events"][getEventJSONIndex(eventObj)])
 
 
     // save
@@ -283,13 +285,13 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     output_questions[0] = "Please write a brief (1 sentence) description of this deliverable";
 
     duration = duration || 60;
-    
+
     var startTimeObj = getStartTime(snapPoint[0]);
-    
+
     var newEvent = {
         "id":createEventId(),
         "x": snapPoint[0]-4, "min_x": snapPoint[0], //NOTE: -4 on x is for 1/15/15 render of events
-        "y": snapPoint[1], timer:0, task_startBtn_time:-1, task_endBtn_time:-1, 
+        "y": snapPoint[1], timer:0, task_startBtn_time:-1, task_endBtn_time:-1,
         "status":"not_started", "gdrive":[], "completed_x":null, events_after : ""
     };
 
@@ -363,12 +365,12 @@ function showDropDown(){
         },
         items: {
             "view": {name: "View", icon: ""},
-            "edit": {name: "Edit", icon: "", disabled: function(key, opt) { 
+            "edit": {name: "Edit", icon: "", disabled: function(key, opt) {
                     return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
                 }
             },
             "duplicate": {name: "Duplicate", icon: ""},
-            "confirmDelete": {name: "Delete", icon: ""//, disabled: function(key, opt) { 
+            "confirmDelete": {name: "Delete", icon: ""//, disabled: function(key, opt) {
                     //return ((getEventFromId(CURRENT_EVENT_SELECTED).status == "completed") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "started") || (getEventFromId(CURRENT_EVENT_SELECTED).status == "delayed"));
                 }//}
         }
@@ -380,18 +382,18 @@ function duplicateEvent(groupNumber, closeModal){
     var eventToDuplicate = flashTeamsJSON["events"][task_id];
 
 
-    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
+    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event
     var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
-    
+
     var y = eventToDuplicate["y"]; //keep event on same row as original event
     //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
-    
-    var snapPoint = calcSnap(x,y); 
 
-    //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
-    if(!checkWithinTimelineBounds(snapPoint)){ 
+    var snapPoint = calcSnap(x,y);
+
+    //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)
+    if(!checkWithinTimelineBounds(snapPoint)){
         alert('This event cannot be duplicated because it exceeds the boundaries of the timeline');
-        return; 
+        return;
     }
 
     var eventObj = createEventObj(newEventObject([snapPoint[0], snapPoint[1]], eventToDuplicate["duration"], eventToDuplicate));
@@ -404,24 +406,24 @@ function duplicateEvent(groupNumber, closeModal){
     }
 
     if(closeModal == true){
-        $('#task_modal').modal('hide'); 
-        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+        $('#task_modal').modal('hide');
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     }else{
-        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
     }
     // save
     updateStatus();
 }
 
 function viewEvent(groupNumber){
-    logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 }
 
 function editEvent(groupNumber){
-    logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
+    logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 
@@ -435,7 +437,7 @@ function checkWithinTimelineBounds(snapPoint) {
 function getStartTime(mouseX) {
     var startHr = startHrForX(mouseX);
     var startMin = startMinForX(mouseX);
-    
+
     var startTimeinMinutes = parseInt((startHr*60)) + parseInt(startMin);
     return {"startHr":startHr, "startMin":startMin, "startTimeinMinutes":startTimeinMinutes};
 };
@@ -512,7 +514,7 @@ function startMinForX(X){
 function findCurrentUserNextEvent(currentUserEvents){
     for (var i = 0; i < currentUserEvents.length; i++){
         if(currentUserEvents[i].status == "not_started" || currentUserEvents[i].status == "delayed"){
-            return currentUserEvents[i]["id"];      
+            return currentUserEvents[i]["id"];
         }
     }
 }
@@ -533,27 +535,27 @@ function addBoxShadowFilter(svg, id) {
             svgRoot = svg[0][0];
         }
     }
-    
+
     var selection = d3.select(svgRoot);
-    
+
     var filter = selection.append("filter")
         .attr("id", id)
         .attr("height", "130%");
-    
+
     var feGaussianBlur = filter.append("feGaussianBlur")
         .attr("in", "SourceAlpha")
         .attr("stdDeviation", 2);
-    
+
     var feOffset = filter.append("feOffset")
         .attr("dx", 0)
         .attr("dy", 1)
         .attr("result", "offsetblur");
-    
+
     var feComponentTransfer = filter.append("feComponentTransfer");
     feComponentTransfer.append("feFuncA")
         .attr("type", "linear")
         .attr("slope", 0.08);
-    
+
     var feMerge = filter.append("feMerge");
     feMerge.append("feMergeNode");
     feMerge.append("feMergeNode")
@@ -571,7 +573,7 @@ function addBoxShadowFilter(svg, id) {
  */
 function addToTaskFromData(data, eventObj, taskGroup) {
     var tag = data.tag;
-    
+
     var selector = data.selector;
     if(typeof(selector) === "function") {
         // if the selector is a function, pass it the event object to get
@@ -579,16 +581,16 @@ function addToTaskFromData(data, eventObj, taskGroup) {
         selector = selector(eventObj);
     }
     var selection = taskGroup.selectAll(selector);
-    
+
     var svgElem = selection.empty() ? taskGroup.append(tag) : selection;
-    
+
     if(tag === "text") {
         svgElem.text(data.text(eventObj));
     }
-    
+
     svgElem.attr(data.attrs);
     svgElem.style(data.style);
-    
+
     return svgElem;
 }
 
@@ -608,7 +610,7 @@ function addEventMember(eventId, memberIndex) {
     var memberName = flashTeamsJSON["members"][memberIndex].role;
     var memberUniq = flashTeamsJSON["members"][memberIndex].uniq;
     var memberColor = flashTeamsJSON["members"][memberIndex].color;
-    
+
     logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
     // get event
@@ -646,8 +648,8 @@ function deleteEventMember(eventId, memberNum) {
 
 //shows an alert asking the user to confirm that they want to delete an event
 function confirmDeleteEvent(eventId) {
-    $('#task_modal').modal('hide'); 
-    
+    $('#task_modal').modal('hide');
+
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Delete Event?";
 
@@ -663,7 +665,7 @@ function confirmDeleteEvent(eventId) {
     $("#confirmButton").attr("class","btn btn-danger");
 
     $('#confirmAction').modal('show');
-    
+
 
     //Calls deleteEvent function if user confirms the delete
     document.getElementById("confirmButton").onclick=function(){deleteEvent(eventId)};
@@ -675,11 +677,11 @@ function confirmDeleteEvent(eventId) {
 function deleteEvent(eventId){
     //Hide the editing task modal
     $('#confirmAction').modal('hide');
-    
+
     // Only log before because event won't exist after
     logActivity("deleteEvent(eventId)",'Delete Event - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
-    
+
     var indexOfJSON = getEventJSONIndex(eventId);
 
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
@@ -688,10 +690,10 @@ function deleteEvent(eventId){
     //Delete the event object from the json
     var events = flashTeamsJSON["events"];
     events.splice(indexOfJSON, 1);
-    
+
     //stores the ids of all of the interactions to erase
     var intersToDel = [];
-    
+
     //Iterate over interactions to find any that involve the specific event
     for (var i = 0; i < flashTeamsJSON["interactions"].length; i++) {
             var inter = flashTeamsJSON["interactions"][i];
@@ -699,7 +701,7 @@ function deleteEvent(eventId){
                 intersToDel.push(inter.id);
             }
         }
-      
+
     //Delete all of the interactions specified from the previous function from the json
     for (var i = 0; i < intersToDel.length; i++) {
         var intId = intersToDel[i];

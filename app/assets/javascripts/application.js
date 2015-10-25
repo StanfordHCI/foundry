@@ -22,6 +22,7 @@
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
 //= require private_pub
+//= require extend
 //= require wrapper
 //= require ./authoring/load
 //= require ./authoring/logging
@@ -54,6 +55,7 @@
 //= require ./authoring/taskStatus
 //= require_tree ./authoring/chat
 //= require_tree ./authoring/sidebar
+//= require_tree ./authoring/teams
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
 //= require ./authoring/jquery.cookie
@@ -61,6 +63,5 @@
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
-//= require ./authoring/flashTeam
 //= require ./authoring/request_updates
 //= require ./authoring/draw_boxes
