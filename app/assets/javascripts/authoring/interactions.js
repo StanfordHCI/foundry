@@ -3,7 +3,7 @@
  * Code that manages the interactions (collaborations and handoffs).
  * Includes drawing, manipulating, removing, updating related data, etc.
  * Some helper function to return handoffs/collabs pertaining to a certain event
- * or certain worker. 
+ * or certain worker.
  */
 
 var DRAWING_HANDOFF = false;
@@ -11,35 +11,36 @@ var DRAWING_COLLAB = false;
 var INTERACTION_TASK_ONE_IDNUM = 0;
 var interaction_counter = undefined;
 
-/* 
+/*
  * Called when a user clicks a task rectangle (aka event)
- * Determines if the user is trying to draw an interaction and if so, what type 
+ * Determines if the user is trying to draw an interaction and if so, what type
  */
 function eventMousedown(task2idNum) {
     var task1idNum = INTERACTION_TASK_ONE_IDNUM;
+    var flashTeamsJSON = currentTeam.flash_teams_json;
 
     var task_id = getEventJSONIndex(task2idNum);
     var eventObj = flashTeamsJSON["events"][task_id];
- 
+
    //Show modal if handoff or collaboration is NOT being drawn
     if (DRAWING_HANDOFF != true && DRAWING_COLLAB != true){
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
-       var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables</a>' + 
+       var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables</a>' +
        '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        //'<button class="btn " id="duplicate-task" style="float :left " onclick="duplicateEvent('+task2idNum+', true)">Duplicate</button>' +
-       createOptionsButton(task2idNum) + 
+       createOptionsButton(task2idNum) +
        '<button class="btn " id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
        '<button class="btn " id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Take a Break</button>'+
        '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
        '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
-     
-       $('#task_modal').modal('show'); 
+
+       $('#task_modal').modal('show');
        $('.task-modal-footer').html(modal_footer);
        $('.task-modal-body').html(modal_body);
 
-      logActivity("eventMousedown(task2idNum)",'Clicked on Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(task2idNum)]);
+      currentTeam.logActivity("eventMousedown(task2idNum)",'Clicked on Event', flashTeamsJSON["events"][getEventJSONIndex(task2idNum)]);
       showTaskOverview(task2idNum);
     }
 
@@ -55,13 +56,13 @@ function eventMousedown(task2idNum) {
             task2idNum = task1idNum;
             task1idNum = t2Id;
         }
-        
+
         //Iterate over existing interactions
         for (var i = 0; i < flashTeamsJSON["interactions"].length; i++) {
             var inter = flashTeamsJSON["interactions"][i];
 
             //Check if both of the related event ids belong to a single interaction
-            if ((inter.event1 == task1idNum && inter.event2 == task2idNum) 
+            if ((inter.event1 == task1idNum && inter.event2 == task2idNum)
                 || (inter.event1 == task2idNum && inter.event2 == task1idNum)) {
                 alert("Sorry, this interaction already exists.");
                 DRAWING_COLLAB = false;
@@ -78,7 +79,7 @@ function eventMousedown(task2idNum) {
 
     //Draw a handoff from task one to task two
     } else if (DRAWING_HANDOFF == true) {
-        //First new interaction for a team 
+        //First new interaction for a team
         if (interaction_counter == undefined) {
             interaction_counter = initializeInteractionCounter();
         }
@@ -91,15 +92,15 @@ function eventMousedown(task2idNum) {
         var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1idNum)];
         var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2idNum)];
         var task1End = ev1.startTime + ev1.duration;
-        
+
         //Valid draw
         if (task1End <= ev2.startTime) {
             //Add handoff data to JSON
             var color = "gray";
-            var handoffData = {"event1":task1idNum, "event2":task2idNum, 
+            var handoffData = {"event1":task1idNum, "event2":task2idNum,
                 "type":"handoff", "description":"", "id":interaction_counter, "color":color};
             flashTeamsJSON.interactions.push(handoffData);
-            logActivity("eventMousedown(task2idNum)",'Created Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
+            currentTeam.logActivity("eventMousedown(task2idNum)",'Created Handoff', flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
             updateStatus();
 
             //Visually draw the handoff using the data
@@ -129,7 +130,7 @@ function eventMousedown(task2idNum) {
         //Verify that the tasks overlap
         var overlap = eventsOverlap(task1X, task1Width, task2X, task2Width);
         if (overlap > 0) {
-            //First new interaction for a team 
+            //First new interaction for a team
             if (interaction_counter == undefined) {
                 interaction_counter = initializeInteractionCounter();
             }
@@ -137,13 +138,13 @@ function eventMousedown(task2idNum) {
             //Updates counter and saves to database
             interaction_counter++;
             updateStatus();
-            var collabData = {"event1":task1idNum, "event2":task2idNum, 
+            var collabData = {"event1":task1idNum, "event2":task2idNum,
                 "type":"collaboration", "description":"", "id":interaction_counter};
             flashTeamsJSON.interactions.push(collabData);
-            logActivity("eventMousedown(task2idNum)",'Created collaboration', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
+            currentTeam.logActivity("eventMousedown(task2idNum)",'Created collaboration', flashTeamsJSON["interactions"][getIntJSONIndex(interaction_counter)]);
             updateStatus();
 
-            //Visually draw the collaboration 
+            //Visually draw the collaboration
             drawCollaboration(collabData, overlap);
 
             //Reinitialize variables
@@ -177,7 +178,7 @@ function startWriteHandoff() {
     INTERACTION_TASK_ONE_IDNUM = this.getAttribute('groupNum');
     DRAWING_HANDOFF = true;
     var m = d3.mouse(this);
-    
+
     //Draw a line starting at the first clicked task and follows the mouse movements
     var timelineSvg = window._foundry.timeline.timelineSvg;
     var handoffLayerSvg = window._foundry.timeline.handoffLayer;
@@ -204,7 +205,7 @@ function drawHandoff(handoffData) {
     var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1Id)];
     var x1 = handoffStart(ev1);
     var y1 = ev1.y + 50;
-    
+
     //Find beginning of task 2
     var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2Id)];
     var x2 = ev2.x + 3;
@@ -237,7 +238,7 @@ function drawHandoff(handoffData) {
 
         //Highlight the handoffs relevant to a worker
         .attr("stroke", function() {
-            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_BORDER_COLOR; 
+            if (isWorkerInteraction(handoffId)) return WORKER_TASK_NOT_START_BORDER_COLOR;
             else return "gray";
         })
         .attr("stroke-width", 3)
@@ -245,13 +246,13 @@ function drawHandoff(handoffData) {
         .attr("fill", "none")
 
         //On mouseover, highlight the handoff and strengthen opacity
-        .on("mouseover", function() { 
+        .on("mouseover", function() {
             d3.select(this).style("stroke-opacity", .95);
             d3.select(this).style("stroke", TASK_START_BORDER_COLOR);
         })
 
         //On mouseout, return handoff to default styling
-        .on("mouseout", function() { 
+        .on("mouseout", function() {
             d3.select(this).style("stroke-opacity", .45);
             if (isWorkerInteraction(handoffId)) d3.select(this).style("stroke", WORKER_TASK_NOT_START_BORDER_COLOR);
             else d3.select(this).style("stroke", "gray");
@@ -266,7 +267,7 @@ function drawHandoff(handoffData) {
 function drawHandoffPopover(handoffId, ev1, ev2) {
     //Popover that stores information about the handoff
     $("#interaction_" + handoffId).popover({
-        class: "handoffPopover", 
+        class: "handoffPopover",
         id: '"handoffPopover_' + handoffId + '"',
         html: "true",
         trigger: "click",
@@ -276,8 +277,8 @@ function drawHandoffPopover(handoffId, ev1, ev2) {
         container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
-    $("#interaction_" + handoffId).on('click', function() { 
-        logActivity("drawHandoff(handoffData)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
+    $("#interaction_" + handoffId).on('click', function() {
+        currentTeam.logActivity("drawHandoff(handoffData)",'Show Handoff', flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
 
     });
 }
@@ -300,7 +301,7 @@ function handoffStart(firstEvent){
 function getHandoffInfo(handoffId){
 	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="interactionNotes_' + handoffId + '">'
-		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
+		+ flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description
 		+ '</textarea><br />'
 		+ '<button type="button" class="btn btn-success" id="saveHandoff' + handoffId + '"'
         +' onclick="saveHandoff(' + handoffId +');">Save</button>'
@@ -309,7 +310,7 @@ function getHandoffInfo(handoffId){
         +' onclick="deleteInteraction(' + handoffId +');">Delete</button>';
       } else{
 	      content = '<p id="interactionNotes_' + handoffId + '">'
-	      +flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description 
+	      +flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)].description
 	      + '</p><br />'
 	      + '<button type="button" class="btn" onclick="hideHandoffPopover(' + handoffId +');">Close</button><br /> ';
       }
@@ -329,7 +330,7 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
      * Then route to second event horizontally */
     if (y1 <= y2) { //Event 1 is higher
         pathStr += "L " + (x1+4) + ", " + (y1+25) + "\n";
-        pathStr += "L " + (x2+1) + ", " + (y1+25) + "\n"; 
+        pathStr += "L " + (x2+1) + ", " + (y1+25) + "\n";
     } else { //Event 2 is higher
         pathStr += "L " + (x1+4) + ", " + (y1-55) + "\n";
         pathStr += "L " + (x2+1) + ", " + (y1-55) + "\n";
@@ -345,14 +346,14 @@ function routeHandoffPath(ev1, ev2, x1, x2, y1, y2) {
     pathStr += "L" + (x2+6) + ", " + (y2+2) + "\n";
     pathStr += "L" + (x2+8) + ", " + (y2) + "\n";
     pathStr += "L" + (x2+6) + ", " + (y2-2) + "\n";
-    
+
     return pathStr;
 }
 
 //Close the popover to "cancel" the edit
 function hideHandoffPopover(handoffId) {
     $('#interaction_' + handoffId).popover("hide");
-    logActivity("hideHandoffPopover(handoffId)",'Closed Handoff Popover', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
+    currentTeam.logActivity("hideHandoffPopover(handoffId)",'Closed Handoff Popover', flashTeamsJSON["interactions"][getIntJSONIndex(handoffId)]);
 }
 
 //Save handoff notes and update popover
@@ -370,7 +371,7 @@ function saveHandoff(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
-    logActivity("saveHandoff(intId)",'Saved Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
+    currentTeam.logActivity("saveHandoff(intId)",'Saved Handoff', flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
     updateStatus();
 
     //Hide Popover
@@ -378,20 +379,20 @@ function saveHandoff(intId) {
 }
 
 
-/* 
- * Called when we click the collaboration button.  
- * Initializes creating a collaboration b/t two events. 
+/*
+ * Called when we click the collaboration button.
+ * Initializes creating a collaboration b/t two events.
  */
 function startWriteCollaboration(ev) {
     //TODO: COMMENT
     if(isUser) { // user page
         return;
     }
-    
+
     //TODO: COMMENT
     d3.event.stopPropagation();
 
-    INTERACTION_TASK_ONE_IDNUM = this.getAttribute('groupNum'); 
+    INTERACTION_TASK_ONE_IDNUM = this.getAttribute('groupNum');
     DRAWING_COLLAB = true;
     var m = d3.mouse(this);
 
@@ -410,9 +411,9 @@ function startWriteCollaboration(ev) {
     timelineSvg.on("mousemove", interMouseMove);
 };
 
-/* 
- * Draw collaboration between two events, calculates which event 
- * comes first and what the overlap is 
+/*
+ * Draw collaboration between two events, calculates which event
+ * comes first and what the overlap is
  */
 function drawCollaboration(collabData, overlap) {
     //Extract collaboration data
@@ -422,7 +423,7 @@ function drawCollaboration(collabData, overlap) {
 
     //Find coordinates of the two tasks
     var ev1 = flashTeamsJSON["events"][getEventJSONIndex(task1Id)];
-    var y1 = ev1.y; 
+    var y1 = ev1.y;
     var ev2 = flashTeamsJSON["events"][getEventJSONIndex(task2Id)];
     var x2 = ev2.x + 3;
     var y2 = ev2.y;
@@ -448,7 +449,7 @@ function drawCollaboration(collabData, overlap) {
         .attr("x", x2)
         .attr("y", firstTaskY-9) //AT hack to fix overlap w/ tab members
         .attr("height", taskDistance+9)
-        .attr("width", overlap) 
+        .attr("width", overlap)
         .attr("fill", "#B0BBBF")
         .attr("fill-opacity", .7)
         .on("mouseover", function() { d3.select(this).style("fill-opacity", .9)})
@@ -461,7 +462,7 @@ function drawCollaboration(collabData, overlap) {
 //Add a popover to the collaboration rect so the user can add notes and delete
 function drawCollabPopover(collabId, ev1, ev2) {
     $("#interaction_" + collabId).popover({
-        class: "collabPopover", 
+        class: "collabPopover",
         id: '"collabPopover_' + collabId + '"',
         html: "true",
         trigger: "click",
@@ -471,8 +472,8 @@ function drawCollabPopover(collabId, ev1, ev2) {
         container: $(".container-fluid") //used to be #timeline-container but would get squished if event was near chat
     });
 
-    $("#interaction_" + collabId).on('click', function() { 
-        logActivity("drawCollabPopover(collabId, ev1, ev2)",'Show Handoff', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(collabId)]);
+    $("#interaction_" + collabId).on('click', function() {
+        currentTeam.logActivity("drawCollabPopover(collabId, ev1, ev2)",'Show Handoff', flashTeamsJSON["interactions"][getIntJSONIndex(collabId)]);
 
     });
 }
@@ -485,7 +486,7 @@ function updateCollabPopover(collabId){
 
 //TODO: COMMENT
 function getCollabInfo(collabId){
-	
+
 	if((in_progress != true || (in_progress == true && flashTeamsJSON["paused"] == true)) && (current_user == "Author" || memberType =="author" || memberType == "pc" || memberType == "client") ) {
 		content = '<textarea rows="2.5" id="collabNotes_' + collabId + '">'
 		+ flashTeamsJSON["interactions"][getIntJSONIndex(collabId)].description
@@ -501,7 +502,7 @@ function getCollabInfo(collabId){
         +'</p><br />'
         + '<button type="button" class="btn" onclick="hideCollabPopover(' + collabId +');">Close</button><br /> ';
       }
-	
+
 	return content;
 }
 
@@ -520,7 +521,7 @@ function saveCollab(intId) {
     //Update JSON
     var indexOfJSON = getIntJSONIndex(intId);
     flashTeamsJSON["interactions"][indexOfJSON].description = notes;
-    logActivity("saveCollab(intId)",'Saved Collaboration', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
+    currentTeam.logActivity("saveCollab(intId)",'Saved Collaboration', flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
     updateStatus();
 
     //Hide Popover
@@ -530,7 +531,7 @@ function saveCollab(intId) {
 //Close popover without saving
 function hideCollabPopover(intId){
 	 $("#interaction_" + intId).popover("hide");
-     logActivity("hideCollabPopover(intId)",'Closed Collab Popover', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
+     currentTeam.logActivity("hideCollabPopover(intId)",'Closed Collab Popover', flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
 }
 
 //Deletes the interaction from the timeline and the JSON
@@ -540,11 +541,11 @@ function deleteInteraction(intId) {
 
     //Delete interaction data from JSON
     var indexOfJSON = getIntJSONIndex(intId);
-    
-    logActivity("deleteInteraction(intId)",'Delete Interaction', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
+
+    currentTeam.logActivity("deleteInteraction(intId)",'Delete Interaction', flashTeamsJSON["interactions"][getIntJSONIndex(intId)]);
 
     flashTeamsJSON["interactions"].splice(indexOfJSON, 1);
-    
+
     updateStatus();
 
     //Delete interaction visually
@@ -577,12 +578,12 @@ function eventsOverlap(task1X, task1Width, task2X, task2Width) {
         var overlapStart;
         if (task1X <= task2X) overlapStart = task2X;
         else overlapStart = task1X;
-        
+
         //Find the end of the overlap
         var overlapEnd;
         if (task1End <= task2End) overlapEnd = task1End;
         else overlapEnd = task2End;
-        
+
         return overlapEnd-overlapStart;
     }
 }
@@ -607,7 +608,7 @@ function getIntJSONIndex(idNum) {
 
 //Initialize the counter that creates ids for interactions
 function initializeInteractionCounter() {
-    if (flashTeamsJSON["interactions"].length == 0) return 0; 
+    if (flashTeamsJSON["interactions"].length == 0) return 0;
     else {
         var highestId = 0;
         for (i = 0; i < flashTeamsJSON["interactions"].length; i++) {
@@ -623,12 +624,12 @@ function initializeInteractionCounter() {
  * isWorkerInteraction() returns true if an interaction
  * involves an event that a worker is assigned to
  *
- * @return {boolean} 
+ * @return {boolean}
  */
 function isWorkerInteraction(id) {
     //Get all events related to a worker
     var events = window._foundry.events;
-    var workerEvents = []; 
+    var workerEvents = [];
     for (var i = 0; i<flashTeamsJSON["events"].length; i++) {
         var eventObj = flashTeamsJSON["events"][i];
         if (events.isWorkerTask(eventObj)) {
@@ -658,7 +659,7 @@ function getHandoffsForEvent(id) {
             //Check if handoff involves the event
             if (inter["event1"] == id) belongs = true;
             else if (inter["event2"] == id) belongs = true;
-            
+
             if (belongs){
                 eventHandoffs.push(inter["id"]);
             }
@@ -682,7 +683,7 @@ function getCollabsForEvent(id) {
             //Check if collaboration involves the event
             if (inter["event1"] == id) belongs = true;
             else if (inter["event2"] == id) belongs = true;
-            
+
             if (belongs){
                 eventCollabs.push(inter["id"]);
             }
@@ -693,10 +694,10 @@ function getCollabsForEvent(id) {
 
 /**
  * handoffOutOfRange() returns true if an event's position
- * causes a handoff to be out of range. Handoffs are out of range if 
- * the first task ends before the second task begins. 
+ * causes a handoff to be out of range. Handoffs are out of range if
+ * the first task ends before the second task begins.
  *
- * @return {boolean} 
+ * @return {boolean}
  */
 function handoffOutOfRange(ev1, ev2) {
     var event1 = flashTeamsJSON["events"][getEventJSONIndex(ev1)];

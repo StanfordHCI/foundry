@@ -27,7 +27,7 @@ var TASK_COMPLETE_COLOR = "#3fb53f";
 var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 
 //lighter blue/grey
-var TASK_PAUSED_COLOR =  "#a8cfde"; 
+var TASK_PAUSED_COLOR =  "#a8cfde";
 var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
 function checkEventsBeforeCompleted(groupNum) {
@@ -76,7 +76,7 @@ function startTask(groupNum) {
     eventObj.latest_remaining_time = eventObj["timer"];
 
 	//alert(eventObj.latest_remaining_time);
-    
+
     //remove task from remaining and add to live task array
     var idx = remaining_tasks.indexOf(groupNum);
     if (idx != -1) { // delayed task
@@ -84,7 +84,7 @@ function startTask(groupNum) {
     }
     live_tasks.push(groupNum);
 
-    logActivity("startTask(groupNum)",'Start Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("startTask(groupNum)",'Start Task', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
     drawEvent(eventObj); //Will update color
@@ -105,44 +105,44 @@ function startTask(groupNum) {
 
 //Fires on "Pause" button on task modal
 function pauseTask(groupNum) {
-	
+
 	//Close the first (task) modal
     $("#task_modal").modal('hide');
-    
+
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
     eventObj.status = "paused";
     eventObj.task_pauseBtn_time = (new Date).getTime();
-    eventObj.task_latest_active_time = eventObj.task_pauseBtn_time; 
-    
+    eventObj.task_latest_active_time = eventObj.task_pauseBtn_time;
+
     eventObj.latest_remaining_time = eventObj["timer"];
-    
+
     paused_tasks.push(groupNum);
 
-    logActivity("pauseTask(groupNum)",'Pause Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("pauseTask(groupNum)",'Pause Task', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
     drawEvent(eventObj); //Will update color
     trackUpcomingEvent();
-	
+
 
 	//chaning resume button to pause button on the task modal
     $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
-    $("#pause-resume-task").html('Resume Task'); 
+    $("#pause-resume-task").html('Resume Task');
 
     postToSlack(eventObj, "paused");
-	
+
 }
 
 //Fires on "Pause" button on task modal
 function resumeTask(groupNum) {
-	
+
 	//Close the first (task) modal
     $("#task_modal").modal('hide');
-    
+
 	var indexOfJSON = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][indexOfJSON];
-    
+
     if(isDelayed(groupNum)){
         eventObj.status = "delayed";
     } else{
@@ -151,15 +151,15 @@ function resumeTask(groupNum) {
     eventObj.task_resumeBtn_time = (new Date).getTime();
     eventObj.task_latest_active_time = eventObj.task_resumeBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
-    
+
     //remove task from remaining and add to live task array
     var idx = paused_tasks.indexOf(groupNum);
     if (idx != -1) { // delayed task
         paused_tasks.splice(idx, 1);
     }
 
-    logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
-   
+    currentTeam.logActivity("resumeTask(groupNum)",'Resume Task', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     updateStatus();
     drawEvent(eventObj); //Will update color
     trackUpcomingEvent();
@@ -167,10 +167,10 @@ function resumeTask(groupNum) {
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
-    $("#pause-resume-task").html('Take a Break'); 
+    $("#pause-resume-task").html('Take a Break');
 
     postToSlack(eventObj, "resumed");
-	
+
 }
 
 // This function lets you know the current status of a task that is paused
@@ -187,15 +187,15 @@ function checkPausedTaskStatus(eventObj){
     if (isDelayed(eventObj)) pausedTaskStatus = "delayed";
     else pausedTaskStatus = "started";
 
-    return pausedTaskStatus; 
+    return pausedTaskStatus;
 }
 
 //Alert firing on event complete buttons
-function confirmCompleteTask(groupNum) { 
+function confirmCompleteTask(groupNum) {
     //Close the first (task) modal
     $("#task_modal").modal('hide');
 
-    logActivity("confirmCompleteTask(groupNum)",'Confirm Complete Task - Show Doc Questions Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("confirmCompleteTask(groupNum)",'Confirm Complete Task - Show Doc Questions Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     $(".confirm-modal-cancel").attr('onclick', 'logCloseTaskDocModal('+groupNum+')');
 
@@ -207,7 +207,7 @@ function confirmCompleteTask(groupNum) {
     //Creates the alert modal title
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = eventToComplete.title + "<br /> Have You Completed This Task?";
-    
+
     //Edits the confirmAction modal from _confirm_action.html.erb
     var alertText = document.getElementById("confirmActionText");
     alertText.innerHTML = completeTaskModalText(eventToComplete);
@@ -221,7 +221,7 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        else{ 
+        else{
             $("#confirmButton").prop('disabled', true);
             $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
         }
@@ -233,7 +233,7 @@ function confirmCompleteTask(groupNum) {
     $("#saveButton").attr("class","btn btn-default");
     $("#saveButton").attr("style", "display:inline;");
     $('#confirmAction').modal('show');
-    
+
 
     $(".outputForm").change(function() {
         completed = allCompleted(eventToComplete);
@@ -242,7 +242,7 @@ function confirmCompleteTask(groupNum) {
             $("#confirmButton").prop('disabled', false);
             $("#confirmButton")[0].innerHTML = "Submit!";
         }
-        else{ 
+        else{
             $("#confirmButton").prop('disabled', true);
             $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
         }
@@ -251,22 +251,22 @@ function confirmCompleteTask(groupNum) {
 
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
-    	logActivity("confirmCompleteTask(groupNum) - document.getElementById('confirmButton').onclick=function()",'Confirm Complete Task - Clicked Confirm Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    	logActivity("confirmCompleteTask(groupNum) - document.getElementById('confirmButton').onclick=function()",'Confirm Complete Task - Clicked Confirm Button', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };
-    //hidePopover(groupNum); 
+    //hidePopover(groupNum);
 
     //calls saveQuestions functions if user chooses to save questions
     document.getElementById("saveButton").onclick=function(){
-        logActivity("confirmCompleteTask(groupNum) - document.getElementById('saveButton').onclick=function()",'Confirm Complete Task - Clicked Save Button', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("confirmCompleteTask(groupNum) - document.getElementById('saveButton').onclick=function()",'Confirm Complete Task - Clicked Save Button', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
         saveQuestions(groupNum);
     };
 }
 
 function logCloseTaskDocModal(groupNum){
-    logActivity("logCloseTaskDocModal(groupNum)",'Close Task Documentation Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("logCloseTaskDocModal(groupNum)",'Close Task Documentation Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 var allCompleted = function(eventToComplete){
@@ -280,11 +280,11 @@ var allCompleted = function(eventToComplete){
                 if ($(".outputCheckbox")[i].contains($(".outputCheckbox:checked")[j])){
                     value = true;
                 }
-            } 
-                if (value){ 
+            }
+                if (value){
                 //console.log(splitOutputs[i]);
                 document.getElementById("output" + splitOutputs[i]).style.display = "block";
-            }else{ 
+            }else{
                 document.getElementById("output" + splitOutputs[i]).style.display = "none";
             }
         }
@@ -330,7 +330,7 @@ var keyUpFunc = function(eventToComplete){
         $("#confirmButton").prop('disabled', false);
         $("#confirmButton")[0].innerHTML = "Submit!";
     }
-    else{ 
+    else{
         $("#confirmButton").prop('disabled', true);
         $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
     }
@@ -340,7 +340,7 @@ var keyUpFunc = function(eventToComplete){
 function completeTaskModalText(eventToComplete) {
     var modalText = "<p align='left' style='padding-bottom:4px'><b>Please check the box next to each deliverable to indicate that you have completed and uploaded it to this </b>"
                     + "<a href=" + eventToComplete["gdrive"][1] + " target='_blank'>Google Drive Folder</a></p>";
-                    
+
     //Get outputs from eventObj
     var eventOutputs = eventToComplete.outputs;
     if (eventOutputs != null && eventOutputs != "") {
@@ -390,10 +390,10 @@ function completeTaskModalText(eventToComplete) {
         if (!generalFilledQ)
             var placeholderVal = "";
         else{
-            var placeholderVal = generalFilledQ[i][1]; 
+            var placeholderVal = generalFilledQ[i][1];
         }
         modalText += '<p id="textq' + i + '">' + generalQuestions[i] + ': </p></br><textarea id="q' + i + '"class="outputForm" rows="4" onkeyup="keyUpFunc(); saveDocQuestions(' + eventToComplete.id + ')">'+ placeholderVal + '</textarea></br>';
-    } 
+    }
     modalText += "</div></form>";
     modalText+= "<em>Click 'Task Completed' to alert the PC and move on to the documentation questons.</em>";
     return modalText;
@@ -401,7 +401,7 @@ function completeTaskModalText(eventToComplete) {
 
 //Function to save the documentation questions in the form when the task is completed
 function saveDocQuestions(groupNum){
-    var task_id = getEventJSONIndex(groupNum); 
+    var task_id = getEventJSONIndex(groupNum);
     var ev = flashTeamsJSON["events"][task_id];
 
     var eventOutputs = ev["outputs"];
@@ -427,9 +427,9 @@ function saveDocQuestions(groupNum){
                 }
             }
             ev["checkboxes"][total[i].id] = value;
-        }   
+        }
     }
-    
+
     var docQuestions = [];
     generalQuestions = [];
     for (i = 0; i < ev.docQs.length; i++){
@@ -437,7 +437,7 @@ function saveDocQuestions(groupNum){
     }
     for (i = 0; i < generalQuestions.length; i++){
         docQuestions.push([generalQuestions[i], $("#q" + i).val()]);
-    }    
+    }
     ev["docQs"] = docQuestions;
 
     flashTeamsJSON["local_update"] = new Date().getTime();
@@ -446,7 +446,7 @@ function saveDocQuestions(groupNum){
 //Called when user presses "Save" button
 var saveQuestions = function(groupNum){
     saveDocQuestions(groupNum);
-    logActivity("var saveQuestions = function(groupNum)",'Save Questions', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("var saveQuestions = function(groupNum)",'Save Questions', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     updateStatus();
 }
 
@@ -458,20 +458,20 @@ var completeTask = function(groupNum){
     var eventToComplete = flashTeamsJSON["events"][indexOfJSON];
     saveDocQuestions(groupNum);
     //console.log(eventToComplete["docQs"]);
-    
+
     if(eventToComplete.status == "delayed"){
-        
+
         var idx = delayed_tasks.indexOf(groupNum);
         if (idx != -1) { // delayed task
             delayed_tasks.splice(idx, 1);
             //console.log("removed task from delayed and added to completed_red");
-            
+
         }
         completed_red_tasks.push(groupNum);
         sendEmailOnCompletionOfDelayedTask(groupNum);
     }
     else if (eventToComplete.status == "started"){
-       
+
         var idx = live_tasks.indexOf(groupNum);
         if (idx != -1){ // live task
             live_tasks.splice(idx, 1);
@@ -493,7 +493,7 @@ var completeTask = function(groupNum){
             //var task_g = getTaskGFromGroupNum (groupNum);
             //var blue_width = drawBlueBox(ev, task_g);
             drawn_blue_tasks.push(groupNum);
-            
+
             //sendEmailOnEarlyCompletion(blue_width);
             live_tasks.splice(idx, 1);
         }
@@ -501,13 +501,13 @@ var completeTask = function(groupNum){
 
     eventToComplete.status = "completed";
 
-    logActivity("var completeTask = function(groupNum)",'Complete Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
-   
+    currentTeam.logActivity("var completeTask = function(groupNum)",'Complete Task', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+
     //TODO: Iteration Marker - if we iterate and want to put it on the task, do it here
 
     //Update database, must be false b/c we are not using the old ticker
     //updateStatus(false);
-    
+
     /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
     I think updateStatus needs to be true since the team is still in progress when you complete a task */
     flashTeamsJSON['local_update'] = new Date().getTime();
@@ -537,9 +537,9 @@ var postToSlack = function(event, update) {
     var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit';
     //var teamUrl = 'http://foundry-app.herokuapp.com/flash_teams/'+flash_team_id+'/';
 
-    // HACK HACK HACK for summer deployment. 
+    // HACK HACK HACK for summer deployment.
     //Eventually teams need to have a place they can store the private URLs
-    var channel = "#foundry-notifications";  
+    var channel = "#foundry-notifications";
     var notification_group = "Update";
     var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
     if (flashTeamsJSON['id'] == 178 || flashTeamsJSON['id'] == 636 || flashTeamsJSON['id'] == 685 || flashTeamsJSON['id'] == 786) { // trauma

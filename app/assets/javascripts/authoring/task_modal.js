@@ -3,11 +3,11 @@ function showTaskOverview(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
-	
+
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
 	var uniq_u=getParameterByName('uniq');
-		
-	
+
+
 	//modal label
 	var label = title;
 
@@ -19,56 +19,56 @@ function showTaskOverview(groupNum){
 	var taskOverviewContent = getTaskOverviewContent(groupNum);
 	//$('#taskOverview').html(taskOverviewContent);
 	$('#task-text').html(taskOverviewContent);
-    
+
     // if team hasn't started yet, don't show the google drive deliverables button in task footer
     if(!in_progress){
-        $("#gdrive-footer-btn").css('display', 'none'); 
+        $("#gdrive-footer-btn").css('display', 'none');
     }
 
-    // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.) 
+    // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.)
     //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client
 	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
-        
+
 
         if(eventObj.status == "started" || eventObj.status == "delayed"){
             $("#start-end-task").addClass('btn-success');
             $("#start-end-task").css('display', '');
             $("#pause-resume-task").addClass('btn-info');
             $("#pause-resume-task").css('display', '');
-            
-            
+
+
             $("#start-end-task").attr('onclick', 'confirmCompleteTask('+groupNum+')');
             $("#start-end-task").html('Complete');
-        } 
- 
-        
+        }
+
+
         else if(eventObj.status == "paused"){
             $("#start-end-task").css('display', 'none');
             $("#pause-resume-task").addClass('btn-primary');
             $("#pause-resume-task").css('display', '');
             $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
-            
+
             $("#pause-resume-task").html('Resume Task');
-            
-        } 
-        
+
+        }
+
         else if(eventObj.status == "completed"){
-             $("#pause-resume-task").css('display', 'none'); 
+             $("#pause-resume-task").css('display', 'none');
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
               $("#start-end-task").addClass('btn-success');
               $("#start-end-task").prop('disabled', true);
         }
         else{
-           $("#pause-resume-task").css('display', 'none'); 
+           $("#pause-resume-task").css('display', 'none');
            $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
             $("#start-end-task").addClass('btn-warning');
-            $("#start-end-task").html('Start Task'); 
+            $("#start-end-task").html('Start Task');
         }
     } else{
-            $("#start-end-task").css('display', 'none');   
-            $("#pause-resume-task").css('display', 'none');  
+            $("#start-end-task").css('display', 'none');
+            $("#pause-resume-task").css('display', 'none');
     }
 
     if(uniq_u == "" || memberType == "pc" || memberType == "client"){
@@ -83,10 +83,10 @@ function showTaskOverview(groupNum){
     if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" )){
         $("#duplicate-task").css('display','');
     }
-    
+
 	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '')
-		
+
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	} //only the author, PC OR CLIENT (as of 8/21/2015) can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
@@ -101,19 +101,19 @@ function showTaskOverview(groupNum){
 		$("#delete").css('display','none');
         //$("#duplicate-task").css('display','none');
 	}
-    logActivity("showTaskOverview(groupNum)",'Show Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("showTaskOverview(groupNum)",'Show Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideTaskOverview(groupNum){
-    logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 function showShortTaskOverview(groupNum){
         var task_id = getEventJSONIndex(groupNum);
         var eventObj = flashTeamsJSON["events"][task_id];
         var title = eventObj["title"];
-    
+
         //modal label
         var label = title;
         var taskOverviewContent = getTaskOverviewContent(groupNum);
@@ -129,33 +129,33 @@ function showShortTaskOverview(groupNum){
                             + '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables</a>';
 
         $('.task-modal-footer2').html(modal_footer);
-        
-        $('#task_modal2').modal('show'); 
+
+        $('#task_modal2').modal('show');
 
 
-        logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
-    
+
 }
 
 function logShortTaskOverviewGDriveBtnClick(groupNum){
-        logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 function logTaskOverviewGDriveBtnClick(groupNum){
-        logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideShortTaskOverview(groupNum){
-    logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
 
 function editTaskOverview(popover,groupNum){
-	logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+	logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];
@@ -164,21 +164,21 @@ function editTaskOverview(popover,groupNum){
     if(title != "New Event"){
         eventFormTitle = title;
     }
-   	
+
 	if(popover==true){
 		$('#task-edit-link').hide();
-		
+
 		//label
-		label = '<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'"' + '" value="'+eventFormTitle+'" >'	
+		label = '<input type ="text" name="eventName" id="eventName' + '" placeholder="'+title+'"' + '" value="'+eventFormTitle+'" >'
 		$('#task_modal_Label').html(label);
 
         //content
         var taskOverviewForm = getTaskOverviewForm(groupNum);
 
 		$('#task-text').html(taskOverviewForm);
-		
+
 		$("#edit-save-task").attr('onclick', 'saveTaskOverview('+groupNum+')');
-		$("#edit-save-task").html('Save');	
+		$("#edit-save-task").html('Save');
 
         // create the read only tags for inputs created by handoffs or collaborations
         // var int_inputs_tags = $('#int_inputs').tags({
@@ -208,10 +208,10 @@ function editTaskOverview(popover,groupNum){
             tagSize: "sm",
         });
 
-        $("#inputs").tagsinput(); 
+        $("#inputs").tagsinput();
         $("#outputs").tagsinput();
 
-        //Adds the appropraiate documentation question field when 
+        //Adds the appropraiate documentation question field when
         $("#outputs").change(function() {
             tempText = {};
             for (i = 0; i < $(".oQs").length; i++){
@@ -222,7 +222,7 @@ function editTaskOverview(popover,groupNum){
             htmlString = "";
             for (i = 0; i < outputArray.length; i++){
                 if (outputArray[i] != ""){
-                    htmlString = htmlString + '<div><b>Questions about <i>' + outputArray[i] + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">'; 
+                    htmlString = htmlString + '<div><b>Questions about <i>' + outputArray[i] + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + outputArray[i] + '">';
                     if (outputArray[i] in tempText){
                         for (j = 0; j < tempText[outputArray[i]].length; j++){
                             htmlString = htmlString + tempText[outputArray[i]][j] + '\n';
@@ -237,7 +237,7 @@ function editTaskOverview(popover,groupNum){
             document.getElementById("outputQForm").innerHTML = htmlString;
         });
 
-	}	
+	}
 }
 
 function getTaskOverviewForm(groupNum){
@@ -270,34 +270,34 @@ function getTaskOverviewForm(groupNum){
 
     var form ='<form name="taskOverviewForm" id="taskOverviewForm" style="margin-bottom: 5px;">'
         + '<div class="event-table-wrapper">'
-        + '<div class="row-fluid">' 
+        + '<div class="row-fluid">'
         + '<div class="span6">'
-        + '<b>Event Start</b> <br>' 
-        + 'Hours : <input type="number" id="startHr" value="' + startHr 
-            + '" min="0" style="width:36px">         ' 
-        + 'Minutes : <input type="number" id="startMin" value="' + startMin 
+        + '<b>Event Start</b> <br>'
+        + 'Hours : <input type="number" id="startHr" value="' + startHr
+            + '" min="0" style="width:36px">         '
+        + 'Minutes : <input type="number" id="startMin" value="' + startMin
             + '" min="0" step="15" max="45" style="width:36px"><br />'
 
         +'<br />'
-        + '<b>Project Coordinator</b><br><select class="pcInput"' 
-            +' name="pcName" id="pcEvent"' 
+        + '<b>Project Coordinator</b><br><select class="pcInput"'
+            +' name="pcName" id="pcEvent"'
             + 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
-    
+
         + '</div> <div class="span6">'
-        + '<b>Total Runtime </b> <br />' 
+        + '<b>Total Runtime </b> <br />'
         + 'Hours : <input type = "number" id="hours" value="'
-            +numHours+'" min="0" style="width:36px"/>         ' 
+            +numHours+'" min="0" style="width:36px"/>         '
         + 'Minutes : <input type = "number" id = "minutes" value="'+minutesLeft
-            +'" style="width:36px" min="0" step="15" max="45"/> <br />'     
+            +'" style="width:36px" min="0" step="15" max="45"/> <br />'
         +'<br />'
-        + '<b>Directly-Responsible Individual</b><br><select class="driInput"' 
-            +' name="driName" id="driEvent"' 
+        + '<b>Directly-Responsible Individual</b><br><select class="driInput"'
+            +' name="driName" id="driEvent"'
 			+ 'onchange="getDRI('+groupNum + ')">'+ writeDRIMembers(groupNum,dri_id) +'</select>'
         + '</div>'
         + '</div>'
         +'<br />'
 
-        + '<div class="row-fluid">' 
+        + '<div class="row-fluid">'
         + '<div class="span12">'
         + '<b>Members</b><br/> <div id="eventMemberList">'
         + writeEventMembers(eventObj)  +'</div>'
@@ -311,7 +311,7 @@ function getTaskOverviewForm(groupNum){
         + '<div><b>Task Documentation Questions </b><i>(Start a new line to create a new question)</i></br><textarea class="span12" style="width:475px" rows="5" placeholder="Add any General Questions here" id="questions">' + questions + '</textarea></div>'
         + '<div id="outputQForm">';
         for (var key in outputQuestions){
-            form = form + '<div><b>Questions about <i>' + key + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">'; 
+            form = form + '<div><b>Questions about <i>' + key + ' </i></b><i>(Start a new line to create a new question)</i></br><textarea class="span12 oQs" style="width:475px" rows="5" placeholder="Add any questions here" id="num' + key + '">';
             for (i = 0; i < outputQuestions[key].length; i++){
                 form = form + outputQuestions[key][i][0] + '\n';
             }
@@ -319,11 +319,11 @@ function getTaskOverviewForm(groupNum){
         }
         form = form + '</div>'
         + '<a onclick="showTaskOverview('+groupNum+')" style="font-weight: normal;">Cancel</a>'
-        
+
         + '</div>'
         + '</div>'
         + '</div>'
-        
+
         + '</form>';
 
     return form;
@@ -334,86 +334,86 @@ function getTaskOverviewForm(groupNum){
 function getTaskOverviewContent(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_id];
-	
+
 	var hrs = Math.floor(ev.duration/60);
     var mins = ev.duration % 60;
-    
+
     // if the minutes are < 10, you need to add a zero before
     if(mins < 10){
 	    mins = '0' + mins;
     }
-    
-    var evStartHr = ev.startHr; 
-	var evStartMin = ev.startMin.toFixed(0); 
-	
+
+    var evStartHr = ev.startHr;
+	var evStartMin = ev.startMin.toFixed(0);
+
 	// if the minutes are < 10, you need to add a zero before
 	if(evStartMin < 10){
 	    evStartMin = '0' + evStartMin;
     }
-	
+
 	//var content = '<div class="row-fluid" >';
 
     var content = '<div class="row-fluid">';
-                
+
                 if(ev.status == "not_started"){
                     content += '<span class="span6"><b>Task Status: </b> not started  </span>';
-                    content += '<span class="span6" style="text-align:right"><b>Task Duration: </b>' + formatModalTime(ev.duration) + '</span>'; 
+                    content += '<span class="span6" style="text-align:right"><b>Task Duration: </b>' + formatModalTime(ev.duration) + '</span>';
                 }
                 else{
                     content += '<span class="span6"><b>Task Status: </b>' + ev.status +' </span>';
                     content += '<span class="span6" style="text-align:right">'
-                            + '<b>Time Remaining: </b>' + formatModalTime(ev.timer) +' / ' + formatModalTime(ev.duration) + '</span>'; 
+                            + '<b>Time Remaining: </b>' + formatModalTime(ev.timer) +' / ' + formatModalTime(ev.duration) + '</span>';
                 }
 
         content += '</div>';
 
         content += '<hr/><div class="row-fluid"><em>30 minutes of this task are allocated for reading the requirements'
         +' and reviewing the previous materials. Click the start button when you are ready to review.</em>';
-        
+
     content += '</div>';
-	
+
 		content += '<hr /><div class="row-fluid">';
-		
+
 			content += '<h4>The goal of this task is to: </h4>';
-		
+
 			if (ev.notes != ""){
-				content += ev.notes;	
+				content += ev.notes;
 			}
 			else{
 				content += "No task description has been provided yet."
 			}
-			
+
 		content += '</div>';
-		
+
         //content += '</div>';
-        
-		
+
+
 	content += '<div class="row-fluid" >';
-		
+
 		if(ev.outputs) {
 			//content += '<b>Deliverables:</b><br>';
 			content +=  '<br /><h5>Specifically, you are expected to produce the following deliverables: </h5>';
 			var outputs = ev.outputs.split(",");
 			for(var i=0;i<outputs.length;i++){
-				
+
 				content += outputs[i];
-				
+
 				//content += outputs[i] + ': ';
 				//content += 'insert description here';
 				content += "<br />";
 			}
 		}
-    			
+
     content += '</div>';
 
     var handoff_inputs = events_immediately_before(groupNum);
 
-    if(ev.inputs.length!=0) { 
+    if(ev.inputs.length!=0) {
         handoff_inputs.push(parseInt(ev.id));
     }
 
     if(handoff_inputs.length!=0) {
-        content += '<div class="row-fluid" >';  
+        content += '<div class="row-fluid" >';
         content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
         for(var i=0; i<handoff_inputs.length; i++){
                 input_ev_id = handoff_inputs[i];
@@ -421,7 +421,7 @@ function getTaskOverviewContent(groupNum){
                 content += '<p style="padding-top: 5px">';
                 if(input_ev['outputs'].length ==0){
                     content+= '<b>prior task results</b>';
-                
+
                 }else{
                     content +='<b><a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logHandoffInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a></b>';
 
@@ -431,13 +431,13 @@ function getTaskOverviewContent(groupNum){
                 content += '</p>';
         }
 
-        content +=  '</div>'; 
+        content +=  '</div>';
     }
 
      var collab_inputs = events_in_collaboration(groupNum);
 
     if(collab_inputs.length!=0) {
-        content += '<div class="row-fluid" >';  
+        content += '<div class="row-fluid" >';
         content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
         for(var i=0; i<collab_inputs.length; i++){
                 input_ev_id = collab_inputs[i];
@@ -445,7 +445,7 @@ function getTaskOverviewContent(groupNum){
                 content += '<p style="padding-top: 5px">';
                 if(input_ev['outputs'].length ==0){
                     content+= '<b>collaboration</b>';
-                
+
                 }else{
                     content +='<b><a href=' + input_ev["gdrive"][1] + ' target="_blank" onclick="logCollabInputClick(' + groupNum + ',' + input_ev_id + ')">'+ input_ev['outputs'].split(',').join(', ') +'</a></b>';
 
@@ -456,16 +456,16 @@ function getTaskOverviewContent(groupNum){
                 content += '</p>';
         }
 
-        content +=  '</div>'; 
+        content +=  '</div>';
     }
-		
-		
+
+
 		content += "<hr/>";
-		
-	content += '<div class="row-fluid" >';		
-				
+
+	content += '<div class="row-fluid" >';
+
 		content += '<b>Members assigned to this task: </b>';
-		
+
 		var num_members = ev.members.length;
 	    if(num_members > 0){
 	        //content += '<b>Members:</b><br>';
@@ -481,13 +481,13 @@ function getTaskOverviewContent(groupNum){
 	    else{
 		    content += "No members have been assigned yet."
 	    }
-    
+
     if (ev.dri != "" && ev.dri != undefined){
         var dri_id = parseInt (ev.dri);
         var mem = null;
 
         for (var i = 0; i<flashTeamsJSON["members"].length; i++){
-           
+
             if(flashTeamsJSON["members"][i].id == dri_id){
                 mem = flashTeamsJSON["members"][i].role;
                 break;
@@ -504,9 +504,9 @@ function getTaskOverviewContent(groupNum){
 		  if (ev.pc != "" && ev.pc != undefined){
 	        var pc_id = parseInt (ev.pc);
 	        var mem = null;
-	
+
 	        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
-	           
+
 	            if(flashTeamsJSON["members"][i].id == pc_id){
 	                mem = flashTeamsJSON["members"][i].role;
 	                break;
@@ -517,20 +517,20 @@ function getTaskOverviewContent(groupNum){
             content += '<b>Project Coordinator: </b>';
             content += mem;
             content += "</div>"
-            
+
         }
     }
 
 	content += '</div>';
-		
+
 	content += "<hr/>";
-		
-	content += '<div class="row-fluid" >';	
-		
+
+	content += '<div class="row-fluid" >';
+
 	//content += "<hr/>";
     content += "<h4>You will need to answer the following questions: <br /><br /></h4>";
 
-    //Add output documentation questions to task modal    
+    //Add output documentation questions to task modal
     for (var key in ev.outputQs){
         if (key != ""){
             content += "<b><i>" + key + "</i></b></br>";
@@ -542,7 +542,7 @@ function getTaskOverviewContent(groupNum){
         }
     }
     //content += "<hr/>";
-    
+
 
     //Add general documentation questions to task modal
     if (ev.docQs.length > 0){
@@ -554,22 +554,22 @@ function getTaskOverviewContent(groupNum){
             }
         }
     }
-    
+
     content += '</div>';
-	
+
 	return content;
 }
 
 
 function logHandoffInputClick(groupNum, inputEvId){
     //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
-    logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, flashTeamsJSON["events"]);
 
 }
 
 function logCollabInputClick(groupNum, inputEvId){
     //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
-    logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"]);
+    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, flashTeamsJSON["events"]);
 
 }
 
@@ -581,7 +581,7 @@ function formatModalTime(timeInMins){
 
     var time = timeInMins;
     var sign = (time / Math.abs(time) < 0) ? "-" : "";
-    
+
     var hours = Math.floor(Math.abs(time) / 60);
     var minutes = Math.abs(time) % 60;
 
@@ -600,7 +600,7 @@ function formatModalTime(timeInMins){
 function createOptionsButton(groupNum){
 
     var ev_index = getEventJSONIndex(groupNum);
-    var ev_title = flashTeamsJSON["events"][ev_index].title; 
+    var ev_title = flashTeamsJSON["events"][ev_index].title;
 
     var optionsBtn = '<div class="btn-group dropup">'
                 + '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">'
@@ -609,7 +609,7 @@ function createOptionsButton(groupNum){
                 + '</a>'
                 + '<ul class="dropdown-menu">'
                     + '<li><a tabindex="-1" href="#" id="duplicate-task" onclick="duplicateEvent('+ groupNum +', true)">Duplicate</a></li>';
-           if(flashTeamsJSON.folder != undefined){         
+           if(flashTeamsJSON.folder != undefined){
                 optionsBtn += '<li><a tabindex="-1" href="#" id="new-gdrive-proj-folder" '
                     + 'onclick="createTaskFolder(\'' + ev_title + ' - ' + groupNum + '\', ' + ev_index + ', \'' + flashTeamsJSON.folder[0] + '\')"'
                     + '>New GDrive Folder</a></li>';
@@ -617,12 +617,12 @@ function createOptionsButton(groupNum){
 
         optionsBtn += '</ul>'
                     + '</div>';
-    
+
     return optionsBtn;
 }
 
 function saveTaskOverview(groupNum){
-	var task_index = getEventJSONIndex(groupNum); 
+	var task_index = getEventJSONIndex(groupNum);
 	var ev = flashTeamsJSON["events"][task_index];
 
     //Update title
@@ -634,7 +634,7 @@ function saveTaskOverview(groupNum){
     }
 
     //Update start time if changed
-    var startHour = $("#startHr").val();    
+    var startHour = $("#startHr").val();
     if (startHour != "") startHour = parseInt($("#startHr").val());
     else startHour = parseInt($("#startHr").attr("placeholder"));
 
@@ -694,7 +694,7 @@ function saveTaskOverview(groupNum){
         if (checkbox == undefined) return false;
         if (checkbox.checked == true) {
             ev.members.push(memberId); //Update JSON
-        } 
+        }
     });
 
     //Update description if changed
@@ -728,10 +728,10 @@ function saveTaskOverview(groupNum){
                 if (questionArray[j] != ""){
                     outQs[output].push([questionArray[j],""]);
                 }
-            } 
+            }
         }
     }
-    ev.outputQs = outQs;    
+    ev.outputQs = outQs;
 
     //everytime a modal is saved all_inputs of all events on the timeline are updated
     update_all_inputs_string();
@@ -739,11 +739,11 @@ function saveTaskOverview(groupNum){
     flashTeamsJSON['local_update'] = new Date().getTime();
     drawEvent(ev);
 
-    logActivity("saveTaskOverview(groupNum)",'Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("saveTaskOverview(groupNum)",'Save Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
 
-    $('#task_modal').modal('hide'); 
+    $('#task_modal').modal('hide');
 }
 
 
@@ -751,7 +751,7 @@ function saveTaskOverview(groupNum){
 function update_all_inputs_string(){
     var events = flashTeamsJSON["events"];
     var all_inputs_array=[];
-    
+
     for (var i =0; i<events.length; i++){
         var all_inputs_string="";
         all_inputs_array = getAllInputs(events[i].id);
@@ -764,7 +764,7 @@ function update_all_inputs_string(){
 
             flashTeamsJSON["events"][i]["all_inputs"] = all_inputs_string;
         }
-        
+
     }
 }
 
@@ -778,42 +778,42 @@ function getAllInputs(groupNum){
    var collaboration_ids = events_in_collaboration(groupNum);
    var all_inputs=[];
 
-   if(ev.inputs) { 
+   if(ev.inputs) {
 
         var inputs = ev.inputs.split(",");
         for(var i=0;i<inputs.length;i++){
-            all_inputs.push([groupNum, inputs[i] ]);    
+            all_inputs.push([groupNum, inputs[i] ]);
         }
     }
 
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
-           
+
             var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
             if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
                 continue;
 
             var outputs = ev_before["outputs"].split(",");
-            
-            for(var j=0;j<outputs.length;j++){   
+
+            for(var j=0;j<outputs.length;j++){
                all_inputs.push([ev_before.id , outputs[j] ])
-            }                   
-        }    
+            }
+        }
     }
 
     if(collaboration_ids.length!=0){
         for(var i=0;i<collaboration_ids.length;i++){
-           
+
             var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
             if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
                 continue;
 
             var outputs = ev_collab["outputs"].split(",");
-            
-            for(var j=0;j<outputs.length;j++){   
+
+            for(var j=0;j<outputs.length;j++){
                all_inputs.push([ev_collab.id , outputs[j] ])
-            }                   
-        }   
+            }
+        }
     }
 
     return all_inputs;
@@ -824,7 +824,7 @@ function getAllInputs(groupNum){
 function get_int_inputs_array(groupNum, type){
     //var events = flashTeamsJSON["events"];
     var int_inputs_array=[];
-    
+
     var task_id = getEventJSONIndex(groupNum);
     var eventObj = flashTeamsJSON["events"][task_id];
 
@@ -836,7 +836,7 @@ function get_int_inputs_array(groupNum, type){
     else if(type == "collab"){
         var all_inputs_array = getCollabInputs(groupNum);
     }
-    
+
     for( var j=0; j<all_inputs_array.length; j++){
 
         if (all_inputs_array[j][0] != groupNum){
@@ -859,17 +859,17 @@ function getCollabInputs(groupNum){
 
     if(collaboration_ids.length!=0){
         for(var i=0;i<collaboration_ids.length;i++){
-           
+
             var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
             if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
                 continue;
 
             var outputs = ev_collab["outputs"].split(",");
-            
-            for(var j=0;j<outputs.length;j++){   
+
+            for(var j=0;j<outputs.length;j++){
                collab_inputs.push([ev_collab.id , outputs[j] ])
-            }                   
-        }   
+            }
+        }
     }
 
     return collab_inputs;
@@ -887,17 +887,17 @@ function getHandoffInputs(groupNum){
 
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
-           
+
             var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
             if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
                 continue;
 
             var outputs = ev_before["outputs"].split(",");
-            
-            for(var j=0;j<outputs.length;j++){   
+
+            for(var j=0;j<outputs.length;j++){
                handoff_inputs.push([ev_before.id , outputs[j] ])
-            }                   
-        }    
+            }
+        }
     }
 
     return handoff_inputs;
@@ -909,7 +909,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
 
 //improves apperance of stacked task modals
 //http://gurde.com/stacked-bootstrap-modals/
-// $(document)  
+// $(document)
 //   .on('show.bs.modal', '.modal', function(event) {
 //     $(this).appendTo($('body'));
 //   })
@@ -920,7 +920,7 @@ $.fn.modal.Constructor.prototype.enforceFocus = function () {};
 //     setModalsAndBackdropsOrder();
 //   });
 
-// function setModalsAndBackdropsOrder() {  
+// function setModalsAndBackdropsOrder() {
 //   var modalZIndex = 1040;
 //   $('.modal.in').each(function(index) {
 //     var $modal = $(this);
