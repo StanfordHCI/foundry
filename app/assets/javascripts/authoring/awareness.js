@@ -178,19 +178,7 @@ function startFlashTeam() {
 }
 
 /* moved to TeamControl class
-function endTeam() {
-    //console.log("TEAM ENDED");
-    $('#confirmAction').modal('hide');
-    logActivity("endTeam()",'End Team', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-    currentTeam.updateStatus(false);
-    stopCursor();
-    stopProjectStatus();
-    stopTrackingTasks();
-    $("#flashTeamEndBtn").attr("disabled", "disabled");
-    $("#flashTeamPauseBtn").css('display','none');
-    $("#projectStatusText").html("The project is not in progress or has not started yet.");
-    $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-}
+function endTeam()
 */
 
 //save dependencyAPI.getEventsAfter(task_id, true) for each event in the json.
@@ -257,183 +245,15 @@ if(flashTeamsJSON) {
     entryManager = new EntryManager(flashTeamsJSON);
 }
 
-
-function renderFlashTeamsJSON(data, firstTime) {
-    // firstTime will also be true in the case that flashTeamEndedorStarted, so
-    // we make sure that it is false (i.e. true firstTime, upon page reload for user
-    // before the team starts)
-    // !user_poll means a poll wasn't the one the generated this call to renderEverything
-    //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
-    if(firstTime){
-        renderChatbox();
-        renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
-    }
-
-    //console.log("inside render everything");
-    //console.log("THIS IS THE DATA", data);
-
-    //get user name and user role for the chat
-    if(data == null){
-        // if(firstTime){
-        //     renderChatbox();
-        //     renderProjectOverview();
-        //     //console.log("DATA NULL & FIRST TIME - RETURNING BEFORE LOAD");
-        // }
-        //console.log("DATA NULL - RETURNING BEFORE LOAD");
-        // will only be run way at the beginning before any members or events are added
-        // will only run in requester's page, because on members' pages, members array
-        // length will be greater than zero
-        // if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
-        //     console.log("CREATED A FOLDER!!!!!!!!");
-        //     createNewFolder(flashTeamsJSON["title"]); // gdrive
-        // }
-        return; // status not set yet
-    }
-
-
-    // Using transaction ID to avoid updatin client which is already updated.
-    //console.log("global " + json_transaction_id)
-    var currentTransactionID = json_transaction_id || 0
-    //console.log("current " + currentTransactionID)
-    var givenTransactionID = data.json_transaction_id || 1
-    //console.log("given " + givenTransactionID)
-    if(currentTransactionID >= givenTransactionID) return;
-    //console.log("Rendering...")
-    json_transaction_id = givenTransactionID
-
-    loadedStatus = data;
-
-    in_progress = loadedStatus.flash_team_in_progress;
-    flashTeamsJSON = loadedStatus.flash_teams_json;
-
-    // initialize the entry manager after flashTeamsJSON has been loaded
-    window.entryManager = new window.EntryManager(flashTeamsJSON);
-
-    //renderChatbox();
-    setCurrentMember();
-    renderProjectOverview();
-
-    if(firstTime) {
-        //setCurrentMember(); //commented this out because we now always call setCurrentMember() in case changes are made during project
-        initializeTimelineDuration();
-        //renderProjectOverview(); //commented this out because we now always call setCurrentMember() in case changes are made during project
-    }
-
-
-    // is this the user, and has he/she loaded the page
-    // before the team started
-    // is_user && firstTime && in_progress would be the case
-    // where the user loads the page for the first time after
-    // the team has started
-    if(isUser) {
-        // user loaded page before team started
-        if (firstTime && !in_progress)
-            user_loaded_before_team_start = true;
-    }
-
-
-    colorBox();
-    if(in_progress){
-        //console.log("flash team in progress");
-        $("#flashTeamStartBtn").attr("disabled", "disabled");
-        $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above
-        $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above
-        $("#workerEditTeamBtn").css('display','');
-
-        if(flashTeamsJSON["paused"]){
-            $("#flashTeamResumeBtn").css('display','');
-            $("#flashTeamPauseBtn").css('display','none');
-        }
-        else{
-            $("#flashTeamPauseBtn").css('display','');
-            $("#flashTeamResumeBtn").css('display','none');
-        }
-
-        loadData();
-        if(!isUser || memberType == "pc" || memberType == "client"){
-            renderMembersRequester();
-            $('#projectStatusText').html("The project is in progress.<br /><br />");
-            $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-        }else{
-            renderAllMemberTabs();
-            $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
-        }
-
-        renderAllMemberTabs();
-        trackUpcomingEvent();
-
-        //call this function if team is not in the edit mode
-        if(isUser && memberType != "pc" && memberType != "client"){
-            disableTeamEditing();
-        }
-        else if(!flashTeamsJSON["paused"]){
-            disableTeamEditing();
-        }
-
-       /* //show the documentation of the previous task for the workers and the PCs.
-        if (isUser || memberType == "pc"){
-            show_previous_doc();
-            //updateStatus();
-        }*/
-
-        //startTeam(firstTime);
-
-
-
-    } else {
-        //console.log("flash team not in progress");
-        if(flashTeamsJSON["startTime"] == undefined){
-
-            //console.log("NO START TIME!");
-            updateOriginalStatus();
-        }
-
-        // if (flashTeamsJSON.events.length == 0 && flashTeamsJSON.members.length == 0){
-        //     console.log("CREATED A FOLDER!!!!!!!!");
-        //     createNewFolder(flashTeamsJSON["title"]); // gdrive
-        // }
-
-        if(!flashTeamsJSON)
-            return;
-
-
-        loadData();
-
-        if(isUser && memberType != "pc" && memberType != "client"){
-            disableTeamEditing();
-        }
-
-        if(!isUser || memberType == "pc" || memberType == "client") {
-            renderMembersRequester();
-        }
-    }
-
-}
+/* moved to FlashTeam class
+function renderFlashTeamsJSON(data, firstTime)
+*/
 
 // firstTime=true means page is reloaded
 /* moved to FlashTeam class
-
-function renderEverything(data, firstTime) {
-    renderFlashTeamsJSON(data, firstTime);
-
-    if(firstTime) {
-        logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-        listenForVisibilityChange();
-    }
-
-
+function renderEverything(data, firstTime)
 }
 */
-// render events to show timer changes
-// TODO rework to draw timers only
-// function initTimer() {
-//     setInterval(function(){
-//         //drawEvents(true);
-//         //drawStartedEvents();
-//         drawStartedEvTimers();
-//         console.log('initTimer calling drawStartedEvTimers');
-//     }, 5000)
-// }
 
 function listenForVisibilityChange(){
     if (typeof document.hidden !== "undefined") {
@@ -475,67 +295,10 @@ function listenForVisibilityChange(){
 // saves member object for current_user (undefined for author so we will set it to 'Author')
 var current_user;
 
+/*moved to FlasTeam and Chat classes
 //finds user name and sets current variable to user's index in array
-var renderChatbox = function(){
-    var uniq_u=getParameterByName('uniq');
-
-    var url2 = '/flash_teams/' + flash_team_id + '/get_user_name';
-    $.ajax({
-       url: url2,
-       type: 'post',
-       data : { "uniq" : String(uniq_u) }
-    }).done(function(data){
-       chat_name = data["user_name"];
-       chat_role = data["user_role"];
-
-       presname = chat_name;
-	   currentStatus = "online ★";
-
-	   // current_user is undefined for author so just set it to 'Author'
-	   // when current_user is the author it won't have a uniq id so need to check for current_user == 'Author' instead
-	   if(chat_role == 'Author'){
-		   current_user = 'Author';
-		   //console.log ("CURRENT USER AUTHOR: " + current_user);
-
-	   }
-
-       if (chat_role == "" || chat_role == null){
-         uniq_u2 = data["uniq"];
-
-
-         flash_team_members = flashTeamsJSON["members"];
-         //console.log(flash_team_members[0].uniq);
-         for(var i=0;i<flash_team_members.length;i++){
-
-            if (flash_team_members[i].uniq == uniq_u2){
-              chat_role = flash_team_members[i].role;
-              current = i;
-              current_user = flash_team_members[i];
-
-              // here there once existed a call to boldEvents
-
-              trackUpcomingEvent();
-            }
-         }
-
-       }
-
-       // Set our initial online status.
-		setUserStatus(currentStatus);
-
-       myDataRef.on('child_added', function(snapshot) {
-                var message = snapshot.val();
-                //console.log(snapshot);
-                //console.log(message);
-                //console.log("MESSAGE NAME: " + message["name"]);
-
-                displayChatMessage(message.name, message.uniq, message.role, message.date, message.text);
-
-                name = message.name;
-            });
-
-    });
-};
+var renderChatbox = function()
+*/
 
 var flashTeamEndedorStarted = function(){
     if (loadedStatus.flash_team_in_progress == undefined){
@@ -664,60 +427,13 @@ var recordStartTime = function(){
     currentTeam.updateStatus(true);
 };
 
-var loadStatus = function(id){
-    var loadedStatusJSON;
-    var url = '/flash_teams/' + id.toString() + '/get_status';
-    $.ajax({
-        url: url,
-        type: 'get'
-    }).done(function(data){
-        loadedStatusJSON = data;
-        //console.log("loadedStatusJSON: " + loadedStatusJSON);
-    });
-    return JSON.parse(loadedStatusJSON);
-};
+/* moved to requestUpdates
+var loadStatus = function(id)
+*/
 
-var loadData = function(){
-    // position cursor before getting the new task arrays
-    // because once the new task arrays are updated,
-    // trackLiveAndRemainingTasks is immediately going to
-    // operate on them, while the current cursor here is
-    // not yet where it should be in time (its behind)
-    var latest_time;
-    if (in_progress){
-        latest_time = (new Date()).getTime();
-    } else {
-        latest_time = loadedStatus.latest_time; // really only useful at end
-    }
-
-    //Next line is commented out after disabling the ticker
-   // cursor_details = positionCursor(flashTeamsJSON, latest_time);
-
-    live_tasks = loadedStatus.live_tasks;
-    paused_tasks = loadedStatus.paused_tasks;
-    remaining_tasks = loadedStatus.remaining_tasks;
-    delayed_tasks = loadedStatus.delayed_tasks;
-    drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
-    completed_red_tasks = loadedStatus.completed_red_tasks;
-
-
-    //load_statusBar(status_bar_timeline_interval);
-
-    drawEvents(!in_progress);
-
-    /*imported popover to modal
-    if(isUser){
-        updateAllPopoversToReadOnly();
-    }
-    */
-
-    drawBlueBoxes();
-    drawRedBoxes();
-    drawOrangeBoxes();
-    drawDelayedTasks();
-    drawInteractions(); //START HERE, INT DEBUG
-    googleDriveLink();
-};
+/* moved to FlashTeam class
+var loadData = function()
+*/
 
 /*
 var checkProjectFolder = function(){
@@ -732,66 +448,7 @@ var checkProjectFolder = function(){
 
 // user must call this startTeam(true, )
 /* moved to TeamControl class
-var startTeam = function(firstTime){
-    //console.log("STARTING TEAM");
-    //console.log("here1");
-    if(!in_progress) {
-        //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
-        //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
-        //console.log("flashTeamsJSON['original_json']: " + flashTeamsJSON["original_json"]);
-        //console.log("flashTeamsJSON['original_status']: " + flashTeamsJSON["original_status"]);
-        //updateStatus();
-        //checkProjectFolder();
-        updateOriginalStatus();
-		recordStartTime();
-		//checkProjectFolder();
-        //addAllFolders();
-        createProjectFolder();
-        //googleDriveLink();
-        //addAllTaskFolders();
-        in_progress = true; // TODO: set before this?
-        //$("#projectStatusText").toggleClass('projectStatusText-inactive', true);
-        $("#projectStatusText").html("The project is in progress.<br /><br />");
-
-        flashTeamsJSON["paused"]=false;
-        updateInteractionsPopovers();
-
-        logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-
-        //added next line to disable the ticker
-        currentTeam.updateStatus(true);
-
-        logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-        //console.log("here2");
-    }
-
-    //Next line is commented out after disabling the ticker
-    //setCursorMoving();
-
-    // page was loaded after team started
-    // OR
-    // page was loaded before team started && this call to startTeam is as a result of
-    // team now starting (received through poll)
-
-    var page_loaded_after_start = firstTime && in_progress;
-    var page_loaded_before_start_and_now_started = user_loaded_before_team_start && in_progress;
-
-    if(page_loaded_after_start || page_loaded_before_start_and_now_started){
-        if(page_loaded_before_start_and_now_started)
-            user_loaded_before_team_start = false;
-        //updateAllPopoversToReadOnly();
-
-
-        //Next line is commented out after disabling the ticker
-        //project_status_handler = setProjectStatusMoving();
-        //trackLiveAndRemainingTasks();
-        //trackUpcomingEvent();
-    }
-
-
-    //Next line is commented out after disabling the ticker
-    //load_statusBar(status_bar_timeline_interval);
-};
+var startTeam = function(firstTime)
 */
 
 // var googleDriveLink = function(){
@@ -1688,77 +1345,13 @@ var getAllTasks = function(){
 };
 
 /* moved to FlashTeam
-var constructStatusObj = function(){
-    flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
-    flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
-    flashTeamsJSON["author"] = author_name;
-    flashTeamsJSON["status"] = in_progress;
-
-    var localStatus = {};
-
-    localStatus.json_transaction_id = json_transaction_id || 1;
-
-    localStatus.local_update = flashTeamsJSON["local_update"];
-    localStatus.team_paused = flashTeamsJSON["paused"];
-    localStatus.task_groups = task_groups;
-    localStatus.live_tasks = live_tasks;
-    localStatus.paused_tasks = paused_tasks;
-    localStatus.remaining_tasks = remaining_tasks;
-    localStatus.delayed_tasks = delayed_tasks;
-    localStatus.drawn_blue_tasks = drawn_blue_tasks;
-    localStatus.completed_red_tasks = completed_red_tasks;
-    localStatus.flash_teams_json = flashTeamsJSON;
-
-    //delayed_task_time is required for sending notification emails on delay
-    localStatus.delayed_tasks_time = delayed_tasks_time;
-    localStatus.dri_responded = dri_responded;
-
-    return localStatus;
-};
+var constructStatusObj = function()
 */
 
 var timer = null;
 
 var updateStatus = function(flash_team_in_progress){
     currentTeam.updateStatus(flash_team_in_progress)
-/*
-    if (timer) {
-        clearTimeout(timer); //cancel the previous timer.
-        timer = null;
-    }
-    timer = setTimeout(function(){
-
-        json_transaction_id++
-        var localStatus = constructStatusObj();
-
-        //if flashTeam hasn't been started yet, update the original status in the db
-        if(flashTeamsJSON["startTime"] == undefined){
-    	    //console.log("NO START TIME!");
-    		updateOriginalStatus();
-        }
-
-        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
-            localStatus.flash_team_in_progress = flash_team_in_progress;
-        } else {
-
-            localStatus.flash_team_in_progress = in_progress;
-        }
-        localStatus.latest_time = (new Date).getTime();
-        var localStatusJSON = JSON.stringify(localStatus);
-        //console.log("updating string: " + localStatusJSON);
-
-        var flash_team_id = $("#flash_team_id").val();
-        var authenticity_token = $("#authenticity_token").val();
-        var url = '/flash_teams/' + flash_team_id + '/update_status';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-        }).done(function(data){
-            //console.log("UPDATED FLASH TEAM STATUS");
-        });
-    }, 2000);
-*/
 };
 
 //this function updates the original status of the flash team in the database, which is
@@ -1766,25 +1359,6 @@ var updateStatus = function(flash_team_in_progress){
 // information once the team is run
 var updateOriginalStatus = function(){
     currentTeam.updateOriginalStatus()
-    /*
-    //console.log("in updateOriginalStatus");
-    var localStatus = constructStatusObj();
-
-    localStatus.latest_time = (new Date).getTime();
-    var localStatusJSON = JSON.stringify(localStatus);
-    //console.log("updating string: " + localStatusJSON);
-
-    var flash_team_id = $("#flash_team_id").val();
-    var authenticity_token = $("#authenticity_token").val();
-    var url = '/flash_teams/' + flash_team_id + '/update_original_status';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-    }).done(function(data){
-        //console.log("UPDATED FLASH TEAM STATUS");
-    });
-*/
 };
 
 var sendEmailOnCompletionOfDelayedTask = function(groupNum){
