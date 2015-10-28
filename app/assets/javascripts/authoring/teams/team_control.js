@@ -1,7 +1,7 @@
-TeamControl = function() {
+TeamControl = {
   //var startTeam = function(firstTime){
   // user must call this startTeam(true, )
-  this.start = function(firstTime) {
+  start: function(firstTime) {
     if(!this.in_progress) {
         this.updateOriginalStatus();
         recordStartTime();
@@ -32,10 +32,10 @@ TeamControl = function() {
         if(page_loaded_before_start_and_now_started)
             user_loaded_before_team_start = false;
     }
-  };
+  },
 
   //function endTeam()
-  this.end = function() {
+  end: function() {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
     this.logActivity("endTeam()",'End Team', this.flash_teams_json);

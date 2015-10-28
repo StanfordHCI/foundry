@@ -3,8 +3,8 @@ var oldTeam = null;
 
 FlashTeam = function (data) {
   this.extendWith(data);
-  this.extendWith(Logger.prototype)
-  this.extendWith(new TeamControl())
+  this.extendWith(Logger)
+  this.extendWith(TeamControl)
 
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
