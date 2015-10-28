@@ -17,7 +17,7 @@ TeamControl = {
         //added next line to disable the ticker
         this.updateStatus(true);
 
-        logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', this.flash_teams_json);
+        this.logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', this.flash_teams_json);
     }
 
     // page was loaded after team started

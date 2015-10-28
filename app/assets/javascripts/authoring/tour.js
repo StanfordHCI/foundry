@@ -2,7 +2,7 @@
  * ---------------------------------------------
  * Creates and runs various tours of the site for different users: author, worker, PC
  * Uses Bootstrap Tour (bootstraptour.com)
- * Each step is a different panel of the tour. 
+ * Each step is a different panel of the tour.
  */
 
 //A tour that walks a user through the team authoring process
@@ -10,11 +10,11 @@ var authoringTour = new Tour({
 	autoscroll: true,
 	steps: [
 	{
-		orphan: true, 
+		orphan: true,
 		title: "<b>Welcome to Foundry</b>",
 		backdrop: true,
 		html: true,
-		content: "<div class='tour-content-wrapper'>Foundry is an online platform that allows you " 
+		content: "<div class='tour-content-wrapper'>Foundry is an online platform that allows you "
 		+"to create and manage teams of experts.<img src=''> </img></div>" //USED TO BE OVERVIEW.GIF, BUT TOO SMALL
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev' disabled='true'>« Prev</button>"
@@ -22,7 +22,7 @@ var authoringTour = new Tour({
 		+"<button class='btn btn-default' data-role='end'>End tour</button></nav></div>",
 		template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3>"
 		+"<div class='popover-content'></div>"
-	}, 
+	},
 	{
 		element: "#member-container",
 		title: "<b>Team Roles</b>",
@@ -41,7 +41,7 @@ var authoringTour = new Tour({
 		html: true,
 		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
 		+"project coordinator, or a worker. You can also assign each role a category "
-		+"and specify the necessary skills for that role based on the oDesk platform." 
+		+"and specify the necessary skills for that role based on the oDesk platform."
 		+"<img src='/assets/addWorker.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -83,8 +83,8 @@ var authoringTour = new Tour({
 	},
 	// {
 	// 	element: "#search-events-container" ,
-	// 	title: "<b>Event Library</b>", 
-	// 	content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over " 
+	// 	title: "<b>Event Library</b>",
+	// 	content: "<div class='tour-content-wrapper'>This is the event library. Here you can search over "
 	// 	+"all previously created events by entering in keywords, inputs, "
 	// 	+"and outputs, and drag them to your timeline."
 	// 	+"<img src='/assets/eventlibrary.png'> </img></div>"
@@ -132,7 +132,7 @@ var authoringTour = new Tour({
 		title: "<b>Project Overview</b>",
 		html: true,
 		content: "<div class='tour-content-wrapper'>Finally, add a description of the overall project "
-		+"here in the project overview. This will give workers a understanding of the scope of the project. " 
+		+"here in the project overview. This will give workers a understanding of the scope of the project. "
 		+"<img src='/assets/projectOverview.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -150,8 +150,8 @@ var authoringTour = new Tour({
 	{
 		orphan: true,
 		title: "<b>Google Drive Integration</b>",
-		content: "<div class='tour-content-wrapper'>When the team has been started, a shared " 
-		+"Google Drive folder is created for the project. The link will appear on the sidebar. " 
+		content: "<div class='tour-content-wrapper'>When the team has been started, a shared "
+		+"Google Drive folder is created for the project. The link will appear on the sidebar. "
 		+"<img src='/assets/gdrive.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -164,7 +164,7 @@ var authoringTour = new Tour({
 		orphan: true,
 		title: "<b>Google Drive Integration</b>",
 		content: "<div class='tour-content-wrapper'>Google Drive folders are automatically created for "
-		+"each event, workers can open the folder by clicking the Upload icon." 
+		+"each event, workers can open the folder by clicking the Upload icon."
 		+"<img src='/assets/upload.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -236,8 +236,8 @@ var authoringTour = new Tour({
 	},
 	{
 		element: "#chat-box-container" ,
-		title: "<b>Chat With the Team</b>", 
-		content: "<div class='tour-content-wrapper'>Once the team has started working, you can chat with " 
+		title: "<b>Chat With the Team</b>",
+		content: "<div class='tour-content-wrapper'>Once the team has started working, you can chat with "
 		+"all of the team members in this group chat box."
 		+"<img src='/assets/chat.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
@@ -250,27 +250,26 @@ var authoringTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Good luck! </b>", 
+		title: "<b>Good luck! </b>",
 		content: "Good luck with your project and please enjoy the use of Foundry!"
 	}],
-		onStart: function (tour) {logActivity("authoringTour onStart: function (tour)",'Start Foundry Authoring Tour - step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onEnd: function (tour) {logActivity("authoringTour onEnd: function (tour)",'Ended Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		//onShow: function (tour) {logActivity("Event Update",'Viewing Foundry Authoring Tour- title: ' + authoringTour.getStep(authoringTour.getCurrentStep()).title + '- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onNext: function (tour) {logActivity("authoringTour onNext: function (tour)",'Clicked Next on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onPrev: function (tour) {logActivity("authoringTour onPrev: function (tour)",'Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+		onStart: function (tour) {currentTeam.logActivity("authoringTour onStart: function (tour)",'Start Foundry Authoring Tour - step' + authoringTour.getCurrentStep(), flashTeamsJSON);},
+		onEnd: function (tour) {currentTeam.logActivity("authoringTour onEnd: function (tour)",'Ended Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), flashTeamsJSON);},
+		onNext: function (tour) {currentTeam.logActivity("authoringTour onNext: function (tour)",'Clicked Next on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), flashTeamsJSON);},
+		onPrev: function (tour) {currentTeam.logActivity("authoringTour onPrev: function (tour)",'Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), flashTeamsJSON);},
 });
 
 
 //Start the tour on the click of the Tour Button, which only appears in author mode
 $("#tourBtn").click(function(){
 
-	logActivity("$('#tourBtn').click(function()",'Started Foundry Authoring Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	currentTeam.logActivity("$('#tourBtn').click(function()",'Started Foundry Authoring Tour', flashTeamsJSON);
 	//Initialize the tour
 	authoringTour.init();
-    authoringTour.start(true);
+  authoringTour.start(true);
 
-    //Always start tour at the first step, comment out to start at most recent
-    authoringTour.goTo(0); 
+  //Always start tour at the first step, comment out to start at most recent
+  authoringTour.goTo(0);
 });
 
 
@@ -278,8 +277,8 @@ $("#tourBtn").click(function(){
 var expertTour = new Tour({
 	steps: [
 	{
-		orphan: true, 
-		title: "<b>Welcome to Foundry</b>", 
+		orphan: true,
+		title: "<b>Welcome to Foundry</b>",
 		content: "View your upcoming tasks, communicate with the team "
 		+ "track the progress of the project, "
 		+ "and upload and download files from a shared Google Drive folder.",
@@ -287,7 +286,7 @@ var expertTour = new Tour({
 	},
 	{
 		element: "#project-status-container",
-		title: "<b>Project Status</b>", 
+		title: "<b>Project Status</b>",
 		content: "This panel contains information about this project including "
 		+"the progress of the whole team as well as your next upcoming task. ",
 		onShow: function(authoringTour) {
@@ -296,7 +295,7 @@ var expertTour = new Tour({
 	},
 	{
 		element: ".welcome" ,
-		title: "<b>Your Role</b>", 
+		title: "<b>Your Role</b>",
 		content: "This is your role in the project.",
 		onShow: function(authoringTour) {
 			if(!$("#foundry-header .menu-button").hasClass("active")) $("#foundry-header .menu-button").click();
@@ -304,7 +303,7 @@ var expertTour = new Tour({
 	},
 	{
 		element: ".google-drive-button" ,
-		title: "<b>Google Drive Project Folder</b>", 
+		title: "<b>Google Drive Project Folder</b>",
 		content: "This is a link to the shared Google Drive folder for the entire project. "
 		+"You will need to add the folder to your personal Drive to upload and download files.",
 		onShow: function(authoringTour) {
@@ -316,7 +315,7 @@ var expertTour = new Tour({
 		title: "<b>Project Overview</b>",
 		html: true,
 		content: "<div class='tour-content-wrapper'>This is the project overview. "
-		+"Here you will see the author's description of the scope of the entire project. " 
+		+"Here you will see the author's description of the scope of the entire project. "
 		+"<img src=''> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -333,7 +332,7 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Timeline</b>", 
+		title: "<b>Timeline</b>",
 		content: "<div class='tour-content-wrapper'>This is the timeline. Here you can "
 		+"view the entire project. Your tasks have been highlighted in yellow. "
 		+"<img src='/assets/highlightTasks.png'> </img></div>"
@@ -347,7 +346,7 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>View Task Details</b>", 
+		title: "<b>View Task Details</b>",
 		content: "<div class='tour-content-wrapper'> Click on the task to see details such as: "
 		+"start time, estimated duration, workers, deliverables of the task, etc."
 		+"<img src='/assets/viewTask.gif'> </img></div>"
@@ -386,7 +385,7 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Start Your Task</b>", 
+		title: "<b>Start Your Task</b>",
 		content: "<div class='tour-content-wrapper'>Click 'Start' to begin your task. "
 		+"Live tasks turn blue and the timer begins."
 		+"<img src='/assets/startTask.gif'> </img></div>"
@@ -399,7 +398,7 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Complete Your Events</b>", 
+		title: "<b>Complete Your Events</b>",
 		content: "<div class='tour-content-wrapper'>If you are the DRI, complete the task "
 		+"on the timeline and complete the documentation questions. There will be a checklist for "
 		+"each deliverable of the task. "
@@ -415,7 +414,7 @@ var expertTour = new Tour({
 		orphan: true,
 		title: "<b>Open in Drive</b>",
 		content: "<div class='tour-content-wrapper'>After clicking on 'Upload' on the event, click on the "
-		+"'Open in Drive' button on the top right side of the Google " 
+		+"'Open in Drive' button on the top right side of the Google "
 		+"drive page so that you can upload to the drive."
 		+"<img src='/assets/openInDrive.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
@@ -427,7 +426,7 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Early and On-Time Events</b>", 
+		title: "<b>Early and On-Time Events</b>",
 		content: "<div class='tour-content-wrapper'>When completed, the event will be marked in green, "
 		+"and downstream workers will be notified that they can begin working "
 		+"<img src='/assets/regTask.png'> </img></div><nav class='popover-navigation'><div class='btn-group'>"
@@ -439,10 +438,10 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Delayed Events</b>", 
+		title: "<b>Delayed Events</b>",
 		content: "<div class='tour-content-wrapper'>If your work takes longer than expected, the event "
 		+"will be marked red as delayed. Foundry will email you to request "
-		+"a new estimated complete time so the PC can plan accordingly." 
+		+"a new estimated complete time so the PC can plan accordingly."
 		+"<img src='/assets/delay.png'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"
@@ -453,8 +452,8 @@ var expertTour = new Tour({
 	},
 	{
 		element: "#chat-box-container" ,
-		title: "<b>Chat With the Team</b>", 
-		content: "<div class='tour-content-wrapper'>You can use this chat feature to commmunicate with the " 
+		title: "<b>Chat With the Team</b>",
+		content: "<div class='tour-content-wrapper'>You can use this chat feature to commmunicate with the "
 		+"members of the team as well as the project coordinator (PC)."
 		+"<img src='/assets/chat.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
@@ -467,43 +466,43 @@ var expertTour = new Tour({
 	},
 	{
 		orphan: true,
-		title: "<b>Good luck! </b>", 
+		title: "<b>Good luck! </b>",
 		content: "Good luck with your project and please enjoy the use of Foundry!"
 	}
 ],
-		onStart: function (tour) {logActivity("expertTour onStart: function (tour)",'Start Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onEnd: function (tour) {logActivity("expertTour onEnd: function (tour)",'Ended Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onNext: function (tour) {logActivity("expertTour onNext: function (tour)",'Clicked Next on Foundry Worker Tour - step: - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  		onPrev: function (tour) {logActivity("expertTour onPrev: function (tour)",'Clicked Previous on Foundry Worker Tour - step' + expertTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+		onStart: function (tour) {currentTeam.logActivity("expertTour onStart: function (tour)",'Start Foundry Worker Tour - step' + expertTour.getCurrentStep(), flashTeamsJSON);},
+  		onEnd: function (tour) {currentTeam.logActivity("expertTour onEnd: function (tour)",'Ended Foundry Worker Tour - step' + expertTour.getCurrentStep(), flashTeamsJSON);},
+  		onNext: function (tour) {currentTeam.logActivity("expertTour onNext: function (tour)",'Clicked Next on Foundry Worker Tour - step: - step' + expertTour.getCurrentStep(), flashTeamsJSON);},
+  		onPrev: function (tour) {currentTeam.logActivity("expertTour onPrev: function (tour)",'Clicked Previous on Foundry Worker Tour - step' + expertTour.getCurrentStep(), flashTeamsJSON);},
 });
 
 //Start the tour on the click of the expert tour button, only shows up in worker mode
 $("#expertTourBtn").click(function() {
 
-	logActivity("$('#expertTourBtn').click(function()",'Started Foundry Worker Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	currentTeam.logActivity("$('#expertTourBtn').click(function()",'Started Foundry Worker Tour', flashTeamsJSON);
 
 	//Initialize the expert tour
 	expertTour.init();
     expertTour.start(true);
 
     //Always start at the first step, comment out to start at most recent
-    expertTour.goTo(0);  
+    expertTour.goTo(0);
 });
 
-//TODO: PC Tour, this is starter code 
+//TODO: PC Tour, this is starter code
 //A tour to walk the PCs through the use of Foundry
 var pcTour = new Tour({
 	steps: [
 	{
-		orphan: true, 
-		title: "<b>Welcome to Foundry</b>", 
+		orphan: true,
+		title: "<b>Welcome to Foundry</b>",
 		content: "View your upcoming tasks, communicate with the team "
 		+ "track the progress of the project, "
 		+ "and upload and download files from a shared Google Drive folder.",
 		backdrop: true
 	}
 ]});
-	
+
 //TODO: Set an item to click for this to start up the PC Tour
 /*$("#").click(function(){
 	//Initialize the PC tour
@@ -511,7 +510,7 @@ var pcTour = new Tour({
     pcTour.start(true);
 
     //Always start at the first step, comment out to start at most recent
-    pcTour.goTo(0); 
+    pcTour.goTo(0);
 });*/
 
 

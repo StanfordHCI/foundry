@@ -266,7 +266,6 @@ function createEvent(point, duration) {
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
-    // logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
     currentTeam.logActivity("createEvent(point, duration)",'Create Event', flashTeamsJSON["events"][getEventJSONIndex(eventObj)])
 
 
@@ -349,7 +348,7 @@ function createEventObj(eventObject) {
 function onConfigClick(event){
     CURRENT_EVENT_SELECTED = event.groupNum;
 
-    logActivity("onConfigClick(event)",'Clicked Event Config Icon', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(event.groupNum)]);
+    currentTeam.logActivity("onConfigClick(event)",'Clicked Event Config Icon', flashTeamsJSON["events"][getEventJSONIndex(event.groupNum)]);
 
     showDropDown();
 }
@@ -407,23 +406,23 @@ function duplicateEvent(groupNumber, closeModal){
 
     if(closeModal == true){
         $('#task_modal').modal('hide');
-        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     }else{
-        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
     }
     // save
     updateStatus();
 }
 
 function viewEvent(groupNumber){
-    logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+    currentTeam.logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 }
 
 function editEvent(groupNumber){
-    logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+    currentTeam.logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 
@@ -611,7 +610,7 @@ function addEventMember(eventId, memberIndex) {
     var memberUniq = flashTeamsJSON["members"][memberIndex].uniq;
     var memberColor = flashTeamsJSON["members"][memberIndex].color;
 
-    logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
     // get event
     var indexOfEvent = getEventJSONIndex(eventId);
@@ -622,7 +621,7 @@ function addEventMember(eventId, memberIndex) {
     // render on events
     drawMemberTabs(flashTeamsJSON["events"][indexOfEvent]);
 
-    logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - After', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - After', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 }
 
 //Remove a team member from an event
@@ -631,7 +630,7 @@ function deleteEventMember(eventId, memberNum) {
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
-    logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
     //Update the JSON then redraw the event
     var indexOfJSON = getEventJSONIndex(eventId);
@@ -642,7 +641,7 @@ function deleteEventMember(eventId, memberNum) {
         drawEvent(event);
     }
 
-    logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - After', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - After', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
 }
 
@@ -679,7 +678,7 @@ function deleteEvent(eventId){
     $('#confirmAction').modal('hide');
 
     // Only log before because event won't exist after
-    logActivity("deleteEvent(eventId)",'Delete Event - Before', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEvent(eventId)",'Delete Event - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
 
 
     var indexOfJSON = getEventJSONIndex(eventId);

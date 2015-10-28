@@ -155,7 +155,7 @@ function logHideShortTaskOverview(groupNum){
 
 
 function editTaskOverview(popover,groupNum){
-	logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+	currentTeam.logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
     var task_id = getEventJSONIndex(groupNum);
 	var eventObj = flashTeamsJSON["events"][task_id];
 	var title = eventObj["title"];

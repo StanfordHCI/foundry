@@ -13,7 +13,7 @@ FlashTeam = function (data) {
     this.renderJSON(firstTime);
 
     if(firstTime) {
-        logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        this.logActivity("renderEverything(firstTime)",'Render Everything - First Time', this.flash_teams_json);
         listenForVisibilityChange();
     }
   }

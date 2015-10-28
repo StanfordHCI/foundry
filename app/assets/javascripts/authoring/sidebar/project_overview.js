@@ -44,7 +44,7 @@ ProjectOverview = function () {
     if(popover==true){
       $('#po-edit-link').hide();
 
-      logActivity("editProjectOverview(true)",'Edit Project Overview - In Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+      currentTeam.logActivity("editProjectOverview(true)",'Edit Project Overview - In Modal', flashTeamsJSON);
 
       var projectOverviewForm = '<form name="projectOverviewForm" id="projectOverviewForm" style="margin-bottom: 5px;">'
             +'<textarea type="text"" id="projectOverviewInput" rows="6" placeholder="Description of project...">'+project_overview+'</textarea>'
@@ -74,15 +74,13 @@ ProjectOverview = function () {
       project_overview_input =  "No project overview has been added yet.";
     }
 
-    logActivity('saveProjectOverview()',"saveProjectOverview() - Before Update",'Save Project Overview - Before Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    currentTeam.logActivity('saveProjectOverview()',"saveProjectOverview() - Before Update",'Save Project Overview - Before Update', flashTeamsJSON);
 
 
     currentTeam["projectoverview"] = project_overview_input;
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
     updateStatus();
-
-    //logActivity('saveProjectOverview()', "saveProjectOverview() - After Update",'Save Project Overview - After Update', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 
     this.show();
   }

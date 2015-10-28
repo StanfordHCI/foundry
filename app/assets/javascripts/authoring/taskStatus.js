@@ -251,7 +251,7 @@ function confirmCompleteTask(groupNum) {
 
     //Calls completeTask function if user confirms the complete
     document.getElementById("confirmButton").onclick=function(){
-    	logActivity("confirmCompleteTask(groupNum) - document.getElementById('confirmButton').onclick=function()",'Confirm Complete Task - Clicked Confirm Button', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    	currentTeam.logActivity("confirmCompleteTask(groupNum) - document.getElementById('confirmButton').onclick=function()",'Confirm Complete Task - Clicked Confirm Button', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
         $('#confirmAction').modal('hide');
     	completeTask(groupNum);
     };

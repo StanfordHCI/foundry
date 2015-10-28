@@ -1,8 +1,8 @@
 /* gdrive.js
 --------------------
-* References the Google Drive API, and contains functions 
+* References the Google Drive API, and contains functions
 * to initialize google sign in, and connect to a user's google drive
-* It also containts functions for creating files and folders, 
+* It also containts functions for creating files and folders,
 * as well as modify their permissions
 */
 
@@ -25,20 +25,20 @@ function checkAuth(loadPopup) {
 function handleAuthResult(authResult) {
   var gFolderBtn = document.getElementById('gFolder');
   if (authResult && !authResult.error) {
-    
+
     //if user is authorized and the team is in progress but the folder hasn't been created it, create it
     if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
           createProjectFolder();
     }
 
-    googleDriveLink();  
+    googleDriveLink();
 
   } else {
     checkAuth(false);
     if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
       $("#authorize-button").html('Log in to Google Drive™');
       $("#google-drive-button").toggleClass('gdrive-inactive', false);
-      gFolderBtn.onclick = handleAuthClick; 
+      gFolderBtn.onclick = handleAuthClick;
       $("#gFolder").css('display', '');
     }
     else{
@@ -87,27 +87,27 @@ var googleDriveLink = function(){
       }
 
 
-      
+
     }
 
     gFolderBtn.onclick=function(){
         //console.log("is clicked");
         if((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
-          logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON); 
+          currentTeam.logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder', flashTeamsJSON);
           window.open(flashTeamsJSON.folder[1]);
-          
+
 
         }else{
-          logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder - Error Alert Triggered', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+          currentTeam.logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder - Error Alert Triggered', flashTeamsJSON);
           alert("Team hasn't started or folder hasn't been created yet.");
         }
-        
+
     }
 };
 
 //Creates the project's folder
 function createProjectFolder(){
-  
+
   //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
   if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
     //console.log('project folder already exists');
@@ -125,8 +125,8 @@ function createProjectFolder(){
             "description" : "Overall Shared Folder"
          }
       });
-      
-      req.execute(function(resp) { 
+
+      req.execute(function(resp) {
         //console.log("resp: " + resp);
          //console.log("resp.id: " + resp.id);
          if(resp.id == undefined){
@@ -135,27 +135,27 @@ function createProjectFolder(){
          }
 
         var folderArray = [resp.id, resp.alternateLink];
-        
+
         insertPermission(folderArray[0], "me", "anyone", "writer");
         flashTeamsJSON.folder = folderArray;
-        
+
     updateStatus(); // don't put true or false here
-        
+
     addAllTaskFolders(flashTeamsJSON.folder[0])
 
     googleDriveLink();
 
-    logActivity("createProjectFolder()",'Created Project and Task Folders', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+    currentTeam.logActivity("createProjectFolder()",'Created Project and Task Folders', flashTeamsJSON);
     });
-    
-    
-  }); 
-  
+
+
+  });
+
 }
 
 //Creates a subfolder for a particular task
 function createTaskFolder(eventName, JSONId, parent_folder){
-  
+
   gapi.client.load('drive', 'v2', function() {
     var req;
     req = gapi.client.request({
@@ -168,20 +168,20 @@ function createTaskFolder(eventName, JSONId, parent_folder){
             "parents": [{"id": parent_folder}]
          }
       });
-      
-      req.execute(function(resp) { 
+
+      req.execute(function(resp) {
         var folderArray = [resp.id, resp.alternateLink];
-        
+
         flashTeamsJSON["events"][JSONId].gdrive = folderArray;
         insertPermission(folderArray[0], "me", "anyone", "writer");
         folderIds.push(folderArray);
 
     updateStatus(); // don't put true or false here
     });
-    
-    
+
+
   }); //end gapi.client.load
-  
+
 }
 
 //Adds all the task folders when the folder has started
