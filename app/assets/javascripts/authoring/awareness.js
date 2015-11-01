@@ -2,7 +2,6 @@
  * ---------------------------------------------
  *
  */
-var json_transaction_id = 0;
 
 //var task_timer_interval = 1000; // "normal" speed is 60000. If 1000 : each second is a minute on timeline.
 //var timeline_interval = 10000; // "normal" speed timer is 30 minutes (1800000 milliseconds); fast timer is 10 seconds (10000 milliseconds)
@@ -455,6 +454,7 @@ var startTeam = function(firstTime)
 
 var drawEvents = function(editable){
     //console.log('drawEvents is being called');
+    var flashTeamsJSON = currentTeam.flash_teams_json;
     for(var i=0;i<flashTeamsJSON.events.length;i++){
         var ev = flashTeamsJSON.events[i];
         //console.log("DRAWING EVENT " + i + ", with editable: " + editable);

@@ -196,7 +196,7 @@ FlashTeam = function (data) {
     var self = this;
     timer = setTimeout(function(){
 
-        json_transaction_id++
+        self.json_transaction_id++;
         var localStatus = self.constructStatusObj();
 
         //if flashTeam hasn't been started yet, update the original status in the db
@@ -256,7 +256,7 @@ FlashTeam = function (data) {
 
     var localStatus = {};
 
-    localStatus.json_transaction_id = json_transaction_id || 1;
+    localStatus.json_transaction_id = this.json_transaction_id || 1;
 
     localStatus.local_update = flashTeamsJSON["local_update"];
     localStatus.team_paused = flashTeamsJSON["paused"];

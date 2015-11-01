@@ -35,6 +35,7 @@ $.fn.subscribeToFlashTeamUpdate = function() {
     url = "/flash_team/" + $(this).val() + "/updated"
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
+            loadedStatus = data;
             oldTeam = currentTeam;
             currentTeam = new FlashTeam(loadedStatus);
             currentTeam.render(false);
