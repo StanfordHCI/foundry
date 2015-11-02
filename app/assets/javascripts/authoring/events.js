@@ -254,9 +254,9 @@ function createEvent(point, duration) {
     // render event on timeline
     drawEvent(eventObj, true);
 
+    var event_index = getEventJSONIndex(eventObj.id);
     //if team is in edit mode, add the gDrive folder for this event
     if(flashTeamsJSON["paused"] == true){
-        var event_index = getEventJSONIndex(eventObj.id);
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
 
