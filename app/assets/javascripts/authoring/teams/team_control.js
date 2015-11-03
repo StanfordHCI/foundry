@@ -2,11 +2,11 @@ TeamControl = {
   //var startTeam = function(firstTime){
   // user must call this startTeam(true, )
   start: function(firstTime) {
-    if(!this.in_progress) {
+    if(!this.inProgress()) {
         this.updateOriginalStatus();
         recordStartTime();
         createProjectFolder();
-        this.in_progress = true; // TODO: set before this?
+        this.flash_team_in_progress = true; // TODO: set before this?
         $("#projectStatusText").html("The project is in progress.<br /><br />");
 
         this.flash_teams_json["paused"]=false;
@@ -25,8 +25,8 @@ TeamControl = {
     // page was loaded before team started && this call to startTeam is as a result of
     // team now starting (received through poll)
 
-    var page_loaded_after_start = firstTime && in_progress;
-    var page_loaded_before_start_and_now_started = user_loaded_before_team_start && in_progress;
+    var page_loaded_after_start = firstTime && this.inProgress();
+    var page_loaded_before_start_and_now_started = user_loaded_before_team_start && this.inProgress();
 
     if(page_loaded_after_start || page_loaded_before_start_and_now_started){
         if(page_loaded_before_start_and_now_started)
@@ -39,6 +39,8 @@ TeamControl = {
     //console.log("TEAM ENDED");
     $('#confirmAction').modal('hide');
     this.logActivity("endTeam()",'End Team', this.flash_teams_json);
+    this.flash_team_in_progress = false;
+    this.flash_teams_json["paused"]=true;
     this.updateStatus(false);
     stopCursor();
     stopProjectStatus();
@@ -49,4 +51,7 @@ TeamControl = {
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
   }
 
+  inProgress: function() {
+    return this.flash_team_in_progress
+  }
 }

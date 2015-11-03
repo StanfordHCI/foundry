@@ -297,7 +297,7 @@ var flashTeamEndedorStarted = function(){
     if (loadedStatus.flash_team_in_progress == undefined){
         return false;
     }
-    return in_progress != loadedStatus.flash_team_in_progress;
+    return oldTeam.inProgress() != loadedStatus.flash_team_in_progress;
 };
 
 var flashTeamUpdated = function(){
@@ -1173,7 +1173,7 @@ var trackUpcomingEvent = function(){
 
 
         if( ev.status == "not_started" ){
-            if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && in_progress == true){
+            if(checkEventsBeforeCompletedNoAlert(upcomingEvent) && currentTeam.inProgress()){
                 overallTime = "You can now start <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a> task.";
 
                 updateSidebarText(overallTime, "black");
@@ -1237,7 +1237,7 @@ var trackUpcomingEvent = function(){
             updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
         }
 
-        if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
+        if(currentTeam.inProgress() &&  (flashTeamsJSON["paused"] == true) ){
             overallTime = "The team is being edited right now. " + overallTime;
             updateSidebarText(overallTime);
         }

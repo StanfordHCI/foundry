@@ -62,7 +62,7 @@ function drawG(eventObj) {
 
     var showHandles = function(d) {
         // same size as in leftResize and rightResize functions
-        if(isUser || in_progress) {
+        if(isUser || currentTeam.inProgress()) {
             return;
         }
 
@@ -302,7 +302,7 @@ function drawBottom(eventObj) {
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
     // only show the config icon on the task if team is not in progress, if team is paused or if task is paused, completed or not started (e.g., not in progress)
-    if( !in_progress || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
+    if( !currentTeam.inProgress() || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
         var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
         configIcon.on("click", onConfigClick);
     }
@@ -320,7 +320,7 @@ function drawBottom(eventObj) {
         // }
 
         if(ev.gdrive.length > 0){
-          if (in_progress || (!in_progress && current_user == "Author" && flashTeamsJSON["startTime"])){
+          if (currentTeam.inProgress() || (!currentTeam.inProgress() && current_user == "Author" && flashTeamsJSON["startTime"])){
             currentTeam.logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             window.open(ev.gdrive[1]);
             } else{
@@ -481,7 +481,7 @@ function drawShade(eventObj) {
 //
 function drawTimer(eventObj){
 
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
+    if( currentTeam.inProgress() || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
         return;
     }
 

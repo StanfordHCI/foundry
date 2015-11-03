@@ -27,7 +27,7 @@ function handleAuthResult(authResult) {
   if (authResult && !authResult.error) {
 
     //if user is authorized and the team is in progress but the folder hasn't been created it, create it
-    if(in_progress && !flashTeamsJSON.folder && current_user == "Author"){
+    if(currentTeam.inProgress() && !flashTeamsJSON.folder && current_user == "Author"){
           createProjectFolder();
     }
 
@@ -35,7 +35,7 @@ function handleAuthResult(authResult) {
 
   } else {
     checkAuth(false);
-    if(!in_progress || current_user == "Author" || !flashTeamsJSON.folder){
+    if(!currentTeam.inProgress() || current_user == "Author" || !flashTeamsJSON.folder){
       $("#authorize-button").html('Log in to Google Drive™');
       $("#google-drive-button").toggleClass('gdrive-inactive', false);
       gFolderBtn.onclick = handleAuthClick;
@@ -58,7 +58,7 @@ function handleAuthClick(event) {
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
 
-    // if(in_progress){
+    // if(currentTeam.inProgress()){
     //   $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
     // }
     // else{
@@ -66,7 +66,7 @@ var googleDriveLink = function(){
     // }
 
 
-    if(!in_progress || !flashTeamsJSON.folder){
+    if(!currentTeam.inProgress() || !flashTeamsJSON.folder){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
         $("#authorize-button").html('Google Drive™ folder');
         $("#google-drive-button").toggleClass('gdrive-inactive', false);
@@ -92,7 +92,7 @@ var googleDriveLink = function(){
 
     gFolderBtn.onclick=function(){
         //console.log("is clicked");
-        if((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
+        if((currentTeam.inProgress() && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
           currentTeam.logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder', flashTeamsJSON);
           window.open(flashTeamsJSON.folder[1]);
 
@@ -109,7 +109,7 @@ var googleDriveLink = function(){
 function createProjectFolder(){
 
   //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
-  if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+  if(!currentTeam.inProgress() && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
     //console.log('project folder already exists');
     return;
   }

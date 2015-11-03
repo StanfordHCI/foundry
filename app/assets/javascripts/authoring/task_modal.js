@@ -21,13 +21,13 @@ function showTaskOverview(groupNum){
 	$('#task-text').html(taskOverviewContent);
 
     // if team hasn't started yet, don't show the google drive deliverables button in task footer
-    if(!in_progress){
+    if(!currentTeam.inProgress()){
         $("#gdrive-footer-btn").css('display', 'none');
     }
 
     // determines which buttons to show in the footer of the modal (e.g., start, complete, etc.)
     //checks if team has been started and if the current user is assigned to the task or if the user is an author, PC or client
-	if(in_progress == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
+	if(currentTeam.inProgress() == true && (currentMemberTask(groupNum) == true || uniq_u == "" || memberType == "pc" || memberType == "client")){
 
 
         if(eventObj.status == "started" || eventObj.status == "delayed"){
@@ -80,17 +80,17 @@ function showTaskOverview(groupNum){
         $("#duplicate-task").css('display','none');
     }
 
-    if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" )){
+    if(currentTeam.inProgress() == true && flashTeamsJSON["paused"]==true && (uniq_u == "" )){
         $("#duplicate-task").css('display','');
     }
 
-	if(in_progress != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
+	if(currentTeam.inProgress() != true && (uniq_u == "" || memberType == "pc" || memberType == "client") ) {
 		$("#edit-save-task").css('display', '')
 
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	} //only the author, PC OR CLIENT (as of 8/21/2015) can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
-    else if(in_progress == true && flashTeamsJSON["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+    else if(currentTeam.inProgress() == true && flashTeamsJSON["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
             $("#edit-save-task").css('display', '');
             //$("#duplicate-task").css('display','');
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
@@ -672,7 +672,7 @@ function saveTaskOverview(groupNum){
     ev.duration = (newHours * 60) + newMin;
 
     // Updates the remaining time and timer for tasks that are paused and edited when team is in progress via edit mode
-    if(in_progress == true && flashTeamsJSON["paused"] == true && ev.status == "paused"){
+    if(currentTeam.inProgress() == true && flashTeamsJSON["paused"] == true && ev.status == "paused"){
         var newRemainingTime = (ev.duration - originalDuration) + originalRemainingTime;
         ev.timer = newRemainingTime;
         ev.latest_remaining_time = newRemainingTime;

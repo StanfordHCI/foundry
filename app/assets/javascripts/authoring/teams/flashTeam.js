@@ -70,13 +70,13 @@ FlashTeam = function (data) {
     // the team has started
     if(isUser) {
         // user loaded page before team started
-        if (firstTime && !in_progress)
+        if (firstTime && !this.inProgress())
             user_loaded_before_team_start = true;
     }
 
 
     colorBox();
-    if(in_progress){
+    if(this.inProgress()){
         //console.log("flash team in progress");
         $("#flashTeamStartBtn").attr("disabled", "disabled");
         $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above
@@ -149,7 +149,7 @@ FlashTeam = function (data) {
       // operate on them, while the current cursor here is
       // not yet where it should be in time (its behind)
       var latest_time;
-      if (in_progress){
+      if (this.inProgress()){
           latest_time = (new Date()).getTime();
       } else {
           latest_time = this.latest_time; // really only useful at end
@@ -160,7 +160,7 @@ FlashTeam = function (data) {
       remaining_tasks = loadedStatus.remaining_tasks;
       delayed_tasks = loadedStatus.delayed_tasks;
 
-      drawEvents(!in_progress);
+      drawEvents(!this.inProgress());
 
       this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
       this.drawBoxes(this.completed_red_tasks , drawRedBox);
@@ -206,9 +206,6 @@ FlashTeam = function (data) {
 
         if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
             localStatus.flash_team_in_progress = flash_team_in_progress;
-        } else {
-
-            localStatus.flash_team_in_progress = in_progress;
         }
         localStatus.latest_time = (new Date).getTime();
         var localStatusJSON = JSON.stringify(localStatus);
@@ -252,7 +249,7 @@ FlashTeam = function (data) {
     flashTeamsJSON["id"] = this.id; //previously: = $("#flash_team_id").val();
     flashTeamsJSON["title"] = this.name; //previously: = document.getElementById("ft-name").innerHTML;
     flashTeamsJSON["author"] = this.author;
-    flashTeamsJSON["status"] = this.in_progress;
+    flashTeamsJSON["status"] = this.flash_team_in_progress;
 
     var localStatus = {};
 

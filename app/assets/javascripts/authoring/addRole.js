@@ -3,11 +3,11 @@
     var $input = $role.find('input');
     var $nameSpan = $role.find('.name');
     var $indicator = $role.find('.indicator');
-    
+
     var isValidRole = function(str) {
         return str.length > 0;
     };
-    
+
     var submitRole = function() {
         if(isValidRole($input.val())) {
             addMember();
@@ -16,11 +16,11 @@
             $role.removeClass('valid');
         }
     };
-    
+
     $role.click(function() {
-        if(in_progress && flashTeamsJSON["paused"]!=true) { $role.addClass('disabled'); }
+        if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true) { $role.addClass('disabled'); }
         else  $role.removeClass('disabled');
-      
+
 
         if($(this).hasClass('disabled')) { return; }
         $role.addClass('active');
@@ -30,13 +30,13 @@
         $nameSpan.hide();
         $input.show().focus();
     });
-    
+
     $indicator.click(function() {
         if(isValidRole($input.val())) {
             submitRole();
         }
     });
-    
+
     $input.keyup(function(e) {
         if(e.keyCode === 13) {
             submitRole();
@@ -68,20 +68,20 @@
     var isValidFolder = function(str) {
         return str.length > 0;
     };
-    
+
     var addFolderClickFn = function(e) {
         closeOpenPopovers();
         var $addFolderButton = $(this);
-        
+
         // check if the team is currently in progress
-        if(in_progress && flashTeamsJSON["paused"]!=true) { $addFolderButton.addClass('disabled'); }
+        if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true) { $addFolderButton.addClass('disabled'); }
         else  $addFolderButton.removeClass('disabled');
 
         if($addFolderButton.hasClass('disabled')) { return; }
-        
+
         $addFolderButton.addClass('active');
         var $rolesMenu = $(this).parents('.roles-menu').addClass('active');
-        
+
         var $oldSpan = $(this).find('span');
         var $input = $('<input type="text" id="addFolderInput" ' +
                        'placeholder="Add folder">')

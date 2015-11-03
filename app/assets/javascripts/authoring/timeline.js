@@ -34,7 +34,7 @@ var ALT_MARKER_COLOR = "transparent";
 var current = undefined;
 var currentUserEvents = [];
 var currentUserIds = [];
-var upcomingEvent; 
+var upcomingEvent;
 
 //Remove existing X-axis labels
 var numMins = -60;
@@ -64,27 +64,27 @@ var timeline_svg = d3TimelineElem.append("svg")
         .attr("width", SVG_WIDTH)
         .attr("height", SVG_HEIGHT)
         .attr("class", "grid-layer");
-  
+
   var selectionLayer = timeline_svg.append("g")
         .attr("width", SVG_WIDTH)
         .attr("height", SVG_HEIGHT)
         .attr("class", "selection-layer");
-  
+
   var handoffLayer = timeline_svg.append("g")
         .attr("width", SVG_WIDTH)
         .attr("height", SVG_HEIGHT)
         .attr("class", "handoff-layer");
-  
+
   var collabLayer = timeline_svg.append("g")
         .attr("width", SVG_WIDTH)
         .attr("height", SVG_HEIGHT)
         .attr("class", "collab-layer");
-  
+
   var eventLayer = timeline_svg.append("g")
         .attr("width", SVG_WIDTH)
         .attr("height", SVG_HEIGHT)
         .attr("class", "event-layer");
-  
+
   window._foundry = {
     timeline: {
       // marker that triggers a mousedown event
@@ -118,7 +118,7 @@ var timeline_svg = d3TimelineElem.append("svg")
       handoffLayer: handoffLayer,
 
       collabLayer: collabLayer,
-      
+
       eventLayer: eventLayer,
 
       svgHeight: SVG_HEIGHT,
@@ -371,14 +371,14 @@ function getEventJSONIndex(idNum) {
     }
 };
 
-//VCom Time expansion button trial 
+//VCom Time expansion button trial
 function addTime() {
     calcAddHours(TIMELINE_HOURS);
     redrawTimeline();
 }
 
 
-//VCom Calculates how many hours to add when user expands timeline manually 
+//VCom Calculates how many hours to add when user expands timeline manually
 //Increases by 1/3 each time (130% original length)
 function calcAddHours(currentHours) {
     TIMELINE_HOURS = currentHours + Math.floor(currentHours/3);
@@ -391,7 +391,7 @@ function calcAddHours(currentHours) {
 //Redraws timeline based on those numbers
 function redrawTimeline() {
   var timeline = window._foundry.timeline;
-  
+
   // an array of the numbers [0, 1, 2, ..., numSteps-1]
   var intervals = (
       function (steps){
@@ -404,14 +404,14 @@ function redrawTimeline() {
 
   var timelineSvg = timeline.timelineSvg;
   var gridLayer = timeline.gridLayer;
-  
+
   //Reset svg width
   timeline.resizeSvg(SVG_WIDTH, SVG_HEIGHT);
-  
+
   //Remove all existing grid lines & background
   gridLayer.selectAll("line.grid-line").remove();
   gridLayer.selectAll("rect.marker").remove();
-  
+
   // draw markers to timeline svg
   gridLayer.selectAll("rect.marker")
       .data(intervals) // hour intervals
@@ -421,7 +421,7 @@ function redrawTimeline() {
           .style("fill",
                  function(d) {
                    var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
-                   return Math.floor(d/stepsPerHour) % 2 == 0 ? 
+                   return Math.floor(d/stepsPerHour) % 2 == 0 ?
                      timeline.markerColor : timeline.altMarkerColor;
                  })
           .attr("x", function(d) {return d * STEP_WIDTH})
@@ -444,7 +444,7 @@ function redrawTimeline() {
       .style("stroke",
         function(d) {
           var stepsPerHour = HOUR_WIDTH / STEP_WIDTH;
-          return d % stepsPerHour == 0 ? 
+          return d % stepsPerHour == 0 ?
             timeline.strongStrokeColor : timeline.strokeColor;
       });
 
@@ -459,7 +459,7 @@ function redrawTimeline() {
         .attr("y1", function(d) {return d * _foundry.timeline.rowHeight;})
         .attr("y2", function(d) {return d * _foundry.timeline.rowHeight;})
         .style("stroke", _foundry.timeline.strokeColor);
-  
+
   // redraw row cover
   gridLayer.selectAll("rect.row-cover").remove();
   timeline.rowCoverSvg = gridLayer
@@ -469,20 +469,20 @@ function redrawTimeline() {
     .attr("width", "100%")
     .attr("height", "100%")
     .style("fill", "rgba(0, 0, 0, 0.04)");
-  
+
   //Remove existing X-axis labels
   gridLayer.selectAll("text.timelabel").remove();
   numMins = -60;
-  
+
   //Add ability to draw rectangles on extended timeline
   timelineSvg
       .on("mousedown", _foundry.timeline.timelineMousedownFn)
       .on("mouseover", _foundry.timeline.timelineMouseoverFn);
-  
+
   var headerSvg = timeline.headerSvg;
   // reset header svg width
   headerSvg.attr("width", TOTAL_HOUR_PIXELS)
-  
+
   // draw lines to header svg
   headerSvg.selectAll("line")
       .data(intervals.slice(0, intervals.length/4))
@@ -492,7 +492,7 @@ function redrawTimeline() {
       .attr("y1", HEADER_HEIGHT - 12)
       .attr("y2", HEADER_HEIGHT)
       .style("stroke", timeline.strokeColor);
-  
+
   // draw timeline time intervals to header svg
   headerSvg.selectAll("text.time-marker")
       .data(intervals.slice(0, intervals.length/4))
@@ -508,27 +508,6 @@ function redrawTimeline() {
               "font-weight": "400",
               "fill": "#777",
           });
-
-  //Get the latest time and team status, update x position of cursor
-  // cursor = timeline_svg.select(".cursor");
-  
-  //NOTE from DR: I commented out the block of code below because it was raising an error when the timeline was loaded 
-  //and the same exact code is included in awareness.js
-  
-  /* var latest_time;
-  if (in_progress){
-      latest_time = (new Date).getTime();
-  } else {
-      latest_time = loadedStatus.latest_time;
-  }*/
-  
-  //Next line is commented out after disabling the ticker
-  //cursor_details = positionCursor(flashTeamsJSON, latest_time);
-
-  //move all existing events back on top of timeline
-  //$(timelineSvg.selectAll('g')).each(function() {
-  //    $('.chart').append(this);
-  //});
-}
+  }
 
 redrawTimeline();

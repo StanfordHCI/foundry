@@ -90,7 +90,7 @@ function leftResize(d) {
     if(isUser) { // user page
         return;
     }
-    if(in_progress && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
             return;
     }
 
@@ -135,7 +135,7 @@ function rightResize(d) {
     if(isUser) { // user page
         return;
     }
-    if(in_progress && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
         return;
     }
 
@@ -167,7 +167,7 @@ function dragEventBlock(d) {
     if(isUser) { // user page
         return;
     }
-    if(in_progress && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
             return;
     }
 
@@ -233,7 +233,7 @@ function newEvent(point, duration) {
     if(isUser && memberType != "pc" && memberType != "client"){
        return;
     }
-    if(in_progress && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
         return;
     }
 
@@ -261,7 +261,7 @@ function createEvent(point, duration) {
     }
 
     //if team has been ended and new events get added, add the gDrive folder for the newly added events
-    if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+    if(!currentTeam.inProgress() && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
         var event_index = getEventJSONIndex(eventObj.id);
         createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
     }
