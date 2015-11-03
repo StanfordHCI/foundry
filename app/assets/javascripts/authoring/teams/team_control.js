@@ -46,10 +46,13 @@ TeamControl = {
     stopProjectStatus();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
+    $("#flashTeamEndBtn").css('display','none');
+    $("#workerEditTeamBtn").attr("disabled", "disabled");
+    $("#workerEditTeamBtn").css('display','none');
     $("#flashTeamPauseBtn").css('display','none');
     $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-  }
+  },
 
   inProgress: function() {
     return this.flash_team_in_progress
