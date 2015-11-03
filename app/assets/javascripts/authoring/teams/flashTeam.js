@@ -164,23 +164,39 @@ FlashTeam = function (data) {
 
       this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
       this.drawBoxes(this.completed_red_tasks , drawRedBox);
-      this.drawBoxes(this.diffEvents());
+      this.drawBoxes(this.diffEvents(), drawOrangeBox);
 
-      //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
       drawDelayedTasks();
+
+      this.drawRemovedTasks();
+
       drawInteractions(); //START HERE, INT DEBUG
-      //!!!!!!!!!!!! still uses global variables !!!!!!!!!!!!!!!!!!!!//
       googleDriveLink();
   };
 
+  this.drawRemovedTasks = function() {
+    if(this.diffEmpty()) return [];
+    for(var i=0; i<this.getDiff().removed_events.length; i++){
+      drawEvent(this.getDiff().removed_events[i])
+    }
+  }
+
+  this.diffEmpty = function() {
+    return !this.flash_teams_json.diff
+  }
+
+  this.getDiff = function() {
+    return this.flash_teams_json.diff
+  }
+
   this.diffEvents = function() {
-    if(!this.diff) { return [] }
-    return this.diff.changed_events_ids.concat(flashTeamsJSON.diff.added_events_ids, drawOrangeBox)
+    if(this.diffEmpty()) { return [] }
+    return this.getDiff().changed_events_ids.concat(this.getDiff().added_events_ids)
   }
 
   this.drawBoxes = function(collection, renderer) {
     for (var i=0;i<collection.length;i++){
-        var ev = this["events"][getEventJSONIndex(collection[i])];
+        var ev = this.flash_teams_json["events"][getEventJSONIndex(collection[i])];
         var task_g = getTaskGFromGroupNum(collection[i]);
 
         renderer(ev, task_g);

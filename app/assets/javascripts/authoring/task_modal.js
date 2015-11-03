@@ -623,7 +623,7 @@ function createOptionsButton(groupNum){
 
 function saveTaskOverview(groupNum){
 	var task_index = getEventJSONIndex(groupNum);
-	var ev = flashTeamsJSON["events"][task_index];
+	var ev = currentTeam.flash_teams_json["events"][task_index];
 
     //Update title
     if($("#eventName").val() != "")

@@ -30,7 +30,8 @@ class FlashTeam < ActiveRecord::Base
     data["flash_teams_json"]['diff'] = {
       changed_events_ids: self.changed_events_ids,
       added_events_ids: self.added_events_ids,
-      removed_events_ids: self.removed_events_ids
+      removed_events_ids: self.removed_events_ids,
+      removed_events: self.removed_events
     } if data["flash_teams_json"].present?
 
     data["flash_teams_json"]['fork'] = true if data["flash_teams_json"].present? && self.fork?
@@ -69,6 +70,11 @@ class FlashTeam < ActiveRecord::Base
   def removed_events_ids
     return [] if origin.blank?
     origin.events_ids - self.events_ids
+  end
+
+  def removed_events
+    return [] if origin.blank?
+    origin.events.select{|e| removed_events_ids.include? e['id']}
   end
 end
 
