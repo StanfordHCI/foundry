@@ -168,7 +168,7 @@ FlashTeam = function (data) {
 
       drawDelayedTasks();
 
-      this.drawRemovedTasks();
+      if(showDiff()) this.drawRemovedTasks();
 
       drawInteractions(); //START HERE, INT DEBUG
       googleDriveLink();

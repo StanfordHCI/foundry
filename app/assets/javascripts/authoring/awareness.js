@@ -48,6 +48,10 @@ $(document).ready(function(){
     $("#flash_team_id").getTeamInfo();
 });
 
+var showDiff = function() {
+    return $(".show_diff").length > 0
+}
+
 var addCursor = function(){
     // time cursor in red
     timeline_svg.append("line")
@@ -621,7 +625,7 @@ var computeLiveAndRemainingTasks = function(){
         var data = task_groups[i];
         var groupNum = data.groupNum;
 
-        var ev = flashTeamsJSON["events"][getEventJSONIndex(groupNum)];
+        var ev = getEventFromGroup(groupNum);
         var start_x = ev.x;
         var width = getWidth(ev);
         var end_x = parseFloat(start_x) + parseFloat(width);

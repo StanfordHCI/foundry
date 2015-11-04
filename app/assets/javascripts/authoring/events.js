@@ -458,15 +458,23 @@ function createEventId(){
 
 //Retrieve event json object using id
 function getEventFromId(id) {
-    var events = flashTeamsJSON.events;
+    var events = currentTeam.flash_teams_json.events;
     for(var i=0;i<events.length;i++){
         var ev = events[i];
         if(ev.id == id){
             return ev;
         }
     }
-    return null;
+    return getDeletedEvent(id);
 };
+
+function getEvenFromGroup(groupNum) {
+    var ev = currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)];
+    if(!ev) {
+        ev = getDeletedEvent(groupNum)
+    }
+    return ev;
+}
 
 function checkEventsCompleted(events) {
     for (var i=0; i<events.length; i++){

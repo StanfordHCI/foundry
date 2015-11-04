@@ -363,11 +363,29 @@ var task_g = timeline_svg.selectAll(".task_g");
 
 //Access a particular "event" in the JSON by its id number and return its index in the JSON array of events
 function getEventJSONIndex(idNum) {
-    var num_events = flashTeamsJSON["events"].length;
+    var num_events = currentTeam.flash_teams_json["events"].length;
     for (var i = 0; i < num_events; i++) {
-        if (flashTeamsJSON["events"][i].id == idNum) {
+        if (currentTeam.flash_teams_json["events"][i].id == idNum) {
             return i;
         }
+    }
+};
+
+function getDeletedEventIndex(idNum) {
+    if(currentTeam.diffEmpty()) return [];
+    for(var i=0; i<currentTeam.getDiff().removed_events.length; i++){
+      if(currentTeam.getDiff().removed_events[i].id == idNum) {
+        return i;
+      }
+    }
+};
+
+function getDeletedEvent(idNum) {
+    if(currentTeam.diffEmpty()) return [];
+    for(var i=0; i<currentTeam.getDiff().removed_events.length; i++){
+      if(currentTeam.getDiff().removed_events[i].id == idNum) {
+        return currentTeam.getDiff().removed_events[i];
+      }
     }
 };
 

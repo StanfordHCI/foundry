@@ -166,7 +166,7 @@ var drawOrangeBox = function(ev, task_g, use_cursor){
     var events = window._foundry.events;
     var width = getWidth(ev) - 2 * events.marginLeft;
     var existingOrangeBox = task_g.selectAll("#changed_rect_" + groupNum);
-    if(existingOrangeBox[0] && existingOrangeBox[0].length == 0) {
+    if(existingOrangeBox.length == 0) {
         task_g.append("rect")
             .attr("class", "changed_rectangle")
             .attr("x", function(d) {return d.x})
