@@ -162,9 +162,9 @@ FlashTeam = function (data) {
 
       drawEvents(!this.inProgress());
 
-      this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
-      this.drawBoxes(this.completed_red_tasks , drawRedBox);
-      this.drawBoxes(this.diffEvents(), drawOrangeBox);
+      // this.drawBoxes(this.drawn_blue_tasks , drawBlueBox);
+      // this.drawBoxes(this.completed_red_tasks , drawRedBox);
+      // this.drawBoxes(this.diffEvents(), drawOrangeBox);
 
       drawDelayedTasks();
 
@@ -177,8 +177,24 @@ FlashTeam = function (data) {
   this.drawRemovedTasks = function() {
     if(this.diffEmpty()) return [];
     for(var i=0; i<this.getDiff().removed_events.length; i++){
-      drawEvent(this.getDiff().removed_events[i])
+      drawDeletedEvent(this.getDiff().removed_events[i])
     }
+  }
+
+  this.taskChanged = function(taskId) {
+    if(this.diffEmpty()) return false;
+    for(var i=0; i<this.diffEvents().length; i++){
+      if(this.diffEvents()[i] == taskId) return true
+    }
+    return false;
+  }
+
+  this.taskDeleted = function(taskId) {
+    if(this.diffEmpty()) return false;
+    for(var i=0; i<this.getDiff().removed_events.length; i++){
+      if(this.getDiff().removed_events[i].id == taskId) return true
+    }
+    return false;
   }
 
   this.diffEmpty = function() {

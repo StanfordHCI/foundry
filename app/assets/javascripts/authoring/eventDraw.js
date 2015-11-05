@@ -37,6 +37,27 @@ function drawEvent(eventObj) {
     }, 0)
 };
 
+function drawDeletedEvent(eventObj) {
+    //release thread
+    setTimeout(function(){
+        // Start off by redrawing the timeline if we need to, so the events
+
+        // subtract two so there's always at least one empty row
+        // (event.row is 0 indexed)
+
+        if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+          window._foundry.timeline.updateNumRows(eventObj.row + 2);
+        }
+
+        drawG(eventObj);
+
+        drawMainRect(eventObj);
+        drawTop(eventObj);
+        drawShade(eventObj);
+    }, 0)
+};
+
+
 //
 function drawG(eventObj) {
     var x = _foundry.timeline.stepWidth *
@@ -190,6 +211,8 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y})
         .attr("fill", function(d) {
+            if(currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_COLOR;
+            if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_COLOR;
             switch(eventObj.status) {
                 case "not_started":
                     if(events.isWorkerTask(eventObj)) return WORKER_TASK_NOT_START_COLOR;
@@ -241,6 +264,8 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
         .attr("fill", function(d) {
+            if(currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_BORDER_COLOR;
+            if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_BORDER_COLOR;
             switch(eventObj.status) {
                 case "not_started":
                     // if the task is for the currently logged in user

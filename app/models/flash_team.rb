@@ -22,7 +22,24 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def stored_json
-    @data ||= JSON.parse((self.status.presence || '{}')).with_indifferent_access
+    @data ||= JSON.parse(self.status.presence || default_json).with_indifferent_access
+  end
+
+  def default_json
+    {
+      folders: [],
+      flash_teams_json: {
+        events: [],
+        projectoverview: "",
+        members: [],
+        interactions: []
+      },
+      drawn_blue_tasks: [],
+      completed_red_tasks: [],
+      live_tasks: [],
+      paused_tasks: [],
+      task_groups: []
+    }.to_json
   end
 
   def status_json

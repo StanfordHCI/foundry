@@ -30,6 +30,14 @@ var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 var TASK_PAUSED_COLOR =  "#a8cfde";
 var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
+//orange
+var TASK_CHANGED_COLOR =  "#ffa500";
+var TASK_CHANGED_BORDER_COLOR = "#faa100";
+
+//deadly pale
+var TASK_DELETED_COLOR =  "#fafafa";
+var TASK_DELETED_BORDER_COLOR = "#000000";
+
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
