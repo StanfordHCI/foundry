@@ -45,7 +45,6 @@ $(document).ready(function(){
     colorBox();
     //console.log("THIS FUNCTION HITS");
     $("#flash_team_id").requestUpdates(true);
-    $("#flash_team_id").getTeamInfo();
 });
 
 var showDiff = function() {

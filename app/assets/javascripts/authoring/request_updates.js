@@ -24,6 +24,7 @@ $.fn.requestUpdates = function(firstTime) {
         // renderEverything(loadedStatus, firstTime);
         currentTeam = new FlashTeam(loadedStatus);
         currentTeam.render();
+        $("#flash_team_id").getTeamInfo();
         // } else {
         //     drawStartedEvents();
         // }

@@ -46,9 +46,9 @@ var drag = d3.behavior.drag()
             var event2;
             var eventHandoffs = getHandoffsForEvent(d.groupNum);
             for (var i = 0; i<eventHandoffs.length; i++) {
-                var handoff = flashTeamsJSON["interactions"][getIntJSONIndex(eventHandoffs[i])];
-                event1 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event1"])];
-                event2 = flashTeamsJSON["events"][getEventJSONIndex(handoff["event2"])];
+                var handoff = currentTeam.flash_teams_json["interactions"][getIntJSONIndex(eventHandoffs[i])];
+                event1 = currentTeam.flash_teams_json["events"][getEventJSONIndex(handoff["event1"])];
+                event2 = currentTeam.flash_teams_json["events"][getEventJSONIndex(handoff["event2"])];
                 if (handoffOutOfRange(handoff["event1"], handoff["event2"]) == true) {
                     outOfRange = true;
                     break;
@@ -56,7 +56,7 @@ var drag = d3.behavior.drag()
             }
             if (outOfRange) {
                 alert("Sorry, " + event1.title + " cannot end before " + event2.title + " begins.");
-                flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                currentTeam.flash_teams_json["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                 drawEvent(originalEV, false);
             }
 
@@ -64,15 +64,15 @@ var drag = d3.behavior.drag()
             outOfRange = false;
             var eventCollabs = getCollabsForEvent(d.groupNum);
             for (var i = 0; i<eventCollabs.length; i++) {
-                var collab = flashTeamsJSON["interactions"][getIntJSONIndex(eventCollabs[i])];
-                event1 = flashTeamsJSON["events"][getEventJSONIndex(collab.event1)];
-                event2 = flashTeamsJSON["events"][getEventJSONIndex(collab.event2)];
+                var collab = currentTeam.flash_teams_json["interactions"][getIntJSONIndex(eventCollabs[i])];
+                event1 = currentTeam.flash_teams_json["events"][getEventJSONIndex(collab.event1)];
+                event2 = currentTeam.flash_teams_json["events"][getEventJSONIndex(collab.event2)];
                 var overlap = eventsOverlap(event1.x, getWidth(event1), event2.x, getWidth(event2));
 
                 if (overlap <= 0) {
                     alert("Sorry, " + event1.title + " and " + event2.title
                         + " must overlap to have a collaboration.");
-                    flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+                    currentTeam.flash_teams_json["events"][getEventJSONIndex(d.groupNum)] = originalEV;
                     drawEvent(originalEV, false);
                     break;
                 }
@@ -90,7 +90,7 @@ function leftResize(d) {
     if(isUser) { // user page
         return;
     }
-    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true){
             return;
     }
 
@@ -123,7 +123,7 @@ function leftResize(d) {
     ev.startMin = startMin;
     ev.startTime = startHr * 60 + startMin;
 
-    flashTeamsJSON['local_update'] = new Date().getTime();
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime();
 
     updateStatus();
 
@@ -135,7 +135,7 @@ function rightResize(d) {
     if(isUser) { // user page
         return;
     }
-    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true){
         return;
     }
 
@@ -155,7 +155,7 @@ function rightResize(d) {
     }
     ev.duration = durationForWidth(newWidth);
 
-    flashTeamsJSON['local_update'] = new Date().getTime();
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime();
 
     updateStatus();
 
@@ -167,7 +167,7 @@ function dragEventBlock(d) {
     if(isUser) { // user page
         return;
     }
-    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true){
             return;
     }
 
@@ -206,7 +206,7 @@ function dragEventBlock(d) {
     ev.row = newRow;
     ev.y = currentY+5;
 
-    flashTeamsJSON['local_update'] = new Date().getTime();
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime();
 
     updateStatus();
     drawEvent(ev, false);
@@ -233,7 +233,7 @@ function newEvent(point, duration) {
     if(isUser && memberType != "pc" && memberType != "client"){
        return;
     }
-    if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true){
+    if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true){
         return;
     }
 
@@ -244,7 +244,6 @@ function newEvent(point, duration) {
 function createEvent(point, duration) {
     // get coords where event should snap to
     var snapPoint = calcSnap(point[0], point[1]);
-    var flashTeamsJSON = currentTeam.flash_teams_json;
 
     if(!checkWithinTimelineBounds(snapPoint)){ return; }
 
@@ -256,17 +255,17 @@ function createEvent(point, duration) {
 
     var event_index = getEventJSONIndex(eventObj.id);
     //if team is in edit mode, add the gDrive folder for this event
-    if(flashTeamsJSON["paused"] == true){
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+    if(currentTeam.flash_teams_json["paused"] == true){
+        createTaskFolder(currentTeam.flash_teams_json["events"][event_index].title, event_index, currentTeam.flash_teams_json.folder[0]);
     }
 
     //if team has been ended and new events get added, add the gDrive folder for the newly added events
-    if(!currentTeam.inProgress() && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
+    if(!currentTeam.inProgress() && currentTeam.flash_teams_json["folder"] != undefined && currentTeam.flash_teams_json["startTime"] != undefined){
         var event_index = getEventJSONIndex(eventObj.id);
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        createTaskFolder(currentTeam.flash_teams_json["events"][event_index].title, event_index, currentTeam.flash_teams_json.folder[0]);
     }
 
-    currentTeam.logActivity("createEvent(point, duration)",'Create Event', flashTeamsJSON["events"][getEventJSONIndex(eventObj)])
+    currentTeam.logActivity("createEvent(point, duration)",'Create Event', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventObj)])
 
 
     // save
@@ -340,7 +339,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
 function createEventObj(eventObject) {
 
     //add new event to flashTeams database
-    flashTeamsJSON.events.push(eventObject);
+    currentTeam.flash_teams_json.events.push(eventObject);
 
     return eventObject;
 };
@@ -348,7 +347,7 @@ function createEventObj(eventObject) {
 function onConfigClick(event){
     CURRENT_EVENT_SELECTED = event.groupNum;
 
-    currentTeam.logActivity("onConfigClick(event)",'Clicked Event Config Icon', flashTeamsJSON["events"][getEventJSONIndex(event.groupNum)]);
+    currentTeam.logActivity("onConfigClick(event)",'Clicked Event Config Icon', currentTeam.flash_teams_json["events"][getEventJSONIndex(event.groupNum)]);
 
     showDropDown();
 }
@@ -378,7 +377,7 @@ function showDropDown(){
 
 function duplicateEvent(groupNumber, closeModal){
     var task_id = getEventJSONIndex(groupNumber);
-    var eventToDuplicate = flashTeamsJSON["events"][task_id];
+    var eventToDuplicate = currentTeam.flash_teams_json["events"][task_id];
 
 
     //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event
@@ -399,30 +398,30 @@ function duplicateEvent(groupNumber, closeModal){
 
     drawEvent(eventObj, true);
 
-    if(flashTeamsJSON["paused"] == true){
+    if(currentTeam.flash_teams_json["paused"] == true){
         var event_index = getEventJSONIndex(eventObj.id);
-        createTaskFolder(flashTeamsJSON["events"][event_index].title, event_index, flashTeamsJSON.folder[0]);
+        createTaskFolder(currentTeam.flash_teams_json["events"][event_index].title, event_index, currentTeam.flash_teams_json.folder[0]);
     }
 
     if(closeModal == true){
         $('#task_modal').modal('hide');
-        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNumber)]);
 
     }else{
-        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+        currentTeam.logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNumber)]);
     }
     // save
     updateStatus();
 }
 
 function viewEvent(groupNumber){
-    currentTeam.logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+    currentTeam.logActivity("viewEvent(groupNumber)",'Clicked View Event on Config Dropdown', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 }
 
 function editEvent(groupNumber){
-    currentTeam.logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
+    currentTeam.logActivity("editEvent(groupNumber)",'Clicked Edit Event on Config Dropdown', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNumber)]);
 
     $('#task_modal').modal({show: true, onload: eventMousedown(groupNumber)});
 
@@ -602,7 +601,7 @@ function addToTaskFromData(data, eventObj, taskGroup) {
 }
 
 function renderAllMemberTabs() {
-    var events = flashTeamsJSON["events"];
+    var events = currentTeam.flash_teams_json["events"];
     for (var i = 0; i < events.length; i++){
         var ev = events[i];
         drawMemberTabs(ev);
@@ -614,22 +613,22 @@ function renderAllMemberTabs() {
 //and a pill in the popover that can be deleted, both of the specified color of the member
 function addEventMember(eventId, memberIndex) {
     // get details from members array
-    var memberName = flashTeamsJSON["members"][memberIndex].role;
-    var memberUniq = flashTeamsJSON["members"][memberIndex].uniq;
-    var memberColor = flashTeamsJSON["members"][memberIndex].color;
+    var memberName = currentTeam.flash_teams_json["members"][memberIndex].role;
+    var memberUniq = currentTeam.flash_teams_json["members"][memberIndex].uniq;
+    var memberColor = currentTeam.flash_teams_json["members"][memberIndex].color;
 
-    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - Before', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventId)]);
 
     // get event
     var indexOfEvent = getEventJSONIndex(eventId);
 
     // add member to event
-    flashTeamsJSON["events"][indexOfEvent].members.push({name: memberName, uniq: memberUniq, color: memberColor});
+    currentTeam.flash_teams_json["events"][indexOfEvent].members.push({name: memberName, uniq: memberUniq, color: memberColor});
 
     // render on events
-    drawMemberTabs(flashTeamsJSON["events"][indexOfEvent]);
+    drawMemberTabs(currentTeam.flash_teams_json["events"][indexOfEvent]);
 
-    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - After', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("addEventMember(eventId, memberIndex)",'Add Event Member - After', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventId)]);
 }
 
 //Remove a team member from an event
@@ -638,18 +637,18 @@ function deleteEventMember(eventId, memberNum) {
          $("#rect_" + eventId).attr("fill", TASK_NOT_START_COLOR)
      }
 
-    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - Before', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventId)]);
 
     //Update the JSON then redraw the event
     var indexOfJSON = getEventJSONIndex(eventId);
-    var event = flashTeamsJSON["events"][indexOfJSON];
+    var event = currentTeam.flash_teams_json["events"][indexOfJSON];
     var indexInEvent = event.members.indexOf(memberNum);
     if(indexInEvent != -1) {
         event.members.splice(indexInEvent, 1);
         drawEvent(event);
     }
 
-    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - After', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEventMember(eventId, memberNum)",'Delete Event Member - After', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventId)]);
 
 }
 
@@ -661,7 +660,7 @@ function confirmDeleteEvent(eventId) {
     label.innerHTML = "Delete Event?";
 
     var indexOfJSON = getEventJSONIndex(eventId);
-    var events = flashTeamsJSON["events"];
+    var events = currentTeam.flash_teams_json["events"];
     var eventToDelete = events[indexOfJSON];
 
     var alertText = document.getElementById("confirmActionText");
@@ -686,24 +685,24 @@ function deleteEvent(eventId){
     $('#confirmAction').modal('hide');
 
     // Only log before because event won't exist after
-    currentTeam.logActivity("deleteEvent(eventId)",'Delete Event - Before', flashTeamsJSON["events"][getEventJSONIndex(eventId)]);
+    currentTeam.logActivity("deleteEvent(eventId)",'Delete Event - Before', currentTeam.flash_teams_json["events"][getEventJSONIndex(eventId)]);
 
 
     var indexOfJSON = getEventJSONIndex(eventId);
 
-    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    var eventObj = currentTeam.flash_teams_json["events"][indexOfJSON];
     var eventStatus = eventObj.status;
 
     //Delete the event object from the json
-    var events = flashTeamsJSON["events"];
+    var events = currentTeam.flash_teams_json["events"];
     events.splice(indexOfJSON, 1);
 
     //stores the ids of all of the interactions to erase
     var intersToDel = [];
 
     //Iterate over interactions to find any that involve the specific event
-    for (var i = 0; i < flashTeamsJSON["interactions"].length; i++) {
-            var inter = flashTeamsJSON["interactions"][i];
+    for (var i = 0; i < currentTeam.flash_teams_json["interactions"].length; i++) {
+            var inter = currentTeam.flash_teams_json["interactions"][i];
             if (inter.event1 == eventId || inter.event2 == eventId) {
                 intersToDel.push(inter.id);
             }
