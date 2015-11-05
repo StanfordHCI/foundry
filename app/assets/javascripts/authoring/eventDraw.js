@@ -93,7 +93,7 @@ function drawG(eventObj) {
         var left = d3.select(this).selectAll(".left-handle");
         var right = d3.select(this).selectAll(".right-handle");
 
-        var width = getWidth(getEventFromId(groupNum));
+        var width = getWidth(eventObj);
 
         if(x < eventX + width/2) {
             // show the left and hide the right
