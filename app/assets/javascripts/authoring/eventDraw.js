@@ -211,7 +211,7 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y})
         .attr("fill", function(d) {
-            if(currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_COLOR;
+            if(showDiff() && currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_COLOR;
             if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_COLOR;
             switch(eventObj.status) {
                 case "not_started":
@@ -264,7 +264,7 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
         .attr("fill", function(d) {
-            if(currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_BORDER_COLOR;
+            if(showDiff() && currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_BORDER_COLOR;
             if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_BORDER_COLOR;
             switch(eventObj.status) {
                 case "not_started":

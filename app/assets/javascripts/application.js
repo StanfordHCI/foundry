@@ -24,6 +24,7 @@
 //= require private_pub
 //= require extend
 //= require wrapper
+//= require ./authoring/request_updates
 //= require ./authoring/load
 //= require ./authoring/logging
 //= require ./authoring/timeline
@@ -63,5 +64,4 @@
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
-//= require ./authoring/request_updates
 //= require ./authoring/draw_boxes
