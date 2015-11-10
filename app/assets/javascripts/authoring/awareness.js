@@ -201,7 +201,7 @@ function save_tasksAfter_json(){
 //Asks user to confirm that they want to end the team
 $("#flashTeamEndBtn").click(function(){
     var bodyText = document.getElementById("confirmActionText");
-    currentTeam.updateStatus();
+    // currentTeam.updateStatus();
     if ((live_tasks.length == 0) && (remaining_tasks.length == 0) && (delayed_tasks.length == 0)) {
         bodyText.innerHTML = "Are you sure you want to end " + flashTeamsJSON["title"] + "?";
     } else {

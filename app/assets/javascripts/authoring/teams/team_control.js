@@ -3,10 +3,10 @@ TeamControl = {
   // user must call this startTeam(true, )
   start: function(firstTime) {
     if(!this.inProgress()) {
-        this.updateOriginalStatus();
         recordStartTime();
         createProjectFolder();
         this.flash_team_in_progress = true; // TODO: set before this?
+        this.updateOriginalStatus();
         $("#projectStatusText").html("The project is in progress.<br /><br />");
 
         this.flash_teams_json["paused"]=false;
