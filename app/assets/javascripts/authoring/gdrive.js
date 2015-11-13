@@ -107,50 +107,37 @@ var googleDriveLink = function(){
 
 //Creates the project's folder
 function createProjectFolder(){
-
   //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
   if(!currentTeam.inProgress() && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
-    //console.log('project folder already exists');
     return;
   }
 
   gapi.client.load('drive', 'v2', function() {
     var req;
     req = gapi.client.request({
-        'path': '/drive/v2/files',
-        'method': 'POST',
-        'body':{
-            "title" : flashTeamsJSON.title,
-            "mimeType" : "application/vnd.google-apps.folder",
-            "description" : "Overall Shared Folder"
-         }
-      });
-
-      req.execute(function(resp) {
-        //console.log("resp: " + resp);
-         //console.log("resp.id: " + resp.id);
-         if(resp.id == undefined){
-           //console.log("resp.id is undefined: " + resp);
-           return;
-         }
-
-        var folderArray = [resp.id, resp.alternateLink];
-
-        insertPermission(folderArray[0], "me", "anyone", "writer");
-        flashTeamsJSON.folder = folderArray;
-
-    updateStatus(); // don't put true or false here
-
-    addAllTaskFolders(flashTeamsJSON.folder[0])
-
-    googleDriveLink();
-
-    currentTeam.logActivity("createProjectFolder()",'Created Project and Task Folders', flashTeamsJSON);
+      'path': '/drive/v2/files',
+      'method': 'POST',
+      'body':{
+          "title" : flashTeamsJSON.title,
+          "mimeType" : "application/vnd.google-apps.folder",
+          "description" : "Overall Shared Folder"
+       }
     });
 
+    req.execute(function(resp) {
+      if(resp.id == undefined) return;
+      var folderArray = [resp.id, resp.alternateLink];
 
+      insertPermission(folderArray[0], "me", "anyone", "writer");
+      flashTeamsJSON.folder = folderArray;
+
+      addAllTaskFolders(flashTeamsJSON.folder[0])
+
+      googleDriveLink();
+
+      currentTeam.logActivity("createProjectFolder()",'Created Project and Task Folders', flashTeamsJSON);
+    });
   });
-
 }
 
 //Creates a subfolder for a particular task

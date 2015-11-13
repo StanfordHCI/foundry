@@ -154,6 +154,7 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
+    $("#flashTeamEndBtn").removeAttr("disabled");
     $("#flashTeamPauseBtn").css('display', '');
     $("#workerEditTeamBtn").css('display', '');
 
@@ -201,14 +202,13 @@ function save_tasksAfter_json(){
 //Asks user to confirm that they want to end the team
 $("#flashTeamEndBtn").click(function(){
     var bodyText = document.getElementById("confirmActionText");
-    // currentTeam.updateStatus();
-    if ((live_tasks.length == 0) && (remaining_tasks.length == 0) && (delayed_tasks.length == 0)) {
-        bodyText.innerHTML = "Are you sure you want to end " + flashTeamsJSON["title"] + "?";
-    } else {
-        //console.log("ENDED TEAM EARLY");
-        //var progressRemaining = Math.round(100 - curr_status_width);
-        bodyText.innerHTML = flashTeamsJSON["title"] + " is still in progress!  Are you sure you want to end the team?";
-    }
+    // if ((live_tasks.length == 0) && (remaining_tasks.length == 0) && (delayed_tasks.length == 0)) {
+    //     bodyText.innerHTML = "Are you sure you want to end " + flashTeamsJSON["title"] + "?";
+    // } else {
+    //     //console.log("ENDED TEAM EARLY");
+    //     //var progressRemaining = Math.round(100 - curr_status_width);
+    //     bodyText.innerHTML = flashTeamsJSON["title"] + " is still in progress!  Are you sure you want to end the team?";
+    // }
     var confirmEndTeamBtn = document.getElementById("confirmButton");
     confirmEndTeamBtn.innerHTML = "End the team";
     $("#confirmButton").attr("class","btn btn-danger");
@@ -216,9 +216,11 @@ $("#flashTeamEndBtn").click(function(){
     label.innerHTML = "End Team?";
     $('#confirmAction').modal('show');
 
-    document.getElementById("confirmButton").onclick=function(){currentTeam.end()};
-
-
+    document.getElementById("confirmButton").onclick=function(){
+        $("#flashTeamStartBtn").removeAttr("disabled");
+        $("#flashTeamStartBtn").css('display','');
+        currentTeam.end()
+    };
 });
 
 
@@ -420,7 +422,7 @@ var flashTeamUpdated = function(){
 
 var recordStartTime = function(){
     flashTeamsJSON["startTime"] = (new Date).getTime();
-    currentTeam.updateStatus(true);
+    updateStatus(true);
 };
 
 /* moved to requestUpdates
@@ -620,8 +622,8 @@ var computeLiveAndRemainingTasks = function(){
 
     var remaining_tasks = [];
     var live_tasks = [];
-    for (var i=0;i<task_groups.length;i++){
-        var data = task_groups[i];
+    for (var i=0;i<currentTeam.task_groups.length;i++){
+        var data = currentTeam.task_groups[i];
         var groupNum = data.groupNum;
 
         var ev = getEventFromGroup(groupNum);
@@ -631,22 +633,12 @@ var computeLiveAndRemainingTasks = function(){
 
 
         if(curr_new_x >= start_x && curr_new_x <= end_x && drawn_blue_tasks.indexOf(groupNum) == -1){
-
-		         //console.log("previous task does not appear to be delayed so adding task to live_task");
-                   live_tasks.push(groupNum);
-
-
-        } else if(curr_new_x < start_x){
+            live_tasks.push(groupNum);
+        } else if(curr_new_x < start_x) {
             remaining_tasks.push(groupNum);
         }
     }
 
-/*    var tasks_tmp = MoveLiveToRemaining(live_tasks,remaining_tasks);
-    live_tasks = tasks_tmp["live"];
-    remaining_tasks = tasks_tmp["remaining"];
-    updateStatus(true);
-  */
-    //console.log("returning from computing live and remaining tasks");
     return {"live":live_tasks, "remaining":remaining_tasks};
 };
 
@@ -1346,10 +1338,6 @@ var constructStatusObj = function()
 */
 
 var timer = null;
-
-var updateStatus = function(flash_team_in_progress){
-    currentTeam.updateStatus(flash_team_in_progress)
-};
 
 //this function updates the original status of the flash team in the database, which is
 // used for the team duplication feature (it preserves the team without saving the status

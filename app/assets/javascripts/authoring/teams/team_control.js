@@ -3,7 +3,6 @@ TeamControl = {
   // user must call this startTeam(true, )
   start: function(firstTime) {
     if(!this.inProgress()) {
-        recordStartTime();
         createProjectFolder();
         this.flash_team_in_progress = true; // TODO: set before this?
         this.updateOriginalStatus();
@@ -14,8 +13,7 @@ TeamControl = {
 
         this.logActivity("var startTeam = function(firstTime) - Before Update Status",'Start Team - Before Update Status', this.flash_teams_json);
 
-        //added next line to disable the ticker
-        this.updateStatus(true);
+        recordStartTime(); // updates the status
 
         this.logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', this.flash_teams_json);
     }

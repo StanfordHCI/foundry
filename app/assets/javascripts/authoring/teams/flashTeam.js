@@ -221,39 +221,37 @@ FlashTeam = function (data) {
   }
 
   this.updateStatus = function(flash_team_in_progress) {
-    if (timer) {
-        clearTimeout(timer); //cancel the previous timer.
-        timer = null;
-    }
+    //TODO Debug code. remove later
+    var err = new Error();
+    console.log("updateStatus");
+    console.dir(err.stack);
+
     var self = this;
-    timer = setTimeout(function(){
+    self.json_transaction_id++;
+    var localStatus = self.constructStatusObj();
 
-        self.json_transaction_id++;
-        var localStatus = self.constructStatusObj();
+    //if flashTeam hasn't been started yet, update the original status in the db
+    if(flashTeamsJSON["startTime"] == undefined){
+      self.updateOriginalStatus();
+    }
 
-        //if flashTeam hasn't been started yet, update the original status in the db
-        if(flashTeamsJSON["startTime"] == undefined){
-          self.updateOriginalStatus();
-        }
+    if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
+        localStatus.flash_team_in_progress = flash_team_in_progress;
+    }
+    localStatus.latest_time = (new Date).getTime();
+    var localStatusJSON = JSON.stringify(localStatus);
+    //console.log("updating string: " + localStatusJSON);
 
-        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
-            localStatus.flash_team_in_progress = flash_team_in_progress;
-        }
-        localStatus.latest_time = (new Date).getTime();
-        var localStatusJSON = JSON.stringify(localStatus);
-        //console.log("updating string: " + localStatusJSON);
-
-        var flash_team_id = $("#flash_team_id").val();
-        var authenticity_token = $("#authenticity_token").val();
-        var url = '/flash_teams/' + flash_team_id + '/update_status';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-        }).done(function(data){
-            //console.log("UPDATED FLASH TEAM STATUS");
-        });
-    }, 2000);
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_status';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+    }).done(function(data){
+        //console.log("UPDATED FLASH TEAM STATUS");
+    });
   }
 
   this.updateOriginalStatus = function() {
@@ -307,3 +305,13 @@ FlashTeam = function (data) {
 }
 
 extend(FlashTeam, Wrapper)
+
+updateStatus = function(flash_team_in_progress) {
+  if (timer) {
+      clearTimeout(timer); //cancel the previous timer.
+      timer = null;
+  }
+  timer = setTimeout(function(){
+    currentTeam.updateStatus(flash_team_in_progress)
+  }, 500)
+}
