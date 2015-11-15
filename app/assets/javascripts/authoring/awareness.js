@@ -1337,8 +1337,6 @@ var getAllTasks = function(){
 var constructStatusObj = function()
 */
 
-var timer = null;
-
 //this function updates the original status of the flash team in the database, which is
 // used for the team duplication feature (it preserves the team without saving the status
 // information once the team is run

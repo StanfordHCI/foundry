@@ -486,7 +486,7 @@ function addMember() {
     entryManager.addEntry(member_obj);
 
     //update event popovers to show the new member
-    var events = flashTeamsJSON.events;
+    var events = currentTeam.flash_teams_json.events;
 
     renderCurrentFolderPills();
     currentTeam.logActivity("addMember()",'Added Member', new Date().getTime(), member_obj);
@@ -542,7 +542,7 @@ function confirmDeleteMember(pillId) {
 
     var labelHtml = "Remove Member?";
     var alertHtml = "<b>Are you sure you want to remove " + member.role +
-        " from " + flashTeamsJSON["title"]+ "? </b><br><font size = '2'>" +
+        " from " + currentTeam.flash_teams_json["title"]+ "? </b><br><font size = '2'>" +
         member.role + " will be removed from all events on the timeline. </font>";
     var deleteButtonHtml = "Remove member";
 
@@ -559,7 +559,7 @@ function confirmDeleteFolder(folderId) {
 
     var labelHtml = "Remove Folder?";
     var alertHtml = "<b>Are you sure you want to remove " + folder.name +
-        " from " + flashTeamsJSON["title"]+ "? </b>" +
+        " from " + currentTeam.flash_teams_json["title"]+ "? </b>" +
         (size > 0 ? "This folder's contents will be removed as well.": "");
     var deleteButtonHtml = "Remove folder";
     var confirmFn = function() {
@@ -600,8 +600,8 @@ function deleteEntry(entryId) {
 
     if(entryManager.isMember(entry)) {
         // remove from members array with event object
-        for(var i=0; i<flashTeamsJSON["events"].length; i++){
-            var ev = flashTeamsJSON["events"][i];
+        for(var i=0; i<currentTeam.flash_teams_json["events"].length; i++){
+            var ev = currentTeam.flash_teams_json["events"][i];
             var member_event_index = ev.members.indexOf(entryId);
             // remove member
             if(member_event_index != -1){ // found member in the event
@@ -638,7 +638,7 @@ function saveMemberInfo(memberId) {
     $("#mPill_" + memberId).popover("hide");
     renderAllMemberTabs();
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
-    flashTeamsJSON['local_update'] = new Date().getTime();
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime();
     currentTeam.logActivity("saveMemberInfo(memberId)",'Saved Member Info', new Date().getTime(),
          member);
 };
@@ -659,7 +659,6 @@ function inviteMember(pillId) {
         member.uniq = data["uniq"];
         member.invitation_link = data["url"];
         renderMemberPopovers(entryManager.getCurrentFolderChildren());
-        updateStatus();
     });
 }
 
@@ -690,7 +689,7 @@ function confirmReplaceMember(pillId) {
     var alertText = document.getElementById("confirmActionText");
     alertText.innerHTML = "<b>Are you sure you want to replace " + memberToReplace
         + "? </b><br><font size = '2'>  The current "
-        + memberToReplace + " will no longer have access to " + flashTeamsJSON["title"]
+        + memberToReplace + " will no longer have access to " + currentTeam.flash_teams_json["title"]
         + " and you will need to hire a new " + memberToReplace + ".</font>";
 
     var deleteButton = document.getElementById("confirmButton");
@@ -759,7 +758,7 @@ function currentMemberTask(groupNum){
      if(current_user == undefined) {return;}
 
     var task_id = getEventJSONIndex(groupNum);
-    var eventObj = flashTeamsJSON["events"][task_id];
+    var eventObj = currentTeam.flash_teams_json["events"][task_id];
 
     var members = eventObj["members"];
 
@@ -805,7 +804,7 @@ function updateRoleName(id, newValue) {
     renderMemberPopovers(entryManager.getCurrentFolderChildren());
     currentTeam.logActivity("updateRoleName(id, newValue)",'Updated Member Role Name', new Date().getTime(),
          member);
-    flashTeamsJSON['local_update'] = new Date().getTime;
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime;
     updateStatus();
     $('#mPill_' + id + ' .name').html(newValue);
 }

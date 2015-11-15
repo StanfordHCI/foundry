@@ -307,11 +307,11 @@ FlashTeam = function (data) {
 extend(FlashTeam, Wrapper)
 
 updateStatus = function(flash_team_in_progress) {
-  if (timer) {
-      clearTimeout(timer); //cancel the previous timer.
-      timer = null;
+  if (currentTeam.timer) {
+      clearTimeout(currentTeam.timer); //cancel the previous timer.
+      currentTeam.timer = null;
   }
-  timer = setTimeout(function(){
+  currentTeam.timer = setTimeout(function(){
     currentTeam.updateStatus(flash_team_in_progress)
-  }, 500)
+  }, 1000)
 }

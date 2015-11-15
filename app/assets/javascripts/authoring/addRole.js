@@ -18,7 +18,7 @@
     };
 
     $role.click(function() {
-        if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true) { $role.addClass('disabled'); }
+        if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true) { $role.addClass('disabled'); }
         else  $role.removeClass('disabled');
 
 
@@ -74,7 +74,7 @@
         var $addFolderButton = $(this);
 
         // check if the team is currently in progress
-        if(currentTeam.inProgress() && flashTeamsJSON["paused"]!=true) { $addFolderButton.addClass('disabled'); }
+        if(currentTeam.inProgress() && currentTeam.flash_teams_json["paused"]!=true) { $addFolderButton.addClass('disabled'); }
         else  $addFolderButton.removeClass('disabled');
 
         if($addFolderButton.hasClass('disabled')) { return; }
