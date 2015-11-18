@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151001183850) do
+ActiveRecord::Schema.define(version: 20151118195127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20151001183850) do
     t.integer  "user_id"
     t.text     "original_status"
     t.integer  "origin_id"
+    t.text     "source_json"
   end
 
   create_table "handoffs", force: true do |t|

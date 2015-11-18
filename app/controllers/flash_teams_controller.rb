@@ -554,7 +554,7 @@ def edit
 
     # Add all the members associated with event to @task_members array
     @flash_team_event['members'].each do |task_member|
-    	@task_members << getMemberById(@id_team, @id_task, task_member)
+    	@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
     end
 
     @task_avail_email_subject = "From Stanford HCI Group: " + @flash_team_event["title"] + " Task Is Available"
@@ -604,7 +604,7 @@ def edit
 
    		@task_members = Array.new
    		@flash_team_event['members'].each do |task_member|
-   			@task_members << getMemberById(@id_team, @id_task, task_member)
+   			@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
    		end
    		@uniq = ""
    		@task_members.each do |task_member|
@@ -673,7 +673,7 @@ def edit
 
     # Add all the members associated with event to @task_members array
     @flash_team_event['members'].each do |task_member|
-      @task_members << getMemberById(@id_team, @id_task, task_member)
+      @task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
     end
 
     @starter_task_email_subject = "Starter Task From Stanford HCI Group: " + @flash_team_event["title"] #+ " Task Is Available"
@@ -725,7 +725,7 @@ def edit
 
     @task_members = Array.new
     @flash_team_event['members'].each do |task_member|
-      @task_members << getMemberById(@id_team, @id_task, task_member)
+      @task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
     end
     @uniq = ""
     @task_members.each do |task_member|
@@ -791,7 +791,7 @@ def edit
 
 	    # Add all the members associated with event to @task_members array
 	    @flash_team_event['members'].each do |task_member|
-	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    	@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
 	    end
 
 	    #@my_text = "Here is some basic text...\n...with a line break."
@@ -867,7 +867,7 @@ def edit
 
 	    # Add all the members associated with event to @task_members array
 	    @flash_team_event['members'].each do |task_member|
-	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    	@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
 	    end
 
 	    @foundry_url = params[:foundry_url]
@@ -978,7 +978,7 @@ def edit
 	    @task_members = Array.new
 	    # Add all the members associated with event to @task_members array
 	    @flash_team_event['members'].each do |task_member|
-	    	@task_members << getMemberById(@id_team, @id_task, task_member)
+	    	@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
 	    end
   end
 
@@ -1022,7 +1022,7 @@ def edit
     @addresses = @addresses.uniq
    		@task_members = Array.new
    		@flash_team_event['members'].each do |task_member|
-   			@task_members << getMemberById(@id_team, @id_task, task_member)
+   			@task_members << FlashTeam.getMemberById(@id_team, @id_task, task_member)
    		end
    		@uniq = ""
    		@task_members.each do |task_member|
