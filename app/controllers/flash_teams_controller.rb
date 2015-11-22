@@ -94,6 +94,19 @@ class FlashTeamsController < ApplicationController
     end
   end
 
+  def merge
+    fork_team = FlashTeam.find(params[:id])
+    if fork_team.fork?
+      origin_team = fork_team.origin
+      origin_team.merge_fork_team(fork_team)
+      flash.now[:notice] = "Fork team successfully merged."
+      redirect_to edit_flash_team_url(origin_team)
+    else
+      flash.now[:error] = "Not a fork."
+      redirect_to edit_flash_team_url(fork_team)
+    end
+  end
+
   def pull
     @fork = FlashTeam.find(params[:id])
 

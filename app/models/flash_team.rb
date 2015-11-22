@@ -26,7 +26,7 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def stored_json
-    @data ||= JSON.parse(self.status.presence || default_json).with_indifferent_access
+    @stored_json ||= JSON.parse(self.status.presence || default_json).with_indifferent_access
   end
 
   def default_json
@@ -47,16 +47,16 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def status_json
-    data = stored_json
-    data["flash_teams_json"]['diff'] = {
+    @status_json ||= stored_json
+    @status_json["flash_teams_json"]['diff'] = {
       changed_events_ids: self.changed_events_ids,
       added_events_ids: self.added_events_ids,
       removed_events_ids: self.removed_events_ids,
       removed_events: self.removed_events
-    } if data["flash_teams_json"].present?
+    } if @status_json["flash_teams_json"].present?
 
-    data["flash_teams_json"]['fork'] = true if data["flash_teams_json"].present? && self.fork?
-    data
+    @status_json["flash_teams_json"]['fork'] = true if @status_json["flash_teams_json"].present? && self.fork?
+    @status_json
   end
 
   def flash_teams_json
@@ -68,7 +68,7 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def events_ids
-    self.events.map{|e| e['id']}
+    self.events.map{|e| e['id'] rescue nil}
   end
 
   def fork?
@@ -113,7 +113,7 @@ class FlashTeam < ActiveRecord::Base
     source_event = self.source_events.detect{|ev| ev['id']}
     return {'status' => 'new'} if event.present? && source_event.nil?
     return {'status' => 'deleted'} if event.nil?
-    (event - source_event).merge({'status' => 'changed'})
+    Hash(event.to_a - source_event.to_a).merge({'status' => 'changed'})
   end
 
   # should be callde for origin team
@@ -127,12 +127,14 @@ class FlashTeam < ActiveRecord::Base
   # should be callde for origin team
   def merge_fork_team(team)
     #add new events
-    this.events << team.added_events
+    team.added_events.each{|new_ev| self.events << new_ev if !self.events_ids.include? new_ev['id']}
     #remove deleted events
-    this.events.delete_if{|ev| removed_events_ids.include? ev['id'] }
+    self.events.delete_if{|ev| team.removed_events_ids.include? ev['id'] }
     #call apply_changes for changed events
-    changed_events_ids.each{|ev_id| apply_changes(id, team.changes_for(id))}
+    team.changed_events_ids.each{|ev_id| apply_changes(id, team.changes_for(id))}
     #save modified status json
+    self.status = self.status_json.to_json
+    self.save
   end
 
   def added_events_ids

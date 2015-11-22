@@ -24,7 +24,7 @@
           <%= link_to 'Pull Request', pull_flash_team_path(@flash_team), class: 'btn btn-primary' if @flash_team.fork? %>
           <%= link_to 'Show Diff', edit_flash_team_path(@flash_team, show_diff: true), class: 'btn btn-warning' if @flash_team.fork? && !params[:show_diff] %>
           <%= link_to 'Hide Diff', edit_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
-          <%= link_to 'Merge Pull Request', edit_flash_team_path(@flash_team.origin), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
+          <%= link_to 'Merge Pull Request', merge_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
 	        <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
 	     </div>
 
