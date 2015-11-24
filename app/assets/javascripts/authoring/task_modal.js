@@ -1,7 +1,6 @@
-
 function showTaskOverview(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
-	var eventObj = flashTeamsJSON["events"][task_id];
+	var eventObj = currentTeam.flash_teams_json["events"][task_id];
 	var title = eventObj["title"];
 
 	//uniq_u is null for author, we use this to decide whether to show the edit link next to project overview
@@ -80,7 +79,7 @@ function showTaskOverview(groupNum){
         $("#duplicate-task").css('display','none');
     }
 
-    if(currentTeam.inProgress() == true && flashTeamsJSON["paused"]==true && (uniq_u == "" )){
+    if(currentTeam.inProgress() == true && currentTeam.flash_teams_json["paused"]==true && (uniq_u == "" )){
         $("#duplicate-task").css('display','');
     }
 
@@ -90,7 +89,7 @@ function showTaskOverview(groupNum){
         $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
 		$("#edit-save-task").html('Edit');
 	} //only the author, PC OR CLIENT (as of 8/21/2015) can edit tasks if the projec is in progress. The delayed, completed, and started tasks cannot be edited.
-    else if(currentTeam.inProgress() == true && flashTeamsJSON["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
+    else if(currentTeam.inProgress() == true && currentTeam.flash_teams_json["paused"]==true && (uniq_u == "" || memberType == "pc" || memberType == "client") && (eventObj.status != "started" && eventObj.status != "delayed" && eventObj.status != "completed")) {
             $("#edit-save-task").css('display', '');
             //$("#duplicate-task").css('display','');
             $("#edit-save-task").attr('onclick', 'editTaskOverview(true,'+groupNum+')');
@@ -101,17 +100,17 @@ function showTaskOverview(groupNum){
 		$("#delete").css('display','none');
         //$("#duplicate-task").css('display','none');
 	}
-    currentTeam.logActivity("showTaskOverview(groupNum)",'Show Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("showTaskOverview(groupNum)",'Show Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 }
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideTaskOverview(groupNum){
-    currentTeam.logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("logHideTaskOverview(groupNum)",'Hide Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 }
 
 function showShortTaskOverview(groupNum){
         var task_id = getEventJSONIndex(groupNum);
-        var eventObj = flashTeamsJSON["events"][task_id];
+        var eventObj = currentTeam.flash_teams_json["events"][task_id];
         var title = eventObj["title"];
 
         //modal label
@@ -133,31 +132,31 @@ function showShortTaskOverview(groupNum){
         $('#task_modal2').modal('show');
 
 
-        currentTeam.logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("showShortTaskOverview(groupNum)",'Show Short Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 
 
 }
 
 function logShortTaskOverviewGDriveBtnClick(groupNum){
-        currentTeam.logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 }
 
 function logTaskOverviewGDriveBtnClick(groupNum){
-        currentTeam.logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+        currentTeam.logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 }
 
 
 //logs when the user clicks the x on the top right of the task modal to hide it
 function logHideShortTaskOverview(groupNum){
-    currentTeam.logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("logHideShortTaskOverview(groupNum)",'Hide Short Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 }
 
 
 
 function editTaskOverview(popover,groupNum){
-	currentTeam.logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+	currentTeam.logActivity("editTaskOverview(popover,groupNum)",'Edit Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
     var task_id = getEventJSONIndex(groupNum);
-	var eventObj = flashTeamsJSON["events"][task_id];
+	var eventObj = currentTeam.flash_teams_json["events"][task_id];
 	var title = eventObj["title"];
 
     var eventFormTitle = '';
@@ -242,7 +241,7 @@ function editTaskOverview(popover,groupNum){
 
 function getTaskOverviewForm(groupNum){
     var task_id = getEventJSONIndex(groupNum);
-	var eventObj = flashTeamsJSON["events"][task_id];
+	var eventObj = currentTeam.flash_teams_json["events"][task_id];
 	var totalMinutes = eventObj["duration"];
     var groupNum = eventObj["id"];
     var title = eventObj["title"];
@@ -333,7 +332,7 @@ function getTaskOverviewForm(groupNum){
 
 function getTaskOverviewContent(groupNum){
 	var task_id = getEventJSONIndex(groupNum);
-	var ev = flashTeamsJSON["events"][task_id];
+	var ev = currentTeam.flash_teams_json["events"][task_id];
 
 	var hrs = Math.floor(ev.duration/60);
     var mins = ev.duration % 60;
@@ -417,7 +416,7 @@ function getTaskOverviewContent(groupNum){
         content += '<hr /><h5>Review the following tasks and deliverables, which are important for your task: </h5>';
         for(var i=0; i<handoff_inputs.length; i++){
                 input_ev_id = handoff_inputs[i];
-                var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+                var input_ev = currentTeam.flash_teams_json["events"][getEventJSONIndex(input_ev_id)];
                 content += '<p style="padding-top: 5px">';
                 if(input_ev['outputs'].length ==0){
                     content+= '<b>prior task results</b>';
@@ -441,7 +440,7 @@ function getTaskOverviewContent(groupNum){
         content += '<hr /><h5>As you work on your deliverables, you should collaborate with the team members working on the following tasks and deliverables: </h5>';
         for(var i=0; i<collab_inputs.length; i++){
                 input_ev_id = collab_inputs[i];
-                var input_ev = flashTeamsJSON["events"][getEventJSONIndex(input_ev_id)];
+                var input_ev = currentTeam.flash_teams_json["events"][getEventJSONIndex(input_ev_id)];
                 content += '<p style="padding-top: 5px">';
                 if(input_ev['outputs'].length ==0){
                     content+= '<b>collaboration</b>';
@@ -486,10 +485,10 @@ function getTaskOverviewContent(groupNum){
         var dri_id = parseInt (ev.dri);
         var mem = null;
 
-        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
+        for (var i = 0; i<currentTeam.flash_teams_json["members"].length; i++){
 
-            if(flashTeamsJSON["members"][i].id == dri_id){
-                mem = flashTeamsJSON["members"][i].role;
+            if(currentTeam.flash_teams_json["members"][i].id == dri_id){
+                mem = currentTeam.flash_teams_json["members"][i].role;
                 break;
             }
         }
@@ -505,10 +504,10 @@ function getTaskOverviewContent(groupNum){
 	        var pc_id = parseInt (ev.pc);
 	        var mem = null;
 
-	        for (var i = 0; i<flashTeamsJSON["members"].length; i++){
+	        for (var i = 0; i<currentTeam.flash_teams_json["members"].length; i++){
 
-	            if(flashTeamsJSON["members"][i].id == pc_id){
-	                mem = flashTeamsJSON["members"][i].role;
+	            if(currentTeam.flash_teams_json["members"][i].id == pc_id){
+	                mem = currentTeam.flash_teams_json["members"][i].role;
 	                break;
 	            }
 	        }
@@ -563,13 +562,13 @@ function getTaskOverviewContent(groupNum){
 
 function logHandoffInputClick(groupNum, inputEvId){
     //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
-    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, flashTeamsJSON["events"]);
+    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, currentTeam.flash_teams_json["events"]);
 
 }
 
 function logCollabInputClick(groupNum, inputEvId){
     //console.log('Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId);
-    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, flashTeamsJSON["events"]);
+    currentTeam.logActivity("logHandoffClick(groupNum, inputEvId)",'Clicked on Input Link on Task Modal - Task Modal Event groupNum: ' + groupNum + ' Id of input event clicked on: ' + inputEvId, currentTeam.flash_teams_json["events"]);
 
 }
 
@@ -600,7 +599,7 @@ function formatModalTime(timeInMins){
 function createOptionsButton(groupNum){
 
     var ev_index = getEventJSONIndex(groupNum);
-    var ev_title = flashTeamsJSON["events"][ev_index].title;
+    var ev_title = currentTeam.flash_teams_json["events"][ev_index].title;
 
     var optionsBtn = '<div class="btn-group dropup">'
                 + '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">'
@@ -609,9 +608,9 @@ function createOptionsButton(groupNum){
                 + '</a>'
                 + '<ul class="dropdown-menu">'
                     + '<li><a tabindex="-1" href="#" id="duplicate-task" onclick="duplicateEvent('+ groupNum +', true)">Duplicate</a></li>';
-           if(flashTeamsJSON.folder != undefined){
+           if(currentTeam.flash_teams_json.folder != undefined){
                 optionsBtn += '<li><a tabindex="-1" href="#" id="new-gdrive-proj-folder" '
-                    + 'onclick="createTaskFolder(\'' + ev_title + ' - ' + groupNum + '\', ' + ev_index + ', \'' + flashTeamsJSON.folder[0] + '\')"'
+                    + 'onclick="createTaskFolder(\'' + ev_title + ' - ' + groupNum + '\', ' + ev_index + ', \'' + currentTeam.flash_teams_json.folder[0] + '\')"'
                     + '>New GDrive Folder</a></li>';
             }
 
@@ -672,7 +671,7 @@ function saveTaskOverview(groupNum){
     ev.duration = (newHours * 60) + newMin;
 
     // Updates the remaining time and timer for tasks that are paused and edited when team is in progress via edit mode
-    if(currentTeam.inProgress() == true && flashTeamsJSON["paused"] == true && ev.status == "paused"){
+    if(currentTeam.inProgress() == true && currentTeam.flash_teams_json["paused"] == true && ev.status == "paused"){
         var newRemainingTime = (ev.duration - originalDuration) + originalRemainingTime;
         ev.timer = newRemainingTime;
         ev.latest_remaining_time = newRemainingTime;
@@ -736,10 +735,10 @@ function saveTaskOverview(groupNum){
     //everytime a modal is saved all_inputs of all events on the timeline are updated
     update_all_inputs_string();
 
-    flashTeamsJSON['local_update'] = new Date().getTime();
+    currentTeam.flash_teams_json['local_update'] = new Date().getTime();
     drawEvent(ev);
 
-    currentTeam.logActivity("saveTaskOverview(groupNum)",'Save Task Overview', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+    currentTeam.logActivity("saveTaskOverview(groupNum)",'Save Task Overview', currentTeam.flash_teams_json["events"][getEventJSONIndex(groupNum)]);
 
     updateStatus();
 
@@ -749,7 +748,7 @@ function saveTaskOverview(groupNum){
 
 //this function updates all the inputs of all tasks based on previous tasks' outputs
 function update_all_inputs_string(){
-    var events = flashTeamsJSON["events"];
+    var events = currentTeam.flash_teams_json["events"];
     var all_inputs_array=[];
 
     for (var i =0; i<events.length; i++){
@@ -762,7 +761,7 @@ function update_all_inputs_string(){
             else
                 all_inputs_string +=', '+ String(all_inputs_array[j][1]);
 
-            flashTeamsJSON["events"][i]["all_inputs"] = all_inputs_string;
+            currentTeam.flash_teams_json["events"][i]["all_inputs"] = all_inputs_string;
         }
 
     }
@@ -772,7 +771,7 @@ function update_all_inputs_string(){
 // getAllInputs returns: [[task_id, input]]
 function getAllInputs(groupNum){
    var task_id = getEventJSONIndex(groupNum);
-   var ev = flashTeamsJSON["events"][task_id];
+   var ev = currentTeam.flash_teams_json["events"][task_id];
 
    var events_before_ids = events_immediately_before(groupNum);
    var collaboration_ids = events_in_collaboration(groupNum);
@@ -789,7 +788,7 @@ function getAllInputs(groupNum){
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
 
-            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            var ev_before = currentTeam.flash_teams_json["events"][getEventJSONIndex(events_before_ids[i])];
             if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
                 continue;
 
@@ -804,7 +803,7 @@ function getAllInputs(groupNum){
     if(collaboration_ids.length!=0){
         for(var i=0;i<collaboration_ids.length;i++){
 
-            var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
+            var ev_collab = currentTeam.flash_teams_json["events"][getEventJSONIndex(collaboration_ids[i])];
             if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
                 continue;
 
@@ -822,11 +821,11 @@ function getAllInputs(groupNum){
 
 //this function returns all of a task's inputs that are only from interactions (e.g., not inputs added manually to a task)
 function get_int_inputs_array(groupNum, type){
-    //var events = flashTeamsJSON["events"];
+    //var events = currentTeam.flash_teams_json["events"];
     var int_inputs_array=[];
 
     var task_id = getEventJSONIndex(groupNum);
-    var eventObj = flashTeamsJSON["events"][task_id];
+    var eventObj = currentTeam.flash_teams_json["events"][task_id];
 
     //var all_inputs_array = getAllInputs(groupNum);
 
@@ -851,7 +850,7 @@ function get_int_inputs_array(groupNum, type){
 // getHandoffInputs returns: [[task_id, input]]
 function getCollabInputs(groupNum){
    var task_id = getEventJSONIndex(groupNum);
-   var ev = flashTeamsJSON["events"][task_id];
+   var ev = currentTeam.flash_teams_json["events"][task_id];
 
    var collaboration_ids = events_in_collaboration(groupNum);
    var collab_inputs=[];
@@ -860,7 +859,7 @@ function getCollabInputs(groupNum){
     if(collaboration_ids.length!=0){
         for(var i=0;i<collaboration_ids.length;i++){
 
-            var ev_collab = flashTeamsJSON["events"][getEventJSONIndex(collaboration_ids[i])];
+            var ev_collab = currentTeam.flash_teams_json["events"][getEventJSONIndex(collaboration_ids[i])];
             if(ev_collab["outputs"] =="" || ev_collab["outputs"] == undefined)
                 continue;
 
@@ -880,7 +879,7 @@ function getCollabInputs(groupNum){
 // Note: this only returns inputs from handoffs but in some cases you also want to include additional task inputs that were added
 function getHandoffInputs(groupNum){
    var task_id = getEventJSONIndex(groupNum);
-   var ev = flashTeamsJSON["events"][task_id];
+   var ev = currentTeam.flash_teams_json["events"][task_id];
 
    var events_before_ids = events_immediately_before(groupNum);
    var handoff_inputs=[];
@@ -888,7 +887,7 @@ function getHandoffInputs(groupNum){
     if(events_before_ids.length!=0){
         for(var i=0;i<events_before_ids.length;i++){
 
-            var ev_before = flashTeamsJSON["events"][getEventJSONIndex(events_before_ids[i])];
+            var ev_before = currentTeam.flash_teams_json["events"][getEventJSONIndex(events_before_ids[i])];
             if(ev_before["outputs"] =="" || ev_before["outputs"] == undefined)
                 continue;
 

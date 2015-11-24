@@ -109,11 +109,11 @@ class FlashTeam < ActiveRecord::Base
 
   # should be callde for the FORK team
   def changes_for(event_id)
-    event = self.events.detect{|ev| ev['id']}
-    source_event = self.source_events.detect{|ev| ev['id']}
+    event = self.events.detect{|ev| ev['id'] == event_id}
+    source_event = self.source_events.detect{|ev| ev['id'] == event_id}
     return {'status' => 'new'} if event.present? && source_event.nil?
     return {'status' => 'deleted'} if event.nil?
-    Hash(event.to_a - source_event.to_a).merge({'status' => 'changed'})
+    (event.to_a - source_event.to_a).to_h.merge({'status' => 'changed'})
   end
 
   # should be callde for origin team
@@ -121,7 +121,7 @@ class FlashTeam < ActiveRecord::Base
     event = self.events.detect{|ev| ev['id'] == ev_id}
     return if event.nil?
     return if changes.delete('status') != 'changed'
-    event.merge changes
+    event.merge! changes
   end
 
   # should be callde for origin team
@@ -131,7 +131,7 @@ class FlashTeam < ActiveRecord::Base
     #remove deleted events
     self.events.delete_if{|ev| team.removed_events_ids.include? ev['id'] }
     #call apply_changes for changed events
-    team.changed_events_ids.each{|ev_id| apply_changes(id, team.changes_for(id))}
+    team.changed_events_ids.each{|ev_id| apply_changes(ev_id, team.changes_for(ev_id))}
     #save modified status json
     self.status = self.status_json.to_json
     self.save
