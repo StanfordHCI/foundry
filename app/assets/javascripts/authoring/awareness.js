@@ -12,7 +12,6 @@ var increment = parseFloat(50)/parseFloat(numIntervals);
 var curr_x_standard = 0;
 
 //not updated in the current version
-var remaining_tasks = [];
 
 var live_tasks = [];
 var delayed_tasks = [];
@@ -202,13 +201,6 @@ function save_tasksAfter_json(){
 //Asks user to confirm that they want to end the team
 $("#flashTeamEndBtn").click(function(){
     var bodyText = document.getElementById("confirmActionText");
-    // if ((live_tasks.length == 0) && (remaining_tasks.length == 0) && (delayed_tasks.length == 0)) {
-    //     bodyText.innerHTML = "Are you sure you want to end " + flashTeamsJSON["title"] + "?";
-    // } else {
-    //     //console.log("ENDED TEAM EARLY");
-    //     //var progressRemaining = Math.round(100 - curr_status_width);
-    //     bodyText.innerHTML = flashTeamsJSON["title"] + " is still in progress!  Are you sure you want to end the team?";
-    // }
     var confirmEndTeamBtn = document.getElementById("confirmButton");
     confirmEndTeamBtn.innerHTML = "End the team";
     $("#confirmButton").attr("class","btn btn-danger");
@@ -245,9 +237,12 @@ var chat_name;
 var presname; // name of user shown in the presence box
 var currentStatus; //the status of the user shown in the presence box
 
-if(flashTeamsJSON) {
-    entryManager = new EntryManager(flashTeamsJSON);
+/* moved to FlashTeam#renderJSON
+
+if(currentTeam.flash_teams_json) {
+    entryManager = new EntryManager(currentTeam.flash_teams_json);
 }
+*/
 
 /* moved to FlashTeam class
 function renderFlashTeamsJSON(data, firstTime)
@@ -620,8 +615,6 @@ var computeLiveAndRemainingTasks = function(){
     var curr_x = cursor.attr("x1");
     var curr_new_x = parseFloat(curr_x) + increment;
 
-    var remaining_tasks = [];
-    var live_tasks = [];
     for (var i=0;i<currentTeam.task_groups.length;i++){
         var data = currentTeam.task_groups[i];
         var groupNum = data.groupNum;
@@ -633,13 +626,13 @@ var computeLiveAndRemainingTasks = function(){
 
 
         if(curr_new_x >= start_x && curr_new_x <= end_x && drawn_blue_tasks.indexOf(groupNum) == -1){
-            live_tasks.push(groupNum);
+            currentTeam.live_tasks.push(groupNum);
         } else if(curr_new_x < start_x) {
-            remaining_tasks.push(groupNum);
+            currentTeam.remaining_tasks.push(groupNum);
         }
     }
 
-    return {"live":live_tasks, "remaining":remaining_tasks};
+    return {"live":currentTeam.live_tasks, "remaining":currentTeam.remaining_tasks};
 };
 
 
@@ -903,7 +896,7 @@ var moveTasksLeft = function(tasks, amount){
 };
 
 var moveRemainingTasksRight = function(amount){
-    moveTasksRight(remaining_tasks, amount, false);
+    moveTasksRight(currentTeam.remaining_tasks, amount, false);
 };
 
 var moveRemainingTasksLeft = function(amount){
@@ -919,8 +912,8 @@ var moveRemainingTasksLeft = function(amount){
         }
     }
     to_move = [];
-    for (var i=0;i<remaining_tasks.length;i++){
-        var evNum = remaining_tasks[i];
+    for (var i=0;i<currentTeam.remaining_tasks.length;i++){
+        var evNum = currentTeam.remaining_tasks[i];
         var ev = flashTeamsJSON["events"][getEventJSONIndex(evNum)]
         var start_x = ev.x;
         var width = getWidth(ev);

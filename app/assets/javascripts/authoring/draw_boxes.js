@@ -42,7 +42,7 @@ var drawDelayedTasks = function(){
 
         if (completed) continue;
 
-        var id_remaining = remaining_tasks.indexOf(groupNum)
+        var id_remaining = currentTeam.remaining_tasks.indexOf(groupNum)
         if (id_remaining != -1) continue;
 
         var red_width = drawRedBox(ev, task_g, true);
@@ -69,9 +69,9 @@ var drawDelayedTasks = function(){
         allRanges.push([task_end, red_end]);
     }
 
-    var tasks_tmp = MoveLiveToRemaining(live_tasks,remaining_tasks);
+    var tasks_tmp = MoveLiveToRemaining(currentTeam.live_tasks,currentTeam.remaining_tasks);
     live_tasks = tasks_tmp["live"];
-    remaining_tasks = tasks_tmp["remaining"];
+    currentTeam.remaining_tasks = tasks_tmp["remaining"];
 
 
     if (tasks_after != null){

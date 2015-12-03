@@ -75,8 +75,7 @@ function startTask(groupNum) {
      if (!checkEventsBeforeCompleted(groupNum))
        return;
 
-    var indexOfJSON = getEventJSONIndex(groupNum);
-    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    var eventObj = getEventFromId(groupNum);
     eventObj.status = "started";
     eventObj.timer = eventObj.duration;
     eventObj.task_startBtn_time = (new Date).getTime();
@@ -86,9 +85,9 @@ function startTask(groupNum) {
 	//alert(eventObj.latest_remaining_time);
 
     //remove task from remaining and add to live task array
-    var idx = remaining_tasks.indexOf(groupNum);
+    var idx = currentTeam.remaining_tasks.indexOf(groupNum);
     if (idx != -1) { // delayed task
-        remaining_tasks.splice(idx, 1);
+        currentTeam.remaining_tasks.splice(idx, 1);
     }
     live_tasks.push(groupNum);
 

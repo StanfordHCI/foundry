@@ -38,6 +38,8 @@ class FlashTeam < ActiveRecord::Base
         members: [],
         interactions: []
       },
+      remaining_tasks: [],
+      delayed_tasks: [],
       drawn_blue_tasks: [],
       completed_red_tasks: [],
       live_tasks: [],

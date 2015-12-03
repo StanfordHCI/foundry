@@ -44,7 +44,7 @@ FlashTeam = function (data) {
     if(firstTime){
         this.renderChatbox();
     }
-
+    entryManager = new EntryManager(this.flash_teams_json);
     in_progress = this.flash_team_in_progress;
     flashTeamsJSON = this.flash_teams_json;
 
@@ -295,6 +295,7 @@ FlashTeam = function (data) {
     localStatus.drawn_blue_tasks = this.drawn_blue_tasks;
     localStatus.completed_red_tasks = this.completed_red_tasks;
     localStatus.flash_teams_json = flashTeamsJSON;
+    localStatus.flash_team_in_progress = this.flash_team_in_progress
 
     //delayed_task_time is required for sending notification emails on delay
     localStatus.delayed_tasks_time = delayed_tasks_time;
