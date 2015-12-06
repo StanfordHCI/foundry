@@ -44,12 +44,11 @@ FlashTeam = function (data) {
     if(firstTime){
         this.renderChatbox();
     }
-    entryManager = new EntryManager(this.flash_teams_json);
     in_progress = this.flash_team_in_progress;
     flashTeamsJSON = this.flash_teams_json;
 
     // initialize the entry manager after flashTeamsJSON has been loaded
-    window.entryManager = new window.EntryManager(flashTeamsJSON);
+    window.entryManager = new window.EntryManager(this.flash_teams_json);
 
     //renderChatbox();
     setCurrentMember();
@@ -228,6 +227,8 @@ FlashTeam = function (data) {
 
     var self = this;
     self.json_transaction_id++;
+    this.flash_teams_json.folders = window.entryManager.folders
+    this.flash_teams_json.members = window.entryManager.members
     var localStatus = self.constructStatusObj();
 
     //if flashTeam hasn't been started yet, update the original status in the db
