@@ -3,7 +3,6 @@ class FlashTeam < ActiveRecord::Base
   validates :author, presence: true
 
   has_many :tasks
-  has_many :members
   belongs_to :origin, class_name: 'FlashTeam'
   has_many :forks, class_name: 'FlashTeam', foreign_key: :origin_id
   belongs_to :user
@@ -73,6 +72,14 @@ class FlashTeam < ActiveRecord::Base
     self.events.map{|e| e['id'] rescue nil}
   end
 
+  def members
+    flash_teams_json.try :fetch, 'members', []
+  end
+
+  def members_ids
+    self.members.map{|m| m['id'] rescue nil}
+  end
+
   def fork?
     origin.present?
   end
@@ -87,6 +94,14 @@ class FlashTeam < ActiveRecord::Base
 
   def source_events_ids
     self.source_events.map{|e| e['id']}
+  end
+
+  def source_members
+    self.source_data['flash_teams_json']['members'] rescue []
+  end
+
+  def source_members_ids
+    self.source_members.map{|m| m['id']}
   end
 
   def changed_events_ids
@@ -134,6 +149,8 @@ class FlashTeam < ActiveRecord::Base
     self.events.delete_if{|ev| team.removed_events_ids.include? ev['id'] }
     #call apply_changes for changed events
     team.changed_events_ids.each{|ev_id| apply_changes(ev_id, team.changes_for(ev_id))}
+    #merge members
+    team.added_members.each{|new_m| self.members << new_m if !self.members_ids.include? new_m['id']}
     #save modified status json
     self.status = self.status_json.to_json
     self.save
@@ -144,8 +161,17 @@ class FlashTeam < ActiveRecord::Base
     self.events_ids - source_events_ids
   end
 
+  def added_members_ids
+    return [] if source_json.blank? || self.members.blank?
+    self.members_ids - source_members_ids
+  end
+
   def added_events
     self.events.select{|ev| added_events_ids.include? ev['id']}
+  end
+
+  def added_members
+    self.members.select{|m| added_members_ids.include? m['id']}
   end
 
   def removed_events_ids
