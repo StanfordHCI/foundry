@@ -1,6 +1,6 @@
 /* eventDraw.js
  * ---------------------------------------------
- * All functions that are involved in physically drawing the 
+ * All functions that are involved in physically drawing the
  * events on the timeline
  * See events.js for helpers
  * See eventDetails.js for detailed piece drawing (i.e., clock icon, duration)
@@ -11,7 +11,7 @@ function drawEvent(eventObj) {
     //release thread
     setTimeout(function(){
         // Start off by redrawing the timeline if we need to, so the events
-        
+
         // subtract two so there's always at least one empty row
         // (event.row is 0 indexed)
 
@@ -37,15 +37,36 @@ function drawEvent(eventObj) {
     }, 0)
 };
 
+function drawDeletedEvent(eventObj) {
+    //release thread
+    setTimeout(function(){
+        // Start off by redrawing the timeline if we need to, so the events
+
+        // subtract two so there's always at least one empty row
+        // (event.row is 0 indexed)
+
+        if(eventObj.row >= window._foundry.timeline.numRows - 2) {
+          window._foundry.timeline.updateNumRows(eventObj.row + 2);
+        }
+
+        drawG(eventObj);
+
+        drawMainRect(eventObj);
+        drawTop(eventObj);
+        drawShade(eventObj);
+    }, 0)
+};
+
+
 //
 function drawG(eventObj) {
     var x = _foundry.timeline.stepWidth *
             (eventObj.startTime/_foundry.timeline.stepInterval);
     var y = _foundry.timeline.rowHeight * eventObj.row;
-    
+
     var xOffset = window._foundry.events.marginLeft;
     var yOffset = window._foundry.events.marginTop;
-    
+
     var groupNum = eventObj["id"];
 
     var idx = getDataIndexFromGroupNum(groupNum);
@@ -59,21 +80,21 @@ function drawG(eventObj) {
         task_groups[idx].x = x + xOffset;
         task_groups[idx].y = y + yOffset;
     }
-    
+
     var showHandles = function(d) {
         // same size as in leftResize and rightResize functions
-        if(isUser || in_progress) {
+        if(isUser || currentTeam.inProgress()) {
             return;
         }
-        
+
         var x = d3.mouse(this)[0];
         var eventX = d.x;
 
         var left = d3.select(this).selectAll(".left-handle");
         var right = d3.select(this).selectAll(".right-handle");
 
-        var width = getWidth(getEventFromId(groupNum));
-        
+        var width = getWidth(eventObj);
+
         if(x < eventX + width/2) {
             // show the left and hide the right
             left.style({display: ""})
@@ -84,7 +105,7 @@ function drawG(eventObj) {
             left.style({display: "none"});
         }
     };
-    
+
     // add group to timeline, based on the data object
     window._foundry.timeline.eventLayer.selectAll("g.event")
         .data(task_groups, function(d){ return d.groupNum; })
@@ -106,7 +127,7 @@ function drawMemberTabs(eventObj) {
     var groupNum = eventObj["id"];
     var members = eventObj.members;
     var task_g = getTaskGFromGroupNum(groupNum);
-    
+
     task_g.selectAll(".mem_tab").remove();
     var start = 4;
     for(var i = 0; i < members.length; i++) {
@@ -116,14 +137,14 @@ function drawMemberTabs(eventObj) {
         if(memberTab.empty()) {
             memberTab = task_g.append("path");
         }
-        
+
         // coordinates for drawing the tab shape
         var shapeData = [
             {x: 0, y: 0}, {x: 24, y: 0},
             {x: 24, y: 11}, {x: 7, y: 11},
             {x: 0, y: 0}
         ];
-        
+
         var xOffset = 4 + i * 16;
         var tabPathFn = function(line, data) {
             return d3.svg.line()
@@ -131,7 +152,7 @@ function drawMemberTabs(eventObj) {
                 .y(function(d) {return data.y + events.bodyHeight + d.y;})
                 .interpolate("linear")(line);
         };
-        
+
         var attrs = {
             id: "mem_tab_" + memberId,
             class: "mem_tab",
@@ -140,18 +161,18 @@ function drawMemberTabs(eventObj) {
             height: 11,
             d: function(d) {return tabPathFn(shapeData, d)},
             fill: member.color,
-            
+
             "data-toggle": "tooltip",
             "data-placement": "bottom",
             "data-container": "body",
             "data-animation": false,
             title: member.role
         }
-        
+
         for(var key in attrs) {
             memberTab.attr(key, attrs[key]);
         }
-        
+
         $(".mem_tab[member-id='" + memberId + "']").each(function() {
           $(this).tooltip()
         });
@@ -161,12 +182,12 @@ function drawMemberTabs(eventObj) {
 //Draw main rectangle of the event block
 function drawMainRect(eventObj) {
     var events = window._foundry.events;
-    
+
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
-    
+
     var width = getWidth(eventObj) - 2 * events.marginLeft;
-    
+
     var rect = task_g.selectAll("#rect_" + groupNum);
     if(rect.empty()) {
         rect = task_g.append("rect")
@@ -179,7 +200,7 @@ function drawMainRect(eventObj) {
     if(boxShadow.empty()) {
         addBoxShadowFilter(task_g, "box-shadow");
     }
-    
+
     // call drag on both of these
     rect
         .attr("id", function(d) { return "rect_" + d.groupNum; })
@@ -190,6 +211,8 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y})
         .attr("fill", function(d) {
+            if(showDiff() && currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_COLOR;
+            if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_COLOR;
             switch(eventObj.status) {
                 case "not_started":
                     if(events.isWorkerTask(eventObj)) return WORKER_TASK_NOT_START_COLOR;
@@ -209,13 +232,13 @@ function drawMainRect(eventObj) {
         .call(drag)//;
 
         //On mouseover, lower the opacity of the event
-        .on("mouseover", function() { 
+        .on("mouseover", function() {
             if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", .6);
             else d3.select(this).style("fill-opacity", .4);
         })
 
         //On mouseout, return event to default styling
-        .on("mouseout", function() { 
+        .on("mouseout", function() {
             if (isWorkerTask(eventObj) || uniq == "") d3.select(this).style("fill-opacity", 1);
             else d3.select(this).style("fill-opacity", .6);
         });
@@ -229,7 +252,7 @@ function drawMainRect(eventObj) {
             "stroke-width": "1",
         });
     }
-    
+
     var borderBottom = task_g.selectAll(".border-bottom");
     if(borderBottom.empty()) {
         borderBottom = task_g.append("rect");
@@ -241,6 +264,8 @@ function drawMainRect(eventObj) {
         .attr("x", function(d) {return d.x})
         .attr("y", function(d) {return d.y + window._foundry.events.bodyHeight - 2})
         .attr("fill", function(d) {
+            if(showDiff() && currentTeam.taskChanged(eventObj.id)) return TASK_CHANGED_BORDER_COLOR;
+            if(currentTeam.taskDeleted(eventObj.id)) return TASK_DELETED_BORDER_COLOR;
             switch(eventObj.status) {
                 case "not_started":
                     // if the task is for the currently logged in user
@@ -265,19 +290,19 @@ function drawMainRect(eventObj) {
 //
 function drawTop(eventObj) {
     var events = window._foundry.events;
-    
+
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var width = getWidth(eventObj);
 
     // grab the main rectangle
     var rect = task_g.select("#rect_" + groupNum);
-    
+
     var titleSvg = addToTaskFromData(events.title, eventObj, task_g);
     titleSvg.call(drag);
     var durationSvg = addToTaskFromData(events.duration, eventObj, task_g);
     durationSvg.call(drag);
-    
+
     // special case, have to determine x2
     var lineSvg = addToTaskFromData(events.line, eventObj, task_g);
     lineSvg.attr("x2", function(d) {
@@ -285,7 +310,7 @@ function drawTop(eventObj) {
         return x1 + (getWidth(eventObj) - (2 * events.marginLeft) - (2 * (x1 - d.x)));
     })
     .call(drag);
-    
+
 }
 
 //
@@ -294,15 +319,15 @@ function drawBottom(eventObj) {
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
     var ev = getEventFromId(groupNum);
-    
+
     // icon for the number of members
     addToTaskFromData(events.numMembersIcon, eventObj, task_g);
-    
+
     // the number of members
     addToTaskFromData(events.numMembers, eventObj, task_g);
 
     // only show the config icon on the task if team is not in progress, if team is paused or if task is paused, completed or not started (e.g., not in progress)
-    if( !in_progress || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
+    if( !currentTeam.inProgress() || (flashTeamsJSON["paused"] == true)){ //&& (eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed"))){
         var configIcon = addToTaskFromData(events.configIcon, eventObj, task_g);
         configIcon.on("click", onConfigClick);
     }
@@ -320,30 +345,30 @@ function drawBottom(eventObj) {
         // }
 
         if(ev.gdrive.length > 0){
-          if (in_progress || (!in_progress && current_user == "Author" && flashTeamsJSON["startTime"])){
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+          if (currentTeam.inProgress() || (!currentTeam.inProgress() && current_user == "Author" && flashTeamsJSON["startTime"])){
+            currentTeam.logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Success', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
             window.open(ev.gdrive[1]);
             } else{
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
-            alert("The flash team must be running for you to upload a file!");  
+            currentTeam.logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            alert("The flash team must be running for you to upload a file!");
             }
         }
         else{
-            logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
-            alert("The flash team must be running for you to upload a file!");  
+            currentTeam.logActivity("drawBottom(eventObj)",'Clicked gDrive Upload Icon - Error Alert', flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+            alert("The flash team must be running for you to upload a file!");
         }
     });
 
 
-    
+
     // collaboration icon
     var collabIconSvg = addToTaskFromData(events.collabIcon, eventObj, task_g);
     collabIconSvg.on("click", startWriteCollaboration);
-    
+
     // handoff icon
     var handoffIconSvg = addToTaskFromData(events.handoffIcon, eventObj, task_g);
     handoffIconSvg.on("click", startWriteHandoff);
-    
+
     var selector = ".event " + events.numMembersIcon.selector + ", " +
                    ".event " + events.uploadIcon.selector + ", " +
                    ".event " + events.collabIcon.selector + ", " +
@@ -358,10 +383,10 @@ function drawDragHandles(eventObj) {
     var events = window._foundry.events;
     var groupNum = eventObj["id"];
     var task_g = getTaskGFromGroupNum(groupNum);
-    
+
     var leftHandleSvg = addToTaskFromData(events.leftHandle, eventObj, task_g);
     leftHandleSvg.call(drag_left);
-    
+
     var rightHandleSvg = addToTaskFromData(events.rightHandle, eventObj, task_g);
     rightHandleSvg.call(drag_right);
 }
@@ -382,8 +407,8 @@ function drawEachHandoffForEvent(eventObj){
         else if (inter["event2"] == eventObj["id"]){
             ev1 = flashTeamsJSON["events"][getEventJSONIndex(inter["event1"])];
             ev2 = eventObj;
-        }  
-        
+        }
+
         //Reposition an existing handoff
         var x1 = handoffStart(ev1);
         var y1 = ev1.y + 50;
@@ -391,7 +416,7 @@ function drawEachHandoffForEvent(eventObj){
         var y2 = ev2.y + 50;
         $("#interaction_" + inter["id"])
             .attr("d", function(d) {
-                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2); 
+                return routeHandoffPath(ev1, ev2, x1, x2, y1, y2);
             })
             .attr("stroke", function() {
                 if (isWorkerInteraction(inter["id"])) return WORKER_TASK_NOT_START_BORDER_COLOR;
@@ -441,7 +466,7 @@ function drawEachCollabForEvent(eventObj){
                         .attr("y", firstTaskY-9) //AT hack to fix offset from tab members
                         .attr("height", taskDistance+9)
                         .attr("width", overlap);
-                }      
+                }
             }
         }
     }
@@ -456,7 +481,7 @@ function drawShade(eventObj) {
     var task_g = getTaskGFromGroupNum(groupNum);
 
     // draw shade on main rect of this event
-    //for each event it draws the shade. 
+    //for each event it draws the shade.
     //in doing so it takes its array of members FOR THAT EVENT
     //for each member for that event it gets their ID
     //if they are the CURRENT member
@@ -471,7 +496,7 @@ function drawShade(eventObj) {
 
             if(eventObj.status == 'completed') task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             else task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", 1);
-            
+
             //task_g.selectAll("#rect_" + groupNum).attr("fill-opacity", .6);
             break;
         }
@@ -480,25 +505,25 @@ function drawShade(eventObj) {
 
 //
 function drawTimer(eventObj){
-   
-    if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
+
+    if( currentTeam.inProgress() || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
         return;
     }
-    
+
     if( eventObj.status == "started" ){
-            
+
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
 
         var duration = eventObj["duration"];
-                
+
         var remaining_time = eventObj.latest_remaining_time - time_passed;
 
-        
+
         if(remaining_time < 0){
             eventObj.status = "delayed";
-             
+
             var groupNum = parseInt(eventObj["id"]);
-            
+
             var idx = live_tasks.indexOf(groupNum);
             if (idx != -1) { // delayed task
                 live_tasks.splice(idx, 1);

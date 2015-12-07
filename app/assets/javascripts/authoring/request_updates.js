@@ -1,7 +1,3 @@
-var author_name; // save name of flash team author
-var team_name; // saves flash team name
-var team_id; // saves flash team id
-
 //returns author name, team name and team ID
 $.fn.getTeamInfo = function(){
     var flash_team_id = $(this).val();
@@ -10,16 +6,9 @@ $.fn.getTeamInfo = function(){
        url: url,
        type: 'post'
     }).done(function(data){
-        saveFlashTeam(data)
+        currentTeam.updateInfo(data);
     });
 };
-
-var saveFlashTeam = function(data){
-    flashTeamsJSON["author"] = author_name = data["author_name"];
-    flashTeamsJSON["title"] = team_name = data["flash_team_name"];
-    flashTeamsJSON["id"] = team_id =   data["flash_team_id"];
-}
-
 
 $.fn.requestUpdates = function(firstTime) {
     var flash_team_id = $(this).val();
@@ -28,15 +17,17 @@ $.fn.requestUpdates = function(firstTime) {
         url: url,
         type: 'get'
     }).done(function(data){
-        if(data == null) return;
+        if(data == null || !data.flash_teams_json) return;
         loadedStatus = data;
 
-        if(flashTeamEndedorStarted() || flashTeamUpdated()) {
-            renderEverything(loadedStatus, firstTime);
-        } else {
-            //console.log('requestUpdates calling drawStartedEvents');
-            drawStartedEvents();
-        }
+        // if(flashTeamEndedorStarted() || flashTeamUpdated()) {
+        // renderEverything(loadedStatus, firstTime);
+        currentTeam = new FlashTeam(loadedStatus);
+        currentTeam.render();
+        $("#flash_team_id").getTeamInfo();
+        // } else {
+        //     drawStartedEvents();
+        // }
   });
 
 }
@@ -45,9 +36,13 @@ $.fn.subscribeToFlashTeamUpdate = function() {
     url = "/flash_team/" + $(this).val() + "/updated"
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
-          renderEverything(data, false);
+            loadedStatus = data;
+            oldTeam = currentTeam;
+            currentTeam = new FlashTeam(loadedStatus);
+            currentTeam.render(false);
+          // renderEverything(data, false);
           //console.log('subscribeToFlashTeamUpdate calling drawStartedEvents');
-          drawStartedEvents();
+          // drawStartedEvents();
         }
     });
 }
@@ -56,7 +51,8 @@ $.fn.subscribeToFlashTeamInfo = function() {
     url = "/flash_team/" + $(this).val() + "/info"
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
-            saveFlashTeam(data)
+            currentTeam.updateInfo(data);
+            // saveFlashTeam(data)
         }
     });
 }

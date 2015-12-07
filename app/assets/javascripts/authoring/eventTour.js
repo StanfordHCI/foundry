@@ -17,7 +17,7 @@ isWorkerTask = function(eventObj) {
 window.onload = function(){
 	//Initialize the tour
 
-	//Only initializes and runs the event, if there is no cookie already in the system 
+	//Only initializes and runs the event, if there is no cookie already in the system
 	//(ie. if a user has never been to the page before)
 	if (!$.cookie('first')){
 		pOverview = flashTeamsJSON['projectoverview'];
@@ -26,7 +26,7 @@ window.onload = function(){
 		if (!pOverview){
 			pOverview = "<b>This project has no project description</b>";
 		}
-		
+
 		//Iterates through events, and stops  once it finds one that belongs to the worker
 		for (i = 0; i < flashTeamsJSON["events"].length; i++){
 	    	if (isWorkerTask(flashTeamsJSON["events"][i])){
@@ -40,7 +40,7 @@ window.onload = function(){
 
 	    //If the worker is assigned an event, initializes the tour
 	    if (elemId){
-	    	logActivity("var eventTour = new Tour",'Start Worker Event Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+	    	currentTeam.logActivity("var eventTour = new Tour",'Start Worker Event Tour', flashTeamsJSON);
 
 		    var eventTour = new Tour({
 			autoscroll: true,
@@ -52,7 +52,7 @@ window.onload = function(){
 				+"We're here to help you get started!</br>"
 				+ "Read the Project Description below, and follow the next few steps"
 				+" in order to start your project."
-				+ "<hr></hr>" 
+				+ "<hr></hr>"
 				+ pOverview
 				+"</div>"
 				+"<nav class='popover-navigation'><div class='btn-group'>"
@@ -81,7 +81,7 @@ window.onload = function(){
 				+ " to read about your task, and start tracking work time. Note that time for "
 				+"reviewing the previous materials, etc. are accounted for as work time.</br></br>"
 				+ "Pay close attention to the task description, the 'inputs' "
-				+"(what other workers have handed off to you)" 
+				+"(what other workers have handed off to you)"
 				+ ", and the deliverables you are expected to create."
 				+"<nav class='popover-navigation'><div class='btn-group'>"
 				+"<button class='btn btn-default' class='event-tour-prev-btn' data-role='prev'>« Prev</button>"
@@ -91,18 +91,18 @@ window.onload = function(){
 				+"<div class='popover-content'></div>"
 			}
 			],
-			onStart: function (tour) {logActivity("eventTour onStart: function (tour)",'Started Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onEnd: function (tour) {logActivity("eventTour onEnd: function (tour)",'Ended Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onNext: function (tour) {logActivity("eventTour onNext: function (tour)",'Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
-  			onPrev: function (tour) {logActivity("eventTour onPrev: function (tour)",'Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
+				onStart: function (tour) {currentTeam.logActivity("eventTour onStart: function (tour)",'Started Worker Event Tour - step' + eventTour.getCurrentStep(), flashTeamsJSON);},
+  			onEnd: function (tour) {currentTeam.logActivity("eventTour onEnd: function (tour)",'Ended Worker Event Tour - step' + eventTour.getCurrentStep(), flashTeamsJSON);},
+  			onNext: function (tour) {currentTeam.logActivity("eventTour onNext: function (tour)",'Clicked Next on Worker Event Tour - step' + eventTour.getCurrentStep(), flashTeamsJSON);},
+  			onPrev: function (tour) {currentTeam.logActivity("eventTour onPrev: function (tour)",'Clicked Previous on Worker Event Tour - step' + eventTour.getCurrentStep(), flashTeamsJSON);},
 
 			});
 
 			//Runs the event tour
 			eventTour.init();
-		    eventTour.start(true);
-		    eventTour.goTo(0); //Always start tour at the first step
-		    $.cookie('first','1',{expires: 1});
+	    eventTour.start(true);
+	    eventTour.goTo(0); //Always start tour at the first step
+	    $.cookie('first','1',{expires: 1});
 		}
 	} else {
 		//console.log("YAY COOKIE");

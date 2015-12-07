@@ -150,5 +150,12 @@ class UserMailer < ActionMailer::Base
     mail(:to => ENV['DEFAULT_EMAIL'], :subject => 'Requested change to the ' + @flash_team_name + ' project')
   end
 
-  
+  def pull_request(fork_id, review_url)
+    @fork = FlashTeam.find(fork_id)
+    @original = @fork.origin
+    @fork_user = @fork.user
+    @user = @original.user
+    @review_url = review_url
+    mail(:to => ENV['DEFAULT_EMAIL'], :subject => "Pull reuest to the #{@original.name}[##{@original.id}] project")
+  end  
 end
