@@ -40,7 +40,7 @@ var authoringTour = new Tour({
 		title: "<b>Customize Each Role</b>",
 		html: true,
 		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
-		+"project coordinator, or a worker. You can also assign each role a category "
+		+"team lead, or a worker. You can also assign each role a category "
 		+"and specify the necessary skills for that role based on the oDesk platform." 
 		+"<img src='/assets/addWorker.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
@@ -455,7 +455,7 @@ var expertTour = new Tour({
 		element: "#chat-box-container" ,
 		title: "<b>Chat With the Team</b>", 
 		content: "<div class='tour-content-wrapper'>You can use this chat feature to commmunicate with the " 
-		+"members of the team as well as the project coordinator (PC)."
+		+"members of the team as well as the team lead."
 		+"<img src='/assets/chat.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"

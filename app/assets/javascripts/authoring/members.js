@@ -301,9 +301,9 @@ function renderMemberPopovers(members) {
             content += '<option value="worker">Worker</option>';
         }
         if(member_type == "pc"){
-            content += '<option value="pc" selected>Project Coordinator</option>';
+            content += '<option value="pc" selected>Team Lead</option>';
         } else {
-            content += '<option value="pc">Project Coordinator </option>';
+            content += '<option value="pc">Team Lead</option>';
         }
         if(member_type == "client"){
             content += '<option value="client" selected>Client</option>';

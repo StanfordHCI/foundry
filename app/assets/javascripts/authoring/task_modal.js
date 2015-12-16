@@ -279,7 +279,7 @@ function getTaskOverviewForm(groupNum){
             + '" min="0" step="15" max="45" style="width:36px"><br />'
 
         +'<br />'
-        + '<b>Project Coordinator</b><br><select class="pcInput"' 
+        + '<b>Team Lead</b><br><select class="pcInput"' 
             +' name="pcName" id="pcEvent"' 
             + 'onchange="getPC('+groupNum + ')">'+ writePCMembers(groupNum,PC_id) +'</select>'
     
@@ -514,7 +514,7 @@ function getTaskOverviewContent(groupNum){
 	        }
           if(mem && mem != undefined){
             content += '<div class=row-fluid>'
-            content += '<b>Project Coordinator: </b>';
+            content += '<b>Team Lead: </b>';
             content += mem;
             content += "</div>"
             
