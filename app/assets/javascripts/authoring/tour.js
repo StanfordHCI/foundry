@@ -41,7 +41,7 @@ var authoringTour = new Tour({
 		html: true,
 		content: "<div class='tour-content-wrapper'>Roles can be given privileges of an author/client, "
 		+"team lead, or a worker. You can also assign each role a category "
-		+"and specify the necessary skills for that role based on the oDesk platform." 
+		+"and specify the necessary skills for that role based on the Upwork platform." 
 		+"<img src='/assets/addWorker.gif'> </img></div>"
 		+"<nav class='popover-navigation'><div class='btn-group'>"
 		+"<button class='btn btn-default' data-role='prev'>« Prev</button>"

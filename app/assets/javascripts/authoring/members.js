@@ -312,10 +312,10 @@ function renderMemberPopovers(members) {
         }   
         content += '</select><br />';
         
-        //Member skills from odesk skill categories
+        //Member skills from upwork skill categories
         +'<div class="input-append" > '
         content += '<br><input class="skillInput" id="addSkillInput_' + member_id 
-            + '" type="text" data-provide="typeahead" placeholder="Add oDesk Skill" />'
+            + '" type="text" data-provide="typeahead" placeholder="Add Upwork Skill" />'
             +'<button class="btn" type="button" class="addSkillButton" id="addSkillButton_' + member_id 
             + '" onclick="addSkill(' + member_id + ');">+</button>'
         +'</div>'
@@ -383,7 +383,7 @@ function renderMemberPopovers(members) {
 
 };
 
-// append oDesk Skills input to popover
+// append Upwork Skills input to popover
         $(document).ready(function() {
             pressEnterKeyToSubmit(".skillInput", ".addSkillButton");
         });
@@ -501,7 +501,7 @@ function addMember() {
 function addSkill(memberId) {
     var skillName = $("#addSkillInput_" + memberId).val();
     if (skillName == "" || oSkills.indexOf(skillName) < 0) {
-        alert("Not a valid oDesk skill");
+        alert("Not a valid Upwork skill");
         return;
     }
 

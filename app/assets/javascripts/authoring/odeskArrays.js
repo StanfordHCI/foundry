@@ -4,9 +4,9 @@
  * a list of skills a worker can be tagged with. 
  */
 
-//oDesk worker categories, two-tiered
+//Upwork worker categories, two-tiered
 var oDeskCategories = {
-	"--oDesk Category--": [],
+	"--Upwork Category--": [],
 	"Web Development": [
 		"All Web Development",
 		"Ecommerce",
@@ -110,7 +110,7 @@ var oDeskCategories = {
 	]
 };
 
-//Skill tags from the oDesk database
+//Skill tags from the Upwork database
 var oSkills = [
 	"skill",
 	"shopify",
