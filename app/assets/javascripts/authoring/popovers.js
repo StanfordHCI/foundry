@@ -41,7 +41,7 @@ function writeDRIMembers(idNum, driId){
 function writePCMembers(idNum, PCId){
 
     var indexOfJSON = getEventJSONIndex(idNum);
-    var PCString = '<option value="0">-- Choose PC --</option>';
+    var PCString = '<option value="0">-- Choose Team Lead --</option>';
     var eventPC = PCId;
     
     // at some point change this to only members for that event (not all members in the flash team)
