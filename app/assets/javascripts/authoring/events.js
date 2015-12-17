@@ -277,7 +277,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
 
     var documented_questions = [];
     documented_questions[0] = "Please explain all other design or execution decisions made, along with the reason they were made";
-    documented_questions[1] = "Please add anything else you want other team members, the project coordinator, or the client, to know. (optional)";
+    documented_questions[1] = "Please add anything else you want other team members, the team lead, or the client, to know. (optional)";
 
     var output_questions = [];
     output_questions[0] = "Please write a brief (1 sentence) description of this deliverable";
