@@ -7,6 +7,7 @@
 var flashTeamsJSON = {
     "title" : document.getElementById("ft-name").innerHTML,
     "id" : flash_team_id,
+    "slack_channel_info" : '',
     "events": [],        //{"title", "id", "startTime", "duration", "notes", "members": [], "dri", "yPosition", inputs”:[], “outputs”:[]}
     "members": [],       //{"id", "role", "skills":[], "color", "category1", "category2"}
     "folders": [],

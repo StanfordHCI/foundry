@@ -4,7 +4,6 @@
 #require 'google/api_client/auth/installed_app'
 require 'securerandom'
 
-
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
   before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
@@ -15,6 +14,12 @@ class FlashTeamsController < ApplicationController
 	end
 
   def create 
+
+    client = Slack::Web::Client.new
+
+    client.auth_test
+
+
     name = flash_team_params(params[:flash_team])[:name]
 
     author = flash_team_params(params[:flash_team])[:author]
@@ -26,8 +31,29 @@ class FlashTeamsController < ApplicationController
     # get id
     id = @flash_team[:id]
 
+    slack_channel_name = 'foundry-team-' + id.to_s
+
+    channel = client.channels_create(
+      options = {
+        name: slack_channel_name
+      }
+    )
+
+    channel_id = channel['channel']['id']
+    channel_name = channel['channel']['name']
+
+    puts channel
+
+    puts channel_id 
+
+    puts channel_name
+
+    #slack_channel_info = {"channel_id": channel_id, "channel_name": channel_name}.to_json
+
+    #puts slack_channel_info
+
     # store in flash team
-    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
+    @flash_team.json = {"title": name,"id": id.to_s,"slack_channel_info": channel_id.to_s, "events": [],"members": [],"interactions": [], "author": author}.to_json
 
     if @flash_team.save
       #redirect_to @flash_team
@@ -445,9 +471,10 @@ end
         flash_team_id = flash_team.id
         flash_team_json = JSON.parse(flash_team.json)
         author_name = flash_team_json["author"]
+        slack_channel_info = flash_team_json["slack_channel_info"]
 
      respond_to do |format|
-      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}.to_json, status: :ok}
+      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name, :slack_channel_info => slack_channel_info}.to_json, status: :ok}
     end
   end
 

@@ -1868,6 +1868,7 @@ var getAllTasks = function(){
 var constructStatusObj = function(){
     flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
     flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
+    flashTeamsJSON["slack_channel_info"] = slack_channel_info;
     flashTeamsJSON["author"] = author_name;
     flashTeamsJSON["status"] = in_progress;
 

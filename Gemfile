@@ -80,4 +80,7 @@ gem 'google-api-client'
 gem 'launchy', '>= 2.1.1'
 gem 'oauth'
 
+gem 'slack-ruby-client'
+
+
 # gem 'google_drive'

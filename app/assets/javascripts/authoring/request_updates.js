@@ -1,8 +1,9 @@
 var author_name; // save name of flash team author
 var team_name; // saves flash team name
 var team_id; // saves flash team id
+var slack_channel_info; // saves slack channel id
 
-//returns author name, team name and team ID
+//returns author name, team name, slackchannel and team ID
 $.fn.getTeamInfo = function(){
     var flash_team_id = $(this).val();
     var url = '/flash_teams/' + flash_team_id + '/get_team_info';
@@ -18,6 +19,7 @@ var saveFlashTeam = function(data){
     flashTeamsJSON["author"] = author_name = data["author_name"];
     flashTeamsJSON["title"] = team_name = data["flash_team_name"];
     flashTeamsJSON["id"] = team_id =   data["flash_team_id"];
+    flashTeamsJSON["slack_channel_info"] = slack_channel_info = data["slack_channel_info"];
 }
 
 

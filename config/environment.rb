@@ -19,3 +19,8 @@ ActionMailer::Base.smtp_settings = {
   :domain         => 'heroku.com',
   :enable_starttls_auto => true
 }
+
+Slack.configure do |config|
+  config.token = ENV['SLACK_API_TOKEN']
+  fail 'Missing ENV[SLACK_API_TOKEN]!' unless config.token
+end

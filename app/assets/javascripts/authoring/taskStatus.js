@@ -576,6 +576,27 @@ var postToSlack = function(event, update) {
         slackMsg = defaultMsg + ' Pinging @mkim17 for notification.';
     }
 
-    var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
-    $.post(private_slack_url, payload);
+    //var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
+    //$.post(private_slack_url, payload);
+
+
+    $.ajax({
+                url: 'https://slack.com/api/chat.postMessage'
+                ,type: "POST"
+                ,dataType: 'json'
+                ,data: {
+                    token: 'xoxb-17048413936-hxfzYgmvnyTftrzxHBHGsFel'
+                    //,channel: 'C0H1H1H7H'
+                    ,channel: flashTeamsJSON["slack_channel_info"]
+                    ,text: slackMsg
+                    ,username: 'foundry-chatbot'
+                }
+                ,success: function (resp) {
+                    if(!resp.ok) {
+                        //$('.slack-new-message').val(message);
+                        console.log('[SlackChat] Post Message failed with errors: ');
+                        console.log(resp);
+                    }
+                }
+            });
 }
