@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150809183913) do
+ActiveRecord::Schema.define(version: 20151118195127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20150809183913) do
     t.integer  "user_id"
     t.text     "original_status"
     t.integer  "origin_id"
+    t.text     "source_json"
   end
 
   create_table "handoffs", force: true do |t|
@@ -120,7 +121,7 @@ ActiveRecord::Schema.define(version: 20150809183913) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "data_json",     default: "{}"
+    t.text     "data_json"
     t.integer  "flash_team_id"
   end
 

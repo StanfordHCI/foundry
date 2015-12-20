@@ -57,9 +57,9 @@ Foundry::Application.routes.draw do
   #     resources :products
   #   end
 
- 
+
   get "welcome/index"
-  
+
   root 'welcome#index'
 
   get 'oauth2callback' => 'welcome#index'
@@ -68,7 +68,7 @@ Foundry::Application.routes.draw do
   post '/flash_teams/rename' => 'flash_teams#rename'
 
   resources :flash_teams do
-    member do 
+    member do
       delete :destroy
       get :get_status
       post :update_status
@@ -86,6 +86,7 @@ Foundry::Application.routes.draw do
       get :settings
       get :duplicate
       get :fork
+      get :merge
       get :pull
       get :clone
       post :settings
@@ -106,9 +107,9 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
   post '/flash_teams/:id/:event_id/hire_form/send_task_acceptance' => 'flash_teams#send_task_acceptance'
   post '/flash_teams/:id/:event_id/hire_form/send_task_rejection' => 'flash_teams#send_task_rejection'
   post '/flash_teams/:id/:event_id/hire_form/send_task_available' => 'flash_teams#send_task_available'
-  
+
   get '/flash_teams/:id/:event_id/panels' => 'flash_teams#panels'
-  
+
   get '/flash_teams/:id/:event_id/delay' => 'flash_teams#delay'
   get '/flash_teams/:id_team/:event_id/get_delay' => 'flash_teams#get_delay'
 
@@ -121,43 +122,43 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
       post :register
     end
   end
-  
+
   post '/activity_logs/create' => 'activity_logs#create'
   post '/activity_logs/log_update' => 'activity_logs#log_update'
 
   get '/users/logout' => 'users#logout'
   get '/users/login' => 'users#login'
-  
+
   post '/users/post_login' => 'users#post_login'
   post '/users/post_login' => 'users#post_login'
-  
+
   resources :users do
     member do
       post :create
     end
   end
-  
+
   #resources :workers
-  get '/workers/index' => 'workers#index' 
-  get '/workers/register' => 'workers#register' 
+  get '/workers/index' => 'workers#index'
+  get '/workers/register' => 'workers#register'
   get '/workers/confirmation' => 'workers#confirmation'
-  get '/workers/apply' => 'workers#apply' 
+  get '/workers/apply' => 'workers#apply'
   get '/workers/apply/:panel' => 'workers#apply'
-  get '/workers/:id/destroy' => 'workers#destroy' 
+  get '/workers/:id/destroy' => 'workers#destroy'
   get '/workers/filter_workers' => 'workers#filter_workers'
   get '/workers/filter_workers_emails' => 'workers#filter_workers_emails'
   get '/workers/right_sidebar_filt' => 'workers#right_sidebar_filt'
   get '/workers/filter_workers_rightsidebar' => 'workers#filter_workers_rightsidebar'
 
-  
+
   resources :workers do
     member do
       post :create
     end
   end
-  
-  
-  
-  
+
+
+
+
 
 end

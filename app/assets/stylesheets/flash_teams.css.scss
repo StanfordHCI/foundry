@@ -134,3 +134,11 @@
 	margin-bottom: 30px;
 }
 
+.changed_rectangle {
+  display: none;
+}
+
+.show_diff .changed_rectangle {
+  display: block;
+}
+
