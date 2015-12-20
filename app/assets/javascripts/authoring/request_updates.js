@@ -6,7 +6,7 @@ $.fn.getTeamInfo = function(){
        url: url,
        type: 'post'
     }).done(function(data){
-        currentTeam.updateInfo(data);
+        if(currentTeam) currentTeam.updateInfo(data);
     });
 };
 
