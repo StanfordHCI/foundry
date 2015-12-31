@@ -172,3 +172,12 @@ function showDiff(){
     console.log(JSON.stringify(diff, null, 3));
 }
 
+function showTasksDiffs(){
+    $('#JSONDiffBtn').attr('onclick', 'hideTasksDiffs()');
+    $('#JSONDiffBtn').prop('value', 'Hide Diffs');
+}
+
+function hideTasksDiffs(){
+    $('#JSONDiffBtn').attr('onclick', 'showTasksDiffs()');
+    $('#JSONDiffBtn').prop('value', 'Show Diffs');
+}

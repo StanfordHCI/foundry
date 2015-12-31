@@ -16,6 +16,8 @@
 	     	
 	     	<input type="button" class="btn btn-primary" id="flashTeamJSONBtn" value="Show JSON"  style="display: ''" onclick="showJSONModal('[<%=@flash_team.id.to_s + "," + @origin_id.to_s%>]');"/>
 
+	     	<input type="button" class="btn btn-primary" id="JSONDiffBtn" value="Show Diffs"  style="display: ''" onclick="showTasksDiffs();"/>
+
 		     <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/>
 	      
 	       <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Author Tour"/>
