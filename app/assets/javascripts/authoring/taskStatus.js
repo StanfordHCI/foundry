@@ -30,6 +30,12 @@ var TASK_COMPLETE_BORDER_COLOR = "#308e30";
 var TASK_PAUSED_COLOR =  "#a8cfde"; 
 var TASK_PAUSED_BORDER_COLOR = "#7db7ce";
 
+var TASK_SEL_COLOR = "orange";
+var TASK_SEL_BORDER_COLOR = "brown";
+
+var TASK_DEL_COLOR = "white";
+var TASK_DEL_BORDER_COLOR = "black";
+
 function checkEventsBeforeCompleted(groupNum) {
     // check if events before have been completed
     var eventsBefore = dependencyAPI.getEventsBefore(groupNum, true);
@@ -60,6 +66,36 @@ function checkEventsBeforeCompletedNoAlert(groupNum) {
     }
 
     return true;
+}
+
+//Fires on show diff button
+function showDiffTask(groupNum, type) {
+    
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+
+    var groupNum = eventObj["id"];
+    var task_g = getTaskGFromGroupNum(groupNum);    
+    var rect = task_g.selectAll("#rect_" + groupNum);
+    var borderBottom = task_g.selectAll(".border-bottom");
+
+    if(type == "sel"){
+        rect.attr("fill", TASK_SEL_COLOR);
+        borderBottom.attr("fill", TASK_SEL_BORDER_COLOR);
+    }
+
+    if(type == "del"){
+        rect.attr("fill", TASK_DEL_COLOR);
+        borderBottom.attr("fill", TASK_DEL_BORDER_COLOR);
+    }
+}
+
+//Fires on show diff button
+function hideDiffTask(groupNum) {
+    
+    var indexOfJSON = getEventJSONIndex(groupNum);
+    var eventObj = flashTeamsJSON["events"][indexOfJSON];
+    drawEvent(eventObj); //Will update color
 }
 
 //Fires on "Start" button on task modal
