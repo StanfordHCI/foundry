@@ -1,6 +1,8 @@
 var author_name; // save name of flash team author
 var team_name; // saves flash team name
 var team_id; // saves flash team id
+var origin_id; 
+var team_type;
 
 //returns author name, team name and team ID
 $.fn.getTeamInfo = function(){
@@ -17,7 +19,15 @@ $.fn.getTeamInfo = function(){
 var saveFlashTeam = function(data){
     flashTeamsJSON["author"] = author_name = data["author_name"];
     flashTeamsJSON["title"] = team_name = data["flash_team_name"];
-    flashTeamsJSON["id"] = team_id =   data["flash_team_id"];
+    flashTeamsJSON["id"] = team_id = data["flash_team_id"];
+    if(data["origin_id"] != undefined){
+        flashTeamsJSON["origin_id"] = origin_id = data["origin_id"];
+        loadOriginStatus(origin_id);
+    }
+
+    if(data["team_type"] != undefined){
+        flashTeamsJSON["team_type"] = team_type = data["team_type"];
+    }
 }
 
 

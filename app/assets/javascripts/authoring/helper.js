@@ -50,17 +50,86 @@ function hideAwareness() {
     chatCont.style.display = "none";
 }
 
-function saveFlashTeam() {
-	console.log("Saving flash team");
+// function saveFlashTeam() {
+// 	console.log("Saving flash team");
     
-    var flash_team_id = $("#flash_team_id").val();
-    var authenticity_token = $("#authenticity_token").val();
-    var url = '/flash_teams/' + flash_team_id + '/update_json';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {"flashTeamsJSON": flashTeamsJSON, "authenticity_token": authenticity_token}
-    }).done(function(data){
-        console.log("UPDATED FLASH TEAM JSON");
-    });
+//     var flash_team_id = $("#flash_team_id").val();
+//     var authenticity_token = $("#authenticity_token").val();
+//     var url = '/flash_teams/' + flash_team_id + '/update_json';
+//     $.ajax({
+//         url: url,
+//         type: 'post',
+//         data: {"flashTeamsJSON": flashTeamsJSON, "authenticity_token": authenticity_token}
+//     }).done(function(data){
+//         console.log("UPDATED FLASH TEAM JSON");
+//     });
+// }
+
+
+function showJSONModal(id_array){
+    loadOriginStatus(origin_id);
+
+    var origin_ft_json = loadedOriginStatus.flash_teams_json;
+
+    //console.log('normal:' + origin_ft_json);
+
+    //console.log('stringify:' + JSON.stringify(origin_ft_json));
+
+    if(team_type == 'original'){
+        $("#origin-json-div").css('display', 'none');
+        $('#json-merge-footer-btn').css('display', 'none');
+        //$("#branch-json-div").css('class', 'span6');
+        $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
+    }
+
+    if(team_type == 'branch'){
+        $("#origin-json-div").html('<h3>ORIGIN JSON</h3>' + JSON.stringify(origin_ft_json));
+        $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
+    }
+
+    $("#jsonModal").modal('show');
+
+}
+
+function mergeJSON(){
+    //alert('merge!');
+
+    var origin_ft_json = loadedOriginStatus;
+
+    origin_ft_json['flash_teams_json'] = flashTeamsJSON;
+
+    //console.log(origin_ft_json);
+
+
+    var localStatusJSON = JSON.stringify(origin_ft_json);
+        //console.log("updating string: " + localStatusJSON);
+
+        var flash_team_id = origin_id;
+        var authenticity_token = $("#authenticity_token").val();
+        var url = '/flash_teams/' + flash_team_id + '/update_status';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+        }).done(function(data){
+            console.log("UPDATED ORIGIN FLASH TEAM STATUS");
+        });
+}
+
+function pullMasterJSON(){
+    loadOriginStatus(origin_id);
+
+    var origin_ft_json = loadedOriginStatus;
+
+    flashTeamsJSON = origin_ft_json['flash_teams_json'];
+
+    updateStatus();
+
+    $("#flash_team_id").requestUpdates(true);
+
+    console.log('pulled master json');
+
+    $("#jsonModal").modal('hide');
+
+
 }

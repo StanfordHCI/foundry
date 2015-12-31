@@ -653,7 +653,9 @@ function hideMemberPopover(memberId) {
 }
 
 function inviteMember(pillId) {
-    var flash_team_id = $("#flash_team_id").val();
+    //var flash_team_id = $("#flash_team_id").val();
+    var flash_team_id = team_id == origin_id ? team_id : origin_id;
+
     var url = '/members/' + flash_team_id + '/invite';
     var member = entryManager.getEntryById(pillId);
     var data = {uniq: member.uniq};
@@ -671,7 +673,8 @@ function reInviteMember(pillId) {
     logActivity("reInviteMember(pillId)",'Reinvited Member', new Date().getTime(), 
         current_user, chat_name, team_id, entryManager.getEntryById(pillId));
 
-    var flash_team_id = $("#flash_team_id").val();
+    //var flash_team_id = $("#flash_team_id").val();
+    var flash_team_id = team_id == origin_id ? team_id : origin_id;
     var url = '/members/' + flash_team_id + '/reInvite';
     var member = entryManager.getEntryById(pillId);
     var data = {uniq: member.uniq };

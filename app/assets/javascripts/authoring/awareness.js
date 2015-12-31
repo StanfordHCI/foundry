@@ -27,6 +27,7 @@ var drawn_blue_tasks = [];
 var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
+var loadedOriginStatus;
 var in_progress = false;
 //var paused = false;
 var delayed_tasks_time = [];
@@ -708,6 +709,21 @@ var loadStatus = function(id){
         //console.log("loadedStatusJSON: " + loadedStatusJSON);
     });
     return JSON.parse(loadedStatusJSON);
+};
+
+function loadOriginStatus(origin_id){
+    //var loadedOriginStatusJSON;
+    var url = '/flash_teams/' + origin_id.toString() + '/get_status';
+    $.ajax({
+        url: url,
+        type: 'get'
+    }).done(function(data){
+        loadedOriginStatus = data;
+        console.log('loadedOriginStatus');
+        //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
+    });
+    //return JSON.parse(loadedOriginStatus);
+    return loadedOriginStatus;
 };
 
 var loadData = function(){

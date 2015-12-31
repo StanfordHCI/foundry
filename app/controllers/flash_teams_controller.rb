@@ -27,7 +27,7 @@ class FlashTeamsController < ApplicationController
     id = @flash_team[:id]
 
     # store in flash team
-    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
+    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '","origin_id": ' + id.to_s + ',"type": "original"' + '}'
 
     if @flash_team.save
       #redirect_to @flash_team
@@ -118,6 +118,25 @@ class FlashTeamsController < ApplicationController
     # Redirect to the list of things
     redirect_to :action => 'index'
   end
+
+  def branch
+    @user = User.find session[:user_id]
+
+    # Locate data from the original
+    original = FlashTeam.find(params[:id])
+
+    # Then create a copy from the original data
+    copy = FlashTeam.create(:name => original.name + " Branch", :author => original.author, :user_id => @user.id)
+    copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '","origin_id": ' + original.id.to_s + ',"type": "branch"' + '}'
+    copy.status = original.original_status
+    #copy.status = createDupTeamStatus(copy.id, original.status, "clone")
+
+    copy.save
+    # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
+
+    # Redirect to the list of things
+    redirect_to :action => 'index'
+  end
   
   def index
 		@flash_teams = FlashTeam.where(:user_id => @user.id).order(:id).reverse_order	
@@ -146,6 +165,8 @@ end
        end		
 		else 
 			@flash_team = FlashTeam.find(params[:id])
+      flash_team_json = JSON.parse(@flash_team.json)
+      @origin_id = flash_team_json['origin_id']
 			
 			if @flash_team.user_id != session[:user_id]
 				flash[:notice] = 'You cannot access this flash team.' 
@@ -445,9 +466,11 @@ end
         flash_team_id = flash_team.id
         flash_team_json = JSON.parse(flash_team.json)
         author_name = flash_team_json["author"]
+        origin_id = flash_team_json["origin_id"]
+        team_type = flash_team_json["type"]
 
      respond_to do |format|
-      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}.to_json, status: :ok}
+      format.json {render json: {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name, :origin_id => origin_id, :team_type => team_type}.to_json, status: :ok}
     end
   end
 

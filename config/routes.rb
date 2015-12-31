@@ -86,6 +86,7 @@ Foundry::Application.routes.draw do
       get :settings
       get :duplicate
       get :clone
+      get :branch
       post :settings
     end
   end

@@ -1,0 +1,27 @@
+<!-- Project Overview Modal (triggered by info button next to the flash team title) -->
+<div id="jsonModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="jsonModalLabel">JSON Structures</h3>
+  </div>
+  <div class="modal-body" id="json-modal-body">
+
+    <div class="row-fluid">
+
+      <div class="span6" id="origin-json-div">
+
+      </div>
+
+      <div class="span6" id="branch-json-div">
+
+      </div>
+
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-danger" id="json-pull-footer-btn" onclick="pullMasterJSON()">Pull Master JSON</button>
+    <button class="btn btn-danger" id="json-merge-footer-btn" onclick="mergeJSON()">Merge JSON into Master</button>
+  </div>
+</div>
