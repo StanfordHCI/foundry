@@ -128,7 +128,7 @@ class FlashTeamsController < ApplicationController
     # Then create a copy from the original data
     copy = FlashTeam.create(:name => original.name + " Branch", :author => original.author, :user_id => @user.id)
     copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '","origin_id": ' + original.id.to_s + ',"type": "branch"' + '}'
-    copy.status = original.original_status
+    copy.status = original.status
     #copy.status = createDupTeamStatus(copy.id, original.status, "clone")
     copy.original_status = original.original_status
 
