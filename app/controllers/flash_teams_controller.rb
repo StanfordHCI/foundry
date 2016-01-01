@@ -27,7 +27,7 @@ class FlashTeamsController < ApplicationController
     id = @flash_team[:id]
 
     # store in flash team
-    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '","origin_id": ' + id.to_s + ',"type": "original"' + '}'
+    @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '","origin_id": ' + id.to_s + ',"type": "branch"' + '}'
 
     if @flash_team.save
       #redirect_to @flash_team
@@ -130,6 +130,7 @@ class FlashTeamsController < ApplicationController
     copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '","origin_id": ' + original.id.to_s + ',"type": "branch"' + '}'
     copy.status = original.original_status
     #copy.status = createDupTeamStatus(copy.id, original.status, "clone")
+    copy.original_status = original.original_status
 
     copy.save
     # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
@@ -308,6 +309,13 @@ end
     end
   end
   
+  def get_original_status
+    @flash_team = FlashTeam.find(params[:id])
+    respond_to do |format|
+      format.json {render json: @flash_team.original_status, status: :ok}
+    end
+  end
+
   def update_original_status
     status = params[:localStatusJSON]
     @flash_team = FlashTeam.find(params[:id])
@@ -315,7 +323,8 @@ end
     @flash_team.save
 
     respond_to do |format|
-      format.json {render json: "saved".to_json, status: :ok}
+      #format.json {render json: "saved".to_json, status: :ok}
+      format.json {render json: @flash_team.original_status, status: :ok}
     end
   end
 

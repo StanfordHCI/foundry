@@ -28,6 +28,7 @@ var completed_red_tasks = [];
 var task_groups = [];
 var loadedStatus;
 var loadedOriginStatus;
+var ancestorBranch;
 var in_progress = false;
 //var paused = false;
 var delayed_tasks_time = [];
@@ -395,7 +396,7 @@ function renderFlashTeamsJSON(data, firstTime) {
     } else {
         //console.log("flash team not in progress");
 
-        if(flashTeamsJSON["startTime"] == undefined){
+        if(flashTeamsJSON["startTime"] == undefined && team_type == "original"){
 
             //console.log("NO START TIME!");
             updateOriginalStatus();
@@ -724,6 +725,21 @@ function loadOriginStatus(origin_id){
     });
     //return JSON.parse(loadedOriginStatus);
     return loadedOriginStatus;
+};
+
+function loadAncestorBranch(id){
+    //var loadedOriginStatusJSON;
+    var url = '/flash_teams/' + id.toString() + '/get_original_status';
+    $.ajax({
+        url: url,
+        type: 'get'
+    }).done(function(data){
+        ancestorBranch = data;
+        console.log('loadedAncestorBranch, aka original status');
+        //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
+    });
+    //return JSON.parse(loadedOriginStatus);
+    return loadAncestorBranch;
 };
 
 var loadData = function(){
@@ -1954,23 +1970,30 @@ var updateStatus = function(flash_team_in_progress){
 // used for the team duplication feature (it preserves the team without saving the status
 // information once the team is run
 var updateOriginalStatus = function(){
-    //console.log("in updateOriginalStatus");
-    var localStatus = constructStatusObj();
 
-    localStatus.latest_time = (new Date).getTime();
-    var localStatusJSON = JSON.stringify(localStatus);
-    //console.log("updating string: " + localStatusJSON);
+    if(team_type == "branch"){
+        return;
+        //console.log('in update original status but this is a branch');
+    }
+    else{
+        //console.log("in updateOriginalStatus");
+        var localStatus = constructStatusObj();
 
-    var flash_team_id = $("#flash_team_id").val();
-    var authenticity_token = $("#authenticity_token").val();
-    var url = '/flash_teams/' + flash_team_id + '/update_original_status';
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-    }).done(function(data){
-        //console.log("UPDATED FLASH TEAM STATUS");
-    });
+        localStatus.latest_time = (new Date).getTime();
+        var localStatusJSON = JSON.stringify(localStatus);
+        //console.log("updating string: " + localStatusJSON);
+
+        var flash_team_id = $("#flash_team_id").val();
+        var authenticity_token = $("#authenticity_token").val();
+        var url = '/flash_teams/' + flash_team_id + '/update_original_status';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+        }).done(function(data){
+            //console.log("UPDATED FLASH TEAM ORIGINAL STATUS");
+        });
+    }
 };
 
 var sendEmailOnCompletionOfDelayedTask = function(groupNum){

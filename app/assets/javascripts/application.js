@@ -61,4 +61,3 @@
 //= require ./authoring/pauseTeam
 //= require ./authoring/request_updates
 //= require ./authoring/branchmerge
-

@@ -20,6 +20,11 @@ var saveFlashTeam = function(data){
     flashTeamsJSON["author"] = author_name = data["author_name"];
     flashTeamsJSON["title"] = team_name = data["flash_team_name"];
     flashTeamsJSON["id"] = team_id = data["flash_team_id"];
+        
+    if(ancestorBranch == undefined){
+        loadAncestorBranch(team_id);
+    }
+
     if(data["origin_id"] != undefined){
         flashTeamsJSON["origin_id"] = origin_id = data["origin_id"];
         loadOriginStatus(origin_id);
