@@ -149,10 +149,8 @@ function diffMergeAll(merge_type){
     var branch = loadedStatus;
     var copied_branch = JSON.parse(JSON.stringify(branch));
 
-    //console.log(JSON.stringify(master_updated));
     var diff = branchmerge.threeWayMerge(master_updated, master, branch);
     console.log(JSON.stringify(diff, null, 3));
-    // var merged = branchmerge.patch(diff.diff, master_updated, branch);
     
     if(merge_type == 'master-to-branch'){
         var merged = branchmerge.patch(diff.diff, master_updated, copied_branch);
