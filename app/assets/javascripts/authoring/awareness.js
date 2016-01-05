@@ -1928,6 +1928,12 @@ var constructStatusObj = function(){
 var timer = null;
 
 var updateStatus = function(flash_team_in_progress){
+    if(deleted_tasks.length > 0){
+        for (var i=0;i<deleted_tasks.length;i++){
+            deleteEvent(deleted_tasks[i]);
+        }
+    }
+
     if (timer) {
         clearTimeout(timer); //cancel the previous timer.
         timer = null;

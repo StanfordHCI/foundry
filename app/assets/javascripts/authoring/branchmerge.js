@@ -1,8 +1,8 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.branchmerge = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* Import into browser. Then, to use:
-var diff = branchmerge.threeWayMerge(master_updated, master, branch)
+var diff = branchmerge.threeWayMerge(before, ancestor, after)
 console.log(JSON.stringify(diff, null, 3));
-var merged = branchmerge.patch(diff.diff, master_updated);
+var merged = branchmerge.patch(diff.diff, before);
 
 Note that if you uncomment some code,
 these functions can also take default arguments that can be
@@ -16,16 +16,14 @@ used for quick testing, like so:
 var xdiff = require('xdiff');
 
 // DEFAULT VARIABLES FOR TESTING PURPOSES
-//var test_master = require('./master.json');
-//var test_master_updated = require('./master_updated.json');
-//var test_branch = require('./branch.json');
+//var test_ancestor = require('./new team/origin_branch.json');
+//var test_before = require('./new team/master_branch.json');
+//var test_after = require('./new team/branch_branch.json');
 // CHANGES IN THE TEST master_updated.json
 // changed --- CC6 has changed title, duration, and start time
 // changed --- old CC7 has an update, whereas in branch it's deleted --- should cause a conflict
 
-// to do a two way merge
-// var d = xdiff.diff(master, branch);
-// console.log(d);
+
 
 module.exports = {
 
@@ -33,12 +31,14 @@ module.exports = {
 	 * Performs a three way merge and returns a data structure with a complete
 	 * diff as well as with a set of conflicted items.
 	 */
-	threeWayMerge: function(master_updated, master, branch) {
-		//master_updated = typeof master_updated !== 'undefined' ?  master_updated : test_master_updated;
-		//master = typeof master !== 'undefined' ?  master : test_master;
-		//branch = typeof branch !== 'undefined' ?  branch : test_branch;
+	threeWayMerge: function(before, ancestor, after) {
+		//before = typeof before !== 'undefined' ?  before : test_before;
+		//ancestor = typeof ancestor !== 'undefined' ?  ancestor : test_ancestor;
+		//after = typeof after !== 'undefined' ?  after : test_after;
 
-		var d3 = xdiff.diff3(master_updated, master, branch);
+		this.cleanJSON(before, ancestor, after);
+
+		var d3 = xdiff.diff3(before, ancestor, after);
 		var conflicts = xdiff.conflicts(); 
 		var results = {
 			'diff': d3,
@@ -50,14 +50,49 @@ module.exports = {
 	/**
 	 * Patches the current upstream using the diff returned
 	 */
-	patch: function(d3, master_updated) {
-		//master_updated = typeof master_updated !== 'undefined' ?  master_updated : test_master_updated;
+	patch: function(diff3, before, after) {
+		//before = typeof before !== 'undefined' ?  before : test_before;
+		//after = typeof after !== 'undefined' ?  after : test_after;
 
-		return xdiff.patch(master_updated, d3);
+		var patched_after = xdiff.patch(before, diff3);
+		patched_after['id'] = after['id'];
+		patched_after['team_type'] = after['team_type'];
+		patched_after['status'] = after['status'];
+		patched_after['title'] = after['title'];
+
+		return patched_after;
+	},
+
+	cleanJSON: function(before, ancestor, after) {
+		delete after['id'];
+		delete ancestor['id'];
+		delete before['id'];
+
+		delete after['team_type'];
+		delete ancestor['team_type'];
+		delete before['team_type'];
+
+		delete after['status'];
+		delete ancestor['status'];
+		delete before['status'];
+
+		delete after['title'];
+		delete ancestor['title'];
+		delete before['title'];				
 	}
 }
-},{"xdiff":2}],2:[function(require,module,exports){
 
+// to do a two way merge
+//var d = xdiff.diff(test_ancestor, test_before);
+//console.log(JSON.stringify(d, null, 3));
+
+// debugging console code
+//var copied_test_after = JSON.parse(JSON.stringify(test_after));
+//var diff3 = module.exports.threeWayMerge(test_before, test_ancestor, test_after);
+//console.log(JSON.stringify(diff3, null, 3));
+//var patched_after = module.exports.patch(diff3['diff'], test_before, copied_test_after);
+//console.log(patched_after);
+},{"xdiff":2}],2:[function(require,module,exports){
 // msb added conflicts
 var _conflicts = new Array();
 
@@ -70,346 +105,396 @@ var _conflicts = new Array();
 //I don't really want to force id
 //should be able to use anything, aslong as you 
 
-function shallowEqual (a, b) {
-    if(isObject(a) 
-      && isObject(b) 
-      && (a.id == b.id || a === b))
-      return true
-    if(a && !b) return false
+function shallowEqual(a, b) {
+    if (isObject(a) && isObject(b) && (a.id == b.id || a === b))
+        return true
+    if (a && !b) return false
     return a == b
-  }
-
-
-function equal (a, b) {
- if((a && !b) || (!a && b)) return false
-  if(Array.isArray(a))
-    if(a.length != b.length) return false
-  if(isObject(a) && isObject(b)) {
-    if (a.id == b.id || a === b)
-      return true
-    for(var i in a)
-      if(!equal(a[i], b[i])) return false
-    return true
-  }
-  if(a == null && b == null) return true
-  return a === b
 }
 
-var adiff = require('adiff')({ equal: equal })
 
-function getPath (obj, path) {
-  if(!Array.isArray(path))
-    return obj[path]
-  for(var i in path) {
-    obj = obj[path[i]]
-  }
-  return obj
+function equal(a, b) {
+    if ((a && !b) || (!a && b)) return false
+    if (Array.isArray(a))
+        if (a.length != b.length) return false
+    if (isObject(a) && isObject(b)) {
+        if (a.id == b.id || a === b)
+            return true
+        for (var i in a)
+            if (!equal(a[i], b[i])) return false
+        return true
+    }
+    if (a == null && b == null) return true
+    return a === b
+}
+
+var adiff = require('adiff')({
+    equal: equal
+})
+
+function getPath(obj, path) {
+    if (!Array.isArray(path))
+        return obj[path]
+    for (var i in path) {
+        obj = obj[path[i]]
+    }
+    return obj
 }
 
 function findRefs(obj, refs) {
-  refs = refs || {}
-  //add leaves before branches.
-  //this will FAIL if there are circular references.
+    refs = refs || {}
+        //add leaves before branches.
+        //this will FAIL if there are circular references.
 
-  if(!obj)
+    if (!obj)
+        return refs
+
+    for (var k in obj) {
+        if (obj[k] && 'object' == typeof obj[k])
+            findRefs(obj[k], refs)
+    }
+
+    if (obj.id && !refs[obj.id])
+        refs[obj.id] = obj
     return refs
-
-  for(var k in obj) {
-    if(obj[k] && 'object' == typeof obj[k])
-      findRefs(obj[k], refs)
-  }
-  
-  if(obj.id && !refs[obj.id])
-    refs[obj.id] = obj
-  return refs
 }
 
 function toRef(v) {
-  //TODO escape strings that happen to start with #*=
-  var r
-  if(r = isRef(v)) return '#*='+r
-  return v
+    //TODO escape strings that happen to start with #*=
+    var r
+    if (r = isRef(v)) return '#*=' + r
+    return v
 }
 
-function isObject (o) {
-  return o && 'object' == typeof o
+function isObject(o) {
+    return o && 'object' == typeof o
 }
 
 function isRef(x) {
-  return x ? x.id : undefined
+    return x ? x.id : undefined
 }
 
 function sameRef(a, b) {
-  return a && b && isRef(a) == isRef(b)
+    return a && b && isRef(a) == isRef(b)
 }
 
 //traverse o, and replace every object with id with a pointer.
 //make diffing references easy.
 
 
-exports.deref = function (o, mutate) {
-  var refs = findRefs(o)
-  var derefed = {}
-  function deref (o, K) {
-    if(isRef(o) && K != isRef(o))
-      return toRef(o)
- 
-    var p = mutate ? o : Array.isArray(o) ? [] : {} //will copy the tree!
-    for (var k in o) {
-      var r 
-      if(isRef(o[k])) p[k] = toRef(o[k])
-      else if(isObject(o[k])) p[k] = deref(o[k])
-      else p[k] = o[k]
+exports.deref = function(o, mutate) {
+    var refs = findRefs(o)
+    var derefed = {}
+
+    function deref(o, K) {
+        if (isRef(o) && K != isRef(o))
+            return toRef(o)
+
+        var p = mutate ? o : Array.isArray(o) ? [] : {} //will copy the tree!
+        for (var k in o) {
+            var r
+            if (isRef(o[k])) p[k] = toRef(o[k])
+            else if (isObject(o[k])) p[k] = deref(o[k])
+            else p[k] = o[k]
+        }
+        return p
     }
-    return p
-  }
-  
-  refs.root = o
-  for (var k in refs)
-    refs[k] = deref(refs[k], k)
-  return refs
+
+    refs.root = o
+    for (var k in refs)
+        refs[k] = deref(refs[k], k)
+    return refs
 }
 
-exports.reref = function (refs, mutate) {
+exports.reref = function(refs, mutate) {
 
-  function fromRef(v) {
-    //TODO escape strings that happen to start with #*=
-    if('string' == typeof v && /^#\*=/.test(v)) return refs[v.substring(3)]
-      return v
-  }
-
-  function reref (o) { //will MUTATE the tree
-    if(!isObject(o))
-      return fromRef(o)
-
-    var p = mutate ? o : Array.isArray(o) ? [] : {} //will copy the tree!
-    for (var k in o) {
-      if(isObject(o[k]))
-         p[k] = reref(o[k])
-      else
-        p[k] = fromRef(o[k])
+    function fromRef(v) {
+        //TODO escape strings that happen to start with #*=
+        if ('string' == typeof v && /^#\*=/.test(v)) return refs[v.substring(3)]
+        return v
     }
-    return p
-  }
-  //if the root is a ref. need a special case
-  for (var k in refs) {
-    refs[k] = reref(refs[k])
-  }
-  return refs.root
+
+    function reref(o) { //will MUTATE the tree
+        if (!isObject(o))
+            return fromRef(o)
+
+        var p = mutate ? o : Array.isArray(o) ? [] : {} //will copy the tree!
+        for (var k in o) {
+            if (isObject(o[k]))
+                p[k] = reref(o[k])
+            else
+                p[k] = fromRef(o[k])
+        }
+        return p
+    }
+    //if the root is a ref. need a special case
+    for (var k in refs) {
+        refs[k] = reref(refs[k])
+    }
+    return refs.root
 }
 
-exports.diff = function (a, b) {
+exports.diff = function(a, b) {
 
-  var aRefs = exports.deref(a)
-  var bRefs = exports.deref(b)
+    var aRefs = exports.deref(a)
+    var bRefs = exports.deref(b)
 
-  var seen = []
+    var seen = []
 
-  for (var k in aRefs)
-    seen.push(k)
+    for (var k in aRefs)
+        seen.push(k)
 
- function isSeen(o) {
-    if(isRef(o)) return ~seen.indexOf(o.id)
-    return true 
-  }
-  function addSeen(o) {
-    if(!isRef(o)) return o
-    if(!isSeen(o)) seen.push(o.id)
-    return o
-  }
-
-  // how to handle references?
-  // this is necessary to handle objects in arrays nicely
-  // otherwise mergeing an edit and a move is ambigous.  // will need to perform a topoligical sort of the refs and diff them first, in that order.
-  // first, apply changes to all refs,
-  // then traverse over the root object,
-
-  function _diff (a, b, path) {
-    path = path || []
-
-    if(Array.isArray(a) && Array.isArray(b)) {
-      var d = adiff.diff(a, b)
-      if(d.length) delta.push(['splice', path, d])
-      return delta
+    function isSeen(o) {
+        if (isRef(o)) return ~seen.indexOf(o.id)
+        return true
     }
 
-// references to objects with ids are
-// changed into strings of thier id.
-// the string is prepended with '#*='
-// to distinguish it from other strings
-// if you use that string in your model,
-// it will break.
-// TODO escape strings so this is safe
-
-   //ah, treat root like it's a id
-
-   var isRoot = path.length === 1 && path[0] === 'root'
-
-    for (var k in b) {
-      // if both are nonRef objects, or are the same object, branch into them.
-    
-    if(isObject(a[k]) && isObject(b[k]) && sameRef(b[k], a[k])) 
-      _diff(a[k], b[k], path.concat(k))
-    else if(b[k] !== a[k])
-      delta.push(['set', path.concat(k), cpy(b[k])])
+    function addSeen(o) {
+        if (!isRef(o)) return o
+        if (!isSeen(o)) seen.push(o.id)
+        return o
     }
-    
-    for (var k in a)
-      if('undefined' == typeof b[k])
-        delta.push(['del', path.concat(k)])
-  }
 
-  var delta = []
-  _diff(aRefs, bRefs, [])
+    // how to handle references?
+    // this is necessary to handle objects in arrays nicely
+    // otherwise mergeing an edit and a move is ambigous.  // will need to perform a topoligical sort of the refs and diff them first, in that order.
+    // first, apply changes to all refs,
+    // then traverse over the root object,
 
-  if(delta.length)
-    return cpy(delta)
+    function _diff(a, b, path) {
+        ////console.log(path);
+        path = path || []
+
+        if (Array.isArray(a) && Array.isArray(b)) {
+            var d = adiff.diff(a, b);
+            //console.log(a);
+            //console.log(b);
+            //console.log(d);
+            //console.log(d.length);
+            //console.log('----');
+            if (d.length) {
+              delta.push(['splice', path, d])
+              //console.log(JSON.stringify(delta, null, 3));
+              //console.log('777777')
+            }
+
+            return delta
+        }
+
+        // references to objects with ids are
+        // changed into strings of thier id.
+        // the string is prepended with '#*='
+        // to distinguish it from other strings
+        // if you use that string in your model,
+        // it will break.
+        // TODO escape strings so this is safe
+
+        //ah, treat root like it's a id
+
+        var isRoot = path.length === 1 && path[0] === 'root'
+
+        for (var k in b) {
+            // if both are nonRef objects, or are the same object, branch into them.
+
+            if (isObject(a[k]) && isObject(b[k]) && sameRef(b[k], a[k])) {
+                _diff(a[k], b[k], path.concat(k))
+            } else if (b[k] !== a[k]) {
+
+                delta.push(['set', path.concat(k), cpy(b[k])])
+            }
+        }
+
+        for (var k in a)
+            if ('undefined' == typeof b[k])
+                delta.push(['del', path.concat(k)])
+    }
+
+    var delta = []
+    _diff(aRefs, bRefs, [])
+
+    if (delta.length)
+        return cpy(delta)
 }
 
-exports.patch = function (a, patch) {
+exports.patch = function(a, patch) {
 
-  if(!patch) throw new Error('expected patch')
+    if (!patch) throw new Error('expected patch')
 
-  var refs = exports.deref(a, true)
-  refs.root = a
+    var refs = exports.deref(a, true)
+    refs.root = a
 
-  var methods = {
-    set: function (key, value) {
-      this[key] = cpy(value) // incase this was a reference, remove it.
-    },
-    del: function (key) {
-      delete this[key]
-    },
-    splice: function (changes) {
-      adiff.patch(this, changes, true)
+    var methods = {
+        set: function(key, value) {
+            this[key] = cpy(value) // incase this was a reference, remove it.
+        },
+        del: function(key) {
+            delete this[key]
+        },
+        splice: function(changes) {
+            adiff.patch(this, changes, true)
+        }
     }
-  }
 
-  function pathTo(a, p) {
-    for (var i in p) a = a[p[i]]
-    return a
-  }
-
-  patch.forEach(function (args) {
-    args = args.slice()
-    var method = args.shift()
-    var path = args.shift().slice()
-    var key
-    if(method != 'splice') {
-      key = path.pop()
-      args.unshift(key)
+    function pathTo(a, p) {
+        for (var i in p) a = a[p[i]]
+        return a
     }
-    var obj = pathTo(refs, path)
-    methods[method].apply(obj, args)
-  })
 
-  return exports.reref(refs, true)
+    patch.forEach(function(args) {
+        args = args.slice()
+        var method = args.shift()
+        var path = args.shift().slice()
+        var key
+        if (method != 'splice') {
+            key = path.pop()
+            args.unshift(key)
+        }
+        var obj = pathTo(refs, path)
+        methods[method].apply(obj, args)
+    })
+
+    return exports.reref(refs, true)
 }
 
 function cpy(o) {
-  if(!o) return o
-  return JSON.parse(JSON.stringify(o))
+    if (!o) return o
+    return JSON.parse(JSON.stringify(o))
 }
 
-exports.diff3 = function (a, o, b) {
-  // msb added conflicts
-  _conflicts = new Array();
+exports.diff3 = function(a, o, b) {
+    // msb added conflicts
+    _conflicts = new Array();
 
-  if(arguments.length == 1)
-    o = a[1], b = a[2], a = a[0]
-  var _a = exports.diff(o, a) || [] // if there where no changes, still merge
-    , _b = exports.diff(o, b) || []
+    if (arguments.length == 1)
+        o = a[1], b = a[2], a = a[0]
+    var _a = exports.diff(o, a) || [] // if there where no changes, still merge
+        ,
+        _b = exports.diff(o, b) || []
 
-  function cmp (a, b) {
-    //check if a[1] > b[1]
-    if(!b)
-      return 1
+    function cmp(a, b) {
+        //check if a[1] > b[1]
+        if (!b)
+            return 1
 
-    var p = a[1], q = b[1]
-    var i = 0
-    while (p[i] === q[i] && p[i] != null)
-      i++
+        var p = a[1],
+            q = b[1]
+        var i = 0
+        while (p[i] === q[i] && p[i] != null)
+            i++
 
-    if(p[i] === q[i]) return 0
-    return p[i] < q[i] ? -1 : 1
-  }
-
-  function isPrefix(a, b) {
-    if(!b) return 1
-    var p = a[1], q = b[1]
-    var i = 0
-    while (p[i] === q[i] && i < p.length && i < q.length)
-      i++
-    if(i == p.length || i == q.length) return 0
-    return p[i] < q[i] ? -1 : 1 
-  }
-
-  //merge two lists, which must be sorted.
-
-  function cmpSp (a, b) {
-    if(a[0] == b[0])
-      return 0
-    function max(k) {
-      return k[0] + (k[1] >= 1 ? k[1] - 1 : 0)
-    }
-    if(max(a) < b[0] || max(b) < a[0])
-      return a[0] - b[0]
-    return 0
-  }
-
-  function resolveAry(a, b) {
-    return a
-  }
-
-  function resolve(a, b) {
-    if(a[1].length == b[1].length) { 
-      if(a[0] == b[0]) {
-        if(a[0] == 'splice') {
-          var R = merge(a[2], b[2], cmpSp, resolveAry)
-          return ['splice', a[1].slice(), R]
-        } else if(equal(a[2], b[2])) //same change both sides.
-          return a
-      }
+            if (p[i] === q[i]) return 0
+        return p[i] < q[i] ? -1 : 1
     }
 
-    _conflicts.push( {
-      'master': a,
-      'branch': b
-    });
+    function isPrefix(a, b) {
+        //console.log("is prefix");
+        //console.log(a);
+        //console.log(b);
 
-    return a
-  }
-
-  function merge(a, b, cmp, resolve) {
-    var i = a.length - 1, j = b.length - 1, r = []
-    while(~i && ~j) {
-      var c = cmp(a[i], b[j])
-      if(c > 0) r.push(a[i--])
-      if(c < 0) r.push(b[j--])
-      if(!c) {
-        var R = resolve(a[i], b[j])
-          j--, i--
-        r.push(R)
-      }
+        if (!b) return 1
+        var p = a[1],
+            q = b[1]
+        var i = 0
+        while (p[i] === q[i] && i < p.length && i < q.length)
+            i++
+            if (i == p.length || i == q.length) {
+              //console.log("same prefix")
+              return 0
+            }
+        return p[i] < q[i] ? -1 : 1
     }
-    //finish off the list if there are any left over
-    while(~i) r.push(a[i--])
-    while(~j) r.push(b[j--])
-    return r
-  }
 
-  _a.sort(cmp)
-  _b.sort(cmp)
+    //merge two lists, which must be sorted.
 
-  var m = merge(_a, _b, isPrefix, resolve)
-  return m.length ? m : null
+    function cmpSp(a, b) {
+        //console.log('cmpsp');
+        //console.log(a);
+        //console.log(b);
+        if (a[0] == b[0]) {
+          //console.log('no deal')
+            return 0
+        }
+
+        function max(k) {
+            return k[0] + (k[1] >= 1 ? k[1] - 1 : 0)
+        }
+        if (max(a) < b[0] || max(b) < a[0])
+            return a[0] - b[0]
+        return 0
+    }
+
+    function resolveAry(a, b) {
+        ////console.log("THIS IS THE PROBLEM???")
+        ////console.log(a);
+        ////console.log(b);
+        return b;
+    }
+
+    function resolve(a, b) {
+        //console.log('resolving')
+        //console.log(a);
+        //console.log(b);
+        if (a[1].length == b[1].length) {
+            if (a[0] == b[0]) {
+                if (a[0] == 'splice') {
+                    //console.log('splicemerge');
+                    var R = merge(a[2], b[2], cmpSp, resolveAry)
+                    //console.log('R is');
+                    //console.log(R);
+                    return ['splice', a[1].slice(), R]
+                } else if (equal(a[2], b[2])) //same change both sides.
+                    return a
+            }
+        }
+
+        _conflicts.push({
+            'master': a,
+            'branch': b
+        });
+
+        return a
+    }
+
+    function merge(a, b, cmp, resolve) {
+        var i = a.length - 1,
+            j = b.length - 1,
+            r = []
+        while (~i && ~j) {
+            var c = cmp(a[i], b[j])
+            if (c > 0) r.push(a[i--])
+            if (c < 0) r.push(b[j--])
+            if (!c) {
+                var R = resolve(a[i], b[j])
+                j--, i--
+                r.push(R)
+                //console.log('new merge');
+                //console.log(JSON.stringify(r, null, 3));
+            }
+        }
+        //finish off the list if there are any left over
+        while (~i) r.push(a[i--])
+        while (~j) r.push(b[j--])
+        //console.log("final r")
+        //console.log(JSON.stringify(r, null, 3));
+        return r
+    }
+
+    _a.sort(cmp)
+    _b.sort(cmp)
+
+    //console.log('the end')
+    //console.log(JSON.stringify(_a, null, 3));
+    //console.log(JSON.stringify(_b, null, 3));
+    //console.log('end the end')
+
+    var m = merge(_a, _b, isPrefix, resolve)
+    return m.length ? m : null
 }
 
 // msb added a list of conflicts
-exports.conflicts = function (){
-  return _conflicts;
+exports.conflicts = function() {
+    return _conflicts;
 }
-
 },{"adiff":3}],3:[function(require,module,exports){
 function head (a) {
   return a[0]

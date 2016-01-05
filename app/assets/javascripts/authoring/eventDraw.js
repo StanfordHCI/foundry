@@ -200,6 +200,8 @@ function drawMainRect(eventObj) {
                     return TASK_PAUSED_COLOR;
                 case "delayed":
                     return TASK_DELAY_COLOR;
+                case "deleted":
+                    return TASK_DEL_COLOR;
                 default:
                     return TASK_COMPLETE_COLOR;
             }
@@ -223,7 +225,7 @@ function drawMainRect(eventObj) {
     if (isWorkerTask(eventObj) || uniq == "") rect.style("fill-opacity", 1);
 
 
-    if(eventObj.status === "not_started") {
+    if(eventObj.status === "not_started" || eventObj.status === "deleted") {
         rect.style({
             stroke: TASK_NOT_START_STROKE_COLOR,
             "stroke-width": "1",
@@ -255,6 +257,8 @@ function drawMainRect(eventObj) {
                     return TASK_PAUSED_BORDER_COLOR;
                 case "delayed":
                     return TASK_DELAY_BORDER_COLOR;
+                case "deleted":
+                    return TASK_DEL_BORDER_COLOR;
                 default:
                     return TASK_COMPLETE_BORDER_COLOR;
             }
@@ -520,5 +524,52 @@ function drawTimer(eventObj){
 
         eventObj["timer"] = remaining_time;
     }
+}
+
+function showTempEvent(eventObject, closeModal){
+    //var task_id = getEventJSONIndex(groupNumber);
+    //var eventToDuplicate = flashTeamsJSON["events"][task_id];
+
+    var eventToDuplicate = eventObject;
+
+    var groupNum = eventToDuplicate['id'];
+
+
+    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
+    //var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
+    var x = eventToDuplicate["x"] + 4;
+
+
+    var y = eventToDuplicate["y"]; //keep event on same row as original event
+    //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
+    
+    var snapPoint = calcSnap(x,y); 
+
+    //check if duplicated row would be within the bounds of the timeline (e.g., doesn't exceed the rows)  
+    if(!checkWithinTimelineBounds(snapPoint)){ 
+        alert('This event cannot be duplicated because it exceeds the boundaries of the timeline');
+        return; 
+    }
+
+    var eventObj = createEventObj(newEventObject([snapPoint[0], snapPoint[1]], eventToDuplicate["duration"], eventToDuplicate));
+
+    eventObj['id'] = eventToDuplicate['id'];
+    eventObj['status'] = "deleted"
+    drawEvent(eventObj, true);
+
+    if(closeModal == true){
+        $('#task_modal').modal('hide'); 
+
+    }else{
+    }
+
+
+    // var new_data = {
+    //       id: "task_g_" + groupNum, class: "task_g",
+    //       groupNum: groupNum, x: x, y: y
+    //     };
+    //     task_groups.push(new_data);
+    // save
+    //updateStatus();
 }
 

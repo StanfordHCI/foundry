@@ -76,14 +76,15 @@ function showJSONModal(id_array){
     //console.log('stringify:' + JSON.stringify(origin_ft_json));
 
     if(team_type == 'original'){
-        $("#origin-json-div").css('display', 'none');
+        $("#master-updated-json-div").css('display', 'none');
         $('#json-merge-footer-btn').css('display', 'none');
         //$("#branch-json-div").css('class', 'span6');
         $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
     }
 
     if(team_type == 'branch'){
-        $("#origin-json-div").html('<h3>ORIGIN JSON</h3>' + JSON.stringify(origin_ft_json));
+        $("#master-updated-json-div").html('<h3>MASTER UPDATED JSON</h3>' + JSON.stringify(origin_ft_json));
+        $("#ancestor-json-div").html('<h3>ANCESTOR JSON</h3>' + JSON.stringify(ancestorBranch['flash_teams_json']));
         $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
     }
 
@@ -91,15 +92,13 @@ function showJSONModal(id_array){
 
 }
 
-function mergeJSON(){
-    //alert('merge!');
+function mergeBranchToMaster(){
+
+    var merged_json = diffMerge('branch-to-master');
 
     var origin_ft_json = loadedOriginStatus;
 
-    origin_ft_json['flash_teams_json'] = flashTeamsJSON;
-
-    //console.log(origin_ft_json);
-
+    origin_ft_json['flash_teams_json'] = merged_json;
 
     var localStatusJSON = JSON.stringify(origin_ft_json);
         //console.log("updating string: " + localStatusJSON);
@@ -113,8 +112,29 @@ function mergeJSON(){
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
             console.log("UPDATED ORIGIN FLASH TEAM STATUS");
+            loadOriginStatus(origin_id);
+            
         });
+
+        //updateAncestorBranch(loadedOriginStatus);
+        pullMasterJSON();
+
 }
+
+//replaces flashTeamsJSON with the JSON from the origin team
+function mergeMasterToBranch(){
+    var merged_json = diffMerge('master-to-branch');
+
+    flashTeamsJSON = merged_json;
+
+    updateStatus();
+
+    console.log('merged master to branch');
+
+    pullMasterJSON();
+}
+
+
 
 //replaces flashTeamsJSON with the JSON from the origin team
 function forcePullMasterJSON(){
@@ -160,63 +180,137 @@ function pullMasterJSON(){
 
 }
 
-// var branch = {"events":[{"id":1451522704201,"x":-4,"min_x":0,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UI Task","members":["1451522684042"],"startTime":0,"duration":120,"startHr":0,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"UI Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451522719541,"x":172,"min_x":176,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX Task","members":["1451522685753"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"UX Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451523453482,"x":348,"min_x":352,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX and UI Event","members":["1451522684042","1451522685753"],"startTime":240,"duration":120,"startHr":4,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"UX and UI Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524371154,"x":172,"min_x":176,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Test Event","members":["1451522684042"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"Test test test","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524611070,"x":436,"min_x":440,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Testing again","members":[],"startTime":300,"duration":120,"startHr":5,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524959620,"x":612,"min_x":616,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"hola","members":[],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525753692,"x":612,"min_x":616,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"MSB Event","members":["1451525760903"],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"HEY MSB","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525878841,"x":788,"min_x":792,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"DR EVENT","members":["1451522685753"],"startTime":540,"duration":120,"startHr":9,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"DR DR DR","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451529339851,"x":370,"min_x":374,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Daniela","members":["1451522685753"],"startTime":255,"duration":90,"startHr":4,"startMin":15,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544180708,"x":612,"min_x":616,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"ANDREW","members":["1451544193926"],"startTime":420,"duration":135,"startHr":7,"startMin":0,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544257444,"x":854,"min_x":858,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Heyyyy","members":["1451525760903","1451544193926"],"startTime":585,"duration":135,"startHr":9,"startMin":45,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451584479455,"x":1052,"min_x":1056,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"DR ROCKS","members":["1451522684042"],"startTime":720,"duration":120,"startHr":12,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"DR DR DR","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}}],"members":[{"role":"UI","id":"1451522684042","color":"#b175ca","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"ec74ae2b-6bb8-430c-a09a-1c12a379b5cc","invitation_link":"http://localhost:3000/members/54/invited?uniq=ec74ae2b-6bb8-430c-a09a-1c12a379b5cc"},{"role":"UX","id":"1451522685753","color":"#9b59b6","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"8e8b1642-6cd9-4c18-a4b6-30a0d271c13e","invitation_link":"http://localhost:3000/members/54/invited?uniq=8e8b1642-6cd9-4c18-a4b6-30a0d271c13e"},{"role":"MSB","id":"1451525760903","color":"#d35400","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"601e54ad-3790-4511-8213-ced2396395f6","invitation_link":"http://localhost:3000/members/54/invited?uniq=601e54ad-3790-4511-8213-ced2396395f6"},{"role":"Andrew","id":"1451544193926","color":"#336e7b","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"345dc4a4-b58c-4e8c-82a1-e71f91cffc18","invitation_link":"http://localhost:3000/members/54/invited?uniq=345dc4a4-b58c-4e8c-82a1-e71f91cffc18"}],"folders":[],"interactions":[],"origin_id":54,"team_type":"branch","local_update":1451584497862,"id":58,"title":"DR NEW Branch","author":"Daniela"};
 
-// var master = {"events":[{"id":1451522704201,"x":-4,"min_x":0,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UI Task","members":["1451522684042"],"startTime":0,"duration":120,"startHr":0,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"UI Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451522719541,"x":172,"min_x":176,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX Task","members":["1451522685753"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"UX Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451523453482,"x":348,"min_x":352,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX and UI Event","members":["1451522684042","1451522685753"],"startTime":240,"duration":120,"startHr":4,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"UX and UI Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524371154,"x":172,"min_x":176,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Test Event","members":["1451522684042"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"Test test test","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524611070,"x":436,"min_x":440,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Testing again","members":[],"startTime":300,"duration":120,"startHr":5,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524959620,"x":612,"min_x":616,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"hola","members":[],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525753692,"x":612,"min_x":616,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"MSB Event","members":["1451525760903"],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"HEY MSB","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525878841,"x":788,"min_x":792,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"DR EVENT","members":["1451522685753"],"startTime":540,"duration":120,"startHr":9,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"DR DR DR","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451529339851,"x":370,"min_x":374,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Daniela","members":["1451522685753"],"startTime":255,"duration":90,"startHr":4,"startMin":15,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544180708,"x":612,"min_x":616,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"ANDREW","members":["1451544193926"],"startTime":420,"duration":135,"startHr":7,"startMin":0,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544257444,"x":854,"min_x":858,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Heyyyy","members":["1451525760903","1451544193926"],"startTime":585,"duration":135,"startHr":9,"startMin":45,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451584463004,"x":1052,"min_x":1056,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"MSB ROCKS","members":["1451525760903"],"startTime":720,"duration":120,"startHr":12,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"MSB MSB MSB","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}}],"members":[{"role":"UI","id":"1451522684042","color":"#b175ca","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"ec74ae2b-6bb8-430c-a09a-1c12a379b5cc","invitation_link":"http://localhost:3000/members/54/invited?uniq=ec74ae2b-6bb8-430c-a09a-1c12a379b5cc"},{"role":"UX","id":"1451522685753","color":"#9b59b6","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"8e8b1642-6cd9-4c18-a4b6-30a0d271c13e","invitation_link":"http://localhost:3000/members/54/invited?uniq=8e8b1642-6cd9-4c18-a4b6-30a0d271c13e"},{"role":"MSB","id":"1451525760903","color":"#d35400","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"601e54ad-3790-4511-8213-ced2396395f6","invitation_link":"http://localhost:3000/members/54/invited?uniq=601e54ad-3790-4511-8213-ced2396395f6"},{"role":"Andrew","id":"1451544193926","color":"#336e7b","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"345dc4a4-b58c-4e8c-82a1-e71f91cffc18","invitation_link":"http://localhost:3000/members/54/invited?uniq=345dc4a4-b58c-4e8c-82a1-e71f91cffc18"}],"folders":[],"interactions":[],"origin_id":54,"team_type":"original","local_update":1451584472109,"id":54,"title":"DR NEW","author":"Daniela","status":false};
-
-// var master_updated = {"events":[{"id":1451522704201,"x":-4,"min_x":0,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UI Task","members":["1451522684042"],"startTime":0,"duration":120,"startHr":0,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"UI Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451522719541,"x":172,"min_x":176,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX Task","members":["1451522685753"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"UX Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451523453482,"x":348,"min_x":352,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"UX and UI Event","members":["1451522684042","1451522685753"],"startTime":240,"duration":120,"startHr":4,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"UX and UI Task Description","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524371154,"x":172,"min_x":176,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Test Event","members":["1451522684042"],"startTime":120,"duration":120,"startHr":2,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"Test test test","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524611070,"x":436,"min_x":440,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Testing again","members":[],"startTime":300,"duration":120,"startHr":5,"startMin":0,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451524959620,"x":612,"min_x":616,"y":245,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"hola","members":[],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":3,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525753692,"x":612,"min_x":616,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"MSB Event","members":["1451525760903"],"startTime":420,"duration":120,"startHr":7,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"HEY MSB","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451525878841,"x":788,"min_x":792,"y":165,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"DR EVENT","members":["1451522685753"],"startTime":540,"duration":120,"startHr":9,"startMin":0,"row":2,"dri":"0","pc":"0","notes":"DR DR DR","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451529339851,"x":370,"min_x":374,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Daniela","members":["1451522685753"],"startTime":255,"duration":90,"startHr":4,"startMin":15,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544180708,"x":612,"min_x":616,"y":325,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"ANDREW","members":["1451544193926"],"startTime":420,"duration":135,"startHr":7,"startMin":0,"row":4,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451544257444,"x":854,"min_x":858,"y":5,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"Heyyyy","members":["1451525760903","1451544193926"],"startTime":585,"duration":135,"startHr":9,"startMin":45,"row":0,"dri":"0","pc":"0","notes":"","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}},{"id":1451584463004,"x":1052,"min_x":1056,"y":85,"timer":0,"task_startBtn_time":-1,"task_endBtn_time":-1,"status":"not_started","gdrive":[],"completed_x":null,"events_after":"","title":"MSB ROCKS","members":["1451525760903"],"startTime":720,"duration":120,"startHr":12,"startMin":0,"row":1,"dri":"0","pc":"0","notes":"MSB MSB MSB","inputs":"","all_inputs":"","outputs":"","docQs":[["Please explain all other design or execution decisions made, along with the reason they were made",""],["Please add anything else you want other team members, the team lead, or the client, to know. (optional)",""]],"outputQs":{}}],"members":[{"role":"UI","id":"1451522684042","color":"#b175ca","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"ec74ae2b-6bb8-430c-a09a-1c12a379b5cc","invitation_link":"http://localhost:3000/members/54/invited?uniq=ec74ae2b-6bb8-430c-a09a-1c12a379b5cc"},{"role":"UX","id":"1451522685753","color":"#9b59b6","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"8e8b1642-6cd9-4c18-a4b6-30a0d271c13e","invitation_link":"http://localhost:3000/members/54/invited?uniq=8e8b1642-6cd9-4c18-a4b6-30a0d271c13e"},{"role":"MSB","id":"1451525760903","color":"#d35400","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"601e54ad-3790-4511-8213-ced2396395f6","invitation_link":"http://localhost:3000/members/54/invited?uniq=601e54ad-3790-4511-8213-ced2396395f6"},{"role":"Andrew","id":"1451544193926","color":"#336e7b","type":"worker","skills":[],"seenDocQs":[],"parentId":"root","uniq":"345dc4a4-b58c-4e8c-82a1-e71f91cffc18","invitation_link":"http://localhost:3000/members/54/invited?uniq=345dc4a4-b58c-4e8c-82a1-e71f91cffc18"}],"folders":[],"interactions":[],"origin_id":54,"team_type":"original","local_update":1451584472109,"id":54,"title":"DR NEW","author":"Daniela","status":false};
-
-
-//default -- don't use
-function diffMergeDef(){
-    var threeWayMerge = branchmerge.threeWayMerge();
-    console.log(JSON.stringify(threeWayMerge, null, 3));
-    var branchMerge = branchmerge.patch(threeWayMerge.diff);
-}
-
-
-var master;
-var master_updated;
-var branch;
-
-function diffMerge(){
+function diffMerge(merge_type){
     loadOriginStatus(origin_id);
-    master = ancestorBranch.flash_teams_json;
-    master_updated = loadedOriginStatus.flash_teams_json;
-    branch = flashTeamsJSON;
+    var master = ancestorBranch.flash_teams_json;
+    
+    var master_updated = loadedOriginStatus.flash_teams_json;
+    var copied_master_updated = JSON.parse(JSON.stringify(master_updated));
+    
+    var branch = flashTeamsJSON;
+    var copied_branch = JSON.parse(JSON.stringify(branch));
 
     //console.log(JSON.stringify(master_updated));
     var diff = branchmerge.threeWayMerge(master_updated, master, branch);
     console.log(JSON.stringify(diff, null, 3));
-    var merged = branchmerge.patch(diff.diff, master_updated);
-    console.log(JSON.stringify(merged));
+    // var merged = branchmerge.patch(diff.diff, master_updated, branch);
+    
+    if(merge_type == 'master-to-branch'){
+        var merged = branchmerge.patch(diff.diff, master_updated, copied_branch);
+        return merged;
+    }
+
+    if(merge_type == 'branch-to-master'){
+        var merged = branchmerge.patch(diff.diff, master_updated, copied_master_updated);
+        return merged;
+    }
 }
 
 function showDiff(){
     loadOriginStatus(origin_id);
-    master = ancestorBranch.flash_teams_json;
-    master_updated = loadedOriginStatus.flash_teams_json;
-    branch = flashTeamsJSON;
+    var master = ancestorBranch.flash_teams_json;
+    var master_updated = loadedOriginStatus.flash_teams_json;
+    var branch = flashTeamsJSON;
 
     //console.log(JSON.stringify(master_updated));
     //var diff = branchmerge.threeWayMerge(master_updated, master, branch);
     var diff = branchmerge.threeWayMerge(master, master_updated, branch);
     console.log(JSON.stringify(diff, null, 3));
+
+    return diff;
 }
 
+
+var diffs_obj; 
+var deleted_tasks = [];
 
 function showTasksDiffs(){
     $('#JSONDiffBtn').attr('onclick', 'hideTasksDiffs()');
     $('#JSONDiffBtn').prop('value', 'Hide Diffs');
 
-    showDiffTask("1451593588227", "sel");
-    showDiffTask("1451586339736", "del");   
+    if(diffs_obj == undefined) {
+     diffs_obj = testDiff() ;
+    }
+    //var diffs_obj = testDiff();
+
+    for (var key in diffs_obj) {
+        console.log(key, diffs_obj[key]);
+        showDiffTask(key, diffs_obj[key]['type'], diffs_obj[key]['index'])
+    }
+
+    // showDiffTask("1451593588227", "add");
+    // showDiffTask("1451586339736", "del");   
 }
 
 function hideTasksDiffs(){
     $('#JSONDiffBtn').attr('onclick', 'showTasksDiffs()');
     $('#JSONDiffBtn').prop('value', 'Show Diffs');
 
-    hideDiffTask("1451593588227");
-    hideDiffTask("1451586339736");
+    // hideDiffTask("1451593588227");
+    // hideDiffTask("1451586339736");
+
+    //var diffs_obj = testDiff();
+
+    // for (var key in diffs_obj) {
+    //     hideDiffTask(key)
+    // }
+    for (var key in diffs_obj) {
+        console.log(key, diffs_obj[key]);
+        hideDiffTask(key, diffs_obj[key]['type'], diffs_obj[key]['index'])
+    }
 }
+
+function testDiff(){
+    //var tasksJSON = loadedStatus.task_groups;
+
+    // $.each(tasksJSON, function(key, value){     
+    //          if(((typeof key) == 'groupNum') && key=='1451935003770' )
+    //              console.log('true');
+    //        //ids.push(key);
+    //     });
+
+    var branch_events = getGroupNumArray(flashTeamsJSON['events']);
+
+    //console.log(branch_events);
+
+    var ancestor_events = getGroupNumArray(ancestorBranch.flash_teams_json['events']);
+
+    var groupNumDiffs = {} 
+
+    for (var i=0;i<branch_events.length;i++){
+        var arrayIndex = ancestor_events.indexOf(branch_events[i]);
+
+        if(arrayIndex == -1){
+            //console.log(ancestor_events.indexOf(branch_events[i]));
+            groupNumDiffs[branch_events[i]] = {"type": "add", "index": i}
+        }
+    }
+
+    for (var i=0;i<ancestor_events.length;i++){
+        var arrayIndex = branch_events.indexOf(ancestor_events[i]);
+
+        if(arrayIndex == -1){
+            //console.log(ancestor_events.indexOf(branch_events[i]));
+            groupNumDiffs[ancestor_events[i]] = {"type": "del", "index": i}
+            deleted_tasks.push(groupNumDiffs[ancestor_events[i]]);
+        }
+    }
+
+    return groupNumDiffs;
+
+}
+
+function getGroupNumArray(events){
+
+    var groupNumArray = []
+
+    for (var i=0;i<events.length;i++){
+        ev_id = events[i]['id'];
+        groupNumArray.push(ev_id);
+    }
+
+    return groupNumArray;
+}
+
+

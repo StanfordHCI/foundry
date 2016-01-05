@@ -98,7 +98,7 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted"/* && !events.isWorkerTask(eventObj) */ ?
                     "#444" : "white";
             },
             "font-weight": function(d) {
@@ -170,7 +170,7 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted"/* && !events.isWorkerTask(eventObj) */ ?
                     "#444" : "white";
             },
             "font-weight": function(d) {
@@ -198,7 +198,7 @@ if(!window._foundry) {
             "stroke": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted" /* && !events.isWorkerTask(eventObj) */ ?
                     "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.24)"
             },
             "stroke-width": "1px"
@@ -232,7 +232,7 @@ if(!window._foundry) {
             "xlink:href": function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted" /* && !events.isWorkerTask(eventObj) */ ?
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
             "class": "num-members-icon",
@@ -255,7 +255,7 @@ if(!window._foundry) {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted"/* && !events.isWorkerTask(eventObj) */ ?
                     events.iconOpacity : 1;
             }
         }
@@ -285,7 +285,7 @@ if(!window._foundry) {
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || eventObj.status === "deleted" /* && !events.isWorkerTask(eventObj) */ ?
                     "black" : "white";
             },
             "font-weight": 200,

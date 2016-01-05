@@ -8,11 +8,15 @@
 
     <div class="row-fluid">
 
-      <div class="span6" id="origin-json-div">
+      <div class="span4" id="master-updated-json-div">
 
       </div>
 
-      <div class="span6" id="branch-json-div">
+      <div class="span4" id="ancestor-json-div">
+
+      </div>
+
+      <div class="span4" id="branch-json-div">
 
       </div>
 
@@ -21,7 +25,7 @@
 
   </div>
   <div class="modal-footer">
-    <button class="btn btn-danger" id="json-pull-footer-btn" onclick="forcePullMasterJSON()">Pull Master JSON</button>
-    <button class="btn btn-danger" id="json-merge-footer-btn" onclick="mergeJSON()">Merge JSON into Master</button>
+    <button class="btn btn-danger" id="json-pull-footer-btn" onclick="mergeMasterToBranch()">Merge Master into Branch</button>
+    <button class="btn btn-danger" id="json-merge-footer-btn" onclick="mergeBranchToMaster()">Merge Branch into Master</button>
   </div>
 </div>
