@@ -712,6 +712,7 @@ var loadStatus = function(id){
     return JSON.parse(loadedStatusJSON);
 };
 
+// this returns the loaded status for the MASTER UPDATED BRANCH
 function loadOriginStatus(origin_id){
     //var loadedOriginStatusJSON;
     var url = '/flash_teams/' + origin_id.toString() + '/get_status';
@@ -1928,11 +1929,6 @@ var constructStatusObj = function(){
 var timer = null;
 
 var updateStatus = function(flash_team_in_progress){
-    if(deleted_tasks.length > 0){
-        for (var i=0;i<deleted_tasks.length;i++){
-            deleteEvent(deleted_tasks[i]);
-        }
-    }
 
     if (timer) {
         clearTimeout(timer); //cancel the previous timer.
@@ -1967,7 +1963,7 @@ var updateStatus = function(flash_team_in_progress){
             type: 'post',
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
-            //console.log("UPDATED FLASH TEAM STATUS");
+            console.log("UPDATED FLASH TEAM STATUS");
         });
     }, 2000);
 };

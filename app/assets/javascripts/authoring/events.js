@@ -40,6 +40,13 @@ var drag = d3.behavior.drag()
             dragged = false;
             var ev = getEventFromId(d.groupNum);
 
+            // if(ev.status=="deleted"){
+            //     console.log('you cannot move a deleted event');
+            //     flashTeamsJSON["events"][getEventJSONIndex(d.groupNum)] = originalEV;
+            //     deleteEvent(d.groupNum);
+            //     removeTask(d.groupNum);
+            // }
+
             //Check if handoffs will make this a bag drag
             var outOfRange = false;
             var event1;

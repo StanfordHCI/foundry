@@ -168,6 +168,7 @@ end
 			@flash_team = FlashTeam.find(params[:id])
       flash_team_json = JSON.parse(@flash_team.json)
       @origin_id = flash_team_json['origin_id']
+      @original_or_branch = flash_team_json['type']
 			
 			if @flash_team.user_id != session[:user_id]
 				flash[:notice] = 'You cannot access this flash team.' 

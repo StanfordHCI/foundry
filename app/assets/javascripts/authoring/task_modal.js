@@ -625,6 +625,12 @@ function saveTaskOverview(groupNum){
 	var task_index = getEventJSONIndex(groupNum); 
 	var ev = flashTeamsJSON["events"][task_index];
 
+    if(ev.status == "deleted"){
+        console.log('you cannot make changes to a deleted task');
+        $('#task_modal').modal('hide'); 
+        return;
+    }
+
     //Update title
     if($("#eventName").val() != "")
         ev.title = $("#eventName").val();

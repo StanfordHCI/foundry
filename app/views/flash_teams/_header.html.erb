@@ -13,6 +13,12 @@
 	  	</div>
 	     
 	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
+
+	     <%if @original_or_branch == "original" %>
+	     	<%= link_to "Branch Team", {action: "branch", id: @flash_team.id}, :class => 'btn btn-primary' %>
+	     <%else%>
+	     	<%= link_to "View Master", {action: "edit", id: @origin_id}, :class => 'btn btn-primary' %>
+	     <%end%>
 	     	
 	     	<input type="button" class="btn btn-primary" id="flashTeamJSONBtn" value="Show JSON"  style="display: ''" onclick="showJSONModal('[<%=@flash_team.id.to_s + "," + @origin_id.to_s%>]');"/>
 
