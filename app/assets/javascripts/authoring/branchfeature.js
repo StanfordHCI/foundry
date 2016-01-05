@@ -20,17 +20,18 @@ function showJSONModal(id_array){
         //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
         var origin_ft_json = loadedOriginStatus.flash_teams_json;
 
-        if(team_type == 'original'){
+    if(team_type == 'original'){
         $("#master-updated-json-div").css('display', 'none');
         $('#json-merge-footer-btn').css('display', 'none');
-        //$("#branch-json-div").css('class', 'span6');
-        $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
-    }
+        $("#ancestor-json-div").css('display', 'none');
+        $("#branch-json-div").removeClass( "span4" ).addClass( "span12" );
+        $("#branch-json-div").html('<h3>CURRENT MASTER JSON</h3>' + JSON.stringify(flashTeamsJSON, null, 2));
+     }
 
     if(team_type == 'branch'){
-        $("#master-updated-json-div").html('<h3>MASTER UPDATED JSON</h3>' + JSON.stringify(origin_ft_json));
-        $("#ancestor-json-div").html('<h3>ANCESTOR JSON</h3>' + JSON.stringify(ancestorBranch['flash_teams_json']));
-        $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON));
+        $("#master-updated-json-div").html('<h3>MASTER UPDATED JSON</h3>' + JSON.stringify(origin_ft_json, null, 2));
+        $("#ancestor-json-div").html('<h3>ANCESTOR JSON</h3>' + JSON.stringify(ancestorBranch['flash_teams_json'], null, 2));
+        $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON, null, 2));
     }
 
     $("#jsonModal").modal('show');
@@ -254,14 +255,26 @@ function testDiff(){
 
     var ancestor_events = getGroupNumArray(ancestorBranch.flash_teams_json['events']);
 
-    var groupNumDiffs = {} 
+    var groupNumDiffs = {}; 
 
     for (var i=0;i<branch_events.length;i++){
         var arrayIndex = ancestor_events.indexOf(branch_events[i]);
 
         if(arrayIndex == -1){
             //console.log(ancestor_events.indexOf(branch_events[i]));
-            groupNumDiffs[branch_events[i]] = {"type": "add", "index": i}
+            groupNumDiffs[branch_events[i]] = {"type": "add", "index": i};
+        }
+
+        else{
+            var branch_index = getIndexOfEventObj(branch_events[i], flashTeamsJSON['events']);
+            var ancestor_index = getIndexOfEventObj(branch_events[i], ancestorBranch.flash_teams_json['events']);
+
+            if(JSON.stringify(flashTeamsJSON['events'][branch_index]) != JSON.stringify(ancestorBranch.flash_teams_json['events'][ancestor_index])){
+                groupNumDiffs[branch_events[branch_index]] = {"type": "edit", "index": i};
+                console.log('this event has been edited!');
+            }
+
+
         }
     }
 
@@ -271,7 +284,7 @@ function testDiff(){
 
         if(arrayIndex == -1){
             //console.log(ancestor_events.indexOf(branch_events[i]));
-            groupNumDiffs[ancestor_events[i]] = {"type": "del", "index": i}
+            groupNumDiffs[ancestor_events[i]] = {"type": "del", "index": i};
             deleted_tasks.push(groupNum);
             deleted_tasks = jQuery.unique(deleted_tasks);
         }
@@ -279,7 +292,7 @@ function testDiff(){
             var indexOfJSON = getEventJSONIndex(groupNum);
             var eventObj = flashTeamsJSON["events"][indexOfJSON];
             if(eventObj.status == "deleted"){
-                groupNumDiffs[ancestor_events[i]] = {"type": "del", "index": i}
+                groupNumDiffs[ancestor_events[i]] = {"type": "del", "index": i};
                 deleted_tasks.push(groupNum);
                 deleted_tasks = jQuery.unique(deleted_tasks);
             }
@@ -302,12 +315,21 @@ function getGroupNumArray(events){
     return groupNumArray;
 }
 
+//Access a particular "event" in the JSON by its id number and return its index in the JSON array of events
+function getIndexOfEventObj(idNum, all_events_obj) {
+    var num_events = all_events_obj.length;
+    for (var i = 0; i < num_events; i++) {
+        if (all_events_obj[i].id == idNum) {
+            return i;
+        }
+    }
+};
 
 function showDiffTask(groupNum, type, index) {
 
     var groupNum = groupNum;
     
-    if(type == "add"){
+    if(type == "add" || type == "edit"){
         var indexOfJSON = getEventJSONIndex(groupNum);
         var eventObj = flashTeamsJSON["events"][indexOfJSON];
 
@@ -315,7 +337,6 @@ function showDiffTask(groupNum, type, index) {
         var task_g = getTaskGFromGroupNum(groupNum);    
         var rect = task_g.selectAll("#rect_" + groupNum);
         var borderBottom = task_g.selectAll(".border-bottom");
-
     
         rect.attr("fill", TASK_SEL_COLOR);
         borderBottom.attr("fill", TASK_SEL_BORDER_COLOR);
@@ -345,7 +366,7 @@ function showDiffTask(groupNum, type, index) {
 //Fires on show diff button
 function hideDiffTask(groupNum, type, index) {
 
-    if(type == "add"){
+    if(type == "add" || type == "edit"){
         var indexOfJSON = getEventJSONIndex(groupNum);
         var eventObj = flashTeamsJSON["events"][indexOfJSON];
         drawEvent(eventObj); //Will update color
