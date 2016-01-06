@@ -15,6 +15,11 @@ function drawEvent(eventObj) {
         // subtract two so there's always at least one empty row
         // (event.row is 0 indexed)
 
+        if(getEventJSONIndex(eventObj["id"]) == undefined){
+            //console.log("event is in task_groups but does not exist in flashTeamsJSON");
+            return;
+        }
+
         if(eventObj.row >= window._foundry.timeline.numRows - 2) {
           window._foundry.timeline.updateNumRows(eventObj.row + 2);
         }

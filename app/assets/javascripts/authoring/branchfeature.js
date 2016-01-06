@@ -385,13 +385,43 @@ function hideDiffTask(groupNum, type, index) {
 }
 
 function removeTempTasks(){
-    if(deleted_tasks.length > 0){
-        for (var i=0;i<deleted_tasks.length;i++){
-            deleteEvent(deleted_tasks[i]);
-            removeTask(deleted_tasks[i]);
+
+    var ev_count_with_temps = flashTeamsJSON['events'].length;
+    console.log('inside remove temp tasks');
+    // if(deleted_tasks.length > 0){
+    //     for (var i=0;i<deleted_tasks.length;i++){
+    //        //deleteEvent(deleted_tasks[i]);
+    //         removeTask(deleted_tasks[i]);
+    //     }
+
+    //     if(show_diff == true){
+    //             hideTasksDiffs();
+    //             showTasksDiffs();
+    //         }
+    // }
+
+
+    for (var i = 0; i < flashTeamsJSON['events'].length; i++) {
+
+        //console.log(flashTeamsJSON['events'][i].status);
+        if (flashTeamsJSON['events'][i].status == "deleted") {
+            console.log('this event was deleted');
+            deleteEvent(flashTeamsJSON['events'][i].id);
+            console.log('after deleted');
+
         }
     }
+
+    var ev_count_without_temps = flashTeamsJSON['events'].length;
+
+    console.log('with temps: ' + ev_count_with_temps + ", without temps: " + ev_count_without_temps);
+
+
+
+    return (ev_count_with_temps == ev_count_without_temps); 
+
 }
+
 function showTempEvent(eventObject, closeModal){
     //var task_id = getEventJSONIndex(groupNumber);
     //var eventToDuplicate = flashTeamsJSON["events"][task_id];

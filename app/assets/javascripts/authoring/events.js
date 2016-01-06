@@ -738,7 +738,10 @@ function deleteEvent(eventId){
     }
 
     //Visually removes task from the timeline, in awareness.js
-    removeTask(eventId);
+    //if(show_diff != true){
+        removeTask(eventId);
+    //}
+    
     updateStatus();
 }
 

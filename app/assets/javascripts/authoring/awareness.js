@@ -427,6 +427,10 @@ function renderFlashTeamsJSON(data, firstTime) {
 // firstTime=true means page is reloaded
 function renderEverything(data, firstTime) {
     renderFlashTeamsJSON(data, firstTime);
+    removeTempTasks();
+
+
+
 
     if(firstTime) {
         logActivity("renderEverything(firstTime)",'Render Everything - First Time', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
@@ -434,6 +438,11 @@ function renderEverything(data, firstTime) {
         //console.log('in firstTime renderEverything');
         initTimer();
         listenForVisibilityChange();
+    }
+
+    if(flashTeamsJSON['events'].length != task_groups.length){
+        console.log('NEED TO WRITE A FUNCTION TO REMOVE THE TASK FROM TASK_GROUP');
+
     }
 
 
@@ -1899,6 +1908,14 @@ var getAllTasks = function(){
 };
 
 var constructStatusObj = function(){
+
+    var temps_removed = removeTempTasks();
+
+    if(show_diff == true && temps_removed == true){
+        //hideTasksDiffs();
+        showTasksDiffs();
+    }
+
     flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
     flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
     flashTeamsJSON["author"] = author_name;
