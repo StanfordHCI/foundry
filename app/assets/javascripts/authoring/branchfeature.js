@@ -60,7 +60,7 @@ function mergeBranchToMaster(){
             type: 'post',
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
-            console.log("UPDATED ORIGIN FLASH TEAM STATUS");
+            //console.log("UPDATED ORIGIN FLASH TEAM STATUS");
             loadOriginStatus(origin_id);
             
         });
@@ -84,7 +84,7 @@ function mergeMasterToBranch(){
 
     //updateStatus();
 
-    console.log('merged master to branch');
+    //console.log('merged master to branch');
 
     pullMasterJSON();
 
@@ -107,7 +107,7 @@ function forcePullMasterJSON(){
 
     updateStatus();
 
-    console.log('pulled master json');
+    //console.log('pulled master json');
 
     $("#jsonModal").modal('hide');
 }
@@ -150,7 +150,7 @@ function diffMergeAll(merge_type){
     var copied_branch = JSON.parse(JSON.stringify(branch));
 
     var diff = branchmerge.threeWayMerge(master_updated, master, branch);
-    console.log(JSON.stringify(diff, null, 3));
+    //console.log(JSON.stringify(diff, null, 3));
     
     if(merge_type == 'master-to-branch'){
         var merged = branchmerge.patch(diff.diff, master_updated, copied_branch);
@@ -175,7 +175,7 @@ function diffMerge(merge_type){
 
     //console.log(JSON.stringify(master_updated));
     var diff = branchmerge.threeWayMerge(master_updated, master, branch);
-    console.log(JSON.stringify(diff, null, 3));
+    //console.log(JSON.stringify(diff, null, 3));
     // var merged = branchmerge.patch(diff.diff, master_updated, branch);
     
     if(merge_type == 'master-to-branch'){
@@ -198,7 +198,7 @@ function showDiff(){
     //console.log(JSON.stringify(master_updated));
     //var diff = branchmerge.threeWayMerge(master_updated, master, branch);
     var diff = branchmerge.threeWayMerge(master, master_updated, branch);
-    console.log(JSON.stringify(diff, null, 3));
+    //console.log(JSON.stringify(diff, null, 3));
 
     return diff;
 }
@@ -211,36 +211,27 @@ function showTasksDiffs(){
     $('#JSONDiffBtn').attr('onclick', 'hideTasksDiffs()');
     $('#JSONDiffBtn').prop('value', 'Hide Diffs');
 
-    if(diffs_obj == undefined) {
-     diffs_obj = testDiff() ;
-    }
+    // if(diffs_obj == undefined) {
+    //  diffs_obj = testDiff();
+    // }
     var diffs_obj = testDiff();
 
     for (var key in diffs_obj) {
-        console.log(key, diffs_obj[key]);
+        //console.log(key, diffs_obj[key]);
         showDiffTask(key, diffs_obj[key]['type'], diffs_obj[key]['index'])
     }
 
     show_diff = true;
-
-    // showDiffTask("1451593588227", "add");
-    // showDiffTask("1451586339736", "del");   
 }
 
 function hideTasksDiffs(){
     $('#JSONDiffBtn').attr('onclick', 'showTasksDiffs()');
     $('#JSONDiffBtn').prop('value', 'Show Diffs');
 
-    // hideDiffTask("1451593588227");
-    // hideDiffTask("1451586339736");
-
     var diffs_obj = testDiff();
 
-    // for (var key in diffs_obj) {
-    //     hideDiffTask(key)
-    // }
     for (var key in diffs_obj) {
-        console.log(key + ":" + diffs_obj[key]);
+        //console.log(key + ":" + diffs_obj[key]);
         hideDiffTask(key, diffs_obj[key]['type'], diffs_obj[key]['index'])
     }
 
@@ -269,7 +260,7 @@ function testDiff(){
 
             if(JSON.stringify(flashTeamsJSON['events'][branch_index]) != JSON.stringify(ancestorBranch.flash_teams_json['events'][ancestor_index])){
                 groupNumDiffs[branch_events[branch_index]] = {"type": "edit", "index": i};
-                console.log('this event has been edited!');
+                //console.log('this event has been edited!');
             }
 
 
@@ -342,22 +333,12 @@ function showDiffTask(groupNum, type, index) {
 
     if(type == "del"){
         var events = window._foundry.events;
-        // var ancestor_branch = loadAncestorBranch(flash_team_id);
-        // console.log('ancestor_branch: ' + ancestor_branch);
-        //console.log('ancestorBranch events: ' + ancestorBranch.flash_teams_json['events']);
-        //var indexOfJSON = getEventJSONIndexFromObj(ancestorBranch.flash_teams_json, groupNum);
         var indexOfJSON = index;
-        //console.log('indexOfJSON: ' + indexOfJSON);
-
         var eventObj = ancestorBranch.flash_teams_json["events"][indexOfJSON];
 
-        //console.log('eventObj: ' + JSON.stringify(eventObj));
-
-        //var groupNum = 
         showTempEvent(eventObj);
-        //var groupNum = eventObj["id"];
 
-        console.log('groupNum: ' + groupNum);
+        //console.log('groupNum: ' + groupNum);
     }
 }
 
@@ -370,13 +351,13 @@ function hideDiffTask(groupNum, type, index) {
         drawEvent(eventObj); //Will update color
     }
     if(type == "del"){
-        console.log('calling hideDiffTask delete');
+        //console.log('calling hideDiffTask delete');
         //removeTask(groupNum);
         deleteEvent(groupNum)
 
         var index = deleted_tasks.indexOf(groupNum);
 
-        console.log('index: ' + index);
+        //console.log('index: ' + index);
         
         if(index < 0){
             deleted_tasks.splice(deleted_tasks.indexOf(groupNum), 1);
@@ -387,57 +368,35 @@ function hideDiffTask(groupNum, type, index) {
 function removeTempTasks(){
 
     var ev_count_with_temps = flashTeamsJSON['events'].length;
-    console.log('inside remove temp tasks');
+    //console.log('inside remove temp tasks');
+    
     // if(deleted_tasks.length > 0){
     //     for (var i=0;i<deleted_tasks.length;i++){
     //        //deleteEvent(deleted_tasks[i]);
     //         removeTask(deleted_tasks[i]);
     //     }
 
-    //     if(show_diff == true){
-    //             hideTasksDiffs();
-    //             showTasksDiffs();
-    //         }
-    // }
-
-
     for (var i = 0; i < flashTeamsJSON['events'].length; i++) {
-
-        //console.log(flashTeamsJSON['events'][i].status);
         if (flashTeamsJSON['events'][i].status == "deleted") {
-            console.log('this event was deleted');
             deleteEvent(flashTeamsJSON['events'][i].id);
-            console.log('after deleted');
-
         }
     }
 
     var ev_count_without_temps = flashTeamsJSON['events'].length;
 
-    console.log('with temps: ' + ev_count_with_temps + ", without temps: " + ev_count_without_temps);
-
-
+    //console.log('with temps: ' + ev_count_with_temps + ", without temps: " + ev_count_without_temps);
 
     return (ev_count_with_temps == ev_count_without_temps); 
 
 }
 
 function showTempEvent(eventObject, closeModal){
-    //var task_id = getEventJSONIndex(groupNumber);
-    //var eventToDuplicate = flashTeamsJSON["events"][task_id];
-
     var eventToDuplicate = eventObject;
 
     var groupNum = eventToDuplicate['id'];
-
-
-    //var x = eventToDuplicate["x"] + 4; //keep event X (and start time) the same as original event 
-    //var x = (parseInt(eventToDuplicate["x"]) + parseInt(getWidth(eventToDuplicate) + 4 )); //move event (and start time) to the right of the event
     var x = eventToDuplicate["x"] + 4;
 
-
     var y = eventToDuplicate["y"]; //keep event on same row as original event
-    //var y = eventToDuplicate["y"] + RECTANGLE_HEIGHT + 20;  //move event to row below original event
     
     var snapPoint = calcSnap(x,y); 
 
@@ -455,8 +414,6 @@ function showTempEvent(eventObject, closeModal){
 
     if(closeModal == true){
         $('#task_modal').modal('hide'); 
-
-    }else{
     }
 }
 

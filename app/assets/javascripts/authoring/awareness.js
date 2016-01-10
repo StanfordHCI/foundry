@@ -440,10 +440,10 @@ function renderEverything(data, firstTime) {
         listenForVisibilityChange();
     }
 
-    if(flashTeamsJSON['events'].length != task_groups.length){
-        console.log('NEED TO WRITE A FUNCTION TO REMOVE THE TASK FROM TASK_GROUP');
+    //if(flashTeamsJSON['events'].length != task_groups.length){
+        //console.log('NEED TO WRITE A FUNCTION TO REMOVE THE TASK FROM TASK_GROUP');
 
-    }
+    //}
 
 
 }
@@ -730,7 +730,7 @@ function loadOriginStatus(origin_id){
         type: 'get'
     }).done(function(data){
         loadedOriginStatus = data;
-        console.log('loadedOriginStatus');
+        //console.log('loadedOriginStatus');
         //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
     });
     //return JSON.parse(loadedOriginStatus);
@@ -745,7 +745,7 @@ function loadAncestorBranch(id){
         type: 'get'
     }).done(function(data){
         ancestorBranch = data;
-        console.log('loadedAncestorBranch, aka original status');
+        //console.log('loadedAncestorBranch, aka original status');
         //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
     });
     //return JSON.parse(loadedOriginStatus);
@@ -1909,12 +1909,12 @@ var getAllTasks = function(){
 
 var constructStatusObj = function(){
 
-    var temps_removed = removeTempTasks();
+    //var temps_removed = removeTempTasks();
 
-    if(show_diff == true && temps_removed == true){
-        //hideTasksDiffs();
-        showTasksDiffs();
-    }
+    // if(show_diff == true && temps_removed == true){
+    //     //hideTasksDiffs();
+    //     showTasksDiffs();
+    // }
 
     flashTeamsJSON["id"] = team_id; //previously: = $("#flash_team_id").val();
     flashTeamsJSON["title"] = team_name; //previously: = document.getElementById("ft-name").innerHTML;
@@ -1953,7 +1953,10 @@ var updateStatus = function(flash_team_in_progress){
     }
     timer = setTimeout(function(){
 
-        json_transaction_id++
+        json_transaction_id++;
+
+        var temps_removed = removeTempTasks();
+
         var localStatus = constructStatusObj();
 
         //if flashTeam hasn't been started yet, update the original status in the db
@@ -1980,7 +1983,11 @@ var updateStatus = function(flash_team_in_progress){
             type: 'post',
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
-            console.log("UPDATED FLASH TEAM STATUS");
+            //console.log("UPDATED FLASH TEAM STATUS");
+            if(show_diff == true && temps_removed == true){
+                //hideTasksDiffs();
+                showTasksDiffs();
+            }
         });
     }, 2000);
 };
