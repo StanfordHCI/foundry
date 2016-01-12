@@ -166,7 +166,7 @@ end
   session.delete(:return_to)
 	session[:return_to] ||= request.original_url
 	  
-  if !params.has_key?("uniq") #if in author view
+  if !params.has_key?("uniq") && !params.has_key?("review") #if in author view
     if session[:user_id].nil? 
        if !session[:uniq].nil?
         redirect_to :controller => 'flash_teams', :action => 'edit', :id => params[:id], :uniq => session[:uniq] and return
@@ -187,6 +187,24 @@ end
 				redirect_to(flash_teams_path) and return 
 			end
 		end
+
+    elsif params.has_key?("review") #if in review mode
+      if params[:review] != "true"
+        flash[:notice] = 'This flash team is not in review mode. You must be logged in as the author to access it.' 
+        redirect_to(welcome_index_path) and return
+      end
+
+      @review_mode = true 
+      @flash_team = FlashTeam.find(params[:id])
+      flash_team_json = JSON.parse(@flash_team.json)
+      @origin_id = flash_team_json['origin_id']
+      @original_or_branch = flash_team_json['type']
+      
+
+      if @original_or_branch == "original"
+        flash[:notice] = 'This flash team is not a branch. You must be logged in as the author to access it.' 
+        redirect_to(welcome_index_path) and return
+      end
 			
   	else #else it is in worker view 
     	@flash_team = FlashTeam.find(params[:id])
