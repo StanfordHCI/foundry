@@ -25,7 +25,13 @@
 
   </div>
   <div class="modal-footer">
-    <button class="btn btn-danger" id="json-pull-footer-btn" onclick="mergeMasterToBranch()">Merge Master into Branch</button>
-    <button class="btn btn-danger" id="json-merge-footer-btn" onclick="mergeBranchToMaster()">Merge Branch into Master</button>
+
+    <%if @original_or_branch == "branch" %>
+        <button class="btn btn-danger" id="json-pull-footer-btn" onclick="mergeMasterToBranch()">Merge Master into Branch</button>
+
+        <button class="btn btn-danger" id="json-merge-footer-btn" onclick="mergeBranchToMaster()">Merge Branch into Master</button>
+
+        <input type="button" class="btn btn-primary" id="submit-pr" value="Submit Pull Request"  style="display: ''" onclick="submitPullRequest();"/>
+       <%end%>
   </div>
 </div>

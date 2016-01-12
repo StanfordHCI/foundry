@@ -383,6 +383,10 @@ function renderFlashTeamsJSON(data, firstTime) {
             disableTeamEditing();
         }
 
+        if(show_diff == true && review_mode == true){
+            showTasksDiffs();
+        }
+
        /* //show the documentation of the previous task for the workers and the PCs.
         if (isUser || memberType == "pc"){
             show_previous_doc();
@@ -419,6 +423,10 @@ function renderFlashTeamsJSON(data, firstTime) {
 
         if(!isUser || memberType == "pc" || memberType == "client") {
             renderMembersRequester();
+        }
+
+        if(show_diff == true && review_mode == true){
+            showTasksDiffs();
         }
     }
 
@@ -747,6 +755,10 @@ function loadAncestorBranch(id){
         ancestorBranch = data;
         //console.log('loadedAncestorBranch, aka original status');
         //console.log("loadedStatusOriginJSON: " + loadedOriginStatus);
+
+        if(review_mode == true){
+            showTasksDiffs();
+        }
     });
     //return JSON.parse(loadedOriginStatus);
     return loadAncestorBranch;
@@ -1957,6 +1969,8 @@ var updateStatus = function(flash_team_in_progress){
 
         var temps_removed = removeTempTasks();
 
+        var in_review_mode = inReviewMode();
+
         var localStatus = constructStatusObj();
 
         //if flashTeam hasn't been started yet, update the original status in the db
@@ -1984,7 +1998,12 @@ var updateStatus = function(flash_team_in_progress){
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
             //console.log("UPDATED FLASH TEAM STATUS");
-            if(show_diff == true && temps_removed == true){
+            // console.log('show_diff: ' + show_diff);
+            // console.log('temps_removed: ' + temps_removed);
+            // console.log('in_review_mode: ' + in_review_mode);
+
+            if(show_diff == true && (temps_removed == true || in_review_mode == true)){
+                //console.log('updated status and need to show tasks diffs');
                 //hideTasksDiffs();
                 showTasksDiffs();
             }

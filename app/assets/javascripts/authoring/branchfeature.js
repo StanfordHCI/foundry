@@ -1,12 +1,24 @@
 var show_diff = false;
 
+var review_mode = inReviewMode();
+
+function inReviewMode(){
+    var params = window.location.search.replace("?", "");
+
+    if(params=="review=true"){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 
 function showJSONModal(id_array){
     // loadOriginStatus(origin_id);
     // var origin_ft_json = loadedOriginStatus.flash_teams_json;
 
-    if(show_diff == true){
+    if(show_diff == true && review_mode != true){
         hideTasksDiffs();
     }
 
@@ -29,6 +41,13 @@ function showJSONModal(id_array){
      }
 
     if(team_type == 'branch'){
+        if(memberType != 'author'){
+            $("#json-merge-footer-btn").prop('disabled', true);
+        }
+
+        if(review_mode == true){
+            $("#submit-pr").prop('disabled', true);
+        }
         $("#master-updated-json-div").html('<h3>MASTER UPDATED JSON</h3>' + JSON.stringify(origin_ft_json, null, 2));
         $("#ancestor-json-div").html('<h3>ANCESTOR JSON</h3>' + JSON.stringify(ancestorBranch['flash_teams_json'], null, 2));
         $("#branch-json-div").html('<h3>BRANCH JSON</h3>' + JSON.stringify(flashTeamsJSON, null, 2));
@@ -38,6 +57,21 @@ function showJSONModal(id_array){
 
     });
 
+}
+
+function submitPullRequest(){
+    var user = chat_name;
+    var channel = "#foundry-notifications";  
+    var notification_group = "@everyone";
+    var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
+
+    var origin_team_name = ancestorBranch.flash_teams_json.title;
+
+    var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit?review=true';
+    var slackMsg = user + ' has submitted a pull request for the ' + origin_team_name + ' team on Foundry. <' + teamUrl + '|Review the pull request on Foundry.>';
+
+    var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
+    $.post(private_slack_url, payload);
 }
 
 function mergeBranchToMaster(){
