@@ -43,6 +43,19 @@
 	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 	     
 	       <% if @member_type == 'pc' || @member_type == 'client' %>
+
+	       		<%if @original_or_branch == "original" %>
+			     	<%= link_to "Branch Team", {action: "branch", id: @flash_team.id, uniq: session[:uniq]}, :class => 'btn btn-primary' %>
+			     <%else%>
+			     	<%= link_to "View Master", {action: "edit", id: @origin_id}, :class => 'btn btn-primary' %>
+			     <%end%>
+			     	
+			     	<input type="button" class="btn btn-primary" id="flashTeamJSONBtn" value="Show JSON"  style="display: ''" onclick="showJSONModal('[<%=@flash_team.id.to_s + "," + @origin_id.to_s%>]');"/>
+
+			     <%if @original_or_branch == "branch" %>
+			     	<input type="button" class="btn btn-primary" id="JSONDiffBtn" value="Show Diffs"  style="display: ''" onclick="showTasksDiffs();"/>
+			     <%end%>
+
 		   		<input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 				<input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
 				<input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>

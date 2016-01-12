@@ -120,10 +120,18 @@ class FlashTeamsController < ApplicationController
   end
 
   def branch
-    @user = User.find session[:user_id]
+    
 
     # Locate data from the original
     original = FlashTeam.find(params[:id])
+
+    if !params.has_key?("uniq") #if in author view
+      author_branch = true
+      @user = User.find session[:user_id]
+    else
+      author_branch = false
+      @user = User.find(original.user_id)
+    end
 
     # Then create a copy from the original data
     copy = FlashTeam.create(:name => original.name + " Branch", :author => original.author, :user_id => @user.id)
@@ -135,8 +143,12 @@ class FlashTeamsController < ApplicationController
     copy.save
     # to do: 1) update member uniq/invite link; 2) update google drive folder info; 3) update latest time (maybe)
 
-    # Redirect to the list of things
-    redirect_to :action => 'index'
+    if author_branch == false
+      redirect_to :action => 'edit', :id => copy.id, :uniq => params[:uniq]
+    else
+      # Redirect to the list of things
+      redirect_to :action => 'index'
+    end
   end
   
   def index
@@ -179,6 +191,10 @@ end
   	else #else it is in worker view 
     	@flash_team = FlashTeam.find(params[:id])
       session[:uniq] = params[:uniq]
+
+      flash_team_json = JSON.parse(@flash_team.json)
+      @origin_id = flash_team_json['origin_id']
+      @original_or_branch = flash_team_json['type']
     end 
     
 	#note: member info is stored in status json in flash_teams_json
