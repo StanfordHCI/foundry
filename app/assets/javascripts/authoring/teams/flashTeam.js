@@ -6,6 +6,7 @@ FlashTeam = function (data) {
   this.extendWith(Logger)
   this.extendWith(TeamControl)
 
+  var self = this
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
     if(this.rendered()) return;
@@ -181,7 +182,7 @@ FlashTeam = function (data) {
       } catch (e) {
         console.log(e);
       }
-      drawStartedEventsTimer();
+      self.drawStartedEventsTimer();
     }, 5000)
   }
 

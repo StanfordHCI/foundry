@@ -178,5 +178,9 @@ class FlashTeam < ActiveRecord::Base
 
       return -1
   end
+
+  def in_process?
+    self.status_json["flash_team_in_progress"] && !self.status_json["flash_teams_json"]["paused"]
+  end
 end
 

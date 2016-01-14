@@ -297,6 +297,7 @@ def edit
     status = params[:localStatusJSON]
     @flash_team = FlashTeam.find(params[:id])
     @flash_team.status = status
+    @flash_team.original_status = status if !@flash_team.in_process?
 
     @flash_team.save
 

@@ -24,15 +24,15 @@ function pauseFlashTeam(){
 	$("#flashTeamPauseBtn").css('display', 'none');
     $("#flashTeamResumeBtn").css('display', '');
 
-	flashTeamsJSON["paused"]=true;
+	currentTeam.flash_teams_json["paused"]=true;
 
-    currentTeam.logActivity("pauseFlashTeam() - Before Update Status",'Edit Team - Before Update Status', flashTeamsJSON);
+    currentTeam.logActivity("pauseFlashTeam() - Before Update Status",'Edit Team - Before Update Status', currentTeam.flash_teams_json);
 	updateStatus();
 
     //draw events in editable mode (show collaboration and handoff buttons, show drag handles etc.)
     enableTeamEditing();
     //drawEvents(true);
-    currentTeam.logActivity("pauseFlashTeam() - After Update Status",'Edit Team - After Update Status', flashTeamsJSON);
+    currentTeam.logActivity("pauseFlashTeam() - After Update Status",'Edit Team - After Update Status', currentTeam.flash_teams_json);
 
 }
 
@@ -62,38 +62,38 @@ function resumeFlashTeam(){
 	$("#flashTeamPauseBtn").css('display', '');
     $("#flashTeamResumeBtn").css('display', 'none');
 
-	flashTeamsJSON["paused"]=false;
+	currentTeam.flash_teams_json["paused"]=false;
 
-    currentTeam.logActivity("resumeFlashTeam() - Before Update Status",'Save Edited Team - Before Update Status', flashTeamsJSON);
+    currentTeam.logActivity("resumeFlashTeam() - Before Update Status",'Save Edited Team - Before Update Status', currentTeam.flash_teams_json);
 	updateStatus();
 
     //Hide handoff and collaboration buttons on the events.
     //drawEvents(false);
     disableTeamEditing();
 
-    currentTeam.logActivity("resumeFlashTeam() - After Update Status",'Save Edited Team - After Update Status', flashTeamsJSON);
+    currentTeam.logActivity("resumeFlashTeam() - After Update Status",'Save Edited Team - After Update Status', currentTeam.flash_teams_json);
 }
 
 $("#workerEditTeamBtn").click(function(){
-    currentTeam.logActivity("$('#workerEditTeamBtn').click(function()",'Clicked Request Change to Team Button', flashTeamsJSON);
+    currentTeam.logActivity("$('#workerEditTeamBtn').click(function()",'Clicked Request Change to Team Button', currentTeam.flash_teams_json);
 
     updateRequestChangeModal('');
 });
 
 $("#request-change-task-not-ready").click(function(){
-    currentTeam.logActivity("$('#request-change-task-not-ready').click(function()","Clicked 'Task is Not Ready to Start' link in sidebar", flashTeamsJSON);
+    currentTeam.logActivity("$('#request-change-task-not-ready').click(function()","Clicked 'Task is Not Ready to Start' link in sidebar", currentTeam.flash_teams_json);
 
     updateRequestChangeModal('taskNotReady');
 });
 
 $("#request-change-edit-task").click(function(){
-    currentTeam.logActivity("$('#request-change-edit-task').click(function()","Clicked 'I want to edit the task' link in sidebar", flashTeamsJSON);
+    currentTeam.logActivity("$('#request-change-edit-task').click(function()","Clicked 'I want to edit the task' link in sidebar", currentTeam.flash_teams_json);
 
     updateRequestChangeModal('taskEdit');
 });
 
 $("#request-change-more-time").click(function(){
-    currentTeam.logActivity("$('#request-change-more-time').click(function()","Clicked 'I need more time' link in sidebar", flashTeamsJSON);
+    currentTeam.logActivity("$('#request-change-more-time').click(function()","Clicked 'I need more time' link in sidebar", currentTeam.flash_teams_json);
 
     updateRequestChangeModal('needMoreTime');
 });
@@ -187,12 +187,12 @@ $('#request-edit-dropdown').change(function(){
 
     updateRequestChangeModal(selected);
 
-    currentTeam.logActivity("$('#request-edit-dropdown').click(function()",'Selected the following type of change to request from dropdown: ' + selected, flashTeamsJSON);
+    currentTeam.logActivity("$('#request-edit-dropdown').click(function()",'Selected the following type of change to request from dropdown: ' + selected, currentTeam.flash_teams_json);
 
 });
 
 $(".request-edit-modal-cancel").click(function(){
-    currentTeam.logActivity("$('#request-edit-modal-cancel').click(function()",'Closed the Request Change Modal', flashTeamsJSON);
+    currentTeam.logActivity("$('#request-edit-modal-cancel').click(function()",'Closed the Request Change Modal', currentTeam.flash_teams_json);
 });
 
 
