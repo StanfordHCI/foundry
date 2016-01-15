@@ -653,6 +653,8 @@ function hideMemberPopover(memberId) {
 
 function inviteMember(pillId) {
     var flash_team_id = $("#flash_team_id").val();
+    var origin_id = $("#origin_id").val();
+    if(origin_id) flash_team_id = origin_id;
     var url = '/members/' + flash_team_id + '/invite';
     var member = entryManager.getEntryById(pillId);
     var data = {uniq: member.uniq};
