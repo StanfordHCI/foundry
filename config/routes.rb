@@ -87,6 +87,7 @@ Foundry::Application.routes.draw do
       get :duplicate
       get :fork
       get :merge
+      get :pull_origin
       get :pull
       get :clone
       post :settings

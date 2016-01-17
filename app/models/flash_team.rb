@@ -49,13 +49,10 @@ class FlashTeam < ActiveRecord::Base
   end
 
   def status_json
+    mr = Merger.new(self.source_json, self.status)
+
     @status_json ||= stored_json
-    @status_json["flash_teams_json"]['diff'] = {
-      changed_events_ids: self.changed_events_ids,
-      added_events_ids: self.added_events_ids,
-      removed_events_ids: self.removed_events_ids,
-      removed_events: self.removed_events
-    } if @status_json["flash_teams_json"].present?
+    @status_json["flash_teams_json"]['diff'] = mr.diff if @status_json["flash_teams_json"].present?
 
     @status_json["flash_teams_json"]['fork'] = true if @status_json["flash_teams_json"].present? && self.fork?
     @status_json
@@ -77,86 +74,22 @@ class FlashTeam < ActiveRecord::Base
     origin.present?
   end
 
-  def source_data
-    @source_data ||= JSON.parse self.source_json
-  end
-
-  def source_events
-    self.source_data['flash_teams_json']['events'] rescue []
-  end
-
-  def source_events_ids
-    self.source_events.map{|e| e['id']}
-  end
-
-  def changed_events_ids
-    return [] if source_json.blank? || self.events.blank?
-    changed_ids = self.events_ids & source_events_ids
-    origin_events = source_events.select{|e| changed_ids.include? e['id']}.group_by{|e| e['id']}
-    own_events = self.events.select{|e| changed_ids.include? e['id']}.group_by{|e| e['id']}
-    changed_ids.select{|ev_id| !events_equal?(origin_events[ev_id].first, own_events[ev_id].first)}
-  end
-
-  def events_equal?(event1, event2)
-    prepare(event1) == prepare(event2)
-  end
-
-  def prepare(event)
-    event.slice(*(event.keys - unnecessary_keys))
-  end
-
-  def unnecessary_keys
-    ["timer"]
-  end
-
-  # should be callde for the FORK team
-  def changes_for(event_id)
-    event = self.events.detect{|ev| ev['id'] == event_id}
-    source_event = self.source_events.detect{|ev| ev['id'] == event_id}
-    return {'status' => 'new'} if event.present? && source_event.nil?
-    return {'status' => 'deleted'} if event.nil?
-    (event.to_a - source_event.to_a).to_h.merge({'status' => 'changed'})
-  end
-
-  # should be callde for origin team
-  def apply_changes(ev_id, changes)
-    event = self.events.detect{|ev| ev['id'] == ev_id}
-    return if event.nil?
-    return if changes.delete('status') != 'changed'
-    event.merge! changes
-  end
-
-  # should be callde for origin team
+  # should be called for origin team
   def merge_fork_team(team)
-    #add new events
-    team.added_events.each{|new_ev| self.events << new_ev if !self.events_ids.include? new_ev['id']}
-    #remove deleted events
-    self.events.delete_if{|ev| team.removed_events_ids.include? ev['id'] }
-    #call apply_changes for changed events
-    team.changed_events_ids.each{|ev_id| apply_changes(ev_id, team.changes_for(ev_id))}
-    #save modified status json
-    self.status = self.status_json.to_json
+    mr = Merger.new(self.status, team.status)
+    self.status = mr.merge.to_json
     self.save
   end
 
-  def added_events_ids
-    return [] if source_json.blank? || self.events.blank?
-    self.events_ids - source_events_ids
+  def pull_origin
+    mr = Merger.new(self.status, self.origin.status)
+    self.status = mr.merge.to_json
+
+    mr = Merger.new(self.source_json, self.origin.status)
+    self.source_json = mr.merge.to_json
+    self.save
   end
 
-  def added_events
-    self.events.select{|ev| added_events_ids.include? ev['id']}
-  end
-
-  def removed_events_ids
-    return [] if origin.blank?
-    source_events_ids - self.events_ids
-  end
-
-  def removed_events
-    return [] if origin.blank?
-    source_events.select{|e| removed_events_ids.include? e['id']}
-  end
   # this function returns the member object from a flash team based on a teamId, taskId and memberId
   def self.getMemberById(teamId, taskId, memId)
 

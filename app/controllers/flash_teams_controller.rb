@@ -107,6 +107,18 @@ class FlashTeamsController < ApplicationController
     end
   end
 
+  def pull_origin
+    fork_team = FlashTeam.find(params[:id])
+    if fork_team.fork?
+      fork_team.pull_origin
+      flash.now[:notice] = "Master team successfully pulled."
+      redirect_to edit_flash_team_url(fork_team)
+    else
+      flash.now[:error] = "Not a fork."
+      redirect_to edit_flash_team_url(fork_team)
+    end
+  end
+
   def pull
     @fork = FlashTeam.find(params[:id])
 
