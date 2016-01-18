@@ -9,7 +9,7 @@ FlashTeam = function (data) {
   var self = this
   //renderEverything(loadedStatus, firstTime) analog
   this.render = function(firstTime) {
-    if(this.rendered()) return;
+    if(this.rendered() && !showDiff()) return;
     //console.log("Rendering...")
     this.renderJSON(firstTime);
 
