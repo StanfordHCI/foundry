@@ -132,7 +132,7 @@ Chat = function() {
         var notif_body = new Date().toLocaleString();
 
         // true if the user added is the current user
-        var is_current_user = (chat_name == user.name);
+        var is_current_user = (self.chat_name == user.name);
 
         var showchatnotif = !is_current_user; // true if notifications should be shown
 
@@ -209,9 +209,9 @@ Chat = function() {
       self.chat_uniq = "author";
     }
 
-    presname = chat_name;
+    presname = self.chat_name;
 
-    var flashTeamsJSON = this;
+    var flashTeamsJSON = currentTeam.flash_teams_json;
 
     // current_user is undefined for author so just set it to 'Author'
     // when current_user is the author it won't have a uniq id so need to check for current_user == 'Author' instead
@@ -284,7 +284,7 @@ Chat = function() {
 
           var dateDiv = $('<div/>').addClass("date").text(dateform);
           var authorDiv = $('<div/>').addClass("author-header").text(name + ' (' + role + ')');
-          var textDiv = $('<div/>', {"id": "m"+self.lastMessage, user: chat_name}).addClass("text").text(text);
+          var textDiv = $('<div/>', {"id": "m"+self.lastMessage, user: self.chat_name}).addClass("text").text(text);
 
           var wrapperDiv = $('<div/>').addClass('message');
 
@@ -316,7 +316,7 @@ Chat = function() {
       } else{
           var textP = $('<p/>').text(text);
 
-          textP.appendTo($('#messageList div[user="' + chat_name + '"]').last());
+          textP.appendTo($('#messageList div[user="' + self.chat_name + '"]').last());
 
           $('.date.m' + self.lastMessage).text(dateform);
       }
