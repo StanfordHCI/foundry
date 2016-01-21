@@ -31,7 +31,7 @@ FlashTeam = function (data) {
   }
 
   this.renderChatbox = function() {
-    var chat = Chat.create(this.flash_teams_json)
+    var chat = new Chat();
     chat.render()
   }
 
@@ -42,9 +42,7 @@ FlashTeam = function (data) {
     // before the team starts)
     // !user_poll means a poll wasn't the one the generated this call to renderEverything
     //if(firstTime && !user_poll) // TODO: find better way to capture the case of user_poll
-    if(firstTime){
-        this.renderChatbox();
-    }
+    this.renderChatbox();
     in_progress = this.flash_team_in_progress;
     flashTeamsJSON = this.flash_teams_json;
 
