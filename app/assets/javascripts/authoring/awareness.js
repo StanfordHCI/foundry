@@ -102,8 +102,7 @@ function removeHandoffBtns(){
 
 $("#flashTeamStartBtn").click(function(){
     var bodyText = document.getElementById("confirmActionText");
-    //updateStatus();
-    bodyText.innerHTML = "Are you sure you want to begin running " + currentTeam.flash_teams_json["title"] + "?";
+    bodyText.innerHTML = "Are you sure you want to begin running " + currentTeam["title"] + "?";
 
     var confirmStartTeamBtn = document.getElementById("confirmButton");
     confirmStartTeamBtn.innerHTML = "Start the team";

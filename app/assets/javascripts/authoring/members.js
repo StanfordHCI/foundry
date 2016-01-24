@@ -543,7 +543,7 @@ function confirmDeleteMember(pillId) {
 
     var labelHtml = "Remove Member?";
     var alertHtml = "<b>Are you sure you want to remove " + member.role +
-        " from " + currentTeam.flash_teams_json["title"]+ "? </b><br><font size = '2'>" +
+        " from " + currentTeam["title"]+ "? </b><br><font size = '2'>" +
         member.role + " will be removed from all events on the timeline. </font>";
     var deleteButtonHtml = "Remove member";
 
@@ -560,7 +560,7 @@ function confirmDeleteFolder(folderId) {
 
     var labelHtml = "Remove Folder?";
     var alertHtml = "<b>Are you sure you want to remove " + folder.name +
-        " from " + currentTeam.flash_teams_json["title"]+ "? </b>" +
+        " from " + currentTeam["title"]+ "? </b>" +
         (size > 0 ? "This folder's contents will be removed as well.": "");
     var deleteButtonHtml = "Remove folder";
     var confirmFn = function() {
@@ -692,7 +692,7 @@ function confirmReplaceMember(pillId) {
     var alertText = document.getElementById("confirmActionText");
     alertText.innerHTML = "<b>Are you sure you want to replace " + memberToReplace
         + "? </b><br><font size = '2'>  The current "
-        + memberToReplace + " will no longer have access to " + currentTeam.flash_teams_json["title"]
+        + memberToReplace + " will no longer have access to " + currentTeam["title"]
         + " and you will need to hire a new " + memberToReplace + ".</font>";
 
     var deleteButton = document.getElementById("confirmButton");
