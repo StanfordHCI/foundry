@@ -76,17 +76,19 @@ class FlashTeam < ActiveRecord::Base
 
   # should be called for origin team
   def merge_fork_team(team)
-    mr = Merger.new(self.status, team.status)
-    self.status = mr.merge.to_json
+    mr = Merger.new(self.status, team.status, team.source_json)
+    res = mr.merge
+    self.status = res.master.to_json
+    team.source_json  = res.base.to_json
     self.save
   end
 
   def pull_origin
-    mr = Merger.new(self.status, self.origin.status)
-    self.status = mr.merge.to_json
+    mr = Merger.new(self.status, self.origin.status, self.source_json)
+    res = mr.merge
+    self.status = res.master.to_json
+    self.source_json = res.base.to_json
 
-    mr = Merger.new(self.source_json, self.origin.status)
-    self.source_json = mr.merge.to_json
     self.save
   end
 
