@@ -61,35 +61,41 @@ function renderMembersRequester() {
 
 function setCurrentMember() {
     var uniq = getParameterByName('uniq');
-
-    if (uniq){
-        $("#uniq").value = uniq;
-
-        var member = entryManager.getEntryByUniq(uniq);
-        if(member) {
-            current = member.id;
-            current_user = member;
-            isUser = true;
-            memberType = member.type;
-
-            $('#member_role_span').html(current_user.role); //updates the "Your Role: " text in left sidebar
-
-            if (member.type == "worker" && $('#member-container').css('display') != "none"){
-                //console.log('member switched to worker role');
-                $('#member-container').css('display', 'none');
-            }
-            if (member.type == "pc" && $('#member-container').css('display') == "none"){
-                //console.log('member switched to pc role');
-                $('#member-container').css('display', 'block');
-            }
-        }
-
-    } else {
+    authorMember = entryManager.getEntryByUniq(currentTeam.author);
+    if(authorMember){
         current = undefined;
         isUser = false;
         memberType = "author";
-    }
+        $('#member_role_span').html(current_user.role);
+    } else {
+        if (uniq){
+            $("#uniq").value = uniq;
 
+            var member = entryManager.getEntryByUniq(uniq);
+            if(member) {
+                current = member.id;
+                current_user = member;
+                isUser = true;
+                memberType = member.type;
+
+                $('#member_role_span').html(current_user.role); //updates the "Your Role: " text in left sidebar
+
+                if (member.type == "worker" && $('#member-container').css('display') != "none"){
+                    //console.log('member switched to worker role');
+                    $('#member-container').css('display', 'none');
+                }
+                if (member.type == "pc" && $('#member-container').css('display') == "none"){
+                    //console.log('member switched to pc role');
+                    $('#member-container').css('display', 'block');
+                }
+            }
+
+        } else {
+            current = undefined;
+            isUser = false;
+            memberType = "author";
+        }
+    }
 };
 
 var folderClickFn = function(e) {

@@ -7,8 +7,8 @@ require 'securerandom'
 
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
-  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index, :fork, :pull]
-  before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
+  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
+  before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection, :fork, :pull]
 
 	def new
 		@flash_team = FlashTeam.new
@@ -81,16 +81,18 @@ class FlashTeamsController < ApplicationController
     original = FlashTeam.find(params[:id])
 
     # Then create a copy from the original data
-    copy = FlashTeam.create(:name => original.name + " Fork", :author => original.author, :user_id => @user.id, origin: original)
+    member = Member.find_by(uniq: params[:uniq])
+    author = member.try(:uniq) || original.author
+    copy = FlashTeam.create(:name => original.name + " Fork", :author => author, :user_id => original.user_id, origin: original)
     copy.json = '{"title": "' + copy.name + '","id": ' + copy.id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + copy.author + '"}'
-    copy.status = createDupTeamStatus(copy.id, original.status, "clone")
+    copy.status = createDupTeamStatus(copy.id, original.status, "clone", params[:uniq])
 
     if copy.save
       flash.now[:notice] = "Team #{original.name} successfuly forked."
-      redirect_to edit_flash_team_url(copy)
+      redirect_to edit_flash_team_url(copy, uniq: params[:uniq])
     else
       flash.now[:error] = "Team #{original.name} fork failed."
-      redirect_to flash_teams_url
+      redirect_to flash_teams_url(uniq: params[:uniq])
     end
   end
 
@@ -112,10 +114,10 @@ class FlashTeamsController < ApplicationController
     if fork_team.fork?
       fork_team.pull_origin
       flash.now[:notice] = "Master team successfully pulled."
-      redirect_to edit_flash_team_url(fork_team)
+      redirect_to edit_flash_team_url(fork_team, uniq: params[:uniq])
     else
       flash.now[:error] = "Not a fork."
-      redirect_to edit_flash_team_url(fork_team)
+      redirect_to edit_flash_team_url(fork_team, uniq: params[:uniq])
     end
   end
 
@@ -127,14 +129,14 @@ class FlashTeamsController < ApplicationController
     redirect_to edit_flash_team_url(@fork)
   end
 
-  def createDupTeamStatus(dup_id, orig_status, type)
+  def createDupTeamStatus(dup_id, orig_status, type, keep_uniq=nil)
 	original_status = JSON.parse(orig_status)
 
 	# update the member invite links
 	flash_team_members = original_status['flash_teams_json']['members']
 
     flash_team_members.each do |member|
-    	uniq = SecureRandom.uuid
+    	uniq = member['uniq'] == keep_uniq ? keep_uniq : SecureRandom.uuid
     	url = url_for :controller => 'members', :action => 'invited', :id => dup_id, :uniq => uniq
 
     	member['uniq'] = uniq
@@ -203,10 +205,10 @@ def edit
 			end
 		end
 
-  	else #else it is in worker view
-    	@flash_team = FlashTeam.find(params[:id])
-      session[:uniq] = params[:uniq]
-    end
+	else #else it is in worker view
+  	@flash_team = FlashTeam.find(params[:id])
+    session[:uniq] = params[:uniq]
+  end
 
 	#note: member info is stored in status json in flash_teams_json
 
@@ -223,10 +225,10 @@ def edit
     end
 
     if params.has_key?("uniq")
-      @in_expert_view = true
-      @in_author_view = false
-
       uniq = params[:uniq]
+      @in_expert_view = true
+      @in_author_view = (uniq == @flash_team.author)
+
 
       Member.find_by! uniq: uniq
       member = Member.where(:uniq => uniq)[0]
@@ -234,19 +236,20 @@ def edit
       flash_team_members = json_status['flash_teams_json']['members']
 
       flash_team_members.each do |member|
-    	if(member['uniq'] == uniq)
-    		@member_type = member['type']
-    		@member_role = member['role']
-    	end
-    end
+      	if(member['uniq'] == uniq)
+      		@member_type = member['type']
+      		@member_role = member['role']
+      	end
+      end
 
-    #create session to use for hiring panel
-     #session[:member] = member.uniq
+      #create session to use for hiring panel
+      #session[:member] = member.uniq
       session.delete(:member)
 	    session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
     else
       @in_expert_view = false
       @in_author_view = true
+      @in_master_view = true
     end
     #end
 

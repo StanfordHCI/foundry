@@ -21,11 +21,11 @@
       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
       <input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
       <%= link_to 'Fork Team', fork_flash_team_path(@flash_team), class: 'btn btn-primary' %>
-      <%= link_to 'Pull Request', pull_flash_team_path(@flash_team), class: 'btn btn-primary' if @flash_team.fork? %>
-      <%= link_to 'Show Diff', edit_flash_team_path(@flash_team, show_diff: true), class: 'btn btn-warning' if @flash_team.fork? && !params[:show_diff] %>
+      <%= link_to 'Pull Request', pull_flash_team_path(@flash_team, uniq: params[:uniq]), class: 'btn btn-primary' if @flash_team.fork? %>
+      <%= link_to 'Show Diff', edit_flash_team_path(@flash_team, show_diff: true, uniq: params[:uniq]), class: 'btn btn-warning' if @flash_team.fork? && !params[:show_diff] %>
       <%= link_to 'Hide Diff', edit_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
-      <%= link_to 'Merge Pull Request', merge_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
-      <%= link_to 'Pull Master', pull_origin_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? %>
+      <%= link_to 'Merge Pull Request', merge_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] && @in_master_view %>
+      <%= link_to 'Pull Master', pull_origin_flash_team_path(@flash_team, uniq: params[:uniq]), class: 'btn btn-warning' if @flash_team.fork? %>
       <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
     </div>
 
@@ -39,9 +39,9 @@
         <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
         <input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
         <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
-        <%= link_to 'Fork Team', fork_flash_team_path(@flash_team), class: 'btn btn-primary' %>
-        <%= link_to 'Show Diff', edit_flash_team_path(@flash_team, show_diff: true), class: 'btn btn-warning' if @flash_team.fork? && !params[:show_diff] %>
-        <%= link_to 'Hide Diff', edit_flash_team_path(@flash_team), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
+        <%= link_to 'Fork Team', fork_flash_team_path(@flash_team, uniq: params[:uniq]), class: 'btn btn-primary' %>
+        <%= link_to 'Show Diff', edit_flash_team_path(@flash_team, show_diff: true, uniq: params[:uniq]), class: 'btn btn-warning' if @flash_team.fork? && !params[:show_diff] %>
+        <%= link_to 'Hide Diff', edit_flash_team_path(@flash_team, uniq: params[:uniq]), class: 'btn btn-warning' if @flash_team.fork? && params[:show_diff] %>
       <% end %>
     </div>
   <% end %>
