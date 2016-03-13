@@ -2,13 +2,13 @@ var comm = new Icecomm('yIkD3HFAWFNXV1qFkux9OqX8PPcAF8rLLQ6lM3hEJTFgcRI');
 
 function createVideoConf(room_name){
 	comm.connect(room_name);
-	
+
 	$("#vc").append('<video id="localVideo" autoplay></video>');
 
 	$("#videoChatModal").modal('show');
 
-  logActivity("createVideoConf(room_name)",('Created Video Conference - Room Name: ' + room_name), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-	
+  currentTeam.logActivity("createVideoConf(room_name)",('Created Video Conference - Room Name: ' + room_name), flashTeamsJSON);
+
 }
 
 
@@ -27,9 +27,9 @@ comm.on('disconnect', function(peer) {
 function disconnectVC(){
 	comm.close();
 	$("#videoChatModal").modal('hide');
-  logActivity("disconnectVC()","Disconnected Video Conference", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+  currentTeam.logActivity("disconnectVC()","Disconnected Video Conference", flashTeamsJSON);
 
-	
+
 }
 
 $("#videoChatModal").on('hide', function () {

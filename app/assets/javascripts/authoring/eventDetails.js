@@ -12,21 +12,21 @@ if(!window._foundry) {
 (function() {
   var events = {
     bodyHeight: 64,
-    
+
     tabHeight: 11,
-    
+
     get totalHeight() {
         return events.bodyHeight + events.tabHeight;
     },
-    
+
     get marginTop() {
         return (window._foundry.timeline.rowHeight - events.totalHeight)/2;
     },
-    
+
     marginLeft: 4,
-    
+
     iconOpacity: 0.38,
-    
+
     /**
      * @param {object} eventObj
      * @returns true if the current user is assigned this task
@@ -34,7 +34,7 @@ if(!window._foundry) {
     isWorkerTask: function(eventObj) {
         return current_user && eventObj.members.indexOf(current_user.id) > - 1;
     },
-    
+
     /**
      * @param {string} text
      * @param {number} workingWidth
@@ -48,7 +48,7 @@ if(!window._foundry) {
             .style(style)
             .style({color: "transparent"})
             .text(text);
-        
+
         var length = text.length;
         while (textSvg.node().getBBox().width > workingWidth) {
             if(length === 0) {
@@ -63,26 +63,26 @@ if(!window._foundry) {
         textSvg.remove();
         return text;
     },
-    
+
     title: {
         selector: ".title",
         tag: "text",
         text: function(eventObj) {
             var title = eventObj.title;
             //var clockAttrs = events.clock.attrs;
-            
-            
+
+
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
                                //- clockAttrs.width(d3.select("#g_" + eventObj.id).data()[0])
                                //- 10 // clock's left margin
                                - 10 // right margin
                                - 5;
-            
+
             return events.getShortenedString(
                 title, workingWidth, eventObj.id, events.title.style);
         },
-        
+
         attrs: {
             "class": "title",
             // x: function(d) {
@@ -92,13 +92,13 @@ if(!window._foundry) {
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 19}
         },
-        
+
         style: {
             "font-family": "proxima-nova",
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || currentTeam.taskDeleted(groupNum) /* && !events.isWorkerTask(eventObj) */ ?
                     "#444" : "white";
             },
             "font-weight": function(d) {
@@ -114,7 +114,7 @@ if(!window._foundry) {
             "text-transform": "uppercase"
         }
     },
-    
+
     duration: {
         selector: ".duration",
         tag: "text",
@@ -134,7 +134,7 @@ if(!window._foundry) {
             else{
                 var time = eventObj.timer || eventObj.duration;
                 var sign = (time / Math.abs(time) < 0) ? "-" : "";
-                
+
                 var hours = Math.floor(Math.abs(time) / 60);
                 var minutes = Math.abs(time) % 60;
 
@@ -142,15 +142,15 @@ if(!window._foundry) {
                 if(hours !== 0) {
                     durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
                 }
-                
+
                 if(minutes !== 0) {
                     var minStr = (eventObj.timer || time > 30 ? " min" : "");
                     durationArray.push(minutes + minStr);
                 }
 
                 var timeStr = sign + durationArray.join(" ");
-            }  
-                        
+            }
+
             var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
             var workingWidth =   getWidth(eventObj)
                                - 2 * events.marginLeft
@@ -158,19 +158,19 @@ if(!window._foundry) {
             return events.getShortenedString(
                 timeStr, workingWidth, eventObj.id, events.duration.style);
         },
-        
+
         attrs: {
             "class": "duration",
             x: function(d) {return d.x + 10},
             y: function(d) {return d.y + 32}
         },
-        
+
         style: {
             "font-family": "proxima-nova",
             fill: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
                 var eventObj = getEventFromId(groupNum);
-                return eventObj.status === "not_started" /* && !events.isWorkerTask(eventObj) */ ?
+                return eventObj.status === "not_started" || currentTeam.taskDeleted(groupNum) /* && !events.isWorkerTask(eventObj) */ ?
                     "#444" : "white";
             },
             "font-weight": function(d) {
@@ -184,7 +184,7 @@ if(!window._foundry) {
             "text-transform": "uppercase"
         }
     },
-    
+
     line: {
         selector: ".underline",
         tag: "line",
@@ -204,7 +204,7 @@ if(!window._foundry) {
             "stroke-width": "1px"
         }
     },
-    
+
     bottomBorder: {
         selector: ".bottom-border",
         tag: "rect",
@@ -215,7 +215,7 @@ if(!window._foundry) {
             class: "bottom-border"
         }
     },
-    
+
     numMembersIcon: {
         selector: ".num-members-icon",
         tag: "image",
@@ -236,7 +236,7 @@ if(!window._foundry) {
                     "/assets/icons/member/member.svg" : "/assets/icons/member/member_white.svg";
             },
             "class": "num-members-icon",
-            
+
             // tooltip stuff
             "data-toggle": "tooltip",
             "data-placement": "bottom",
@@ -250,7 +250,7 @@ if(!window._foundry) {
                 return str;
             }
         },
-        
+
         style: {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -260,7 +260,7 @@ if(!window._foundry) {
             }
         }
     },
-    
+
     numMembers: {
         selector: ".num-members",
         tag: "text",
@@ -365,7 +365,7 @@ if(!window._foundry) {
                     "/assets/icons/upload/upload.svg" : "/assets/icons/upload/upload_white.svg";
             },
             "class": "upload",
-            
+
             // tooltip stuff
             "data-toggle": "tooltip",
             "data-placement": "bottom",
@@ -414,7 +414,7 @@ if(!window._foundry) {
             id: function(d) {return "collab_btn_" + d.groupNum;},
             "class": "collab_btn",
             groupNum: function(d) {return d.groupNum},
-            
+
             // tooltip stuff
             "data-toggle": "tooltip",
             "data-placement": "bottom",
@@ -422,7 +422,7 @@ if(!window._foundry) {
             "data-animation": false,
             title: "Draw collaboration"
         },
-        
+
         style: {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -432,7 +432,7 @@ if(!window._foundry) {
             }
         }
     },
-    
+
     handoffIcon: {
         selector: ".handoff_btn",
         tag: "image",
@@ -442,7 +442,7 @@ if(!window._foundry) {
                 var eventObj = getEventFromId(groupNum);
                 var width = getWidth(eventObj) - 2 * events.marginLeft;
                 var iconWidth = events.handoffIcon.attrs.width(d);
-                
+
                 // subtract the button's width and the right margin
                 if(iconWidth !== 15) {
                     // if the width is to small to fit everything, just
@@ -459,11 +459,11 @@ if(!window._foundry) {
                 var eventObj = getEventFromId(groupNum);
                 var width = getWidth(eventObj) - 2 * events.marginLeft;
                 var workingWidth = width - 2 * 10;
-                
+
                 if(workingWidth/3 < iconWidth) {
                     iconWidth = Math.floor(width/3) - 2;
                 }
-                
+
                 return iconWidth;
             },
             height: 15,
@@ -477,7 +477,7 @@ if(!window._foundry) {
             id: function(d) {return "handoff_btn_" + d.groupNum;},
             class: "handoff_btn",
             groupNum: function(d) {return d.groupNum},
-            
+
             // tooltip stuff
             "data-toggle": "tooltip",
             "data-placement": "bottom",
@@ -485,7 +485,7 @@ if(!window._foundry) {
             "data-animation": false,
             title: "Draw handoff"
         },
-        
+
         style: {
             opacity: function(d) {
                 var groupNum = parseInt(d.id.replace("task_g_", ""));
@@ -495,7 +495,7 @@ if(!window._foundry) {
             }
         }
     },
-    
+
     leftHandle: {
         selector: ".left-handle",
         tag: "rect",
@@ -519,7 +519,7 @@ if(!window._foundry) {
             }
         }
     },
-    
+
     rightHandle: {
         selector: ".right-handle",
         tag: "rect",
@@ -537,7 +537,7 @@ if(!window._foundry) {
             ry: 1,
             "class": "right-handle",
         },
-        
+
         style: {
             display: "none",
             cursor: "ew-resize",
@@ -550,6 +550,6 @@ if(!window._foundry) {
         }
     }
   };
-  
+
   window._foundry.events = events;
 })();
