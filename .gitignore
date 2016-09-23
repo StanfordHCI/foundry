@@ -22,3 +22,6 @@ config/initializers/app_env_vars.rb
 .DS_Store
 config/.DS_Store
 config/initializers/.DS_Store
+
+#Ignore GemFile.lock
+Gemfile.lock
