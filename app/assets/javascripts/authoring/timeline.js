@@ -44,7 +44,6 @@ $("#timeline-container").css({
   backgroundColor: BKG_COLOR,
 }).append(timelineDiv);
 
-
 var d3TimelineElem = d3.select("#timeline-container .timeline");
 
 var header_svg = d3TimelineElem.append("svg")
@@ -530,5 +529,4 @@ function redrawTimeline() {
   //    $('.chart').append(this);
   //});
 }
-
 redrawTimeline();
