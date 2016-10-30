@@ -741,7 +741,7 @@ function saveTaskOverview(groupNum){
 
     logActivity("saveTaskOverview(groupNum)",'Save Task Overview', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
-    updateStatus();
+    updateEvent(groupNum);
 
     $('#task_modal').modal('hide'); 
 }
