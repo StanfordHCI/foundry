@@ -269,7 +269,8 @@ function createEvent(point, duration) {
 
 
     // save
-    updateStatus();
+    console.log("updating event:" + eventObj.id);
+    updateEvent(eventObj.id);
 };
 
 
