@@ -302,12 +302,19 @@ end
     end
   end
 
+  def status_json(obj)
+    JSON.parse((obj.presence || '{}'))
+  end
+
   def update_status
+    flash_team_id = params[:id]
     status = params[:localStatusJSON]
-    @flash_team = FlashTeam.find(params[:id])
+    @flash_team = FlashTeam.find(flash_team_id)
     @flash_team.status = status
 
     @flash_team.save
+
+    PrivatePub.publish_to("/flash_team/#{flash_team_id}/updated", status_json(@flash_team.status))
 
     respond_to do |format|
       format.json {render json: "saved".to_json, status: :ok}

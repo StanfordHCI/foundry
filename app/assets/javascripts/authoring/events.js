@@ -269,8 +269,11 @@ function createEvent(point, duration) {
 
 
     // save
-    console.log("updating event:" + eventObj.id);
-    updateEvent(eventObj.id);
+    if (flashTeamsJSON["events"].length == 1) {
+        updateStatus(); // initiate first status object
+    } else {
+        updateEvent(eventObj.id); // status object already exists
+    }
 };
 
 

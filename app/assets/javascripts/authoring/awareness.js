@@ -279,10 +279,6 @@ function renderFlashTeamsJSON(data, firstTime) {
             disableTeamEditing();
         }
     } else {
-        if(flashTeamsJSON["startTime"] == undefined){
-            updateOriginalStatus();
-        }
-
         if(!flashTeamsJSON)
             return;
 
@@ -1309,7 +1305,6 @@ var updateStatus = function(flash_team_in_progress){
 // used for the team duplication feature (it preserves the team without saving the status
 // information once the team is run
 var updateOriginalStatus = function(){
-    //console.log("in updateOriginalStatus");
     var localStatus = constructStatusObj();
 
     localStatus.latest_time = (new Date).getTime();

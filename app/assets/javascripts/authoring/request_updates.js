@@ -46,12 +46,17 @@ $.fn.subscribeToEventUpdate = function() {
             if (!data.ev["members"]) {
                 data.ev["members"] = [];
             }
-            drawEvent(data.ev)
+            var found = false;
             for (var i = 0; i < flashTeamsJSON["events"].length; i++) {
                 if (flashTeamsJSON["events"][i]["id"] == data.ev["id"]) {
-                    flashTeamsJSON["events"][i] = data.ev
+                    flashTeamsJSON["events"][i] = data.ev;
+                    found = true;
                 }
             }
+            if (!found) {
+                flashTeamsJSON["events"].push(data.ev);
+            }
+            drawEvent(data.ev)
         }
     });
 }
