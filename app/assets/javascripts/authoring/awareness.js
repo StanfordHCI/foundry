@@ -442,7 +442,7 @@ var flashTeamUpdated = function(){
         return true;
     }
 
-    // if gdrive folder is created (e.g., when a team starts), the gdrive btn in all views should activate
+    // if gdrive folder is created (e.g., when a team starts),  the gdrive btn in all views should activate
     if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
         return true;
     }
@@ -1250,6 +1250,27 @@ var constructStatusObj = function(){
 };
 
 var timer = null;
+
+var updateEvent = function(id) {
+    var eventJSON = null;
+    for (var i = 0; i < flashTeamsJSON.events.length; i++) {
+        if (flashTeamsJSON.events[i].id == id) {
+            eventJSON = flashTeamsJSON.events[i];
+        }
+    }
+    if (eventJSON == null) {
+        console.log("did not update event because id was invalid: ", id);
+        return;
+    }
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_event';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"eventJSON": JSON.stringify(eventJSON), "authenticity_token": authenticity_token}
+    }).done(function(data){});
+};
 
 var updateStatus = function(flash_team_in_progress){
     if (timer) {

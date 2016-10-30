@@ -37,11 +37,27 @@ $.fn.requestUpdates = function(firstTime) {
             drawStartedEvents();
         }
   });
+}
 
+$.fn.subscribeToEventUpdate = function() {
+    url = "/flash_team/" + $(this).val() + "/updated_event";
+    PrivatePub.subscribe(url, function(data, channel) {
+        if (data) {
+            if (!data.ev["members"]) {
+                data.ev["members"] = [];
+            }
+            drawEvent(data.ev)
+            for (var i = 0; i < flashTeamsJSON["events"].length; i++) {
+                if (flashTeamsJSON["events"][i]["id"] == data.ev["id"]) {
+                    flashTeamsJSON["events"][i] = data.ev
+                }
+            }
+        }
+    });
 }
 
 $.fn.subscribeToFlashTeamUpdate = function() {
-    url = "/flash_team/" + $(this).val() + "/updated"
+    url = "/flash_team/" + $(this).val() + "/updated";
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
           renderEverything(data, false);
@@ -51,7 +67,7 @@ $.fn.subscribeToFlashTeamUpdate = function() {
 }
 
 $.fn.subscribeToFlashTeamInfo = function() {
-    url = "/flash_team/" + $(this).val() + "/info"
+    url = "/flash_team/" + $(this).val() + "/info";
     PrivatePub.subscribe(url, function(data, channel) {
         if (data) {
             saveFlashTeam(data);
@@ -60,6 +76,6 @@ $.fn.subscribeToFlashTeamInfo = function() {
 }
 
 $(document).ready(function(){
+    $("#flash_team_id").subscribeToEventUpdate();
     $("#flash_team_id").subscribeToFlashTeamUpdate();
-    $("#flash_team_id").subscribeToFlashTeamInfo();
 });

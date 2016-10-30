@@ -343,7 +343,7 @@ function getTaskOverviewContent(groupNum){
 	    mins = '0' + mins;
     }
     
-    var evStartHr = ev.startHr; 
+    var evStartHr = ev.startHr;
 	var evStartMin = ev.startMin.toFixed(0); 
 	
 	// if the minutes are < 10, you need to add a zero before

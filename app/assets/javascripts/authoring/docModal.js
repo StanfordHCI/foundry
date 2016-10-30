@@ -37,8 +37,6 @@ function confirm_show_docs_modal(event_id){
 }
 
 function show_previous_doc(event_id){
-	console.log("in show_previous_doc function");
-  console.log(event_id);
   var ev = flashTeamsJSON["events"][getEventJSONIndex(event_id)];
   
   if (!checkEventsBeforeCompleted(event_id))

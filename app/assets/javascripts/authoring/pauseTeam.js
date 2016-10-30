@@ -65,7 +65,7 @@ function resumeFlashTeam(){
 	flashTeamsJSON["paused"]=false;
 
     logActivity("resumeFlashTeam() - Before Update Status",'Save Edited Team - Before Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-	updateStatus();
+    updateStatus();
 	
     //Hide handoff and collaboration buttons on the events.
     //drawEvents(false);

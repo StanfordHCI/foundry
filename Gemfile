@@ -67,6 +67,8 @@ gem 'd3-rails'
 # Heroku logging
 gem 'rails_12factor', group: :production
 
+gem 'quiet_assets'
+
 # Heroku db: postgres
 gem 'pg', '0.17.1'
 
@@ -81,3 +83,7 @@ gem 'launchy', '>= 2.1.1'
 gem 'oauth'
 
 # gem 'google_drive'
+
+gem 'faye'
+gem 'thin'
+

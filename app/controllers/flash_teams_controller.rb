@@ -10,6 +10,8 @@ class FlashTeamsController < ApplicationController
   before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
 
+  Rails.logger.level = 1
+
 	def new
 		@flash_team = FlashTeam.new
 	end
@@ -272,6 +274,31 @@ end
     @flash_team = FlashTeam.find(params[:id])
     respond_to do |format|
       format.json {render json: @flash_team.status, status: :ok}
+    end
+  end
+
+  def update_event
+    changed_event_json = params[:eventJSON]
+    changed_event = JSON.parse(changed_event_json)
+
+    flash_team_id = params[:id]
+    @flash_team = FlashTeam.find(flash_team_id)
+    status_hashmap = JSON.parse(@flash_team.status)
+    events = status_hashmap["flash_teams_json"]["events"].map do |event|
+      if event["id"] == changed_event["id"]
+        changed_event
+      else
+        event
+      end
+    end
+    status_hashmap["flash_teams_json"]["events"] = events
+    @flash_team.status = status_hashmap.to_json
+    @flash_team.save
+
+    PrivatePub.publish_to "/flash_team/#{flash_team_id}/updated_event", :ev => changed_event
+
+    respond_to do |format|
+      format.json {render json: "saved".to_json, status: :ok}
     end
   end
 
