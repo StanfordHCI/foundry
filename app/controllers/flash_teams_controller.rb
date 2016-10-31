@@ -284,12 +284,17 @@ end
     flash_team_id = params[:id]
     @flash_team = FlashTeam.find(flash_team_id)
     status_hashmap = JSON.parse(@flash_team.status)
+    found = false
     events = status_hashmap["flash_teams_json"]["events"].map do |event|
       if event["id"] == changed_event["id"]
+        found = true
         changed_event
       else
         event
       end
+    end
+    if !found
+      events << changed_event
     end
     status_hashmap["flash_teams_json"]["events"] = events
     @flash_team.status = status_hashmap.to_json
