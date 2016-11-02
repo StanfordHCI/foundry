@@ -23,6 +23,8 @@ function drawEvent(eventObj) {
 
         drawMemberTabs(eventObj);
 
+        drawTimer(eventObj);
+
         drawMainRect(eventObj);
         drawTop(eventObj);
         drawBottom(eventObj);
@@ -33,7 +35,6 @@ function drawEvent(eventObj) {
         drawEachCollabForEvent(eventObj);
 
         drawShade(eventObj);
-        drawTimer(eventObj);
     }, 0)
 };
 
@@ -479,8 +480,7 @@ function drawShade(eventObj) {
 }
 
 //
-function drawTimer(eventObj){
-   
+function drawTimer(eventObj){   
     if( in_progress != true || eventObj.status == "not_started" || eventObj.status == "paused" || eventObj.status == "completed" ) {
         return;
     }
@@ -492,7 +492,6 @@ function drawTimer(eventObj){
         var duration = eventObj["duration"];
                 
         var remaining_time = eventObj.latest_remaining_time - time_passed;
-
         
         if(remaining_time < 0){
             eventObj.status = "delayed";
@@ -504,8 +503,7 @@ function drawTimer(eventObj){
                 live_tasks.splice(idx, 1);
             }
             delayed_tasks.push(groupNum);
-            drawEvent(eventObj);
-            updateStatus(true);
+            updateEvent(groupNum, task_actions.DELAY);
         }
 
         eventObj["timer"] = remaining_time;
@@ -516,7 +514,6 @@ function drawTimer(eventObj){
         var time_passed = (parseInt(((new Date).getTime() - eventObj.task_latest_active_time)/ task_timer_interval ));
         var duration = eventObj["duration"];
         var remaining_time = eventObj.latest_remaining_time - time_passed;
-
 
         eventObj["timer"] = remaining_time;
     }
