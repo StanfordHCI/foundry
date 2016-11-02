@@ -12,8 +12,17 @@ class FlashTeamsController < ApplicationController
 
   Rails.logger.level = 1
 
+  class TaskActions
+    START="start"
+    PAUSE="pause"
+    DELAY="delay"
+    RESUME="resume"
+    COMPLETE="complete"
+  end
+
 	def new
 		@flash_team = FlashTeam.new
+    @task_status = Hash.new
 	end
 
   def create 
@@ -277,30 +286,69 @@ end
     end
   end
 
+  def update_task_status(event_id, task_action, status_hashmap)
+    case task_action
+    when TaskActions::START
+      status_hashmap["live_tasks"] << event_id
+    when TaskActions::PAUSE
+      status_hashmap["paused_tasks"] << event_id
+    when TaskActions::RESUME
+      status_hashmap["paused_tasks"].delete(event_id)
+    when TaskActions::DELAY
+      # multiple clients may send this for a given event
+      # but only one will succeed
+      deleted_id = status_hashmap["live_tasks"].delete(event_id)
+      if deleted_id != nil
+        status_hashmap["delayed_tasks"] << event_id
+      end
+    when TaskActions::COMPLETE
+      if status_hashmap["live_tasks"].include? event_id
+        deleted_id = status_hashmap["live_tasks"].delete(event_id)
+        if deleted_id != nil
+          status_hashmap["drawn_blue_tasks"] << event_id
+        end
+      elsif status_hashmap["delayed_tasks"].include? event_id
+        deleted_id = status_hashmap["delayed_tasks"].delete(event_id)
+        if deleted_id != nil
+          status_hashmap["completed_red_tasks"] << event_id
+        end
+      end
+    end
+  end
+
   def update_event
     changed_event_json = params[:eventJSON]
     changed_event = JSON.parse(changed_event_json)
 
+    task_action = params[:task_action]
+
     flash_team_id = params[:id]
     @flash_team = FlashTeam.find(flash_team_id)
-    status_hashmap = JSON.parse(@flash_team.status)
-    found = false
-    events = status_hashmap["flash_teams_json"]["events"].map do |event|
-      if event["id"] == changed_event["id"]
-        found = true
-        changed_event
-      else
-        event
+    
+    # block reads and writes from any other threads on this flash team
+    @flash_team.with_lock do
+      status_hashmap = JSON.parse(@flash_team.status)
+      found = false
+      events = status_hashmap["flash_teams_json"]["events"].map do |event|
+        if event["id"] == changed_event["id"]
+          found = true
+          changed_event
+        else
+          event
+        end
       end
-    end
-    if !found
-      events << changed_event
-    end
-    status_hashmap["flash_teams_json"]["events"] = events
-    @flash_team.status = status_hashmap.to_json
-    @flash_team.save
+      if !found
+        events << changed_event
+      end
+      status_hashmap["flash_teams_json"]["events"] = events
 
-    PrivatePub.publish_to "/flash_team/#{flash_team_id}/updated_event", :ev => changed_event
+      update_task_status(changed_event["id"], task_action, status_hashmap)
+
+      @flash_team.status = status_hashmap.to_json
+      @flash_team.save
+    end
+
+    PrivatePub.publish_to "/flash_team/#{flash_team_id}/updated_event", :ev => changed_event, :task_action => task_action
 
     respond_to do |format|
       format.json {render json: "saved".to_json, status: :ok}

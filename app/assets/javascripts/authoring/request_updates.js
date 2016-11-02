@@ -18,8 +18,7 @@ var saveFlashTeam = function(data){
     flashTeamsJSON["author"] = author_name = data["author_name"];
     flashTeamsJSON["title"] = team_name = data["flash_team_name"];
     flashTeamsJSON["id"] = team_id =   data["flash_team_id"];
-}
-
+};
 
 $.fn.requestUpdates = function(firstTime) {
     var flash_team_id = $(this).val();
@@ -37,7 +36,52 @@ $.fn.requestUpdates = function(firstTime) {
             drawStartedEvents();
         }
   });
-}
+};
+
+var update_task_status = function(event_id, task_action) {
+    switch(task_action) {
+        case task_actions.START:
+            live_tasks.push(event_id);
+            break;
+        case task_actions.PAUSE:
+            paused_tasks.push(event_id);
+            break;
+        case task_actions.RESUME:
+            var idx = paused_tasks.indexOf(event_id);
+            if (idx != -1) {
+                paused_tasks.splice(idx, 1);
+            }
+            break;
+        case task_actions.DELAY:
+            var idx = live_tasks.indexOf(event_id);
+            if (idx != -1) {
+                var removed = live_tasks.splice(idx, 1); // take out of live_tasks
+                if (removed.length > 0) {
+                    delayed_tasks.push(event_id); // add to delayed_tasks
+                }
+            }
+            break;
+        case task_actions.COMPLETE:
+            if (isLive(event_id)) {
+                var idx = live_tasks.indexOf(event_id);
+                if (idx != -1) {
+                    var removed = live_tasks.splice(idx, 1);
+                    if (removed.length > 0) {
+                        drawn_blue_tasks.push(event_id);
+                    }
+                }
+            } else if (isDelayed(event_id)) {
+                var idx = delayed_tasks.indexOf(event_id);
+                if (idx != -1) {
+                    var removed = delayed_tasks.splice(idx, 1);
+                    if (removed.length > 0) {
+                        completed_red_tasks.push(event_id);
+                    }
+                }
+            }
+            break;
+    }
+};
 
 $.fn.subscribeToEventUpdate = function() {
     url = "/flash_team/" + $(this).val() + "/updated_event";
@@ -56,7 +100,9 @@ $.fn.subscribeToEventUpdate = function() {
             if (!found) {
                 flashTeamsJSON["events"].push(data.ev);
             }
+            update_task_status(data.ev["id"], data.task_action);
             drawEvent(data.ev)
+            initTimer();
         }
     });
 }
