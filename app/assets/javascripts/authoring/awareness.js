@@ -323,7 +323,7 @@ function initTimer() {
         } catch (e) {
             console.log(e);
         }
-     }, 3437);
+     }, 55000);
  }
 
 function listenForVisibilityChange(){
