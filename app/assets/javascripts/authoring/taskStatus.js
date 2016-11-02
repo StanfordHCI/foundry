@@ -75,8 +75,6 @@ function startTask(groupNum) {
     eventObj.task_latest_active_time = eventObj.task_startBtn_time;
     eventObj.latest_remaining_time = eventObj["timer"];
 
-	//alert(eventObj.latest_remaining_time);
-    
     //remove task from remaining and add to live task array
     var idx = remaining_tasks.indexOf(groupNum);
     if (idx != -1) { // delayed task
@@ -86,7 +84,7 @@ function startTask(groupNum) {
 
     logActivity("startTask(groupNum)",'Start Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
-    updateEvent(groupNum);
+    updateEvent(groupNum, task_actions.START);
     drawEvent(eventObj); //Will update color
     trackUpcomingEvent();
 
@@ -121,7 +119,7 @@ function pauseTask(groupNum) {
 
     logActivity("pauseTask(groupNum)",'Pause Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 
-    updateEvent(groupNum);
+    updateEvent(groupNum, task_actions.PAUSE);
     drawEvent(eventObj); //Will update color
     trackUpcomingEvent();
 	
@@ -160,7 +158,7 @@ function resumeTask(groupNum) {
 
     logActivity("resumeTask(groupNum)",'Resume Task', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
    
-    updateEvent(groupNum);
+    updateEvent(groupNum, task_actions.RESUME);
     drawEvent(eventObj); //Will update color
     trackUpcomingEvent();
 
@@ -511,7 +509,7 @@ var completeTask = function(groupNum){
     /*Note from DR: I commented out the updateStatus(false) because it was causing the team to end when you completed a task
     I think updateStatus needs to be true since the team is still in progress when you complete a task */
     flashTeamsJSON['local_update'] = new Date().getTime();
-    updateEvent(groupNum);
+    updateEvent(groupNum, task_actions.COMPLETE);
     drawEvent(eventToComplete);
     trackUpcomingEvent();
 
