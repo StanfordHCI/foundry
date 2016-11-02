@@ -32,6 +32,15 @@ var user_loaded_before_team_start = false;
 
 var window_visibility_state = null;
 var window_visibility_change = null;
+var timer_interval = null;
+
+var task_actions = Object.freeze({
+    START: "start",
+    PAUSE: "pause",
+    DELAY: "delay",
+    RESUME: "resume",
+    COMPLETE: "complete"
+});
 
 $(document).ready(function(){
     colorBox();
@@ -305,14 +314,16 @@ function renderEverything(data, firstTime) {
 }
 
 function initTimer() {
-     setTimeout(function(){
+    if (timer_interval != null) {
+        return;
+    }
+    timer_interval = window.setInterval(function(){
         try {
             drawStartedEvents();
         } catch (e) {
             console.log(e);
         }
-        initTimer();
-     }, 5000)
+     }, 3437);
  }
 
 function listenForVisibilityChange(){
@@ -1027,6 +1038,15 @@ function isDelayed(element) {
     return false;
 };
 
+function isLive(element) {
+    for (var i=0; i<live_tasks.length;i++){
+        if (live_tasks[i] == element){
+            return true;
+        }
+    }
+    return false;
+};
+
 function getEventIndexFromId(event_id) {
     var index = -1;
     for (var i = 0; i < flashTeamsJSON["events"].length; i++) {
@@ -1247,7 +1267,7 @@ var constructStatusObj = function(){
 
 var timer = null;
 
-var updateEvent = function(id) {
+var updateEvent = function(id, task_action) {
     var eventJSON = null;
     for (var i = 0; i < flashTeamsJSON.events.length; i++) {
         if (flashTeamsJSON.events[i].id == id) {
@@ -1264,7 +1284,7 @@ var updateEvent = function(id) {
     $.ajax({
         url: url,
         type: 'post',
-        data: {"eventJSON": JSON.stringify(eventJSON), "authenticity_token": authenticity_token}
+        data: {"eventJSON": JSON.stringify(eventJSON), "task_action": (task_action ? task_action : ""), "authenticity_token": authenticity_token}
     }).done(function(data){});
 };
 
