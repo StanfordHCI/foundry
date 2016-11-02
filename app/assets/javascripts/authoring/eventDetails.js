@@ -132,7 +132,7 @@ if(!window._foundry) {
             }
 
             else{
-                var time = eventObj.timer || eventObj.duration;
+                var time = eventObj.timer;
                 var sign = (time / Math.abs(time) < 0) ? "-" : "";
                 
                 var hours = Math.floor(Math.abs(time) / 60);
@@ -141,15 +141,15 @@ if(!window._foundry) {
                 var durationArray = [];
                 if(hours !== 0) {
                     durationArray.push(hours + " " + (hours === 1 ? "hr" : "hrs"));
-                }
-                
-                if(minutes !== 0) {
-                    var minStr = (eventObj.timer || time > 30 ? " min" : "");
-                    durationArray.push(minutes + minStr);
+                    if(minutes !== 0) {
+                        durationArray.push(minutes + " min");
+                    }
+                } else {
+                    durationArray.push(minutes + " min");
                 }
 
                 var timeStr = sign + durationArray.join(" ");
-            }  
+            }
                         
             var d3Datum = d3.select("#g_" + eventObj.id).data()[0];
             var workingWidth =   getWidth(eventObj)

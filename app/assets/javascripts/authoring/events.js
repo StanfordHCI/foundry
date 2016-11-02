@@ -295,6 +295,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     newEvent["members"] = objectToDuplicate["members"] || [];
     newEvent["startTime"] = startTimeObj["startTimeinMinutes"];
     newEvent["duration"] = objectToDuplicate["duration"] || duration;
+    newEvent["timer"] = newEvent["duration"];
     newEvent["startHr"]  =  startTimeObj["startHr"];
     newEvent["startMin"]  =  startTimeObj["startMin"];
     newEvent["row"] = Math.floor((newEvent["y"]-5)/_foundry.timeline.rowHeight);
