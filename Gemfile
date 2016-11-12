@@ -7,6 +7,9 @@ gem 'private_pub', github: 'aratak/private_pub'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.1'
 
+gem 'bcrypt', '3.1.11'
+gem 'bcrypt-ruby'
+
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 

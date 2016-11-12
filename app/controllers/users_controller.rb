@@ -14,8 +14,10 @@ class UsersController < ApplicationController
 	
 	def create 
 		username = registration_params(params[:user])[:username].downcase
+		password = registration_params(params[:user])[:password]
+		password_confirmation = registration_params(params[:user])[:password_confirmation]
 		
-		@user = User.new(:username => username)
+		@user = User.new(:username => username, :password => password, :password_confirmation => password_confirmation)
 		@user.save()
 		
 		if @user.save
@@ -91,7 +93,7 @@ class UsersController < ApplicationController
 
 private
 def registration_params(params)
-  return params.permit(:username)
+  return params.permit(:username, :password, :password_confirmation)
 end
 
 
