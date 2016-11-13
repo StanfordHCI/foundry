@@ -35,52 +35,41 @@ class UsersController < ApplicationController
 	end #end def create 
 	
 	def index
-	
-	redirect_to(:action => :new)
-	
+		redirect_to(:action => :new)
 	end
 	
 	# implements /users/login, which displays a simple login form where the user can enter their login name and password 
 	def login 
-	
 		# redirect user to their team library if he or she visits the login screen but is already logged in
 		if !session[:user_id].nil?
 			redirect_to(:controller => :flash_teams, :action => :index)
-		end		
-		
+		end	
 		@title = "Login"
-		
-	end #end login 
-	
-	def post_login
-		
-		#username = login_params(params[:login])
-		
-		if User.exists?(:username => params[:login].downcase) # check to see if the login exists in the database 
-			@user = User.find_by_username(params[:login].downcase)
-			
-				session[:user_id] = @user.id  #store user id in the session
-				
-				session.delete(:member)
-				session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
+	end
 
-				flash[:notice] = "Welcome back, #{@user.username}!"
-								
-				if !session[:return_to].nil?
-					redirect_to(session[:return_to])
-				else
-					redirect_to(:controller => :flash_teams, :action => :index)
-				end
-							
+	def post_login
+		@user = User.find_by_username(params[:login].downcase)	
+		if @user && @user.authenticate(params[:password])
+			log_in(@user)
+			
+			session.delete(:member)
+			session[:member] ||= {:mem_uniq => "author", :mem_type => "author"}
+
+			flash[:notice] = "Welcome back, #{@user.username}!"
+
+			if !session[:return_to].nil?
+				redirect_to(session[:return_to])
+			else
+				redirect_to(:controller => :flash_teams, :action => :index)
+			end			
 		else #login does not exist in the database
-			flash[:notice] = "Invalid username."
+			flash[:notice] = "Incorrect username or password"
 			redirect_to(:action => :login)
 		end
-		
-	end #end post_login
+	end
 	
 	
-	def logout 
+	def logout
 		reset_session #destroy session
 		#session[:user] = nil
 		session.delete(:user_id)
