@@ -27,7 +27,7 @@ function confirm_show_docs_modal(event_id){
     confirmStartTeamBtn.innerHTML = "OK";
     
     $("#saveButton").css("display","none");
-    $("#confirmButton").attr("class","btn btn-success");
+    $("#confirmButton").attr("class","greenlink");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Read The Previous Task(s) Info First!";
     $('#confirmAction').modal('show');

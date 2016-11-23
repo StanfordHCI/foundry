@@ -1,3 +1,4 @@
+<%= stylesheet_link_tag "auth"%>
 <header id="foundry-header">
   <div class="menu-button icon active"></div>
   <div class="logo small">
@@ -7,26 +8,25 @@
   
   
    <!-- if in author view show the back button on left and foundry tour and start/end button on right --> 
-   <% if in_author_view %> 
-	     <div class="span3 ft-buttons" id="ft-buttons-left" style="position:absolute;left:150px;top:12px;">
-	       <input type="button" class="btn btn-default" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
+   <% if in_author_view %>
+	     <div class="span3 ft-buttons" id="ft-buttons-left" style="position:absolute;left:150px;top:6px;">
+	       <input type="button" class="link" id="backBtn" value="Back" onclick="window.location='<%=flash_teams_path%>';"/>
 	  	</div>
 	     
-	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
-		    <!--  <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> -->
-	      
-	       <input type="button" class="btn btn-default" id="tourBtn" value="Start Foundry Author Tour"/>
-	       <input type="button" class="btn btn-success" id="flashTeamStartBtn" value="Start Team"/>
-	       <input type="button" class="btn btn-danger" id="flashTeamEndBtn" value="End Team" style="display: none"/>
-	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
-	        <input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
-	        <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
+	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:6px;top:6px;">
+		    
+	       <input type="button" class="link" id="tourBtn" value="Start Foundry Author Tour"/>
+	       <input type="button" class="greenlink" id="flashTeamStartBtn" value="Start Team"/>
+	       <input type="button" class="redlink" id="flashTeamEndBtn" value="End Team" style="display: none"/>
+	       <input type="button" class="greenlink" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
+	        <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
+	        <input type="button" class="bluelink" id="flashTeamResumeBtn" value="Save" style="display: none"/>
 	     </div> 
      
      <% else %> <!-- else only show the start foundry tour button --> 
-	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:12px;top:12px;">
+	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:6px;top:6px;">
 	       <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> 
-	       <input type="button" class="btn btn-default" id="expertTourBtn" value="Start Foundry Worker Tour"/>
+	       <input type="button" class="link" id="expertTourBtn" value="Start Foundry Worker Tour"/>
 	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 	     
 	       <% if @member_type == 'pc' || @member_type == 'client' %>

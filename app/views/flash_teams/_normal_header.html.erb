@@ -1,0 +1,12 @@
+<%= stylesheet_link_tag "auth"%>
+<header id="foundry-header">
+  <div class="menu-button icon active"></div>
+  <div class="logo small">
+    <span class="text">Foundry</span>
+  </div>
+  <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:6px;top:6px;">
+      <input type="button" class="link" id="logout_buttton" value="Logout" onclick="window.location='<%=users_logout_path%>';"/>
+      &nbsp;
+      <span>Logged in as <b><%= @user.username %></b></span>
+  </div>
+</header>

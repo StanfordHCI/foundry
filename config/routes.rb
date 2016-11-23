@@ -60,7 +60,7 @@ Foundry::Application.routes.draw do
  
   get "welcome/index"
   
-  root 'welcome#index'
+  root 'users#login'
 
   get 'oauth2callback' => 'welcome#index'
   get '/flash_teams/event_library' => 'flash_teams#event_library'

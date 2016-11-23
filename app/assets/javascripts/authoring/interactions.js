@@ -26,14 +26,14 @@ function eventMousedown(task2idNum) {
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
-       var modal_footer =  '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables</a>' + 
-       '<button class="btn " id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
+       var modal_footer =  '<button href=' + eventObj['gdrive'][1] +' class="bluelink" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables</button>' + 
+       '<button class="greenlink" id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
        //'<button class="btn " id="duplicate-task" style="float :left " onclick="duplicateEvent('+task2idNum+', true)">Duplicate</button>' +
        createOptionsButton(task2idNum) + 
-       '<button class="btn " id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
-       '<button class="btn " id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Take a Break</button>'+
-       '<button class="btn" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
-       '<button type="button" class="btn btn-danger" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
+       '<button class="greenlink" id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
+       '<button class="bluelink" id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Pause</button>'+
+       '<button class="bluelink" id="edit-save-task" onclick="editTaskOverview(true,'+task2idNum+')">Edit</button>' +
+       '<button type="button" class="redlink" id="delete" onclick="confirmDeleteEvent(' + task2idNum +');">Delete</button>';
      
        $('#task_modal').modal('show'); 
        $('.task-modal-footer').html(modal_footer);

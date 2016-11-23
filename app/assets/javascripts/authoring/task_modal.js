@@ -31,9 +31,9 @@ function showTaskOverview(groupNum){
         
 
         if(eventObj.status == "started" || eventObj.status == "delayed"){
-            $("#start-end-task").addClass('btn-success');
+            $("#start-end-task").addClass('greenlink');
             $("#start-end-task").css('display', '');
-            $("#pause-resume-task").addClass('btn-info');
+            $("#pause-resume-task").addClass('bluelink');
             $("#pause-resume-task").css('display', '');
             
             
@@ -44,11 +44,11 @@ function showTaskOverview(groupNum){
         
         else if(eventObj.status == "paused"){
             $("#start-end-task").css('display', 'none');
-            $("#pause-resume-task").addClass('btn-primary');
+            $("#pause-resume-task").addClass('bluelink');
             $("#pause-resume-task").css('display', '');
             $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
             
-            $("#pause-resume-task").html('Resume Task');
+            $("#pause-resume-task").html('Resume');
             
         } 
         
@@ -56,14 +56,14 @@ function showTaskOverview(groupNum){
              $("#pause-resume-task").css('display', 'none'); 
              $("#start-end-task").css('display', '');
               $("#start-end-task").html('Complete');
-              $("#start-end-task").addClass('btn-success');
+              $("#start-end-task").css('class', 'greenlink');
               $("#start-end-task").prop('disabled', true);
         }
         else{
            $("#pause-resume-task").css('display', 'none'); 
            $("#start-end-task").css('display', '');
             $("#start-end-task").attr('onclick', 'confirm_show_docs('+groupNum+')');
-            $("#start-end-task").addClass('btn-warning');
+            $("#start-end-task").css('class', 'greenlink');
             $("#start-end-task").html('Start Task'); 
         }
     } else{
@@ -125,8 +125,8 @@ function showShortTaskOverview(groupNum){
 
         $('#task-text2').html(taskOverviewContent);
 
-        var modal_footer = '<button class="btn" data-dismiss="modal" aria-hidden="true" style="float: right" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>'
-                            + '<a href=' + eventObj['gdrive'][1] +' class="btn btn-primary" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables</a>';
+        var modal_footer = '<button class="link" data-dismiss="modal" aria-hidden="true" style="float: right" onclick="logHideShortTaskOverview(' + groupNum  + ')">Close</button>'
+                            + '<button href=' + eventObj['gdrive'][1] +' class="bluelink" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logShortTaskOverviewGDriveBtnClick(' + groupNum  + ')">Deliverables</button>';
 
         $('.task-modal-footer2').html(modal_footer);
         
@@ -603,10 +603,7 @@ function createOptionsButton(groupNum){
     var ev_title = flashTeamsJSON["events"][ev_index].title; 
 
     var optionsBtn = '<div class="btn-group dropup">'
-                + '<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">'
-                    + 'Options'
-                    + '<span class="caret"></span>'
-                + '</a>'
+                + '<input type="button" class="link" data-toggle="dropdown" value="Options"></input>'
                 + '<ul class="dropdown-menu">'
                     + '<li><a tabindex="-1" href="#" id="duplicate-task" onclick="duplicateEvent('+ groupNum +', true)">Duplicate</a></li>';
            if(flashTeamsJSON.folder != undefined){         

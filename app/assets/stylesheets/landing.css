@@ -1,0 +1,46 @@
+body {
+    padding-top: 100px;
+}
+a:hover {
+    text-decoration: none;
+}
+#center {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-weight: 100;
+    font-size: 30px;
+    padding: 50px 100px;
+    border: 2px solid #FFF;
+    letter-spacing: 5px;
+}
+
+.link {
+    width: 300px;
+    color: black;
+    background-color: white;
+    padding: 10px 30px;
+    border: 2px solid black;
+    letter-spacing: 2px;
+    font-weight: 300;
+}
+.link:hover {
+    background-color: black;
+    color: white;
+}
+    
+#flash_notice {
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: grey;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 50px 100px;
+    border: 2px solid #FFF;
+    
+}

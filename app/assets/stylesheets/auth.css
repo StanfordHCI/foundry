@@ -1,0 +1,151 @@
+body {
+    padding-top: 100px;
+}
+a:hover {
+    text-decoration: none;
+}
+input.inputbox {
+    font-weight: 300;
+    font-size: 16px;
+    padding: 10px 30px;
+    border: 2px solid black;
+    border-radius: 0px;
+}
+.auth_header {
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-weight: 100;
+    font-size: 30px;
+    padding: 50px 100px;
+    border: 2px solid #FFF;
+    letter-spacing: 5px;
+}
+.inputs {
+    margin: auto;
+    width:50%;
+}
+.center {
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+    font-weight: 100;
+    font-size: 30px;
+    padding: 50px 100px;
+    letter-spacing: 5px;
+}
+#actions {
+    width: 405px;
+    margin: 20px auto;
+    text-align: center;
+}
+.link {
+    background-color: #999999;
+    color:white;
+    text-align: center;
+    padding: 7px 15px;
+    border: 2px solid #999999;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+    width:auto;
+    transition: background-color 0.4s;
+}
+.link:hover:enabled {
+    background-color: #b4b3b3;
+    border-color: #b4b3b3;
+}
+.bluelink {
+    background-color: #3498db;
+    color:white;
+    width:auto;
+    text-align: center;
+    padding: 7px 15px;
+    border: 2px solid #3498db;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+    transition: background-color 0.4s;
+}
+.bluelink:hover:enabled {
+    background-color: #51B4F5;
+    border-color: #51B4F5;
+}
+.greenlink {
+    background-color: #7ABA7A;
+    color:white;
+    width:auto;
+    text-align: center;
+    padding: 7px 15px;
+    border: 2px solid #7ABA7A;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+    transition: background-color 0.4s;
+}
+.greenlink:disabled {
+    background-color: #7ABA7A;
+    color:white;
+    width:auto;
+    text-align: center;
+    padding: 7px 15px;
+    border: 2px solid #7ABA7A;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+    transition: background-color 0.4s;
+
+    opacity:0.3;
+    cursor:default;
+}
+.greenlink:hover:enabled {
+    background-color: #99CC99;
+    border-color: #99CC99;
+}
+.redlink {
+    background-color: #CC6666;
+    color:white;
+    width:auto;
+    text-align: center;
+    padding: 7px 16px;
+    border: 2px solid #CC6666;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+    transition: background-color 0.4s;
+}
+.redlink:disabled {
+    background-color: #CC6666;
+    color:white;
+    width:auto;
+    text-align: center;
+    padding: 7px 16px;
+    border: 2px solid #CC6666;
+    letter-spacing: 2px;
+    font-weight: 300;
+    border-radius: 3px;
+    display:inline-block;
+
+    opacity:0.3;
+    cursor:default;
+}
+.redlink:hover:enabled {
+    background-color: #CE8787;
+    border-color: #CE8787;
+}
+.error {
+    margin: 0 auto;
+    width: 460px;
+    text-align: center;
+    background-color: grey;
+    color: white;
+    font-size: 20px;
+    padding: 10px 20px;
+}

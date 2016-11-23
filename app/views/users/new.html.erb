@@ -1,46 +1,39 @@
-<div style="padding: 5px 15px;">
-	<% if @user.errors.any? %>
-	 		<div class="reg_errors">
-		 		<h4>There were <%= pluralize(@user.errors.count, "error") %> that prohibited your account from being created:</h4>
+<%= stylesheet_link_tag "auth"%>
 
-		 		<ul>
-			 		<% @user.errors.full_messages.each do |msg| %>
-			 		<li><%= msg %></li>
-			 		<% end %>
-			 	</ul>
-			</div>
-		<% end %>
+<% if @user.errors.any? %>
+	<% @user.errors.full_messages.each do |msg| %>
+	    <div class="error"><%= msg %></div>
+	<% end %>
+<% end %>
 
-<div class = "form_container">
+<div class="auth_header">FOUNDRY</div>
 
-	<h4> Create an account </h4>	
-	
+<div class="center">	
      <%= form_for(@user, :method => :post, :url => {:action => :create}) do |f| %>
-	 	  
-        <div>
-             <%= f.label(:username, "Username:")%>
-             <%= f.text_field(:username) %>
-             <%= f.label(:password, "Password:")%>
-             <%= f.password_field(:password) %>
-             <%= f.label(:password, "Confirm Password:")%>
-             <%= f.password_field(:password_confirmation) %> 
-            
-            <p><%= submit_tag "Register" %></p>
-          </div>
+        <table class="inputs">
+            <tr>
+                <td>
+                    <%= f.text_field :username, :placeholder => 'Username', :class => 'inputbox' %>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%= f.password_field :password, :placeholder => 'Password', :class => 'inputbox' %>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%= f.password_field :password_confirmation, :placeholder => 'Password Confirmation', :class => 'inputbox' %>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%= f.submit 'Register', :class => 'bluelink' %>
+                </td>
+            </tr>
+          </table>
      <% end %> <!-- end form -->
-     
-</div> <!-- end registration form div --> 
-
- <% @loginlink = link_to("Login", {:action => :login}) %>
-		<p class = "register-link"> 
-			Already have an account?
-			<%= @loginlink %>
-		</p>
-		
-		<% @homelink = link_to("Go back", welcome_index_path) %>
-		<p class = "home-link"> 
-			<%= @homelink %>
-		</p>
-
+    <br/>
+    <br/>
+     <input type="button" class="link" value="Already have an account? Login" onclick="window.location='/users/login'"/>
 </div>
-
