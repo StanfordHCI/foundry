@@ -76,16 +76,23 @@ function submitPullRequest(){
 
 function mergeBranchToMaster(){
 
+    // takes the current ancestorBranch, current master head,
+    // and current branch head, and does the threeway merge
     var merged_json = diffMerge('branch-to-master');
     //var merged_json = diffMergeAll('branch-to-master');
 
+    // current master's json
+    // loadedOriginStatus is populated by loadOriginStatus()
+    // in the call to diffMerge above
     var origin_ft_json = loadedOriginStatus;
 
+    // this is where master's json is replaced with the merged one
     origin_ft_json['flash_teams_json'] = merged_json;
 
     var localStatusJSON = JSON.stringify(origin_ft_json);
         //console.log("updating string: " + localStatusJSON);
 
+        // now save the new master branch data
         var flash_team_id = origin_id;
         var authenticity_token = $("#authenticity_token").val();
         var url = '/flash_teams/' + flash_team_id + '/update_status';
@@ -95,13 +102,24 @@ function mergeBranchToMaster(){
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){
             //console.log("UPDATED ORIGIN FLASH TEAM STATUS");
+
+            // now that updated master in db, load a copy of it
+            // locally so as to keep the local env in sync
             loadOriginStatus(origin_id);
             
         });
 
         //updateAncestorBranch(loadedOriginStatus);
+
+        // retrieves the newly updated master branch (in db)
+        // and saves it into the "original_status" field of the
+        // current team so as to keep it in sync
+        // pullMasterJSON calls loadOriginStatus again, heh
         pullMasterJSON();
 
+        // now that the "original_status" field of the current
+        // team is updated, go save the current team up in
+        // the database
         updateStatus();
 
         //loadData();
@@ -114,16 +132,27 @@ function mergeMasterToBranch(){
     var merged_json = diffMerge('master-to-branch');
     //var merged_json = diffMergeAll('master-to-branch');
 
+    // overwrite local json
     flashTeamsJSON = merged_json;
 
     //updateStatus();
 
     //console.log('merged master to branch');
 
+    // this should be unnecessary since the master branch wasn't
+    // updated at all
     pullMasterJSON();
 
+    // update the db with the new json of the current team
     updateStatus();
 
+    // load back the data that was just updated in the db
+    // this is mainly meant to retrieve the original_status field
+    // which was updated by pullMasterJSON above
+    // but should be unnecessaty if pullMasterJSON is taken out,
+    // since the masteris not updated at all
+    // to check: should we still store the master json into the
+    // current team's original_status field anyway?
     loadData();
     //updateAncestorBranch(loadedOriginStatus);
     $("#jsonModal").modal('hide');
@@ -198,14 +227,15 @@ function diffMergeAll(merge_type){
 }
 
 function diffMerge(merge_type){
-    loadOriginStatus(origin_id);
+    // ancestorBranch is kept up to date by calling pullMasterJSON
     var master = ancestorBranch.flash_teams_json;
     
-    var master_updated = loadedOriginStatus.flash_teams_json;
-    var copied_master_updated = JSON.parse(JSON.stringify(master_updated));
+    loadOriginStatus(origin_id); // get status of master
+    var master_updated = loadedOriginStatus.flash_teams_json; // current master, at this point, when merging
+    var copied_master_updated = JSON.parse(JSON.stringify(master_updated)); // current master stringified
 
-    var branch = flashTeamsJSON;
-    var copied_branch = JSON.parse(JSON.stringify(branch));
+    var branch = flashTeamsJSON; // current team
+    var copied_branch = JSON.parse(JSON.stringify(branch)); // current team stringified
 
     //console.log(JSON.stringify(master_updated));
     var diff = branchmerge.threeWayMerge(master_updated, master, branch);
