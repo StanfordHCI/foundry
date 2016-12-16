@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161112194141) do
+ActiveRecord::Schema.define(version: 20161212170849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,19 @@ ActiveRecord::Schema.define(version: 20161112194141) do
     t.datetime "updated_at"
     t.datetime "confirmationTime"
   end
+
+  create_table "pull_requests", force: true do |t|
+    t.integer  "parent_team_id"
+    t.json     "new_json"
+    t.json     "ancestor_json"
+    t.integer  "status",         default: 0
+    t.string   "notes"
+    t.integer  "author_id"
+    t.datetime "timestamp"
+  end
+
+  add_index "pull_requests", ["author_id"], name: "index_pull_requests_on_author_id", using: :btree
+  add_index "pull_requests", ["parent_team_id"], name: "index_pull_requests_on_parent_team_id", using: :btree
 
   create_table "sessions", force: true do |t|
     t.string   "session_id", null: false

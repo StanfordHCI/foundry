@@ -146,8 +146,12 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
-    $("#flashTeamPauseBtn").css('display', '');
     $("#workerEditTeamBtn").css('display', '');
+    if($("#pull_requests_mode").val() == 'enabled'){
+        $("#flashTeamBranchBtn").css('display', '');
+    } else {
+        $("#flashTeamPauseBtn").css('display', '');
+    }
 
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
@@ -171,7 +175,11 @@ function endTeam() {
     stopProjectStatus();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
-    $("#flashTeamPauseBtn").css('display','none');
+    if($("#pull_requests_mode").val() == 'enabled'){
+        $("#flashTeamBranchBtn").css('display','none');
+    } else {
+        $("#flashTeamPauseBtn").css('display','none');
+    }
     $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
@@ -260,13 +268,16 @@ function renderFlashTeamsJSON(data, firstTime) {
         $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above
         $("#workerEditTeamBtn").css('display','');
 
-        if(flashTeamsJSON["paused"]){
-            $("#flashTeamResumeBtn").css('display','');
-            $("#flashTeamPauseBtn").css('display','none');
-        }
-        else{
-            $("#flashTeamPauseBtn").css('display','');
-            $("#flashTeamResumeBtn").css('display','none');
+        if($("#pull_requests_mode").val() != 'enabled'){
+            if(flashTeamsJSON["paused"]){
+                $("#flashTeamResumeBtn").css('display','');
+                $("#flashTeamPauseBtn").css('display','none');
+            } else{
+                $("#flashTeamPauseBtn").css('display','');
+                $("#flashTeamResumeBtn").css('display','none');
+            }
+        } else {
+            $("#flashTeamBranchBtn").css('display','');
         }
 
         loadData();
@@ -1371,4 +1382,21 @@ var sendEmailOnCompletionOfDelayedTask = function(groupNum){
 var sendEmailOnEarlyCompletion = function(blue_width){
     var early_minutes=parseInt((parseFloat(blue_width+4)/50.0)*30);
     early_completion_helper(remaining_tasks,early_minutes);
+};
+
+// pull requests
+
+function submit_pull_request(new_json, old_json, flash_team_id) {
+    $.ajax({
+        url: '/pull_requests/create',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            new_json: new_json,
+            ancestor_json: old_json,
+            parent_team_id: flash_team_id,
+        },
+    }).done(function(result){
+        console.log("created pull request");
+    });
 };

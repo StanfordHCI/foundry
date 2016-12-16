@@ -7,7 +7,7 @@ require 'securerandom'
 
 class FlashTeamsController < ApplicationController
   helper_method :get_tasks
-  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
+  before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index, :branch]
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
 
   Rails.logger.level = 1
@@ -86,6 +86,29 @@ class FlashTeamsController < ApplicationController
     redirect_to :action => 'index'   
   end
 
+  def branch
+    team = FlashTeam.find(params[:id])
+    copy = team.dup
+
+    # update name
+    copy.name += ' Branch'
+
+    # update author
+    copy.author = 'tmp' # since this is a temp branch, not a real team
+
+    # update json
+    json_field = JSON.parse(copy.json)
+    json_field["title"] += ' Branch'
+    json_field["id"] = copy.id
+    copy.json = json_field.to_json
+
+    # update user_id
+    copy.user_id = session[:user_id]
+
+    if copy.save!
+      render json: copy
+    end
+  end
   
   def createDupTeamStatus(dup_id, orig_status, type)
 	original_status = JSON.parse(orig_status)

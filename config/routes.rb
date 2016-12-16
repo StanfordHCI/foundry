@@ -81,6 +81,7 @@ Foundry::Application.routes.draw do
       post :get_team_info
       post :delayed_task_finished_email
       post :create
+      post :branch
       post :send_edit_team_request
       #get :hire_form
       get :task_portal
@@ -135,6 +136,8 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
       post :create
     end
   end
+
+  resources :pull_requests
   
   #resources :workers
   get '/workers/index' => 'workers#index' 

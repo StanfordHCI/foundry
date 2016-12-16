@@ -1,3 +1,19 @@
+$("#flashTeamBranchBtn").click(function(){
+    var flash_team_id = $("#flash_team_id").val();
+    $.ajax({
+        url: '/flash_teams/' + flash_team_id + '/branch',
+        type: 'post', // because not idempotent
+        dataType: 'json',
+        success: function(data){
+            var win = window.open('/flash_teams/' + data.id + '/edit?pullrequest="true"', '_blank');
+            if (win) {
+                win.focus();
+            } else {
+                alert('Please allow popups to edit the flash team.');
+            }
+        },
+    });
+});
 
 $("#flashTeamPauseBtn").click(function(){
     
