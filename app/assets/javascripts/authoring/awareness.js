@@ -32,6 +32,15 @@ var user_loaded_before_team_start = false;
 
 var window_visibility_state = null;
 var window_visibility_change = null;
+var timer_interval = null;
+
+var task_actions = Object.freeze({
+    START: "start",
+    PAUSE: "pause",
+    DELAY: "delay",
+    RESUME: "resume",
+    COMPLETE: "complete"
+});
 
 $(document).ready(function(){
     colorBox();
@@ -279,10 +288,6 @@ function renderFlashTeamsJSON(data, firstTime) {
             disableTeamEditing();
         }
     } else {
-        if(flashTeamsJSON["startTime"] == undefined){
-            updateOriginalStatus();
-        }
-
         if(!flashTeamsJSON)
             return;
 
@@ -309,14 +314,16 @@ function renderEverything(data, firstTime) {
 }
 
 function initTimer() {
-     setTimeout(function(){
+    if (timer_interval != null) {
+        return;
+    }
+    timer_interval = window.setInterval(function(){
         try {
             drawStartedEvents();
         } catch (e) {
             console.log(e);
         }
-        initTimer();
-     }, 5000)
+     }, 55000);
  }
 
 function listenForVisibilityChange(){
@@ -442,7 +449,7 @@ var flashTeamUpdated = function(){
         return true;
     }
 
-    // if gdrive folder is created (e.g., when a team starts), the gdrive btn in all views should activate
+    // if gdrive folder is created (e.g., when a team starts),  the gdrive btn in all views should activate
     if(updated_gdrive != undefined && flashTeamsJSON["folder"] == undefined){
         return true;
     }
@@ -1031,6 +1038,15 @@ function isDelayed(element) {
     return false;
 };
 
+function isLive(element) {
+    for (var i=0; i<live_tasks.length;i++){
+        if (live_tasks[i] == element){
+            return true;
+        }
+    }
+    return false;
+};
+
 function getEventIndexFromId(event_id) {
     var index = -1;
     for (var i = 0; i < flashTeamsJSON["events"].length; i++) {
@@ -1251,6 +1267,27 @@ var constructStatusObj = function(){
 
 var timer = null;
 
+var updateEvent = function(id, task_action) {
+    var eventJSON = null;
+    for (var i = 0; i < flashTeamsJSON.events.length; i++) {
+        if (flashTeamsJSON.events[i].id == id) {
+            eventJSON = flashTeamsJSON.events[i];
+        }
+    }
+    if (eventJSON == null) {
+        console.log("did not update event because id was invalid: ", id);
+        return;
+    }
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_event';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"eventJSON": JSON.stringify(eventJSON), "task_action": (task_action ? task_action : ""), "authenticity_token": authenticity_token}
+    }).done(function(data){});
+};
+
 var updateStatus = function(flash_team_in_progress){
     if (timer) {
         clearTimeout(timer); //cancel the previous timer.
@@ -1288,7 +1325,6 @@ var updateStatus = function(flash_team_in_progress){
 // used for the team duplication feature (it preserves the team without saving the status
 // information once the team is run
 var updateOriginalStatus = function(){
-    //console.log("in updateOriginalStatus");
     var localStatus = constructStatusObj();
 
     localStatus.latest_time = (new Date).getTime();

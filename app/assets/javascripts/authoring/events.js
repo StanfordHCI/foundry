@@ -17,14 +17,14 @@ var dragged = false;
 var drag_right = d3.behavior.drag()
     .on("drag", rightResize)
     .on("dragend", function(d){
-        updateStatus();
+        updateEvent(d.groupNum);
     });
 
 //Called when the left resize of a task rectangle is dragged
 var drag_left = d3.behavior.drag()
     .on("drag", leftResize)
     .on("dragend", function(d){
-        updateStatus();
+        updateEvent(d.groupNum);
     });
 
 //Called when task rectangles are dragged
@@ -78,7 +78,7 @@ var drag = d3.behavior.drag()
                 }
             }
             
-            updateStatus();
+            updateEvent(d.groupNum);
         } else {
             // click
             eventMousedown(d.groupNum);
@@ -125,8 +125,6 @@ function leftResize(d) {
 
     flashTeamsJSON['local_update'] = new Date().getTime();
 
-    updateStatus();
-
     drawEvent(ev, false);
 }
 
@@ -156,8 +154,6 @@ function rightResize(d) {
     ev.duration = durationForWidth(newWidth);
 
     flashTeamsJSON['local_update'] = new Date().getTime();
-
-    updateStatus();
 
     drawEvent(ev, false);
 }
@@ -208,7 +204,6 @@ function dragEventBlock(d) {
 
     flashTeamsJSON['local_update'] = new Date().getTime();
 
-    updateStatus();
     drawEvent(ev, false);   
 }
 
@@ -269,12 +264,15 @@ function createEvent(point, duration) {
 
 
     // save
-    updateStatus();
+    if (flashTeamsJSON["events"].length == 1) {
+        updateStatus(); // initiate first status object
+    } else {
+        updateEvent(eventObj.id); // status object already exists
+    }
 };
 
 
 function newEventObject(snapPoint, duration, objectToDuplicate){
-
     var documented_questions = [];
     documented_questions[0] = "Please explain all other design or execution decisions made, along with the reason they were made";
     documented_questions[1] = "Please add anything else you want other team members, the team lead, or the client, to know. (optional)";
@@ -297,6 +295,7 @@ function newEventObject(snapPoint, duration, objectToDuplicate){
     newEvent["members"] = objectToDuplicate["members"] || [];
     newEvent["startTime"] = startTimeObj["startTimeinMinutes"];
     newEvent["duration"] = objectToDuplicate["duration"] || duration;
+    newEvent["timer"] = newEvent["duration"];
     newEvent["startHr"]  =  startTimeObj["startHr"];
     newEvent["startMin"]  =  startTimeObj["startMin"];
     newEvent["row"] = Math.floor((newEvent["y"]-5)/_foundry.timeline.rowHeight);
@@ -405,13 +404,12 @@ function duplicateEvent(groupNumber, closeModal){
 
     if(closeModal == true){
         $('#task_modal').modal('hide'); 
-        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
-
+        logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event Button on Task Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);
     }else{
         logActivity("duplicateEvent(groupNumber)",'Clicked Duplicate Event on Config Dropdown', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNumber)]);    
     }
     // save
-    updateStatus();
+    updateEvent(eventObj.id);
 }
 
 function viewEvent(groupNumber){

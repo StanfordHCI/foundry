@@ -6,7 +6,6 @@ class FlashTeam < ActiveRecord::Base
   has_many :members
 
   after_save do
-    PrivatePub.publish_to("/flash_team/#{self.id}/updated", self.status_json)
     PrivatePub.publish_to("/flash_team/#{self.id}/info", self.get_team_info)
   end
 
@@ -18,9 +17,6 @@ class FlashTeam < ActiveRecord::Base
     {:flash_team_name => flash_team_name, :flash_team_id => flash_team_id, :author_name => author_name}
   end
 
-  def status_json
-    JSON.parse((self.status.presence || '{}'))
-  end
 end
 
 # this function returns the member object from a flash team based on a teamId, taskId and memberId
