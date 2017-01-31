@@ -10,9 +10,17 @@ class PullRequestsController < ApplicationController
     render json: PullRequest.all, status: :ok
   end
 
+  def get_as_json
+    pr = PullRequest.find(params[:id])
+    puts "retrieving pr for merge:"
+    puts pr.to_json
+    puts ""
+    render json: pr, status: :ok
+  end
+
   # POST
   def create
-    pr = PullRequest.new(create_params)
+    pr = PullRequest.new(ancestor_json: params[:ancestor_json], parent_team_id: params[:parent_team_id])
     pr.timestamp = Time.now()
     pr.author_id = session[:user_id]
     if pr.save
@@ -23,9 +31,16 @@ class PullRequestsController < ApplicationController
   end
 
   def update
-    pull_request = PullRequest.find(params[:id])
-    if pull_request.update!(update_params)
-      render json: pull_request, status: :ok
+    pr = PullRequest.find(params[:id])
+    pr.new_json = params[:new_json]
+    puts "updating new_json on backend"
+    puts pr.new_json
+    puts ""
+    pr.notes = params[:notes]
+    if pr.save
+      render json: pr, status: :ok
+    else
+      render json: { errors: pr.errors.full_messages }, status: 500
     end
   end
 

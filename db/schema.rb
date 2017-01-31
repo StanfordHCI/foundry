@@ -89,8 +89,8 @@ ActiveRecord::Schema.define(version: 20161212170849) do
 
   create_table "pull_requests", force: true do |t|
     t.integer  "parent_team_id"
-    t.json     "new_json"
-    t.json     "ancestor_json"
+    t.text     "new_json"
+    t.text     "ancestor_json"
     t.integer  "status",         default: 0
     t.string   "notes"
     t.integer  "author_id"

@@ -11,13 +11,14 @@
 // about supported directives.
 //
 //= require jquery
+//= require jquery_cookie
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.contextMenu.js
-// require_tree ./d3
 //= require ./d3/d3.v3.min
 //= require turbolinks
-// require ./bootstrap/bootstrap
+//= require ./authoring/adiff
+//= require ./authoring/xdiff
 //= require ./bootstrap/bootstrap.min
 //= require ./bootstrap-editable.min
 //= require ./bootstrap-tour.min
@@ -31,14 +32,17 @@
 //= require ./authoring/popovers
 //= require ./authoring/helper
 //= require ./authoring/idle
+//= require ./authoring/pullrequests
+//= require ./authoring/request_updates
+//= require ./authoring/spectrum
+//= require ./authoring/spectrum_use
+//= require ./authoring/testJSON
 //= require ./authoring/awareness
 //= require ./authoring/interactions
 //= require ./authoring/left-sidebar
 //= require ./authoring/addRole
 //= require ./authoring/sidebar
 //= require ./authoring/odeskArrays
-//= require ./authoring/spectrum
-//= require ./authoring/spectrum_use
 //= require ./authoring/eventslibrary
 //= require ./authoring/flash_team_update
 //= require ./authoring/notification_email
@@ -54,10 +58,8 @@
 //= require ./authoring/chat_styling.js
 //= require ./authoring/dependencies
 //= require ./authoring/docModal
-//= require ./authoring/jquery.cookie
 // require ./authoring/video_chat
 //= require ./authoring/eventDraw
 //= require ./authoring/eventDetails
 //= require ./authoring/pauseTeam
-//= require ./authoring/request_updates
 

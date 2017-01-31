@@ -219,6 +219,7 @@ if(flashTeamsJSON) {
 }
 
 function renderFlashTeamsJSON(data, firstTime) {
+    console.log("CALLED");
     // firstTime will also be true in the case that flashTeamEndedorStarted, so
     // we make sure that it is false (i.e. true firstTime, upon page reload for user
     // before the team starts)
@@ -230,7 +231,11 @@ function renderFlashTeamsJSON(data, firstTime) {
     // Using transaction ID to avoid updatin client which is already updated.
     var currentTransactionID = json_transaction_id || 0
     var givenTransactionID = data.json_transaction_id || 1
+    console.log("BEFORE checking transaction id");
+    console.log("currentTransactionID: " + currentTransactionID);
+    console.log("givenTransactionID: " + givenTransactionID);
     if(currentTransactionID >= givenTransactionID) return;
+    console.log("AFTER checking transaction id");
     json_transaction_id = givenTransactionID
 
     loadedStatus = data;
@@ -312,6 +317,17 @@ function renderFlashTeamsJSON(data, firstTime) {
 
         if(!isUser || memberType == "pc" || memberType == "client") {
             renderMembersRequester();
+        }
+
+        if(isBranch()){
+            $("#backBtn").css('display','none');
+            $("#tourBtn").css('display','none');
+            $("#flashTeamStartBtn").css('display','none');
+            if(inReviewMode()){
+                $("#mergePullRequestBtn").css('display', '');
+            } else {
+                $("#submitPullRequestBtn").css('display', '');
+            }
         }
     }
 }
@@ -582,6 +598,8 @@ var loadData = function(){
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     completed_red_tasks = loadedStatus.completed_red_tasks;
 
+    console.log("drawing events again..");
+    console.log(flashTeamsJSON.events);
     drawEvents(!in_progress);
     drawBlueBoxes();
     drawRedBoxes();
@@ -1382,21 +1400,4 @@ var sendEmailOnCompletionOfDelayedTask = function(groupNum){
 var sendEmailOnEarlyCompletion = function(blue_width){
     var early_minutes=parseInt((parseFloat(blue_width+4)/50.0)*30);
     early_completion_helper(remaining_tasks,early_minutes);
-};
-
-// pull requests
-
-function submit_pull_request(new_json, old_json, flash_team_id) {
-    $.ajax({
-        url: '/pull_requests/create',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            new_json: new_json,
-            ancestor_json: old_json,
-            parent_team_id: flash_team_id,
-        },
-    }).done(function(result){
-        console.log("created pull request");
-    });
 };

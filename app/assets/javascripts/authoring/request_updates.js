@@ -110,7 +110,10 @@ $.fn.subscribeToEventUpdate = function() {
 $.fn.subscribeToFlashTeamUpdate = function() {
     url = "/flash_team/" + $(this).val() + "/updated";
     PrivatePub.subscribe(url, function(data, channel) {
+        console.log("FLASH TEAM UPDATED");
         if (data) {
+          console.log("RECEIVED FLASH TEAM UPDATE");
+          console.log(data);
           renderEverything(data, false);
           drawStartedEvents();
         }
@@ -127,6 +130,6 @@ $.fn.subscribeToFlashTeamInfo = function() {
 }
 
 $(document).ready(function(){
-    $("#flash_team_id").subscribeToEventUpdate();
-    $("#flash_team_id").subscribeToFlashTeamUpdate();
+    //$("#flash_team_id").subscribeToEventUpdate();
+    //$("#flash_team_id").subscribeToFlashTeamUpdate();
 });

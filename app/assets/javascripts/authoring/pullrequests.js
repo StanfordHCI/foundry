@@ -1,55 +1,55 @@
 var master_id = $("#parent_team_id").val();
-var pull_request_id = $("#pull_request_id").val();
+var pull_request_id = $("#pr_id").val();
 
 function get_latest_master(handler) {
     $.ajax({
         url: '/flash_teams/' + master_id + '/get_status',
         type: 'get',
-    }).done(handler);
+    }).done(function(data){
+        handler(data.flash_teams_json);
+    });
 };
 
-function update_master(new_json) {
+function update_master(new_json, success) {
     $.ajax({
-        url: '/flash_teams/' + master_id + '/update_status',
+        url: '/flash_teams/' + master_id + '/update_flash_teams_json',
         type: 'post',
-        data: new_json,
-        dataType: 'json',
-    }).done(function(result){
-        console.log("updated master");
-    });
+        data: {"flashTeamsJSON": JSON.stringify(new_json)},
+    }).done(success);
 };
 
 function update_pull_request(data) {
     $.ajax({
-        url: '/pull_requests/' + pull_request_id + '/update',
+        url: '/pull_requests/' + pull_request_id,
         type: 'put',
-        dataType: 'json',
         data: data,
     }).done(function(result){
-        console.log("updated pull request");
+        console.log("updated pull request with final merged pr");
     });
 };
 
-// the arguments are 'flashTeamsJSON' objects of their respective teams
-function merge(into, ancestor, from) {
-    var diff = diff3lib.threeWayMerge(into, ancestor, from);
-    return diff3lib.patch(diff.diff, into, from);
+function pull_and_push(branch, ancestor, success, failure) {
+    get_latest_master(function(latest_master){
+        var diffed = xdiff.diff3Teams(branch, ancestor, latest_master);
+        if (diffed.conflicts.length > 0) {
+            failure(diffed.conflicts);
+        } else {
+            var new_master = xdiff.patchTeam(diffed.diffs, ancestor);
+            update_master(new_master, success);
+        }
+    });
 }
 
-// when master is merged into the branch, the ancestor is no
-// longer the original master. instead, it is updated to be the
-// latest master, since the branch has been "refreshed"
-function merge_master_into_branch(branch, ancestor){
-    get_latest_master(function(latest_master){
-        var new_json = merge(branch, ancestor, latest_master);
-        update_pull_request({new_json: new_json, ancestor_json: latest_master});
-    });
+function isBranch() {
+    return flashTeamsJSON.team_type !== undefined && flashTeamsJSON.team_type == "branch";
 };
 
-function merge_branch_into_master(master, ancestor, branch) {
-    get_latest_master(function(latest_master){
-        var new_json = merge(latest_master, ancestor, branch);
-        update_master(new_json);
-        update_pull_request({status: "merged"});
-    });
+function inReviewMode() {
+    var params = window.location.search.replace("?", "");
+
+    if(params=="review=true"){
+        return true;
+    } else {
+        return false;
+    }
 };

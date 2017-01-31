@@ -105,6 +105,17 @@ class FlashTeamsController < ApplicationController
     # update user_id
     copy.user_id = session[:user_id]
 
+    copy_status = JSON.parse(copy.status)
+    copy_status["flash_teams_json"]["team_type"] = 'branch'
+    copy_status["flash_teams_json"]["pr_id"] = params[:pr_id]
+    copy_status["flash_teams_json"]["parent_team_id"] = team.id
+    copy_status["flash_team_in_progress"] = false
+
+    #origin_status = JSON.parse(team.status)
+    #copy_status["ancestor_flash_teams_json"] = origin_status["flash_teams_json"]
+
+    copy.status = copy_status.to_json
+
     if copy.save!
       render json: copy
     end
@@ -203,6 +214,26 @@ end
         @author_runtime=false
       else
         @author_runtime=json_status["flash_team_in_progress"]
+      end
+
+      @pr_id = -1
+      if json_status["flash_teams_json"].key?("pr_id")
+        @pr_id = json_status["flash_teams_json"]["pr_id"]
+        puts @pr_id
+      end
+
+      @in_review_mode = false
+      if request.query_parameters["review"] == "true"
+        @in_review_mode = true
+        puts @in_review_mode
+        @parent_team_id = json_status["flash_teams_json"]["parent_team_id"]
+      end
+
+      @is_branch = false
+      if json_status["flash_teams_json"].key?("team_type")
+        if json_status["flash_teams_json"]["team_type"] == "branch"
+          @is_branch = true
+        end
       end
     end
 
@@ -418,10 +449,26 @@ end
     end
   end
 
+  def update_flash_teams_json
+    flash_team_id = params[:id]
+    ft_json = params[:flashTeamsJSON]
+    @flash_team = FlashTeam.find(flash_team_id)
+    status_hashmap = JSON.parse(@flash_team.status)
+    status_hashmap["flash_teams_json"] = JSON.parse(ft_json)
+    status_hashmap["json_transaction_id"] += 1
+    @flash_team.status = status_hashmap.to_json
+    @flash_team.save
+
+    PrivatePub.publish_to("/flash_team/#{flash_team_id}/updated", status_json(@flash_team.status))
+    
+    respond_to do |format|
+      format.json {render json: nil, status: :ok}
+    end
+  end
+
   def get_json
     @flash_team = FlashTeam.find(params[:id])
     status_hashmap = JSON.parse(@flash_team.status)
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + status_hashmap["flash_teams_json"].to_json
     respond_to do |format|
       format.json {render json: status_hashmap["flash_teams_json"].to_json, status: :ok}
     end

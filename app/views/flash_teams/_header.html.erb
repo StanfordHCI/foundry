@@ -21,6 +21,8 @@
 	       <input type="button" class="greenlink" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
            <% if ENV['PULL_REQUESTS'] == 'enabled' %>
 	           <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
+               <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
+               <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
            <% else %>
                <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
            <% end %>
@@ -37,6 +39,8 @@
 		   		<input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 				<% if ENV['PULL_REQUESTS'] == 'enabled' %>
                    <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
+                   <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
+                   <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
                <% else %>
                    <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
                <% end %>
