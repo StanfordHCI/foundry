@@ -10,7 +10,7 @@ class FlashTeamsController < ApplicationController
   before_filter :authenticate!, only: [:new, :create, :show, :duplicate, :clone, :index]
   before_filter :valid_user?, only: [:panels, :hire_form, :send_task_available, :task_acceptance, :send_task_acceptance, :task_rejection, :send_task_rejection]
 
-  Rails.logger.level = 1
+  #Rails.logger.level = 1
 
   class TaskActions
     START="start"
