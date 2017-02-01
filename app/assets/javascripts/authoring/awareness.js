@@ -125,8 +125,6 @@ function disableTeamEditing() {
 }
 
 function enableTeamEditing() {
-    in_progress = false;
-
     updateInteractionsPopovers(); //update interaction popovers to edit mode
 
     $(".add-folder-button").removeClass("disabled");
