@@ -46,6 +46,7 @@ $(document).ready(function(){
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
+    updateStatus();
 });
 
 // Start team after asking user for confirmation
