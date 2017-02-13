@@ -43,10 +43,10 @@ var task_actions = Object.freeze({
 });
 
 $(document).ready(function(){
+    updateStatus();
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
-    updateStatus();
 });
 
 // Start team after asking user for confirmation
@@ -1302,7 +1302,7 @@ var updateStatus = function(flash_team_in_progress){
 
         //if flashTeam hasn't been started yet, update the original status in the db
         if(flashTeamsJSON["startTime"] == undefined){
-    		updateOriginalStatus();
+    		    updateOriginalStatus();
         }
 
         if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
@@ -1321,7 +1321,7 @@ var updateStatus = function(flash_team_in_progress){
             type: 'post',
             data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
         }).done(function(data){});
-    }, 2000);
+    });
 };
 
 //this function updates the original status of the flash team in the database, which is
