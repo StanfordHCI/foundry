@@ -1,112 +1,76 @@
-<div class="container-fluid" style="padding: 5px 20px;">
-
-<!-- Warning for invalid login --> 
-<% if flash[:notice] %>
-	<div class="flash_notice">
-		<p><%= flash[:notice] %></p>
-	</div>
-<% end %>
-
-
-<meta charset="utf-8">
-<div class="row-fluid" style="padding-top: 10px;"> 
-
-  <p class="span9" style="padding-top: 5px;">
-    <span style="font-size: 34px;"><b>Flash Teams Library</b></span>
-
-    <span style="font-size: 18px;">(<%= @flash_teams.length %> Teams)</span>
-
-  </p>
- 
-  <p class="span3">
-    <span class="span12 text-right"> Logged in as <%= @user.username %> (<%= link_to 'Logout', users_logout_path %>)</span>
-  </p>
-</div>
-
-<div class="row-fluid" style="margin-bottom: 10px;">
-  <p> 
-    <span class="span8" style="padding-top: 5px;">
-      <!-- <%# @flash_teams.length %> Teams --> 
-    </span>
-    <span class="span4 text-right">
-      <%= link_to 'New Flash Team', new_flash_team_path, { :class=>"btn btn-primary" } %> 
-    </span>
-  </p>
-</div>
-
-<% @flash_teams.each do |flash_team| %>
-  <div class="row-fluid" style="border: 1px black solid; padding: 5px; margin-top: 5px;">
-   <!--  <a href="#" class="name" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name"><%= flash_team.name %></a> -->
-  
-  <% 
-    if !flash_team.status.nil?
-
-      status = JSON.parse(flash_team.status) 
-
-      flash_team_json = status['flash_teams_json']
-
-      if !flash_team_json['projectoverview'].nil? 
-        project_overview = flash_team_json['projectoverview'] 
-        team_status = flash_team_json['flash_team_in_progress']
-      else
-        project_overview = "No project overview has been added."
-      end
-
-      team_status = flash_team_json['status']
-
-      if team_status == true
-        team_status = "In Progress"
-        team_status_class = "text-info"
-      else
-        team_status = "Not Started"
-        team_status_class = "muted"
-      end
-
-    else
-      project_overview = "No project overview has been added."
-      team_status = "Not Started"
-      team_status_class = "muted"
-    end 
-  %>
-
-  <p>
-    <span class="span9">
-     
-    <!-- <a href="<%=edit_flash_team_path(flash_team) %>" class="model" id="model_<%= flash_team.id %>" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter team name" style="font-size: 18px;"><%= flash_team.name %></a> -->
-
-    <a href="" class="name" data-value="<%= flash_team.name %>" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name" style="font-size: 18px;"><%= flash_team.name %></a>
-
-    <span class=" <%= team_status_class %>"> (<%= team_status %>) </span> [#<%= flash_team.id %>] 
-
-     <!--  <a href="#" class="name" data-type="text" data-pk="<%= flash_team.id %>" data-url="/flash_teams/rename" data-title="Enter name"><%= flash_team.name %></a> -->
-
-   </span>
-
-   <span class="span3 text-right">
-
-      <!-- <a id="container">Rename</a>  |  --> 
-      <b><%= link_to 'Go to Team', edit_flash_team_path(flash_team) %></b>
-
-      <%# link_to 'Delete', flash_team_path(flash_team), :method => :delete, :confirm => 'Are you sure?' %>
-        |  <%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %>
-
-      <span style="padding-left:5px;">
-        <%= link_to '', flash_team_path(flash_team), 
-        :method => :delete, :confirm => 'Are you sure?', :class =>'icon-remove' %>
-      </span>
-
-    </span>
-
+<%= render :partial => "normal_header" %>
+<div class="container-fluid">  
+  <div class="row-fluid" style="padding-top: 10px;"> 
+    <p>
+      <div class="span2"></div>
+      <div class="span4" style="padding-top: 5px;">
+        <span style="font-size: 30px;"><b>Your Flash Teams</b></span>
+      </div>
+      <div class="span2"></div>
+      <div class="span4" style="margin-left:0px;">
+        <input type="button" class="bluelink" id="new_team_button" value="New Flash Team" onclick="window.location='<%=new_flash_team_path%>';"/>
+      </div>
     </p>
-
-    <p style="padding-right:5px;">
-      <span><%= raw project_overview %></span>
-    </p>
-  
   </div>
+  <br/>
 
+  <% @flash_teams.each do |flash_team| %>
+        <% 
+          if !flash_team.status.nil?
+
+            status = JSON.parse(flash_team.status) 
+
+            flash_team_json = status['flash_teams_json']
+
+            if !flash_team_json['projectoverview'].nil? 
+              project_overview = flash_team_json['projectoverview'] 
+              team_status = flash_team_json['flash_team_in_progress']
+            else
+              project_overview = "No project overview has been added."
+            end
+
+            team_status = flash_team_json['status']
+
+            if team_status == true
+              team_status = "In Progress"
+              team_status_class = "text-info"
+            else
+              team_status = "Not Started"
+              team_status_class = "muted"
+            end
+
+          else
+            project_overview = "No project overview has been added."
+            team_status = "Not Started"
+            team_status_class = "muted"
+          end 
+        %>
+
+        <div class="row-fluid">
+          <p>
+            <div class="span2" style="height:40px"></div>
+            <div class="span4" style="height:40px">
+              <div class="row-fluid" style="height:40px">
+                <span style="font-size:18px;">#<%= flash_team.id %></span>
+                <span style="font-size:18px;"><b><%= link_to flash_team.name, edit_flash_team_path(flash_team) %></b></span>
+                <span class=" <%= team_status_class %>"> (<%= team_status %>) </span>
+              </div>
+              <div class="row-fluid" style="height:40px">
+                <p>
+                  <span><%= raw project_overview %></span>
+                </p>
+              </div>
+            </div>
+            <div class="span3 text-right" style="height:40px">
+              <%= link_to 'Duplicate', duplicate_flash_team_path(flash_team) %>
+              |
+              <%= link_to 'Delete', flash_team_path(flash_team), 
+              :method => :delete, :confirm => 'Are you sure you want to delete this team?' %>
+            </div>
+            <div class="span3" style="height:40px"></div>
+          </p>
+        </div>
   <% end %>
-
 </div>
 
   <%= javascript_include_tag "/assets/jquery" %>
@@ -118,23 +82,7 @@
 <script>
   $(document).ready(function() {
     $('.name').editable({
-      placement: "right"
+      placement: "right",
     });
-
-//   $('#model').editable({
-//     // send: 'never',  
-//     // title: 'Enter username',
-//     placement: 'right',
-//     toggle: 'manual',
-//     display: function(value) {
-//         $('#model').text(value);
-//     }
-// });
-
-// $('#controller').click(function(e){
-//     e.stopPropagation();
-//     $('#model').editable('toggle');
-// });
-
   });
 </script>

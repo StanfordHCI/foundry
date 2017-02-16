@@ -126,7 +126,7 @@ function pauseTask(groupNum) {
 
 	//chaning resume button to pause button on the task modal
     $("#pause-resume-task").attr('onclick', 'resumeTask('+groupNum+')');
-    $("#pause-resume-task").html('Resume Task'); 
+    $("#pause-resume-task").html('Resume'); 
 
     postToSlack(eventObj, "paused");
 	
@@ -165,7 +165,7 @@ function resumeTask(groupNum) {
 
 	//chaning start button to complete button on the task modal
     $("#pause-resume-task").attr('onclick', 'pauseTask('+groupNum+')');
-    $("#pause-resume-task").html('Take a Break'); 
+    $("#pause-resume-task").html('Pause'); 
 
     postToSlack(eventObj, "resumed");
 	
@@ -212,8 +212,8 @@ function confirmCompleteTask(groupNum) {
 
     //Code for the Task Completed Button
     var completeButton = document.getElementById("confirmButton");
-    completeButton.innerHTML = "Answer all questions to submit";
-    $("#confirmButton").attr("class","btn btn-success");
+    completeButton.innerHTML = "Answer all qns to submit";
+    $("#confirmButton").attr("class","greenlink");
     completed = allCompleted(eventToComplete);
     if (completed){
             $("#confirmButton").prop('disabled', false);
@@ -221,14 +221,14 @@ function confirmCompleteTask(groupNum) {
         }
         else{ 
             $("#confirmButton").prop('disabled', true);
-            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+            $("#confirmButton")[0].innerHTML = "Answer all qns to Submit";
         }
     $('#confirmAction').modal('show');
 
     //Code for Documentation Question Save Button
     var saveButton = document.getElementById("saveButton");
     saveButton.innerHTML = "Save and Close";
-    $("#saveButton").attr("class","btn btn-default");
+    $("#saveButton").attr("class","bluelink");
     $("#saveButton").attr("style", "display:inline;");
     $('#confirmAction').modal('show');
     
@@ -242,7 +242,7 @@ function confirmCompleteTask(groupNum) {
         }
         else{ 
             $("#confirmButton").prop('disabled', true);
-            $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+            $("#confirmButton")[0].innerHTML = "Answer all qns to Submit";
         }
     });
 
@@ -330,7 +330,7 @@ var keyUpFunc = function(eventToComplete){
     }
     else{ 
         $("#confirmButton").prop('disabled', true);
-        $("#confirmButton")[0].innerHTML = "Answer all Questions to Submit";
+        $("#confirmButton")[0].innerHTML = "Answer all qns to Submit";
     }
 }
 

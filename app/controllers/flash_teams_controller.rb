@@ -26,11 +26,10 @@ class FlashTeamsController < ApplicationController
 	end
 
   def create 
-    name = flash_team_params(params[:flash_team])[:name]
-
-    author = flash_team_params(params[:flash_team])[:author]
+    name = params[:name]
     
     @user = User.find session[:user_id]
+    author = @user.username
     
     @flash_team = FlashTeam.create(:name => name, :author => author, :user_id => @user.id)
 
@@ -52,7 +51,7 @@ class FlashTeamsController < ApplicationController
 		@user = nil 
 		@title = "Invalid User ID"
 		@flash_team = nil
-		redirect_to(welcome_index_path)				
+		redirect_to(users_login_path)				
   	else
     	@flash_team = FlashTeam.find(params[:id])
     
@@ -153,7 +152,7 @@ end
         @user = nil 
   			@title = "Invalid User ID"
   			@flash_team = nil
-  			redirect_to(welcome_index_path) and return
+  			redirect_to(users_login_path) and return
        end		
 		else 
 			@flash_team = FlashTeam.find(params[:id])
@@ -1019,10 +1018,6 @@ end
   	
   	@fw = Worker.all.pluck(:email)   
    end
-   
-  def flash_team_params params
-    params.permit(:name, :author)
-  end
 
   def listQueueForm
     @list_queue_active = "active"

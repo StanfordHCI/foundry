@@ -1,59 +1,12 @@
-<!--
-<h1>Welcome to Foundry!</h1>
-<p><%= link_to "Flash Teams Library", controller: "flash_teams" %></p>
--->
-
-<style>
-	body {
-		background-color: black;
-		padding-top: 100px;
-	}
-	a:hover {
-		text-decoration: none;
-	}
-	#center {
-		width: 200px;
-		margin: 0 auto;
-		text-align: center;
-		background-color: black;
-		color: white;
-		font-weight: 100;
-		font-size: 30px;
-		padding: 50px 100px;
-		border: 2px solid #FFF;
-		letter-spacing: 5px;
-	}
-	#actions {
-		width: 405px;
-		margin: 20px auto;
-		text-align: center;
-	}
-	#actions .link {
-		color: white;
-		padding: 10px 30px;
-		border: 2px solid #FFF;
-		letter-spacing: 2px;
-		font-weight: 300;
-	}
-	#actions .link:hover {
-		background-color: white;
-		color: black;
-	}
-		
-	#flash_notice {
-		width: 200px;
-		margin: 0 auto;
-		margin-bottom: 10px;
-		text-align: center;
-		background-color: grey;
-		color: black;
-		font-weight: bold;
-		font-size: 20px;
-		padding: 50px 100px;
-		border: 2px solid #FFF;
-		
-	}
-</style>
+<div id="center">FOUNDRY</div>
+<br/>
+<%= link_to new_user_path do %>
+	<div class="link">Register</div>
+<% end %>
+<br/>
+<%= link_to users_login_path do %>
+	<div class="link">Login</div>
+<% end %>
 
 <!-- Warning for invalid login --> 
 <% if flash[:notice] %>
@@ -61,18 +14,3 @@
 		<p><%= flash[:notice] %></p>
 	</div>
 <% end %>
-
-
-<div id="center">FOUNDRY</div>
-
-
-
-<div id="actions">
-	<%= link_to new_user_path do %>
-	<div class="link">Register</div>
-	<% end %>
-	
-	<%= link_to users_login_path do %>
-	<div class="link">Login</div>
-	<% end %>
-</div>

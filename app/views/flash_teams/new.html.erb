@@ -1,9 +1,47 @@
-<div style="padding: 5px 15px;">
-
-<h1>New Flash Team</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', flash_teams_path %>
-
-</div>
+<%= render :partial => "normal_header" %>
+<%= stylesheet_link_tag "auth"%>
+    <div class="container-fluid">  
+      <div class="row-fluid" style="padding-top: 10px;"> 
+        <p>
+            <div class="span2"></div>
+            <div class="span4" style="padding-top: 5px;">
+                <span style="font-size: 30px;"><b>New Flash Team</b></span>
+            </div>
+            <div class="span2"></div>
+            <div class="span4" style="margin-left:0px;"></div>
+        </p>
+      </div>
+      <div class="row-fluid" style="padding-top: 10px;">
+        <p>
+            <div class="span2"></div>
+            <div class="span4">
+                <%= form_tag("/flash_teams/create", :method => "post") do %>
+                   <table class="inputs" style="margin-left:0px;">
+                        <tr>
+                            <td>
+                                <%= text_field_tag :name, "", class: 'inputbox', placeholder: 'Team Name' %> <br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <%= submit_tag 'Create team', :class => 'bluelink' %>
+                            </td>
+                        </tr>
+                   </table>
+                <% end %>
+            </div>
+            <div class="span2"></div>
+            <div class="span4"></div>
+        </p>
+      </div>
+      <div class="row-fluid" style="padding-top: 10px;"> 
+        <p>
+            <div class="span2"></div>
+            <div class="span4" style="padding-top: 5px;">
+                <%= link_to 'Back', flash_teams_path, :class => 'link' %>
+            </div>
+            <div class="span2"></div>
+            <div class="span4" style="margin-left:0px;"></div>
+        </p>
+      </div>
+    </div>

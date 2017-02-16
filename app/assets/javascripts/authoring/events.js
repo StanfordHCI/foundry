@@ -658,7 +658,7 @@ function confirmDeleteEvent(eventId) {
 
     var deleteButton = document.getElementById("confirmButton");
     deleteButton.innerHTML = "Delete event";
-    $("#confirmButton").attr("class","btn btn-danger");
+    $("#confirmButton").attr("class","redlink");
 
     $('#confirmAction').modal('show');
     
