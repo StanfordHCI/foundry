@@ -127,6 +127,8 @@ function disableTeamEditing() {
 }
 
 function enableTeamEditing() {
+    in_progress = false;
+
     updateInteractionsPopovers(); //update interaction popovers to edit mode
 
     $(".add-folder-button").removeClass("disabled");
@@ -1064,7 +1066,7 @@ var trackUpcomingEvent = function(){
     if (current == undefined){
         return;
     }
-    
+
     var overallTime;
 
     currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
