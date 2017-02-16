@@ -263,12 +263,6 @@ function createEvent(point, duration) {
     logActivity("createEvent(point, duration)",'Create Event', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(eventObj)]);
 
     updateEvent(eventObj.id);
-    // save
-    //if (flashTeamsJSON["events"].length == 1) {
-    //    updateStatus(); // initiate first status object
-    //} else {
-    //    updateEvent(eventObj.id); // status object already exists
-    //}
 };
 
 
