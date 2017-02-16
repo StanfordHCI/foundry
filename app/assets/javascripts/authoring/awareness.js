@@ -23,6 +23,8 @@ var in_progress = false;
 var delayed_tasks_time = [];
 var dri_responded = [];
 var project_status_handler;
+
+
 var cursor = null;
 var cursor_interval_id = null;
 var cursor_interval_live = false;

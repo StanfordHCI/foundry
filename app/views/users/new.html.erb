@@ -19,7 +19,11 @@
 	 	  
         <div>
              <%= f.label(:username, "Username:")%>
-             <%= f.text_field(:username) %> 
+             <%= f.text_field(:username) %>
+             <%= f.label(:password, "Password:")%>
+             <%= f.password_field(:password) %>
+             <%= f.label(:password, "Confirm Password:")%>
+             <%= f.password_field(:password_confirmation) %> 
             
             <p><%= submit_tag "Register" %></p>
           </div>
