@@ -45,6 +45,7 @@ var task_actions = Object.freeze({
 });
 
 $(document).ready(function(){
+    updateStatus();
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
@@ -127,6 +128,8 @@ function disableTeamEditing() {
 }
 
 function enableTeamEditing() {
+    in_progress = false;
+
     updateInteractionsPopovers(); //update interaction popovers to edit mode
 
     $(".add-folder-button").removeClass("disabled");
@@ -1093,7 +1096,7 @@ var trackUpcomingEvent = function(){
     if (current == undefined){
         return;
     }
-    
+
     var overallTime;
 
     currentUserEvents = currentUserEvents.sort(function(a,b){return parseInt(a.startTime) - parseInt(b.startTime)});
@@ -1320,36 +1323,30 @@ var updateEvent = function(id, task_action) {
 };
 
 var updateStatus = function(flash_team_in_progress){
-    if (timer) {
-        clearTimeout(timer); //cancel the previous timer.
-        timer = null;
+    json_transaction_id++
+    var localStatus = constructStatusObj();
+
+    //if flashTeam hasn't been started yet, update the original status in the db
+    if(flashTeamsJSON["startTime"] == undefined){
+        updateOriginalStatus();
     }
-    timer = setTimeout(function(){
-        json_transaction_id++
-        var localStatus = constructStatusObj();
 
-        //if flashTeam hasn't been started yet, update the original status in the db
-        if(flashTeamsJSON["startTime"] == undefined){
-    		updateOriginalStatus();
-        }
+    if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
+        localStatus.flash_team_in_progress = flash_team_in_progress;
+    } else {
+        localStatus.flash_team_in_progress = in_progress;
+    }
+    localStatus.latest_time = (new Date).getTime();
+    var localStatusJSON = JSON.stringify(localStatus);
 
-        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
-            localStatus.flash_team_in_progress = flash_team_in_progress;
-        } else {
-            localStatus.flash_team_in_progress = in_progress;
-        }
-        localStatus.latest_time = (new Date).getTime();
-        var localStatusJSON = JSON.stringify(localStatus);
-
-        var flash_team_id = $("#flash_team_id").val();
-        var authenticity_token = $("#authenticity_token").val();
-        var url = '/flash_teams/' + flash_team_id + '/update_status';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-        }).done(function(data){});
-    }, 2000);
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_status';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+    }).done(function(data){});
 };
 
 //this function updates the original status of the flash team in the database, which is
