@@ -36,7 +36,6 @@
 //= require ./authoring/request_updates
 //= require ./authoring/spectrum
 //= require ./authoring/spectrum_use
-//= require ./authoring/testJSON
 //= require ./authoring/awareness
 //= require ./authoring/interactions
 //= require ./authoring/left-sidebar
