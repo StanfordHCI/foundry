@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     @user = User.where(id: session[:user_id]).first
     @title = "Invalid User ID"
     # redirect_to(:controller => :users, :action => :login) unless @user
-    redirect_to(welcome_index_path) unless @user
+    redirect_to(users_login_path) unless @user
   end
   
   def valid_user?(options = {})

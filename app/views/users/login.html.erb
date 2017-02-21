@@ -1,41 +1,35 @@
-<div style="padding: 5px 15px;">
-
-<!--app/views/users/login.html.erb -->
+<%= stylesheet_link_tag "auth"%>
 
 <!-- Warning for invalid login --> 
 <% if flash[:notice] %>
-	<div class="flash_notice">
-		<p><%= flash[:notice] %></p>
+	<div class="error">
+		<%= flash[:notice] %>
 	</div>
 <% end %>
 
-<div class = "form_container">
+<div class="auth_header">FOUNDRY</div>
 
-	<h4> Login to an existing account </h4>	
-	
-	<%= form_tag("post_login", :method => "post") do %>
-	   <div>
-	   	<%= label_tag(:login, "Login:") %>
-	   	<%= text_field_tag(:login) %> <br />
-	   	<%= label_tag(:password, "Password:") %>
-	   	<%= password_field_tag(:password) %> <br />
-	  
-	   	<p><%= submit_tag("Login") %></p>
-
-     <% end %> <!-- end form -->
-     
-</div> <!-- end registration form div --> 
-
- 		<% @reglink = link_to("Register", {:action => :new}) %>
-		<p class = "register-link"> 
-			Don't have an account? 
-			<%= @reglink %>
-		</p>
-		
-		
-		<% @homelink = link_to("Go back", welcome_index_path) %>
-		<p class = "home-link"> 
-			<%= @homelink %>
-		</p>
-
+<div class="center">
+	<%= form_tag("/users/post_login", :method => "post") do %>
+	   <table class="inputs">
+	   		<tr>
+	   			<td>
+	   				<%= text_field_tag :login, "", class: 'inputbox', placeholder: 'Username' %> <br />
+	   			</td>
+	   		</tr>
+	   		<tr>
+	   			<td>
+	   				<%= password_field_tag :password, "", class: 'inputbox', placeholder: 'Password' %> <br />
+	   			</td>
+	   		</tr>
+	   		<tr>
+	            <td>
+	                <%= submit_tag 'Login', :class => 'bluelink' %>
+	            </td>
+	        </tr>
+	   </table>
+	<% end %>
+	<br/>
+	<br/>
+	<input type="button" class="link register" value="Don't have an account? Register" onclick="window.location='/users/new'"/>
 </div>

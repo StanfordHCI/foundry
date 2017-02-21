@@ -45,6 +45,7 @@ var task_actions = Object.freeze({
 });
 
 $(document).ready(function(){
+    updateStatus();
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
@@ -58,7 +59,7 @@ $("#flashTeamStartBtn").click(function(){
     var confirmStartTeamBtn = document.getElementById("confirmButton");
     confirmStartTeamBtn.innerHTML = "Start the team";
 
-    $("#confirmButton").attr("class","btn btn-success");
+    $("#confirmButton").attr("class","greenlink");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Start Team?";
     $('#confirmAction').modal('show');
@@ -76,7 +77,7 @@ $("#flashTeamEndBtn").click(function(){
     }
     var confirmEndTeamBtn = document.getElementById("confirmButton");
     confirmEndTeamBtn.innerHTML = "End the team";
-    $("#confirmButton").attr("class","btn btn-danger");
+    $("#confirmButton").attr("class","redlink");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "End Team?";
     $('#confirmAction').modal('show');
@@ -1091,14 +1092,14 @@ var trackUpcomingEvent = function(){
             overallTime = "You can now start <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a> task.";
             updateSidebarText(overallTime, "black");
             updateStatusAlertText(overallTime, 'alert-class');
-            updateSidebarButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
-            updateAlertButton(ev.id, 'eventMousedown', 'Start Task', 'btn-warning');
+            updateSidebarButton(ev.id, 'eventMousedown', 'Start Task', 'greenlink');
+            updateAlertButton(ev.id, 'eventMousedown', 'Start Task', 'greenlink');
         } else {
             overallTime = "Your next task is <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>"+ ev.title +"</a>.";
             updateSidebarText(overallTime, "black");
             updateStatusAlertText(overallTime, 'alert-hide');
-            updateSidebarButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
-            updateAlertButton(ev.id, 'eventMousedown', 'View Task', 'btn-primary');
+            updateSidebarButton(ev.id, 'eventMousedown', 'View Task', 'bluelink');
+            updateAlertButton(ev.id, 'eventMousedown', 'View Task', 'bluelink');
         }
     }
 
@@ -1106,26 +1107,26 @@ var trackUpcomingEvent = function(){
         overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is paused.";
         updateSidebarText(overallTime, "#006699");
         updateStatusAlertText(overallTime, 'alert-info');
-        updateSidebarButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
-        updateAlertButton(ev.id, 'resumeTask', 'Resume Task', 'btn-primary');
+        updateSidebarButton(ev.id, 'resumeTask', 'Resume', 'bluelink');
+        updateAlertButton(ev.id, 'resumeTask', 'Resume', 'bluelink');
     }
 
     if( ev.status == "delayed"){
         overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is delayed.";
         updateSidebarText(overallTime, "#f52020");
         updateStatusAlertText(overallTime, 'alert-danger');
-        updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
-        updateSidebarButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-btn2');
-        updateAlertButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
-        updateAlertButton(ev.id, 'pauseTask', 'Take a Break', 'btn-info', 'project-status-alert-btn2');
+        updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'greenlink');
+        updateSidebarButton(ev.id, 'pauseTask', 'Pause', 'bluelink', 'project-status-btn2');
+        updateAlertButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'greenlink');
+        updateAlertButton(ev.id, 'pauseTask', 'Pause', 'bluelink', 'project-status-alert-btn2');
     }
 
     else if ( ev.status == "started"){
         overallTime = "Your task <a href='#' class='task-name-status' onclick='eventMousedown(" + ev.id +")'>("+ ev.title +")</a> is in progress.";
         updateSidebarText(overallTime, "#40b8e4");
         updateStatusAlertText(overallTime, 'alert-hide');
-        updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'btn-success');
-        updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'btn-info', 'project-status-btn2');
+        updateSidebarButton(ev.id, 'confirmCompleteTask', 'Complete Task', 'greenlink');
+        updateSidebarButton(ev.id, 'pauseTask', 'Pause Task', 'bluelink', 'project-status-btn2');
     }
 
     if(in_progress == true &&  (flashTeamsJSON["paused"] == true) ){
@@ -1278,36 +1279,30 @@ var updateEvent = function(id, task_action) {
 };
 
 var updateStatus = function(flash_team_in_progress){
-    if (timer) {
-        clearTimeout(timer); //cancel the previous timer.
-        timer = null;
+    json_transaction_id++
+    var localStatus = constructStatusObj();
+
+    //if flashTeam hasn't been started yet, update the original status in the db
+    if(flashTeamsJSON["startTime"] == undefined){
+        updateOriginalStatus();
     }
-    timer = setTimeout(function(){
-        json_transaction_id++
-        var localStatus = constructStatusObj();
 
-        //if flashTeam hasn't been started yet, update the original status in the db
-        if(flashTeamsJSON["startTime"] == undefined){
-    		updateOriginalStatus();
-        }
+    if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
+        localStatus.flash_team_in_progress = flash_team_in_progress;
+    } else {
+        localStatus.flash_team_in_progress = in_progress;
+    }
+    localStatus.latest_time = (new Date).getTime();
+    var localStatusJSON = JSON.stringify(localStatus);
 
-        if(flash_team_in_progress != undefined){ // could be undefined if want to call updateStatus in a place where not sure if the team is running or not
-            localStatus.flash_team_in_progress = flash_team_in_progress;
-        } else {
-            localStatus.flash_team_in_progress = in_progress;
-        }
-        localStatus.latest_time = (new Date).getTime();
-        var localStatusJSON = JSON.stringify(localStatus);
-
-        var flash_team_id = $("#flash_team_id").val();
-        var authenticity_token = $("#authenticity_token").val();
-        var url = '/flash_teams/' + flash_team_id + '/update_status';
-        $.ajax({
-            url: url,
-            type: 'post',
-            data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
-        }).done(function(data){});
-    }, 2000);
+    var flash_team_id = $("#flash_team_id").val();
+    var authenticity_token = $("#authenticity_token").val();
+    var url = '/flash_teams/' + flash_team_id + '/update_status';
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
+    }).done(function(data){});
 };
 
 //this function updates the original status of the flash team in the database, which is

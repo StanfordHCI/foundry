@@ -75,7 +75,7 @@ class UsersController < ApplicationController
 		session.delete(:user_id)
 		flash[:notice] = "Succesfully logged out."
 		#redirect_to(:action => :new) # redirect user to the login screen 
-		redirect_to(welcome_index_path)
+		redirect_to(users_login_path)
 		#redirect_to(:controller => :flash_teams, :action => :index)
 	end #end logout
 	

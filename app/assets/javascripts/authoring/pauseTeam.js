@@ -8,7 +8,7 @@ $("#flashTeamPauseBtn").click(function(){
     var confirmStartTeamBtn = document.getElementById("confirmButton");
     confirmStartTeamBtn.innerHTML = "Edit";
     
-    $("#confirmButton").attr("class","btn btn-success");
+    $("#confirmButton").attr("class","bluelink");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Edit Team?";
     $('#confirmAction').modal('show');
@@ -46,7 +46,7 @@ $("#flashTeamResumeBtn").click(function(){
     var confirmStartTeamBtn = document.getElementById("confirmButton");
     confirmStartTeamBtn.innerHTML = "Save";
     
-    $("#confirmButton").attr("class","btn btn-success");
+    $("#confirmButton").attr("class","bluelink");
     var label = document.getElementById("confirmActionLabel");
     label.innerHTML = "Save Team?";
     $('#confirmAction').modal('show');
