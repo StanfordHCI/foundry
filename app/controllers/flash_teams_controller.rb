@@ -111,9 +111,6 @@ class FlashTeamsController < ApplicationController
     copy_status["flash_teams_json"]["parent_team_id"] = team.id
     copy_status["flash_team_in_progress"] = false
 
-    #origin_status = JSON.parse(team.status)
-    #copy_status["ancestor_flash_teams_json"] = origin_status["flash_teams_json"]
-
     copy.status = copy_status.to_json
 
     if copy.save!

@@ -45,7 +45,6 @@ var task_actions = Object.freeze({
 });
 
 $(document).ready(function(){
-    updateStatus();
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
