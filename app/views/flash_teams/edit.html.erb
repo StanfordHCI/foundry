@@ -41,11 +41,7 @@
                            :in_expert_view => @in_expert_view,
                            :flash_team => @flash_team} %>
   <!-- end of left sidebar -->
-  
-  <!-- begin right sidebar -->
-    <%= render :partial => "right_sidebar" %>
-  <!-- end of right sidebar -->
-	
+  	
 	<% if @in_author_view %>
 
     <!-- render partial with confirm action alert --> 
@@ -144,9 +140,6 @@
                      - (parseFloat(timelineWrapper.css("margin-top")))
                      + "px",
           });
-
-          // resize chat in right sidebar
-          chatResize();
       }
       $(window).resize(setEditPage);
       $(document).ready(setEditPage);

@@ -226,7 +226,7 @@ function renderFlashTeamsJSON(data, firstTime) {
     // we make sure that it is false (i.e. true firstTime, upon page reload for user
     // before the team starts)
     if(firstTime){
-        renderChatbox();
+        getCurrentUser();
         renderProjectOverview(); //note: not sure if this goes here, depends on who sees the project overview (e.g., user and/or requester)
     }
 
@@ -248,7 +248,6 @@ function renderFlashTeamsJSON(data, firstTime) {
     // initialize the entry manager after flashTeamsJSON has been loaded
     window.entryManager = new window.EntryManager(flashTeamsJSON);
 
-    //renderChatbox();
     setCurrentMember();
     renderProjectOverview();
 
@@ -396,8 +395,7 @@ function listenForVisibilityChange(){
 // saves member object for current_user (undefined for author so we will set it to 'Author')
 var current_user;
 
-//finds user name and sets current variable to user's index in array
-var renderChatbox = function(){
+var getCurrentUser = function(){
     var uniq_u=getParameterByName('uniq');
 
     var url2 = '/flash_teams/' + flash_team_id + '/get_user_name';
@@ -409,14 +407,11 @@ var renderChatbox = function(){
        chat_name = data["user_name"];
        chat_role = data["user_role"];
 
-       presname = chat_name;
-	   currentStatus = "online ★";
-
-	   // current_user is undefined for author so just set it to 'Author'
-	   // when current_user is the author it won't have a uniq id so need to check for current_user == 'Author' instead
-	   if(chat_role == 'Author'){
-		   current_user = 'Author';
-	   }
+       // current_user is undefined for author so just set it to 'Author'
+       // when current_user is the author it won't have a uniq id so need to check for current_user == 'Author' instead
+       if(chat_role == 'Author'){
+           current_user = 'Author';
+       }
 
        if (chat_role == "" || chat_role == null){
         uniq_u2 = data["uniq"];
@@ -432,16 +427,6 @@ var renderChatbox = function(){
             }
          }
        }
-
-       // Set our initial online status.
-       setUserStatus(currentStatus);
-
-       myDataRef.on('child_added', function(snapshot) {
-            var message = snapshot.val();
-            displayChatMessage(message.name, message.uniq, message.role, message.date, message.text);
-            name = message.name;
-        });
-
     });
 };
 
