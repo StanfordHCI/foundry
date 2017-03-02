@@ -336,6 +336,13 @@ end
     end
   end
 
+  def get_original_status
+    @flash_team = FlashTeam.find(params[:id])
+    respond_to do |format|
+      format.json {render json: @flash_team.original_status, status: :ok}
+    end
+  end
+
   def update_task_status(event_id, task_action, status_hashmap)
     case task_action
     when TaskActions::START

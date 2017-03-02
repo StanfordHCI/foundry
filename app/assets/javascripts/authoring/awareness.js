@@ -84,6 +84,36 @@ $("#flashTeamEndBtn").click(function(){
     document.getElementById("confirmButton").onclick=function(){endTeam()};
 });
 
+$("#flashTeamResetBtn").click(function(){
+    var flash_team_id = $("#flash_team_id").val();
+    var url = '/flash_teams/' + flash_team_id + '/get_original_status';
+    $.ajax({
+        url: url,
+        type: 'get'
+    }).done(function(data){
+        if(data == null) {
+            return;
+        }
+        
+        var bodyText = document.getElementById("confirmActionText");
+        bodyText.innerHTML = "Are you sure you want to end " + flashTeamsJSON["title"] + "?";
+
+        var confirmResetTeamBtn = document.getElementById("confirmButton");
+        confirmResetTeamBtn.innerHTML = "Reset the team";
+        $("#confirmButton").attr("class","redlink");
+        var label = document.getElementById("confirmActionLabel");
+        label.innerHTML = "Reset Team?";
+        $('#confirmAction').modal('show');
+
+        document.getElementById("confirmButton").onclick=function(){
+            $('#confirmAction').modal('hide');
+            json_transaction_id = data.json_transaction_id - 1;
+            renderFlashTeamsJSON(data, false);
+            updateStatus();
+        };
+    });
+});
+
 function removeColabBtns(){
    var events = flashTeamsJSON["events"];
    for (var i = 0; i < events.length; i++){
@@ -221,7 +251,6 @@ if(flashTeamsJSON) {
 }
 
 function renderFlashTeamsJSON(data, firstTime) {
-    console.log("CALLED");
     // firstTime will also be true in the case that flashTeamEndedorStarted, so
     // we make sure that it is false (i.e. true firstTime, upon page reload for user
     // before the team starts)
@@ -233,11 +262,7 @@ function renderFlashTeamsJSON(data, firstTime) {
     // Using transaction ID to avoid updatin client which is already updated.
     var currentTransactionID = json_transaction_id || 0
     var givenTransactionID = data.json_transaction_id || 1
-    console.log("BEFORE checking transaction id");
-    console.log("currentTransactionID: " + currentTransactionID);
-    console.log("givenTransactionID: " + givenTransactionID);
     if(currentTransactionID >= givenTransactionID) return;
-    console.log("AFTER checking transaction id");
     json_transaction_id = givenTransactionID
 
     loadedStatus = data;
@@ -597,16 +622,8 @@ var loadData = function(){
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
     if(!in_progress) {
-        //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
-        //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
-        //console.log("flashTeamsJSON['original_json']: " + flashTeamsJSON["original_json"]);
-        //console.log("flashTeamsJSON['original_status']: " + flashTeamsJSON["original_status"]);
-        //updateStatus();
-        //checkProjectFolder();
         updateOriginalStatus();
 		recordStartTime();
-		//checkProjectFolder();
-        //addAllFolders();
         createProjectFolder();
         in_progress = true; // TODO: set before this?
         $("#projectStatusText").html("The project is in progress.<br /><br />");
@@ -1341,7 +1358,6 @@ var updateOriginalStatus = function(){
 
     localStatus.latest_time = (new Date).getTime();
     var localStatusJSON = JSON.stringify(localStatus);
-    //console.log("updating string: " + localStatusJSON);
 
     var flash_team_id = $("#flash_team_id").val();
     var authenticity_token = $("#authenticity_token").val();
@@ -1351,7 +1367,6 @@ var updateOriginalStatus = function(){
         type: 'post',
         data: {"localStatusJSON": localStatusJSON, "authenticity_token": authenticity_token}
     }).done(function(data){
-        //console.log("UPDATED FLASH TEAM STATUS");
     });
 };
 
