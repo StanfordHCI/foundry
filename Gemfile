@@ -5,7 +5,7 @@ ruby `cat .ruby-version`.strip
 gem 'private_pub', github: 'aratak/private_pub'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.1'
+gem 'rails', github: 'rails/rails', :tag => 'v4.1.0.beta1'
 
 gem 'bcrypt', '3.1.11'
 gem 'bcrypt-ruby'
@@ -43,6 +43,8 @@ gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
+
+gem 'json'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

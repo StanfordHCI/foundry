@@ -18,6 +18,8 @@
         <% 
           if !flash_team.status.nil?
 
+            puts JSON.parse(flash_team.status)
+
             status = JSON.parse(flash_team.status) 
 
             flash_team_json = status['flash_teams_json']

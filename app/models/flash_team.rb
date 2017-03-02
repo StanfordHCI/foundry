@@ -4,6 +4,7 @@ class FlashTeam < ActiveRecord::Base
 
   has_many :tasks
   has_many :members
+  has_many :pull_requests
 
   after_save do
     PrivatePub.publish_to("/flash_team/#{self.id}/info", self.get_team_info)

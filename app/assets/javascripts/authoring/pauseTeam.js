@@ -1,3 +1,99 @@
+$("#flashTeamBranchBtn").click(function(){
+    console.log("SAVING ancestor_json:");
+    console.log(flashTeamsJSON);
+    $.ajax({
+        url: '/pull_requests',
+        type: 'post',
+        data: {"ancestor_json": JSON.stringify(flashTeamsJSON), "parent_team_id": flash_team_id},
+        success: function(data){
+            console.log("just created new pull request:");
+            console.log(data);
+            var pr_id = data.id;
+            var flash_team_id = $("#flash_team_id").val();
+            $.ajax({
+                url: '/flash_teams/' + flash_team_id + '/branch',
+                type: 'post', // because not idempotent
+                dataType: 'json',
+                data: {pr_id: pr_id},
+                success: function(data){
+                    var win = window.open('/flash_teams/' + data.id + '/edit', '_blank');
+                    if (win) {
+                        win.focus();
+                    } else {
+                        alert('Please allow popups to edit the flash team.');
+                    }
+                },
+            });
+        },
+    });
+});
+
+function submitPullRequest(success){
+    var pr_id = $("#pr_id").val();
+    console.log("SAVING new_json:");
+    console.log(flashTeamsJSON);
+    $.ajax({
+        url: '/pull_requests/' + pr_id,
+        type: 'put',
+        data: {"new_json": JSON.stringify(flashTeamsJSON)},
+        success: function(data){
+            var flash_team_id = $("#flash_team_id").val();
+            var user = chat_name;
+
+            var channel = "#foundry-notifications";
+            var notification_group = "@everyone";
+            var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
+
+            var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit?review=true';
+            var slackMsg = user + ' has submitted a pull request on Foundry. <' + teamUrl + '|Review the pull request on Foundry.>';
+
+            var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
+            $.post(private_slack_url, payload).done(success);
+        },
+    });
+};
+
+$("#submitPullRequestBtn").click(function(){
+    submitPullRequest(function(data){
+        var body = "<p>Your changes have been submitted in a pull request, and the team has been informed via a message to the Slack board. Please follow up on Slack to ensure that someone on the team reviews your changes.</p><br/><p>If they approve the request, your changes will be reflected in the original team immediately. If it is rejected, you will see a brief explanation from the reviewer. After that, you are free to submit a new pull request based on the feedback received.</p>";
+        $("#feedback_modal #feedback-modal-label").html("Pull Request Submitted Successfully");
+        $("#feedback_modal .feedback-modal-body").html(body);
+        $("#feedback_modal").modal('show');
+    });
+});
+
+function mergePullRequest(success, failure){
+    var pr_id = $("#pr_id").val();
+    $.ajax({
+        url: '/pull_requests/' + pr_id + '/get_as_json',
+        type: 'get',
+        dataType: 'json',
+    }).done(function(data){
+        pull_and_push(JSON.parse(data["new_json"]), JSON.parse(data["ancestor_json"]), success, failure);
+    });
+};
+
+$("#mergePullRequestBtn").click(function(){
+    mergePullRequest(function(data){
+        var body = "<p>Thank you for reviewing the pull request and approving it! The team has been informed via a message to the Slack board. Please follow up on Slack to ensure that the requester is made aware.</p><br/><p>The changes introduced by this pull request have been automatically merged into the original team, which should appear different now. If you had it open in a tab, we already refreshed it for you to reflect the new changes.</p>";
+        $("#feedback_modal #feedback-modal-label").html("Pull Request Merged Successfully");
+        $("#feedback_modal .feedback-modal-body").html(body);
+        $("#feedback_modal").modal('show');
+
+        
+    }, function(conflicts){
+        var body = "<p>Unfortunately, we are unable to merge this branch because the original team has recently changed and some of those changes conflict with this branch.</p><br/>";
+        body += "<p>Conflict(s): </p>";
+        for (var i in conflicts) {
+            body += "<p>" + JSON.stringify(conflicts[i]) + "</p>";
+        }
+        body += "<br/>";
+        body += "<p>A message has been sent to the Slack board informing the requester of this. The requester is then free to create a new branch and submit a new pull request from the latest version of the team.</p>";
+        $("#feedback_modal #feedback-modal-label").html("Conflicts");
+        $("#feedback_modal .feedback-modal-body").html(body);
+        $("#feedback_modal").modal('show');
+    });
+});
 
 $("#flashTeamPauseBtn").click(function(){
     

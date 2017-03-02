@@ -75,12 +75,14 @@ Foundry::Application.routes.draw do
       post :update_status
       post :update_original_status
       post :update_json
+      post :update_flash_teams_json
       get :get_json
       post :early_completion_email
       post :get_user_name
       post :get_team_info
       post :delayed_task_finished_email
       post :create
+      post :branch
       post :send_edit_team_request
       #get :hire_form
       get :task_portal
@@ -135,6 +137,10 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
       post :create
     end
   end
+
+  resources :pull_requests
+
+  get '/pull_requests/:id/get_as_json' => 'pull_requests#get_as_json'
   
   #resources :workers
   get '/workers/index' => 'workers#index' 
