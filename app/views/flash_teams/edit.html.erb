@@ -2,6 +2,13 @@
 <input type="hidden" id="flash_team_id" value="<%= @flash_team.id %>"/>
 <input type="hidden" id="flash_team_name" value="<%= @flash_team.name%>"/>
 <input type="hidden" id="uniq" value=""/>
+<input type="hidden" id="pull_requests_mode" value="<%= ENV['PULL_REQUESTS'] %>"/>
+<% if @is_branch %>
+  <input type="hidden" id="pr_id" value="<%= @pr_id %>"/>
+<% end %>
+<% if @in_review_mode %>
+  <input type="hidden" id="parent_team_id" value="<%= @parent_team_id %>"/>
+<% end %>
 
 <%= tag :meta, :name=> 'events_json', :content=> @events_json %>
 
@@ -16,6 +23,10 @@
 
     <!-- documentation modal shows up the first time the user logs in --> 
     <%= render :partial => "doc_modal" %>
+
+    <!-- feedback modal is for providing feedback for pull request
+         related actions -->
+    <%= render :partial => "feedback_modal" %>
 
     <!-- request changes to team modal shows up after clicking on 'request a change' button -->
     <%= render :partial => "request_edit_worker_modal" %>
@@ -95,8 +106,10 @@
 <div id="titleLength" style="visibility: hidden; "><span></span></div>
 </div> <!-- end of div class="container-fluid" -->
 
-<%= javascript_include_tag "authoring/gdrive" %>
 <%= javascript_include_tag "application" %>
+
+<%= javascript_include_tag "authoring/gdrive" %>
+
 <%= javascript_include_tag "https://apis.google.com/js/client.js?onload=handleClientLoad" %>
 <%= javascript_include_tag "https://apis.google.com/js/api.js"%>
 

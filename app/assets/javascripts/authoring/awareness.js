@@ -45,7 +45,6 @@ var task_actions = Object.freeze({
 });
 
 $(document).ready(function(){
-    updateStatus();
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
@@ -149,8 +148,12 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
-    $("#flashTeamPauseBtn").css('display', '');
     $("#workerEditTeamBtn").css('display', '');
+    if($("#pull_requests_mode").val() == 'enabled'){
+        $("#flashTeamBranchBtn").css('display', '');
+    } else {
+        $("#flashTeamPauseBtn").css('display', '');
+    }
 
     $("div#search-events-container").css('display','none');
     $("div#project-status-container").css('display','');
@@ -174,7 +177,11 @@ function endTeam() {
     stopProjectStatus();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
-    $("#flashTeamPauseBtn").css('display','none');
+    if($("#pull_requests_mode").val() == 'enabled'){
+        $("#flashTeamBranchBtn").css('display','none');
+    } else {
+        $("#flashTeamPauseBtn").css('display','none');
+    }
     $("#projectStatusText").html("The project is not in progress or has not started yet.");
     $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
 }
@@ -214,6 +221,7 @@ if(flashTeamsJSON) {
 }
 
 function renderFlashTeamsJSON(data, firstTime) {
+    console.log("CALLED");
     // firstTime will also be true in the case that flashTeamEndedorStarted, so
     // we make sure that it is false (i.e. true firstTime, upon page reload for user
     // before the team starts)
@@ -225,7 +233,11 @@ function renderFlashTeamsJSON(data, firstTime) {
     // Using transaction ID to avoid updatin client which is already updated.
     var currentTransactionID = json_transaction_id || 0
     var givenTransactionID = data.json_transaction_id || 1
+    console.log("BEFORE checking transaction id");
+    console.log("currentTransactionID: " + currentTransactionID);
+    console.log("givenTransactionID: " + givenTransactionID);
     if(currentTransactionID >= givenTransactionID) return;
+    console.log("AFTER checking transaction id");
     json_transaction_id = givenTransactionID
 
     loadedStatus = data;
@@ -263,13 +275,16 @@ function renderFlashTeamsJSON(data, firstTime) {
         $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above
         $("#workerEditTeamBtn").css('display','');
 
-        if(flashTeamsJSON["paused"]){
-            $("#flashTeamResumeBtn").css('display','');
-            $("#flashTeamPauseBtn").css('display','none');
-        }
-        else{
-            $("#flashTeamPauseBtn").css('display','');
-            $("#flashTeamResumeBtn").css('display','none');
+        if($("#pull_requests_mode").val() != 'enabled'){
+            if(flashTeamsJSON["paused"]){
+                $("#flashTeamResumeBtn").css('display','');
+                $("#flashTeamPauseBtn").css('display','none');
+            } else{
+                $("#flashTeamPauseBtn").css('display','');
+                $("#flashTeamResumeBtn").css('display','none');
+            }
+        } else {
+            $("#flashTeamBranchBtn").css('display','');
         }
 
         loadData();
@@ -304,6 +319,17 @@ function renderFlashTeamsJSON(data, firstTime) {
 
         if(!isUser || memberType == "pc" || memberType == "client") {
             renderMembersRequester();
+        }
+
+        if(isBranch()){
+            $("#backBtn").css('display','none');
+            $("#tourBtn").css('display','none');
+            $("#flashTeamStartBtn").css('display','none');
+            if(inReviewMode()){
+                $("#mergePullRequestBtn").css('display', '');
+            } else {
+                $("#submitPullRequestBtn").css('display', '');
+            }
         }
     }
 }
@@ -574,6 +600,8 @@ var loadData = function(){
     drawn_blue_tasks = loadedStatus.drawn_blue_tasks;
     completed_red_tasks = loadedStatus.completed_red_tasks;
 
+    console.log("drawing events again..");
+    console.log(flashTeamsJSON.events);
     drawEvents(!in_progress);
     drawBlueBoxes();
     drawRedBoxes();

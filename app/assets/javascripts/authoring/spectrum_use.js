@@ -1,4 +1,4 @@
-$(".full-spectrum").spectrum({
+/*$(".full-spectrum").spectrum({
     color: "#ECC",
     showInput: true,
     className: "full-spectrum",
@@ -25,3 +25,4 @@ $(".full-spectrum").spectrum({
     },
     palette: colorBox.colors
 });
+*/

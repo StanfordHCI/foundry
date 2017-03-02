@@ -19,9 +19,15 @@
 	       <input type="button" class="greenlink" id="flashTeamStartBtn" value="Start Team"/>
 	       <input type="button" class="redlink" id="flashTeamEndBtn" value="End Team" style="display: none"/>
 	       <input type="button" class="greenlink" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
-	        <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
+           <% if ENV['PULL_REQUESTS'] == 'enabled' %>
+	           <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
+               <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
+               <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
+           <% else %>
+               <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
+           <% end %>
 	        <input type="button" class="bluelink" id="flashTeamResumeBtn" value="Save" style="display: none"/>
-	     </div> 
+	     </div>
      
      <% else %> <!-- else only show the start foundry tour button --> 
 	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:6px;top:6px;">
@@ -31,7 +37,13 @@
 	     
 	       <% if @member_type == 'pc' || @member_type == 'client' %>
 		   		<input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
-				<input type="button" class="btn btn-primary" id="flashTeamPauseBtn" value="Edit"  style="display: none"/>
+				<% if ENV['PULL_REQUESTS'] == 'enabled' %>
+                   <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
+                   <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
+                   <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
+               <% else %>
+                   <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
+               <% end %>
 				<input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
    		<% end %>
 
