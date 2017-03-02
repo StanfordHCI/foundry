@@ -178,6 +178,7 @@ function startFlashTeam() {
     $("#flashTeamStartBtn").attr("disabled", "disabled");
     $("#flashTeamStartBtn").css('display','none');
     $("#flashTeamEndBtn").css('display','');
+    $("#flashTeamResetBtn").css('display','');
     $("#workerEditTeamBtn").css('display', '');
     if($("#pull_requests_mode").val() == 'enabled'){
         $("#flashTeamBranchBtn").css('display', '');
@@ -207,6 +208,7 @@ function endTeam() {
     stopProjectStatus();
     stopTrackingTasks();
     $("#flashTeamEndBtn").attr("disabled", "disabled");
+    $("#flashTeamResetBtn").css('display', 'none');
     if($("#pull_requests_mode").val() == 'enabled'){
         $("#flashTeamBranchBtn").css('display','none');
     } else {
@@ -297,6 +299,7 @@ function renderFlashTeamsJSON(data, firstTime) {
         $("#flashTeamStartBtn").attr("disabled", "disabled");
         $("#flashTeamStartBtn").css('display','none'); //not sure if this is necessary since it's above
         $("#flashTeamEndBtn").css('display',''); //not sure if this is necessary since it's above
+        $("#flashTeamResetBtn").css('display', '');
         $("#workerEditTeamBtn").css('display','');
 
         if($("#pull_requests_mode").val() != 'enabled'){
@@ -344,6 +347,8 @@ function renderFlashTeamsJSON(data, firstTime) {
         if(!isUser || memberType == "pc" || memberType == "client") {
             renderMembersRequester();
         }
+
+        $("#flashTeamResetBtn").css('display', 'none');
 
         if(isBranch()){
             $("#backBtn").css('display','none');
