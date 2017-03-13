@@ -524,15 +524,6 @@ var completeTask = function(groupNum){
 
 };
 
-//debugging
-$(function getSlackAuth() {
-  $("#slack-button").click(function () {
-    console.log(slackToken);
-    console.log(slackChannel);
-    console.log(slackURL);
-  });
-});
-
 /**
  * Messages the relevant slack channel that the task is started or finished.
  * Requires a private slack Incoming Webhook integration URL, or it will post to the StanfordHCI slack.
