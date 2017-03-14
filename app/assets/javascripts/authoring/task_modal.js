@@ -142,8 +142,9 @@ function logShortTaskOverviewGDriveBtnClick(groupNum){
         logActivity("logShortTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Short Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
-function logTaskOverviewGDriveBtnClick(groupNum){
-        logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
+function gDriveBtnClick(groupNum, gdrivelink){
+    window.open(gdrivelink, '_blank');
+    logActivity("logTaskOverviewGDriveBtnClick(groupNum)",'Clicked on gDrive Button on Task Overview Modal', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON["events"][getEventJSONIndex(groupNum)]);
 }
 
 
