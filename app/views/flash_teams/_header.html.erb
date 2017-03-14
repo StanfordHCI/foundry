@@ -34,18 +34,16 @@
 	       <input type="button" class="link" id="expertTourBtn" value="Start Foundry Worker Tour"/>
 	     
 
-	       <% puts "MEMBER TYPE IS:"
-              puts @member_type
-              if @member_type == 'pc' || @member_type == 'client' || @member_type == 'worker' %>
-				<% if ENV['PULL_REQUESTS'] == 'enabled' %>
+	       <%  if @member_type == 'pc' || @member_type == 'client' || @member_type == 'worker' %>
+				       <% if ENV['PULL_REQUESTS'] == 'enabled' %>
                    <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
                    <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
                    <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
                <% else %>
                    <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
                <% end %>
-				<input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
-   		<% end %>
+				      <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
+   		     <% end %>
 
 
 	     </div> 
