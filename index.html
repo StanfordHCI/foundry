@@ -37,23 +37,24 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
+            <li class="active"><a href="index2.html">Home</a></li>
+            <li><a href="#about-tab">About</a></li>
            <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Meet the Team<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="team.html">Team</a></li>
-                <li><a href="team.html#contact">Contact</a></li>
+                <li><a href="#team-tab">Team</a></li>
+                <li><a href="#contact-tab">Contact</a></li>
               </ul>
             </li>
-			<li><a href="media.html">Publications & Media</a></li>
-            <li><a href="examples.html">Examples</a></li>
+			<li><a href="#media-tab">Publications & Media</a></li>
+            <li><a href="#examples-tab">Examples</a></li>
           </ul>
+
         </div><!--/.nav-collapse -->
       </div>
     </div>
 
-   <div class="container theme-showcase" role="main">
+   <div class="container theme-showcase" role="main" class="about-columns">
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div class="jumbotron">
@@ -134,18 +135,17 @@
 
    <div class="container">
 	   <div class="row">
-		   <div class="col-md-6" id="about-columns">
-			   <h2>What is Foundry?</h2>
+		   <div class="col-md-6" class="about-columns">
+			   <h2>What are Flash Teams?</h2>
 
 			   <p>
-           Foundry is something I didn't finish writing the description of here.
 				   Crowdsourcing platforms and online labor markets, such as oDesk, give users access to thousands of workers, on-demand.
 				   Flash teams structure expert crowd work to enable users to complete complex and interdependent projects (e.g., web design).
 				   Flash teams are instantiated through Foundry, a web platform that gathers workers and manages them as they follow a
 				   structured workflow defining each task and how workers interact.
 			   </p>
 			   <p>
-				   <a href="about.html" class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a> or
+				   <a href="#about-tab" class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a> or
 				   <a href="http://hci.stanford.edu/publications/2014/flashteams/flashteams-uist2014.pdf" class="btn btn-primary btn-lg" role="button">Read the paper &raquo;</a>
 			   </p>
 		 </div>
@@ -159,21 +159,473 @@
 	   </div>
    </div>
 
+
+   <!-- About Flash Teams -->
+
+   <div class="container theme-showcase" role="main" id="about-tab">
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="row col-md-12">
+        <h1>About Flash Teams</h1>
+
+		<!-- <h2> <small>Computational approaches for dynamically assembling and managing paid experts from the crowd.</small></h2> -->
+
+
+      </div>
+
+      <div class="row col-md-11">
+
+	      <h3>What is a flash team?</h3>
+
+	      <p>
+			Flash teams are computationally-guided teams of crowd experts, supported by lightweight, reproducible, and scalable team structures. Crowdsourcing platforms give users access to thousands of workers, on-demand, but the most prevalent model, microtask crowd work, fails to take advantage of the combined expertise of these workers. Flash teams structure expert crowd work to enable users to complete complex and interdependent projects (e.g., web design) by embedding techniques of high performing offline teams within a model that can take advantage of computation’s ability to abstract, scale, and visualize progress.
+
+	      </p>
+
+	      <p>
+			Flash teams use <em>elastic recruiting techniques</em> that allow teams to grow and shrink on-demand and <em>pipelining</em>
+			to accelerate completion times by beginning the next stage of a workflow as soon as the previous stage has sufficient preliminary
+			results.
+	      </p>
+
+	      <p>
+	      	<img src="img/figure-napkin_sketch.jpg" width="100%">
+	      </p>
+
+	 </div>
+
+     <div class="row col-md-11">
+
+	      <h3>What have flash teams done? </h3>
+
+	      <p>
+	      	Flash teams have created a number of these projects including: web application prototypes, animated videos, and have even recombined
+	      	to create a MOOC (massive open online course) platform complete with content. These projects have used a number of different online
+	      	experts including: professional photographers, user interface (UI) designers, web developers, animators, and even opera singers.
+	      	Example projects are shown below and on the <a href="examples.html">examples page</a>.
+	      </p>
+
+	      <div class="row col-md-12">
+
+	      	<div class="col-md-4">
+	      		<p>
+			  		<img src="img/happily-screenshots-2.jpg" width="100%">
+			  	</p>
+
+			  	<p class="text-center"><em>Mobile Web Application</em></p>
+	      	</div>
+
+	      	<div class="col-md-4">
+	      		<p>
+			  		<img src="img/winograd-screenshots.jpg" width="100%">
+			  	</p>
+
+			  	<p class="text-center"><em>Short Animation</em></p>
+
+	      	</div>
+
+	      	<div class="col-md-4">
+	      		<p>
+			  		<img src="img/mooc-screenshots.jpg" width="100%">
+			  	</p>
+
+			  	<p class="text-center"><em>MOOC Courses</em></p>
+
+	      	</div>
+
+	      </div>
+
+	 </div>
+
+      <div class="row col-md-11">
+
+	      <h3>How do flash teams get created?</h3>
+
+	      <p>
+	      	Flash teams are instantiated through Foundry, a web platform that gathers workers and manages them as they follow a structured workflow
+	      	defining each task and how workers interact. Foundry serves as a visual authoring environment that guides project requesters through creating
+	      	their own flash team of expert crowd workers using decomposed team roles and task-based events in the authoring environment. Users can either
+	      	author a team from scratch, or borrow from a list of existing teams and edit or run them.
+	      </p>
+
+	      <div class="row col-md-12">
+
+	      	<div class="col-md-6">
+	      		<!-- <img src="img/foundry_screenshot-authoring.jpg" width="100%"> -->
+	      		<img src="img/foundry-authoring.jpg" width="100%">
+	      	</div>
+
+	      	<div class="col-md-6">
+	      		<img src="img/foundry-glamour2-arrows.jpg" width="100%">
+	      	</div>
+
+	      </div>
+
+	  </div>
+
+      <div class="row col-md-11">
+	      <h3>How do workers use Foundry?</h3>
+
+	      <p>
+		      After they have finished hiring workers, requesters can give workers access to their team on Foundry. From there, the requester can monitor
+		      the progress of the team. Specifically, once the project has begun, Foundry switches to runtime mode. Each worker receives a unique link that
+		      logs them in to the Foundry runtime with their tasks highlighted in the timeline.
+	      </p>
+
+	      <p>
+			  Foundry tracks the progress of each task, and facilitates coordination and collaboration between team members as well as with the requester.
+			  Workers can log-in to view their tasks, upload deliverables, mark tasks as “complete,” track the progress of the whole team and chat with the
+			  others workers and the project requester.
+	      </p>
+
+	  </div>
+
+      <div class="row col-md-11">
+		  <h3>Where can I find Foundry?</h3>
+
+	      <p>
+	      	Foundry is not public yet, but as soon as it is we will post the sign up link here. Interested in being notified when you can sign up for Foundry?
+	      	Want to be an early tester? <a href="mailto:flashteams@cs.stanford.edu">Email us.</a>
+	      </p>
+
+      </div>
+
+  </div>
+
+
+
+
+   <!-- Meet the Team -->
+   <div class="container theme-showcase" class="about-columns" role="main">
+	   <div class="row"  id="team-tab">
+	   		<div class="col-md-12">
+		   		<h1> Team </h1>
+	   		</div>
+		</div>
+
+		<div class="row col-md-12 team-row">
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://danielaretelny.com">Daniela Retelny</a></strong><br />
+				  <em>PhD Candidate, Stanford University </em> <br />
+				  Department of Management Science & Engineering <br />
+				  <a href="mailto:dretelny@stanford.edu">dretelny@stanford.edu</a>
+				</address>
+			</div>
+
+		   <div class="col-md-4">
+			   	<address>
+			   		<strong><a href="http://hci.stanford.edu/msb">Michael Bernstein</a></strong><br />
+			   		<em>Assistant Professor, Stanford University </em> <br />
+			   		Computer Science Department <br />
+			   		<a href="mailto:msb@cs.stanford.edu">msb@cs.stanford.edu</a>
+					</address>
+			 </div>
+
+		   <div class="col-md-4">
+			   	<address>
+			   		<strong><a href="http://profiles.stanford.edu/melissa-valentine">Melissa Valentine</a></strong><br />
+			   		<em>Assistant Professor, Stanford University </em> <br />
+			   		Department of Management Science and Engineering <br />
+			   		<a href="mailto:mav@stanford.edu">mav@stanford.edu</a>
+					</address>
+		   </div>
+
+	   </div>
+
+	   <div class="row col-md-12 team-row">
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://linkedin.com/pub/alexandra-to/44/423/2b">Alexandra To</a></strong><br />
+				  <em>Masters Student, Stanford University </em> <br />
+				  Symbolic Systems Program <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://linkedin.com/pub/negar-rahmati/64/9a1/a26">Negar Rahmati</a></strong><br />
+				  <em>Masters Student, Stanford University </em> <br />
+				  Department of Electrical Engineering <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://cs.rochester.edu/u/wlasecki/">Walter Lasecki</a></strong><br />
+				  <em>PhD Candidate, University of Rochester </em> <br />
+				  Computer Science Department <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+	   </div>
+
+	   <div class="row col-md-12 team-row">
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://robi.me">Sébastien Robaszkiewicz</a></strong><br />
+				  <em>M.S. '13, Stanford University </em> <br />
+				  Computer Science Department <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://linkedin.com/in/jayhp">Jay Patel</a></strong><br />
+				  <em>Masters Student, Stanford University </em> <br />
+				  Computer Science Department <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+		   <div class="col-md-4">
+		   		<address>
+				  <strong><a href="http://www.linkedin.com/pub/tulsee-doshi/5b/519/707">Tulsee Doshi</a></strong><br />
+				  <em>Undergraduate Student, Stanford University </em> <br />
+				  Symbolic Systems Program <br />
+				  <!-- <a href="mailto:EMAIL@stanford.edu">EMAIL@stanford.edu</a> -->
+				</address>
+			</div>
+
+	   </div>
+
+</div>
+
+<div class="container theme-showcase" role="main" id="contact-tab">
+	   <div class="row">
+	   		<div class="col-md-12">
+		   		<h1 id="contactus"> Contact Us </h1> <br />
+
+		   		<p>
+		   		Interested in speaking with us or be notified when you can sign up for Foundry? Want to be an early tester?
+		   		Email us at <a href="mailto:flashteams@cs.stanford.edu">flashteams@cs.stanford.edu</a>.
+		   		</p>
+	   		</div>
+		</div>
+</div>
+
+
+
+
+   <!-- Publications & Media -->
+   <div class="container theme-showcase" role="main" id="media-tab">
+	<div class="row col-md-12">
+        <h1>Publications & Media</h1>
+	</div>
+  </div>
+
+  <div class="container">
+
+  	<div class="row col-md-11">
+        <h3>Papers</h3>
+
+        <!-- UIST 2014 -->
+        <p class="publication">
+	        Daniela Retelny, Sébastien Robaszkiewicz, Alexandra To, Walter Lasecki, Jay Patel, Negar Rahmati, Tulsee Doshi, Melissa Valentine, Michael Bernstein.
+	        Expert Crowdsourcing with Flash Teams. <a href="http://www.acm.org/uist/uist2014/">UIST 2014: ACM Symposium on User Interface Software and Technology</a>.
+	        Honolulu, HI.
+	        <span class="abstract-pdf-link">
+	        	<a href="#" data-toggle="modal" data-target="#uist2014-abstract-modal">Abstract</a> |
+	        	<a href="http://hci.stanford.edu/publications/2014/flashteams/flashteams-uist2014.pdf">PDF</a>
+	        </span>
+        </p>
+
+        <!-- UIST 2014 Abstract Modal -->
+			<div class="modal fade" id="uist2014-abstract-modal" tabindex="-1" role="dialog" aria-labelledby="uist2014-abstract-modal-label" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			        <h4 class="modal-title" id="uist2014-abstract-modal-label">Expert Crowdsourcing with Flash Teams (UIST 2014)</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p>
+						<em>Abstract:</em>
+						<br />
+						We introduce flash teams, a framework for dynamically assembling and managing paid experts from the crowd. Flash teams advance a vision of expert crowd                 work that accomplishes complex, interdependent goals such as engineering and design. These teams consist of sequences of linked modular tasks and handoffs that can be computationally managed. Interactive systems reason about and manipulate these teams’ structures: for example, flash teams can be recombined to form larger organizations and authored automatically in response to a user’s request. Flash teams can also hire more people elastically in reaction to task needs, and pipeline intermediate output to accelerate completion times. To enable flash teams, we present Foundry, an end-user authoring platform and runtime manager. Foundry allows users to author modular tasks, then manages teams through handoffs of intermediate work. We demonstrate that Foundry and flash teams enable crowdsourcing of a broad class of goals including design prototyping, course development, and film animation, in half the work time of traditional self-managed teams.
+			      </div>
+			      <div class="modal-footer">
+			      	<a href="files/flash-teams-uist2014.pdf" class="pull-left">Download the PDF</a>
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div> <!-- End Modal -->
+
+        <!-- CrowdConf 2013-->
+        <p class="publication">
+	        Daniela Retelny, Sébastien Robaszkiewicz, Alexandra To, Michael Bernstein. Enabling Expert Crowdsourcing with Flash Teams.
+	        <a href="http://www.crowdconf.com/">CrowdConf 2013</a>. San Francisco, CA.
+
+	        <span class="abstract-pdf-link">
+	        	<a href="http://hci.stanford.edu/publications/2013/FlashTeams/FlashTeams_CrowdConf2013.pdf">PDF</a>
+	        </span>
+        </p>
+
+	</div> <!-- End Publications Div -->
+
+	<div class="row col-md-12">
+        <h3>Videos</h3>
+
+        <!-- UIST 2014 Video -->
+        <div class="col-md-5">
+
+		   <div class="embed-responsive embed-responsive-16by9">
+			  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/IVgTZEpHOzc" allowfullscreen></iframe>
+			</div>
+        </div>
+
+        <!-- UIST 2014 Video -->
+        <div class="col-md-5 col-md-offset-1">
+
+		   <div class="embed-responsive embed-responsive-16by9">
+			  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/lcUQ3HDzKS8" allowfullscreen></iframe>
+			</div>
+        </div>
+
+
+	</div> <!-- End Videos Div -->
+
+	<div class="row col-md-12">
+        <h3>Media Coverage</h3>
+		<p class="publication">
+			<a href="http://news.stanford.edu/news/2014/august/crowd-sourcing-video-082514.html">Stanford team looks to take crowdsourcing to a whole new level</a>.
+			Stanford News. August 25, 2014.
+		</p>
+
+		<p class="publication">
+			<a href="http://news.stanford.edu/features/2014/symbolic-systems/">Stanford’s Symbolic Systems program bridges the gap between humanity and technology</a>.
+			Stanford News. August, 2014.
+		</p>
+	</div>
+
+  </div> <!-- End Container -->
+
+
+
+   <!-- Examples -->
+   <div class="container theme-showcase" role="main" id="examples-tab">
+	<div class="row col-md-12">
+        <h1>Example Flash Team Projects</h1>
+	</div>
+  </div>
+
+  	<div class="container theme-showcase" role="main">
+	   <div class="example-item col-md-12">
+
+		   <div class="row col-md-12">
+			   <h3>Napkin Sketch Design Teams <br />
+				   <small>Project: Mobile/Web Application</small>
+				</h3>
+		   </div>
+
+		<div class="row col-md-12">
+
+			<!-- Happily -->
+			<div class="col-md-4">
+				<div class="row col-md-12">
+		   			<img src="img/happily-screenshots.jpg" alt="Happily" class="img-rounded napkinsketch-example-photo">
+		   		</div>
+		   		<div class="row col-md-12">
+		   			<p class="text-center"><em>Happily</em></p>
+		   		</div>
+			</div>
+
+			<!-- Eventick -->
+			<div class="col-md-4">
+		   		<div class="row col-md-12">
+		   			<img src="img/eventick-screenshots.jpg" alt="Eventick" class="img-rounded napkinsketch-example-photo">
+		   		</div>
+		   		<div class="row col-md-12">
+		   			<p class="text-center"><em>Eventick</em></p>
+		   		</div>
+		   	</div>
+
+		   	<!-- Icebreaker -->
+			<div class="col-md-4">
+		   		<div class="row col-md-12">
+		   			<img src="img/icebreaker-screenshots.jpg" alt="Icebreaker" class="img-rounded napkinsketch-example-photo">
+		   		</div>
+		   		<div class="row col-md-12">
+		   			<p class="text-center"><em>Icebreaker</em></p>
+		   		</div>
+			</div>
+	   	</div>
+
+	   	<!--
+		<div class="row col-md-12">
+	   		<p>
+	   			Sketched inputs and high-fidelity prototype results from the napkin sketch design teams. This team iterates from a
+	   			sketch through low fidelity prototypes to produce a working, user-tested software prototype within a day.
+	   		</p>
+	   	</div>
+	   	-->
+
+	  </div>
+  	</div>
+
+	 <div class="container theme-showcase" role="main">
+	 	<div class="example-item col-md-12">
+
+		   	<div class="row col-md-12">
+
+		   		<div class="col-md-6">
+			   		<div class="row">
+				   		<h3>Animation Flash Team <br />
+					   		<small>Project: Short Animated Video of a Young Terry Winograd</small>
+					   	</h3>
+			   		</div>
+
+				   <!-- 16:9 aspect ratio -->
+					<div class="row col-md-12 embed-responsive embed-responsive-16by9">
+					  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/183pmArc_mQ" allowfullscreen></iframe>
+					</div>
+
+					<!--
+					<div class="row col-md-12" id="animation-subtitle">
+			   			<p> The animation flash team takes a high-level script outline as input and produces a short animated movie as output.
+			   			In this example, the animation team produced a short movie of a young Terry Winograd building a computer in his garage.</p>
+			   		</div>
+			   		-->
+		   		</div>
+
+		   		<div class="col-md-6">
+		   			<div class="row">
+				   		<h3>MOOC Flash Team <br />
+					   		<small>Project: Course Video on How to Sing with the Diaphragm</small>
+					   	</h3>
+		   			</div>
+
+				   <!-- 16:9 aspect ratio -->
+					<div class="row col-md-12 embed-responsive embed-responsive-16by9">
+					  <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/tP6aIOCi9E8" allowfullscreen></iframe>
+					</div>
+
+					<!--
+					<div class="row col-md-12" id="animation-subtitle">
+			   			<p> Placeholder text...</p>
+			   		</div>
+			   		-->
+		   		</div>
+
+		   </div> <!-- End row col-md-12 div -->
+
+	   </div> <!-- End example-item col-md-12 div -->
+   </div> <!-- End container theme-showcase div -->
+
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-
-    <script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	  ga('create', 'UA-55786902-1', 'auto');
-	  ga('send', 'pageview');
-	</script>
-
   </body>
 
    <nav class="navbar navbar-default navbar-static-bottom navbar-footer" role="navigation">
