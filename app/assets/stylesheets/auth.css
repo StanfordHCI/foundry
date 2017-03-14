@@ -36,6 +36,13 @@ input.inputbox {
     padding: 50px 100px;
     letter-spacing: 5px;
 }
+.bottom_msg {
+    margin: 0 auto;
+    text-align: center;
+    color: black;
+    font-weight: 100;
+    font-size: 12px;
+}
 #actions {
     width: 405px;
     margin: 20px auto;
