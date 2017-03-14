@@ -1,0 +1,210 @@
+body{ 
+	padding-top: 70px; 
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+p{
+	font-family: 'Raleway', sans-serif;
+}
+
+.navbar-brand{
+	font-family: 'Oswald', sans-serif;
+	font-size: 20px;
+}
+
+
+.navbar-default {
+	background-color: #b82500;
+	border-color: #8a1900;
+	font-family: 'Oswald', sans-serif;
+	font-size: 16px;
+}
+.navbar-default .navbar-brand {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+	color: #fdf1f2;
+}
+.navbar-default .navbar-text {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #fdf1f2;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	color: #fdf1f2;
+	background-color: #8a1900;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #fdf1f2;
+	background-color: #8a1900;
+}
+.navbar-default .navbar-toggle {
+	border-color: #8a1900;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background-color: #8a1900;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #ecf0f1;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+	border-color: #ecf0f1;
+}
+.navbar-default .navbar-link {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-link:hover {
+	color: #fdf1f2;
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #ecf0f1;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #fdf1f2;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+		color: #fdf1f2;
+		background-color: #8a1900;
+	}
+}
+
+.navbar-footer{
+	background: #F8F8F8;
+	border-color: #E7E7E7;
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+
+.footer-images{
+	height: 35px;
+	padding-top: 10px;
+}
+
+/*
+.container .container-fluid .row{
+	font-family: 'Roboto Condensed', sans-serif;
+}
+*/
+
+
+#index-phrase{
+	padding-top: 30px;
+	font-family: 'Roboto Condensed', sans-serif;
+}
+
+#carousel-index{
+}
+
+.carousel-index-photo{
+	margin: auto auto;
+}
+
+
+#about-tab{
+	margin-top:20px;
+}
+
+
+#about-columns{
+	padding-bottom: 30px;
+}
+
+#uist-pres-columns{
+	padding-bottom: 10px;
+}
+
+/*used in index2.html*/
+.about-columns{
+	padding-bottom: 30px;
+}
+
+.team-row{
+	padding-top: 20px;
+}
+.team-photo{
+	background-color: #eee; 
+	height: 100px; 
+	width: 100px;
+}
+
+.napkinsketch-example-photo{
+	width: 320px;
+}
+
+.publication{
+	padding-left: 20px;
+	padding-top: 10px;
+}
+
+.abstract-pdf-link{
+	padding-left: 5px;
+}
+
+#animation-subtitle{
+	padding-top: 20px;
+}
+
+
+/*UIST 2014 Presentation */
+div.slide img {
+	-webkit-box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.75);
+	box-shadow: 0px 4px 6px 0px rgba(0,0,0,0.75);
+	width: 400px;
+}
+
+div.slide {
+	margin-bottom: 40px;
+	clear: both;
+}
+
+div.slide.lastslide{
+	margin-bottom: 0px;
+	clear: both;
+}
+
+/* make div.slide contain all its floating children */
+div.slide:after { 
+   content: "";
+   display: block; 
+   clear: both;
+}
+
+div.slide div.image {
+	float: left;
+	margin: 0 1em 2em 0;
+	margin-right: 24px;
+}
+
+div.caption {
+	margin-left: 424px;
+	font-weight: 500;
+}
+
+div.caption p {
+	line-height: 24px;
+}
+
+div.caption li {
+	width: auto;
+}
+
+h3 {
+	clear: both;
+}
+
+span.courtesy {
+	display: block;
+	font-size: 80%;
+}
+
+div#citations {
+	display: none;
+}
