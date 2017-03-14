@@ -594,7 +594,6 @@ var loadData = function(){
     drawInteractions(); //START HERE, INT DEBUG
     googleDriveLink();
 };
-/*
 var retrieveSlackInfo = function(slack_info){
     slackInfo = gon.slack_info;
     flashTeamsJSON["slackInfo"] = {
@@ -603,10 +602,9 @@ var retrieveSlackInfo = function(slack_info){
       "slackURL": slackInfo.incoming_webhook.url,
     }
 };
-*/
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
-    //retrieveSlackInfo(gon.slack_info);
+    retrieveSlackInfo(gon.slack_info);
     if(!in_progress) {
         //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
         //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
