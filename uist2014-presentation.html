@@ -9,7 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Custom styles for this template -->
     <link href="css/style.css" rel="stylesheet">
 
@@ -22,7 +22,7 @@
     <![endif]-->
   </head>
   <body>
-  
+
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
@@ -39,7 +39,7 @@
           <ul class="nav navbar-nav">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
-            
+
            <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Meet the Team<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -47,31 +47,31 @@
                 <li><a href="team.html#contact">Contact</a></li>
               </ul>
             </li>
-            
+
 			<li><a href="media.html">Publications & Media</a></li>
             <li><a href="examples.html">Examples</a></li>
 
           </ul>
         </div><!--/.nav-collapse -->
       </div>
-    </div>  
-  
+    </div>
+
 <div class="container theme-showcase" id="uist-pres-columns" role="main">
 
 		<h1>Flash Teams at UIST 2014</h1>
-		
+
 		<p><img src="img/uist-ft-team.jpg" width="700" /><span class="courtesy">Accepting our best paper award at UIST</span></p>
-		
-		
+
+
 		<h2>Paper</h2>
-		
+
 		<p><a href="http://hci.stanford.edu/publications/2014/flashteams/flashteams-uist2014.pdf">Expert crowdsourcing with flash teams (PDF)</a>
-		
+
 		<p><a href="#" onclick="toggle('citations'); return false">Click here to reveal citation information &raquo;</a>
-		
+
 		<div id="citations">
 		<p onClick="selectText.apply(this)">Daniela Retelny, Sébastien Robaszkiewicz, Alexandra To, Walter S. Lasecki, Jay Patel, Negar Rahmati, Tulsee Doshi, Melissa Valentine, and Michael S. Bernstein. 2014. Expert crowdsourcing with flash teams. In Proceedings of the 27th annual ACM symposium on User interface software and technology (UIST '14). ACM, New York, NY, USA, 75-85. DOI=10.1145/2642918.2647409 http://doi.acm.org/10.1145/2642918.2647409
-		
+
 		<p><pre onClick="selectText.apply(this)">@inproceedings{Retelny:2014:ECF:2642918.2647409,
 		 author = {Retelny, Daniela and Robaszkiewicz, S{\'e}bastien and To, Alexandra and Lasecki, Walter S. and Patel, Jay and Rahmati, Negar and Doshi, Tulsee and Valentine, Melissa and Bernstein, Michael S.},
 		 title = {Expert Crowdsourcing with Flash Teams},
@@ -90,10 +90,10 @@
 		 keywords = {crowdsourcing, expert crowd work, flash teams},
 		}</pre>
 		</div>
-		
-		
+
+
 		<h2>UIST Presentation</h2>
-		
+
 		<ol>
 		<li><a href="#slides-intro">Introduction</a>
 		<li><a href="#slides-flash-teams">Flash Teams</a>
@@ -103,12 +103,12 @@
 		<li><a href="#slides-field-experiment">Field Experiment</a>
 		<li><a href="#slides-discussion">Discussion</a>
 		</ol>
-		
+
 		<p>You can also view and download <a href="https://speakerdeck.com/dretelny/expert-crowdsourcing-with-flash-teams">the slides (without notes)</a>.
-		
+
 		<h3 id="slides-intro">Introduction</h3>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.001.png"><img src="img/slides/flash-teams-uist-slides.001.png" /></a></div>
 			<div class="caption">
@@ -117,30 +117,30 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.002.png"><img src="img/slides/flash-teams-uist-slides.002.png" /></a></div>
 			<div class="caption">
-				<p>			
-					While technology enables groups of individuals to come together and rapidly complete large tasks, the dominant paradigm 
-					in crowdsourcing has been to use many non-expert workers from platforms such as mechanical turk to complete homogeneous 
+				<p>
+					While technology enables groups of individuals to come together and rapidly complete large tasks, the dominant paradigm
+					in crowdsourcing has been to use many non-expert workers from platforms such as mechanical turk to complete homogeneous
 					microtasks, such as image labeling and text shortening.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.003.png"><img src="img/slides/flash-teams-uist-slides.003.png" /></a></div>
 			<div class="caption">
 				<p>
-					This approach to crowd work does not easily scale to larger open-ended and creative tasks, such as design and video production. 
-					Specifically, when task units are big, they become much harder to decompose into homogenous micro tasks, especially when they 
-					require a certain level of expertise to complete. Overcoming these barriers is critical in order for crowd work to reach its 
+					This approach to crowd work does not easily scale to larger open-ended and creative tasks, such as design and video production.
+					Specifically, when task units are big, they become much harder to decompose into homogenous micro tasks, especially when they
+					require a certain level of expertise to complete. Overcoming these barriers is critical in order for crowd work to reach its
 					potential and support complex and interdependent work.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.004.png"><img src="img/slides/flash-teams-uist-slides.004.png" /></a></div>
 			<div class="caption">
@@ -149,104 +149,104 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.005.png"><img src="img/slides/flash-teams-uist-slides.005.png" /></a></div>
 			<div class="caption">
 				<p>
-					For example, could we bring together a team of crowd workers, give them a napkin sketch of an idea and have them create a 
+					For example, could we bring together a team of crowd workers, give them a napkin sketch of an idea and have them create a
 					user-tested interactive web app in a single day?
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.006.png"><img src="img/slides/flash-teams-uist-slides.006.png" /></a></div>
 			<div class="caption">
 				<p>
-					How about an animated video in 48 hours? 
+					How about an animated video in 48 hours?
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.007.png"><img src="img/slides/flash-teams-uist-slides.007.png" /></a></div>
 			<div class="caption">
 				<p>
-				Better yet, could we push the boundaries of crowdsourcing and bring together multiple teams of crowd workers to create an 
-				entire MOOC platform along with content within a day or two? 
+				Better yet, could we push the boundaries of crowdsourcing and bring together multiple teams of crowd workers to create an
+				entire MOOC platform along with content within a day or two?
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.008.png"><img src="img/slides/flash-teams-uist-slides.008.png" /></a></div>
 			<div class="caption">
 				<p>
-					To accomplish these goals, we shift away from paid micro task work and introduce diverse experts from crowd platforms 
-					such as oDesk. oDesk is an emerging online marketplace where you can find paid experts and professionals with a variety of 
+					To accomplish these goals, we shift away from paid micro task work and introduce diverse experts from crowd platforms
+					such as oDesk. oDesk is an emerging online marketplace where you can find paid experts and professionals with a variety of
 					skills, including programmers, designers, video editors and musicians.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.009.png"><img src="img/slides/flash-teams-uist-slides.009.png" /></a></div>
 			<div class="caption">
 				<p>
-					Experts on these platforms mostly work as uncoordinated independent contractors. This limits the goals that they can pursue. 
+					Experts on these platforms mostly work as uncoordinated independent contractors. This limits the goals that they can pursue.
 				</p>
 				<p>
-					And microtask crowdsourcing techniques that assume homogenous crowds do not effectively leverage participants’ diverse expertise. 
+					And microtask crowdsourcing techniques that assume homogenous crowds do not effectively leverage participants’ diverse expertise.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.010.png"><img src="img/slides/flash-teams-uist-slides.010.png" /></a></div>
 			<div class="caption">
 				<p>
-					It might be tempting to just bring crowd workers together and have them self-manage but it turns out these teams are riddled with problems. 
+					It might be tempting to just bring crowd workers together and have them self-manage but it turns out these teams are riddled with problems.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.011.png"><img src="img/slides/flash-teams-uist-slides.011.png" /></a></div>
 			<div class="caption">
 				<p>
-					However, we know from organizational behavior research, that even temporary groups can coordinate complex work effectively 
-					if they have what are called lightweight team scaffolds. These scaffolds define who is working together and who is responsible 
+					However, we know from organizational behavior research, that even temporary groups can coordinate complex work effectively
+					if they have what are called lightweight team scaffolds. These scaffolds define who is working together and who is responsible
 					for which tasks.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.012.png"><img src="img/slides/flash-teams-uist-slides.012.png" /></a></div>
 			<div class="caption">
 				<p>
-					Our goal is to combine the strengths of team scaffolds with the scale and interactivity of computation to dynamically assemble 
-					and manage teams of expert crowd workers, which we refer to as computational organizational behavior. 
+					Our goal is to combine the strengths of team scaffolds with the scale and interactivity of computation to dynamically assemble
+					and manage teams of expert crowd workers, which we refer to as computational organizational behavior.
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-flash-teams">Flash Teams</h3>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.013.png"><img src="img/slides/flash-teams-uist-slides.013.png" /></a></div>
 			<div class="caption">
 				<p>
-					To do this, we introduce Flash Teams, which are computationally-guided teams of crowd experts supported by lightweight, reproducible and scalable team structures. 
+					To do this, we introduce Flash Teams, which are computationally-guided teams of crowd experts supported by lightweight, reproducible and scalable team structures.
 				</p>
 				<p>
-					For example, computation might help a flash team transform a napkin sketch of an idea into a user-tested, interactive web prototype in under a day. 
+					For example, computation might help a flash team transform a napkin sketch of an idea into a user-tested, interactive web prototype in under a day.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.014.png"><img src="img/slides/flash-teams-uist-slides.014.png" /></a></div>
 			<div class="caption">
@@ -255,43 +255,43 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.015.png"><img src="img/slides/flash-teams-uist-slides.015.png" /></a></div>
 			<div class="caption">
 				<p>
-					The complete set of blocks determines which crowd experts need to be recruited and when they are likely to be needed. 
-					With offline teams, Bunderson and Boumgarden found that these kinds of structures succeed by encoding individuals’ 
+					The complete set of blocks determines which crowd experts need to be recruited and when they are likely to be needed.
+					With offline teams, Bunderson and Boumgarden found that these kinds of structures succeed by encoding individuals’
 					responsibilities and dependencies.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.016.png"><img src="img/slides/flash-teams-uist-slides.016.png" /></a></div>
 			<div class="caption">
 				<p>
-					Each block is a self-contained, reusable representation that has computational properties. It requires the skills needed, an input, 
-					target duration, instructions, and an output type. 
+					Each block is a self-contained, reusable representation that has computational properties. It requires the skills needed, an input,
+					target duration, instructions, and an output type.
 				</p>
 				<p>
-					This kind of modularity isn't just useful for programming: management modularity theory makes it clear that loosely coupled team elements, 
+					This kind of modularity isn't just useful for programming: management modularity theory makes it clear that loosely coupled team elements,
 					connected via standard interfaces, are able to interact in many different configurations. And that's exactly what we intend to enable.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.017.png"><img src="img/slides/flash-teams-uist-slides.017.png" /></a></div>
 			<div class="caption">
 				<p>
-				For example, suppose you are a project requester building a team to execute the user-centered design process starting from a napkin 
-				sketch of an idea. You might connect the Balsamiq mockups from the first block to any other block that takes low-fi mockups as input, 
-				such as a revised mockup block or a heuristic evaluation block. 
+				For example, suppose you are a project requester building a team to execute the user-centered design process starting from a napkin
+				sketch of an idea. You might connect the Balsamiq mockups from the first block to any other block that takes low-fi mockups as input,
+				such as a revised mockup block or a heuristic evaluation block.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.018.png"><img src="img/slides/flash-teams-uist-slides.018.png" /></a></div>
 			<div class="caption">
@@ -300,22 +300,22 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-computational-affordances">Computational Affordances of Flash Teams</h3>
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.019.png"><img src="img/slides/flash-teams-uist-slides.019.png" /></a></div>
 			<div class="caption">
 				<p>
-					Most work teams suffer from what's known as "coordination neglect”: they are skilled at splitting up work but much worse at 
+					Most work teams suffer from what's known as "coordination neglect”: they are skilled at splitting up work but much worse at
 					coordinating and combining their efforts at the end.
 				</p>
 				<p>
-					Because flash teams are machine readable, they are computationally malleable. This lets us minimize coordination neglect and 
+					Because flash teams are machine readable, they are computationally malleable. This lets us minimize coordination neglect and
 					create entirely new kinds of organizational forms, which let teams replicate, grow and shrink, and more.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.020.png"><img src="img/slides/flash-teams-uist-slides.020.png" /></a></div>
 			<div class="caption">
@@ -324,18 +324,18 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.021.png"><img src="img/slides/flash-teams-uist-slides.021.png" /></a></div>
 			<div class="caption">
 				<p>
-					For example, the same napkin sketch design flash team can be replicated and used for many different types of web or mobile applications. 
-					For the most part, organizational behavior research has focused on using these kinds of team scaffolds for fluid membership. We focus on 
+					For example, the same napkin sketch design flash team can be replicated and used for many different types of web or mobile applications.
+					For the most part, organizational behavior research has focused on using these kinds of team scaffolds for fluid membership. We focus on
 					how they allow us to capitalize on the scale of the crowd.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.022.png"><img src="img/slides/flash-teams-uist-slides.022.png" /></a></div>
 			<div class="caption">
@@ -344,27 +344,27 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.023.png"><img src="img/slides/flash-teams-uist-slides.023.png" /></a></div>
 			<div class="caption">
 				<p>
-					For example, to create an online learning platform, a flash team might combine several teams that can design and 
+					For example, to create an online learning platform, a flash team might combine several teams that can design and
 					implement software with additional teams that can develop educational materials and animated videos.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.024.png"><img src="img/slides/flash-teams-uist-slides.024.png" /></a></div>
 			<div class="caption">
 				<p>
-					Second, traditional teams are pretty static: you’re either on the team, or you're off. But, because crowdsourcing platforms 
+					Second, traditional teams are pretty static: you’re either on the team, or you're off. But, because crowdsourcing platforms
 					allow for quick recruitment, flash teams also benefit from elastic growth, which enables teams to grow and shrink as needed. 
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.025.png"><img src="img/slides/flash-teams-uist-slides.025.png" /></a></div>
 			<div class="caption">
@@ -372,62 +372,62 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.026.png"><img src="img/slides/flash-teams-uist-slides.026.png" /></a></div>
 			<div class="caption">
 				<p>
-					Third, flash teams can also be pipelined rather than waiting for the entire task to complete.  Suppose the system knew 
-					whether a task could accept in progress input or produce in-progress output. For instance, the UI designer is idle while 
+					Third, flash teams can also be pipelined rather than waiting for the entire task to complete.  Suppose the system knew
+					whether a task could accept in progress input or produce in-progress output. For instance, the UI designer is idle while
 					the Heuristic Evaluation is done,
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.027.png"><img src="img/slides/flash-teams-uist-slides.027.png" /></a></div>
 			<div class="caption">
 				<p>
-					but he could start working on the revised version of the low-fi prototype as soon as the UX researcher reports the 
+					but he could start working on the revised version of the low-fi prototype as soon as the UX researcher reports the
 					first heuristic violation. This allows computation to automatically optimize these teams.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.028.png"><img src="img/slides/flash-teams-uist-slides.028.png" /></a></div>
 			<div class="caption">
 				<p>
-					Finally, so far, we have assumed that project requesters are fluent with creating teams. Most people, however, have a 
-					goal in mind but may not have a strong idea of how to break it down. 
+					Finally, so far, we have assumed that project requesters are fluent with creating teams. Most people, however, have a
+					goal in mind but may not have a strong idea of how to break it down.
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.029.png"><img src="img/slides/flash-teams-uist-slides.029.png" /></a></div>
 			<div class="caption">
 				<p>
-					We can search through the space of known inputs and outputs to automatically create a new team — one that may have never 
+					We can search through the space of known inputs and outputs to automatically create a new team — one that may have never
 					previously existed! — using the components of previous teams.
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.030.png"><img src="img/slides/flash-teams-uist-slides.030.png" /></a></div>
 			<div class="caption">
 				<p>
-					To do this, we represent all known flash team blocks in the STRIPS planning language and use a planning algorithm to find a set of 
-					actions that connect from original input to final output. While the general planning problem is NP-complete, boolean satisfiability 
-					solvers can scale these systems to thousands of actions.	
+					To do this, we represent all known flash team blocks in the STRIPS planning language and use a planning algorithm to find a set of
+					actions that connect from original input to final output. While the general planning problem is NP-complete, boolean satisfiability
+					solvers can scale these systems to thousands of actions.
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.031.png"><img src="img/slides/flash-teams-uist-slides.031.png" /></a></div>
 			<div class="caption">
@@ -435,30 +435,30 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-foundry">Foundry</h3>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.032.png"><img src="img/slides/flash-teams-uist-slides.032.png" /></a></div>
 			<div class="caption">
 				<p>
-					Existing project management and micro task management tools do not capitalize on the unique affordances and scale of 
-					distributed expert crowd work. This means that flash teams require new kinds of tools and infrastructure. 
+					Existing project management and micro task management tools do not capitalize on the unique affordances and scale of
+					distributed expert crowd work. This means that flash teams require new kinds of tools and infrastructure.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.033.png"><img src="img/slides/flash-teams-uist-slides.033.png" /></a></div>
 			<div class="caption">
 				<p>
-					We created Foundry, a web platform tailored to the design affordances of distributed expert crowds. It allows project 
-					requesters to create flash team structures and helps team members track their progress and send notifications when a 
+					We created Foundry, a web platform tailored to the design affordances of distributed expert crowds. It allows project
+					requesters to create flash team structures and helps team members track their progress and send notifications when a
 					handoff has been issued.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.034.png"><img src="img/slides/flash-teams-uist-slides.034.png" /></a></div>
 			<div class="caption">
@@ -466,30 +466,30 @@
 					With Foundry, requesters can create a flash team from scratch or compose or modify previous team structures from the Foundry flash teams library.
 				</p>
 				<p>
-					To give you a sense of how Foundry works, let’s take the example I showed earlier and create a team to execute the user-centered design process. 
+					To give you a sense of how Foundry works, let’s take the example I showed earlier and create a team to execute the user-centered design process.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.035.png"><img src="img/slides/flash-teams-uist-slides.035.png" /></a></div>
 			<div class="caption">
 				<p>
-					As a requester, you would first add the team roles by reaching into the nearly 2,500 oDesk skill categories. 
+					As a requester, you would first add the team roles by reaching into the nearly 2,500 oDesk skill categories.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.036.png"><img src="img/slides/flash-teams-uist-slides.036.png" /></a></div>
 			<div class="caption">
 				<p>
-					You would then add blocks to the timeline as you would on a calendar interface, including all of the metadata 
+					You would then add blocks to the timeline as you would on a calendar interface, including all of the metadata
 					around members, inputs and outputs.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.037.png"><img src="img/slides/flash-teams-uist-slides.037.png" /></a></div>
 			<div class="caption">
@@ -501,7 +501,7 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.038.png"><img src="img/slides/flash-teams-uist-slides.038.png" /></a></div>
 			<div class="caption">
@@ -510,18 +510,18 @@
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.039.png"><img src="img/slides/flash-teams-uist-slides.039.png" /></a></div>
 			<div class="caption">
 				<p>
-					In runtime mode, Foundry adds a red timer playhead that starts advancing along the timeline. 
+					In runtime mode, Foundry adds a red timer playhead that starts advancing along the timeline.
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.040.png"><img src="img/slides/flash-teams-uist-slides.040.png" /></a></div>
 			<div class="caption">
@@ -530,40 +530,40 @@
 				</p>
 			</div>
 		</div>
-		
-		
-		
+
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.041.png"><img src="img/slides/flash-teams-uist-slides.041.png" /></a></div>
 			<div class="caption">
 				<p>
-					When a worker marks a block as complete, Foundry notifies workers for the next blocks that their task is active. 
+					When a worker marks a block as complete, Foundry notifies workers for the next blocks that their task is active.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.042.png"><img src="img/slides/flash-teams-uist-slides.042.png" /></a></div>
 			<div class="caption">
 				<p>
-					If a task is delayed or completed early, Foundry recalculates the start time of subsequent tasks, 
+					If a task is delayed or completed early, Foundry recalculates the start time of subsequent tasks,
 					updates the timeline and notifies workers.
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-flash-team-examples">Flash Team Examples</h3>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.043.png"><img src="img/slides/flash-teams-uist-slides.043.png" /></a></div>
 			<div class="caption">
 				<p>
-					In order to better understand the design space of flash teams and what they would enable us to do, 
+					In order to better understand the design space of flash teams and what they would enable us to do,
 					we recruited experts from oDesk and ran a series of example projects, ranging from design to education.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.044.png"><img src="img/slides/flash-teams-uist-slides.044.png" /></a></div>
 			<div class="caption">
@@ -572,29 +572,29 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.045.png"><img src="img/slides/flash-teams-uist-slides.045.png" /></a></div>
 			<div class="caption">
 				<p>
-					We gave three different flash teams sketches that we took from Stanford student assignments in the Introduction to HCI class. 
+					We gave three different flash teams sketches that we took from Stanford student assignments in the Introduction to HCI class.
 					Their goal was to produce a fully functional and user-tested web prototype.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.046.png"><img src="img/slides/flash-teams-uist-slides.046.png" /></a></div>
 			<div class="caption">
 				<p>
-					Here you can see a summary of the napkin sketch outcomes along with some screenshots of the different web prototypes. 
-					The completion times ranged from 18 hours to 31 hours and 30 minutes depending on the amount of pipelining and elasticity. 
-					All of the outputs were fully functional and reflected the original intent. Therefore, these flash teams took a project that 
-					takes weeks in an intro HCI class and completed it in a fraction of the time. 
+					Here you can see a summary of the napkin sketch outcomes along with some screenshots of the different web prototypes.
+					The completion times ranged from 18 hours to 31 hours and 30 minutes depending on the amount of pipelining and elasticity.
+					All of the outputs were fully functional and reflected the original intent. Therefore, these flash teams took a project that
+					takes weeks in an intro HCI class and completed it in a fraction of the time.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.047.png"><img src="img/slides/flash-teams-uist-slides.047.png" /></a></div>
 			<div class="caption">
@@ -604,22 +604,22 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.048.png"><img src="img/slides/flash-teams-uist-slides.048.png" /></a></div>
 			<div class="caption">
 				<p>
-					To test this, we decided to use a flash team to create an animated video based on a rough script idea, which was to 
-					elebrate the retirement of Terry Winograd. In under two days, the flash team came up with a plot and produced the video, 
-					which captured a funny anecdote from his childhood, when Terry built a computer in his garage. 
+					To test this, we decided to use a flash team to create an animated video based on a rough script idea, which was to
+					elebrate the retirement of Terry Winograd. In under two days, the flash team came up with a plot and produced the video,
+					which captured a funny anecdote from his childhood, when Terry built a computer in his garage.
 				</p>
 				<p>
-					Let’s have a look at the video that the flash team produced.	
+					Let’s have a look at the video that the flash team produced.
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.049.png"><img src="img/slides/flash-teams-uist-slides.049.png" /></a></div>
 			<div class="caption">
@@ -628,28 +628,28 @@
 				</p>
 			</div>
 		</div>
-		
-		
+
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.050.png"><img src="img/slides/flash-teams-uist-slides.050.png" /></a></div>
 			<div class="caption">
 				<p>
-					The napkin sketch design teams and animations team illustrated that a flash teams approach to expert crowdsourcing works. 
+					The napkin sketch design teams and animations team illustrated that a flash teams approach to expert crowdsourcing works.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.051.png"><img src="img/slides/flash-teams-uist-slides.051.png" /></a></div>
 			<div class="caption">
 				<p>
-					Our final objective was to combine multiple modular team structures to create a new online learning (MOOC) platform 
-					and to generate three short lessons, which included introductions to using the diaphragm while singing, portrait 
+					Our final objective was to combine multiple modular team structures to create a new online learning (MOOC) platform
+					and to generate three short lessons, which included introductions to using the diaphragm while singing, portrait
 					photography and the Towers of Hanoi puzzle.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.052.png"><img src="img/slides/flash-teams-uist-slides.052.png" /></a></div>
 			<div class="caption">
@@ -658,7 +658,7 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.053.png"><img src="img/slides/flash-teams-uist-slides.053.png" /></a></div>
 			<div class="caption">
@@ -667,40 +667,40 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.054.png"><img src="img/slides/flash-teams-uist-slides.054.png" /></a></div>
 			<div class="caption">
 				<p>
-					For each course, one education team created the course content and quiz materials and one animation team produced the video. 
+					For each course, one education team created the course content and quiz materials and one animation team produced the video.
 					Simultaneously, three napkin sketch teams worked on the web platform used to upload and share the courses.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.055.png"><img src="img/slides/flash-teams-uist-slides.055.png" /></a></div>
 			<div class="caption">
 				<p>
-					Taken together, it took the nine flash teams 19 hours and 20 minutes to create the MOOC platform and three interactive lessons. 
+					Taken together, it took the nine flash teams 19 hours and 20 minutes to create the MOOC platform and three interactive lessons.
 					You can see excerpts from each of the three courses at the bottom of the slide.
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-field-experiment">Field Experiment</h3>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.056.png"><img src="img/slides/flash-teams-uist-slides.056.png" /></a></div>
 			<div class="caption">
 				<p>
-					We have one final question. Does this infrastructure help people collaborate? We conducted a controlled experiment to 
-					compare flash teams to a self-managed team approach where the crowd experts choose their own path. We collected data 
+					We have one final question. Does this infrastructure help people collaborate? We conducted a controlled experiment to
+					compare flash teams to a self-managed team approach where the crowd experts choose their own path. We collected data
 					with 3 napkin sketch design teams in each condition, totaling 22 crowd experts from oDesk.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.057.png"><img src="img/slides/flash-teams-uist-slides.057.png" /></a></div>
 			<div class="caption">
@@ -708,17 +708,17 @@
 					We asked all of the teams to create a simple party planning task manager from an input sketch.
 				</p>
 				<p>
-					The main difference between the two conditions was the existence of the flash team workflow, which defined the sequences 
-					of tasks to the team members, and allowed Foundry to support coordination via handoffs and notifications. 
+					The main difference between the two conditions was the existence of the flash team workflow, which defined the sequences
+					of tasks to the team members, and allowed Foundry to support coordination via handoffs and notifications.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.058.png"><img src="img/slides/flash-teams-uist-slides.058.png" /></a></div>
 			<div class="caption">
 				<p>
-					While all six of the teams completed the task, the flash teams took roughly HALF AS MANY WORK HOURS, which means half 
+					While all six of the teams completed the task, the flash teams took roughly HALF AS MANY WORK HOURS, which means half
 					the cost. They also followed the iterative design process more closely, and required less coordination.
 				</p>
 				<p>
@@ -726,37 +726,37 @@
 				</p>
 			</div>
 		</div>
-		
+
 		<h3 id="slides-discussion">Discussion</h3>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.059.png"><img src="img/slides/flash-teams-uist-slides.059.png" /></a></div>
 			<div class="caption">
 				<p>
-					Most crowdsourcing research has focused on coordinating workers that are homogeneous and replaceable. 		
+					Most crowdsourcing research has focused on coordinating workers that are homogeneous and replaceable.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.060.png"><img src="img/slides/flash-teams-uist-slides.060.png" /></a></div>
 			<div class="caption">
 				<p>
-					Flash teams offer an opportunity to shift the crowdsourcing narrative towards teams of diverse experts from the crowd. 
+					Flash teams offer an opportunity to shift the crowdsourcing narrative towards teams of diverse experts from the crowd.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide">
 			<div class="image"><a href="img/slides/flash-teams-uist-slides.061.png"><img src="img/slides/flash-teams-uist-slides.061.png" /></a></div>
 			<div class="caption">
 				<p>
-					More importantly, we strongly believe that flash teams and platforms like foundry will enable the combination of computation 
-					and organizational behavior to shape the future of crowd work.  
+					More importantly, we strongly believe that flash teams and platforms like foundry will enable the combination of computation
+					and organizational behavior to shape the future of crowd work.
 				</p>
 			</div>
 		</div>
-		
+
 		<div class="slide lastslide">
 			<div class="image lastslide"><a href="img/slides/flash-teams-uist-slides.062.png"><img src="img/slides/flash-teams-uist-slides.062.png" /></a></div>
 			<div class="caption">
@@ -766,31 +766,31 @@
 				</p>
 			</div>
 		</div>
-		
+
 	<div class="row">
 	<p style="margin-bottom:0px;">Template adapted from Tom Lieber's <a href="http://alltom.com/pages/theseus/chi-2014/">webpage for Thesesus</a> (presented at CHI 2014)</p>
 	</div>
 
 </div>
-	   
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
-  
+
     <script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	
+
 	  ga('create', 'UA-55786902-1', 'auto');
 	  ga('send', 'pageview');
-	</script>  
-  
+	</script>
+
   </body>
-  
-  <!-- JavaScript for UIST citation above --> 
+
+  <!-- JavaScript for UIST citation above -->
   <script>
 	function selectText() {
 		if (document.selection) {
@@ -819,6 +819,6 @@
 		  <p class="pull-left footer-images"> Copyright 2014 | <a href="mailto:flashteams@cs.stanford.edu">flashteams@cs.stanford.edu</a></p>
 		  <a href="http://hci.stanford.edu"><img src="img/stanfordhci-logo.png" alt="Stanford HCI Logo" class="pull-right footer-images"></a>
 	   </div>
-   </nav>  
-  
+   </nav>
+
 </html>
