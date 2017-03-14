@@ -600,7 +600,7 @@ var retrieveSlackInfo = function(slack_info){
       "slackToken": slackInfo.access_token,
       "slackChannel": slackInfo.incoming_webhook.channel,
       "slackURL": slackInfo.incoming_webhook.url,
-    }
+    } 
 };
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
