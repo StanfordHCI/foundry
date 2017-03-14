@@ -533,13 +533,10 @@ var postToSlack = function(event, update) {
     var title = event['title'];
     var user = chat_name;
     var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit';
-    //var teamUrl = 'http://foundry-app.herokuapp.com/flash_teams/'+flash_team_id+'/';
 
-    // HACK HACK HACK for summer deployment.
-    //Eventually teams need to have a place they can store the private URLs
-    var channel = flashTeamsJSON["slackChannel"];
+    var channel = flashTeamsJSON["slackInfo"]["slackChannel"];
     var notification_group = "Update";
-    var private_slack_url = flashTeamsJSON["slackURL"];
+    var private_slack_url = flashTeamsJSON["slackInfo"]["slackURL"];
 
     var defaultMsg = user + ' has ' + update + ' *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.>';
 

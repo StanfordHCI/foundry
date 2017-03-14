@@ -596,9 +596,11 @@ var loadData = function(){
 
 var retrieveSlackInfo = function(slack_info){
     slackInfo = gon.slack_info;
-    flashTeamsJSON["slackToken"] = slackInfo.access_token;
-    flashTeamsJSON["slackChannel"] = slackInfo.incoming_webhook.channel;
-    flashTeamsJSON["slackURL"] = slackInfo.incoming_webhook.url;
+    flashTeamsJSON["slackInfo"] = {
+      "slackToken": slackInfo.access_token,
+      "slackChannel": slackInfo.incoming_webhook.channel,
+      "slackURL": slackInfo.incoming_webhook.url,
+    }
 };
 
 // user must call this startTeam(true, )
