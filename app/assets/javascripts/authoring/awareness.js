@@ -325,6 +325,7 @@ function renderFlashTeamsJSON(data, firstTime) {
             $("#tourBtn").css('display','none');
             $("#flashTeamStartBtn").css('display','none');
             if(inReviewMode()){
+                in_progress = true; // to disable editing the events
                 $("#mergePullRequestBtn").css('display', '');
             } else {
                 $("#submitPullRequestBtn").css('display', '');

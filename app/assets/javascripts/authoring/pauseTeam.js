@@ -1,6 +1,7 @@
 $("#flashTeamBranchBtn").click(function(){
     console.log("SAVING ancestor_json:");
     console.log(flashTeamsJSON);
+    var flash_team_id = $("#flash_team_id").val();
     $.ajax({
         url: '/pull_requests',
         type: 'post',
@@ -9,7 +10,6 @@ $("#flashTeamBranchBtn").click(function(){
             console.log("just created new pull request:");
             console.log(data);
             var pr_id = data.id;
-            var flash_team_id = $("#flash_team_id").val();
             $.ajax({
                 url: '/flash_teams/' + flash_team_id + '/branch',
                 type: 'post', // because not idempotent
