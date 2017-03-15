@@ -174,9 +174,6 @@ end
 
   session.delete(:return_to)
 	session[:return_to] ||= request.original_url
-
-  puts "slack token in flash teams controller"
-  puts flash[:slack_info]
   gon.slack_info = flash[:slack_info]
 
   if !params.has_key?("uniq") #if in author view
