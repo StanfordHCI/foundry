@@ -31,21 +31,19 @@
      
      <% else %> <!-- else only show the start foundry tour button --> 
 	     <div class="span2 ft-buttons" id="ft-buttons-right" style="width:auto;position:absolute;right:6px;top:6px;">
-	       <input type="button" class="btn btn-default" id="vcBtn" value="Join Video Call" style="display: ''" onclick="createVideoConf('<%=@flash_team.name + "_" + @flash_team.id.to_s%>');"/> 
 	       <input type="button" class="link" id="expertTourBtn" value="Start Foundry Worker Tour"/>
-	       <input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
 	     
-	       <% if @member_type == 'pc' || @member_type == 'client' %>
-		   		<input type="button" class="btn btn-info" id="workerEditTeamBtn" value="Request Change"  style="display: none"/>
-				<% if ENV['PULL_REQUESTS'] == 'enabled' %>
+
+	       <%  if @member_type == 'pc' || @member_type == 'client' || @member_type == 'worker' %>
+				       <% if ENV['PULL_REQUESTS'] == 'enabled' %>
                    <input type="button" class="bluelink" id="flashTeamBranchBtn" value="Edit" target="_blank" style="display: none"/>
                    <input type="button" class="bluelink" id="submitPullRequestBtn" value="Submit Pull Request" style="display: none"/>
                    <input type="button" class="bluelink" id="mergePullRequestBtn" value="Approve and Merge" style="display: none"/>
                <% else %>
                    <input type="button" class="bluelink" id="flashTeamPauseBtn" value="Edit" style="display: none"/>
                <% end %>
-				<input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
-   		<% end %>
+				      <input type="button" class="btn btn-primary" id="flashTeamResumeBtn" value="Save" style="display: none"/>
+   		     <% end %>
 
 
 	     </div> 

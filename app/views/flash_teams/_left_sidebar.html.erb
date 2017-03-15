@@ -26,22 +26,7 @@
       <div id="project-overview-container" class="sidebar-item" onclick="logSidebarClick('project-overview-container')" style="overflow-y:scroll;">
         <!-- Render project overview container --> 
         <%= render :partial => "project_overview" %> 
-      </div>
-    
-      <% unless author_runtime %>
-        
-        <!--Add a file picker for the user to start the upload process -->
-        <!--
-        <input type="file" id="filePicker" />
-        <input type="button" id="authorizeButton" style="display: none" value="Authorize" />
-        -->	
-        <div id="search-events-container" class="sidebar-item" onclick="logSidebarClick('search-events-container')">
-          <!-- render partial with event library --> 
-          <%= render :partial => "event_library" %>
-        </div>
-    
-      <% end %> <!-- end if in author runtime conditional --> 
-          
+      </div>          
     <% end %> <!-- end author view conditional -->
 
     <% if in_expert_view %>

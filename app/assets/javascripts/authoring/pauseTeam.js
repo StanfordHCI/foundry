@@ -176,25 +176,6 @@ $("#workerEditTeamBtn").click(function(){
     updateRequestChangeModal('');
 });
 
-$("#request-change-task-not-ready").click(function(){
-    logActivity("$('#request-change-task-not-ready').click(function()","Clicked 'Task is Not Ready to Start' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-
-    updateRequestChangeModal('taskNotReady');
-});
-
-$("#request-change-edit-task").click(function(){
-    logActivity("$('#request-change-edit-task').click(function()","Clicked 'I want to edit the task' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-
-    updateRequestChangeModal('taskEdit');
-});
-
-$("#request-change-more-time").click(function(){
-    logActivity("$('#request-change-more-time').click(function()","Clicked 'I need more time' link in sidebar", new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
-
-    updateRequestChangeModal('needMoreTime');
-});
-
-
 $("#requestEditSubmitBtn").click(function(){
 
     var selected = $('#request-edit-dropdown').val();
