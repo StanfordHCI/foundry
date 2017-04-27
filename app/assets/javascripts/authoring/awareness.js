@@ -48,6 +48,13 @@ $(document).ready(function(){
     colorBox();
     $("#flash_team_id").requestUpdates(true);
     $("#flash_team_id").getTeamInfo();
+
+    // start author tour for first visit of the author
+    // TODO: check if worker, then show worker tour
+    var first_visit_author = $("#first_visit_author").val();
+    if (first_visit_author == "true") {
+        authorTour();
+    }
 });
 
 // Start team after asking user for confirmation

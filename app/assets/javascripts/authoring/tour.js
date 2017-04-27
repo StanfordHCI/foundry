@@ -260,17 +260,19 @@ var authoringTour = new Tour({
   		onPrev: function (tour) {logActivity("authoringTour onPrev: function (tour)",'Clicked Previous on Foundry Authoring Tour- step' + authoringTour.getCurrentStep(), new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);},
 });
 
-
-//Start the tour on the click of the Tour Button, which only appears in author mode
-$("#tourBtn").click(function(){
-
+function authorTour(){
 	logActivity("$('#tourBtn').click(function()",'Started Foundry Authoring Tour', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
 	//Initialize the tour
 	authoringTour.init();
     authoringTour.start(true);
 
     //Always start tour at the first step, comment out to start at most recent
-    authoringTour.goTo(0); 
+    authoringTour.goTo(0);
+}
+
+//Start the tour on the click of the Tour Button, which only appears in author mode
+$("#tourBtn").click(function(){
+	authorTour();
 });
 
 
