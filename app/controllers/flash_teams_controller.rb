@@ -40,7 +40,6 @@ class FlashTeamsController < ApplicationController
     @flash_team.json = '{"title": "' + name + '","id": ' + id.to_s + ',"events": [],"members": [],"interactions": [], "author": "' + author + '"}'
 
     if @flash_team.save
-      #redirect_to @flash_team
       redirect_to edit_flash_team_path(id), flash: { "first_visit": true }
     else
       render 'new'
