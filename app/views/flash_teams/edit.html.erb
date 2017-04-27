@@ -9,6 +9,7 @@
 <% if @in_review_mode %>
   <input type="hidden" id="parent_team_id" value="<%= @parent_team_id %>"/>
 <% end %>
+<input type="hidden" id="first_visit_author" value="<%= @first_visit_author %>"/>
 
 <%= tag :meta, :name=> 'events_json', :content=> @events_json %>
 

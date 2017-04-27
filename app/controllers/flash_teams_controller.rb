@@ -41,7 +41,7 @@ class FlashTeamsController < ApplicationController
 
     if @flash_team.save
       #redirect_to @flash_team
-      redirect_to edit_flash_team_path(id)
+      redirect_to edit_flash_team_path(id), flash: { "first_visit": true }
     else
       render 'new'
     end
@@ -170,12 +170,14 @@ rescue_from ActiveRecord::RecordNotFound do
   render 'member_doesnt_exist'   # or e.g. redirect_to :action => :index
 end
  
-  def edit
-  
+def edit
   session.delete(:return_to)
 	session[:return_to] ||= request.original_url
 	  
   if !params.has_key?("uniq") #if in author view
+    @in_expert_view = false
+    @in_author_view = true
+
     if session[:user_id].nil? 
        if !session[:uniq].nil?
         redirect_to :controller => 'flash_teams', :action => 'edit', :id => params[:id], :uniq => session[:uniq] and return
@@ -192,98 +194,89 @@ end
 				flash[:notice] = 'You cannot access this flash team.' 
 				redirect_to(flash_teams_path) and return 
 			end
-		end
-			
-  	else #else it is in worker view 
-    	@flash_team = FlashTeam.find(params[:id])
-      session[:uniq] = params[:uniq]
-    end 
+		end		
+  else #else it is in expert view (i.e. has the uniq parameter)
+    @in_expert_view = true
+    @in_author_view = false
+
+    @flash_team = FlashTeam.find(params[:id])
+    session[:uniq] = params[:uniq]
+  end 
     
-	#note: member info is stored in status json in flash_teams_json
-		
-    #customize user views
-    status = @flash_team.status 
-    if status == nil
+  #customize user views
+  status = @flash_team.status 
+  if status == nil
+    @author_runtime=false
+  else
+    json_status= JSON.parse(status)
+    if json_status["flash_team_in_progress"] == nil
       @author_runtime=false
     else
-      json_status= JSON.parse(status)
-      if json_status["flash_team_in_progress"] == nil
-        @author_runtime=false
-      else
-        @author_runtime=json_status["flash_team_in_progress"]
-      end
-
-      @pr_id = -1
-      if json_status["flash_teams_json"].key?("pr_id")
-        @pr_id = json_status["flash_teams_json"]["pr_id"]
-        puts @pr_id
-      end
-
-      @in_review_mode = false
-      if request.query_parameters["review"] == "true"
-        @in_review_mode = true
-        puts @in_review_mode
-        @parent_team_id = json_status["flash_teams_json"]["parent_team_id"]
-      end
-
-      @is_branch = false
-      if json_status["flash_teams_json"].key?("team_type")
-        if json_status["flash_teams_json"]["team_type"] == "branch"
-          @is_branch = true
-        end
-      end
+      @author_runtime=json_status["flash_team_in_progress"]
     end
 
-    if params.has_key?("uniq")
-     @in_expert_view = true
-     @in_author_view = false
+    @pr_id = -1
+    if json_status["flash_teams_json"].key?("pr_id")
+      @pr_id = json_status["flash_teams_json"]["pr_id"]
+      puts @pr_id
+    end
 
-     uniq = params[:uniq]
-    
-     Member.find_by! uniq: uniq
-     #if !(Member.exist(:uniq => uniq))  #role has been reinvited and doesn't exist anymore
-     #   render 'member_doesnt_exist'
-     #end 
+    @in_review_mode = false
+    if request.query_parameters["review"] == "true"
+      @in_review_mode = true
+      puts @in_review_mode
+      @parent_team_id = json_status["flash_teams_json"]["parent_team_id"]
+    end
 
-     member = Member.where(:uniq => uniq)[0]
-     @user_name = member.name
-     
-          
-     
+    @is_branch = false
+    if json_status["flash_teams_json"].key?("team_type")
+      if json_status["flash_teams_json"]["team_type"] == "branch"
+        @is_branch = true
+      end
+    end
+  end
+
+  puts "~~~~~~~~~~~~~~~~~~~~~FLASH FIRST VISIT: "
+  puts flash[:first_visit]
+
+  @first_visit_author = false
+  if @in_expert_view
+    uniq = params[:uniq]
+  
+    Member.find_by! uniq: uniq
+
+    member = Member.where(:uniq => uniq)[0]
+    @user_name = member.name
+
     flash_team_members = json_status['flash_teams_json']['members']
-        
+      
     flash_team_members.each do |member|
-    	if(member['uniq'] == uniq)
-    		@member_type = member['type']
-    		@member_role = member['role']
-    	end
+  	  if(member['uniq'] == uniq)
+  		  @member_type = member['type']
+  		  @member_role = member['role']
+  	  end
     end
     
     #create session to use for hiring panel
-     #session[:member] = member.uniq
-     session.delete(:member)
-	 session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
-
-
-
-    else
-     @in_expert_view = false
-     @in_author_view = true
-    end
-    #end
-
-    flash_teams = FlashTeam.all
-    @events_array = []
-    flash_teams.each do |flash_team|
-      next if flash_team.json.blank?
-      flash_team_json = JSON.parse(flash_team.json)
-      flash_team_events = flash_team_json["events"]
-      flash_team_events.each do |flash_team_event|
-        @events_array << flash_team_event
-      end
-    end
-    @events_json = @events_array.to_json
+    session.delete(:member)
+	  session[:member] ||= {:mem_uniq => member['uniq'], :mem_type => @member_type}
+  elsif @in_author_view and flash[:first_visit]
+    @first_visit_author = true
   end
+
+  flash_teams = FlashTeam.all
+  @events_array = []
+  flash_teams.each do |flash_team|
+    next if flash_team.json.blank?
+    flash_team_json = JSON.parse(flash_team.json)
+    flash_team_events = flash_team_json["events"]
+    flash_team_events.each do |flash_team_event|
+      @events_array << flash_team_event
+    end
+  end
+  @events_json = @events_array.to_json
+
+end # function end
 
   def rename
     # update flash team name in rails model
