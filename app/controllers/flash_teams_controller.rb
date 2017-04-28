@@ -168,7 +168,7 @@ rescue_from ActiveRecord::RecordNotFound do
   #flash[:notice] = 'The object you tried to access does not exist'
   render 'member_doesnt_exist'   # or e.g. redirect_to :action => :index
 end
- 
+
 def edit
   session.delete(:return_to)
 	session[:return_to] ||= request.original_url
@@ -234,9 +234,6 @@ def edit
       end
     end
   end
-
-  puts "~~~~~~~~~~~~~~~~~~~~~FLASH FIRST VISIT: "
-  puts flash[:first_visit]
 
   @first_visit_author = false
   if @in_expert_view
@@ -667,12 +664,11 @@ end # function end
 
  		@panels = Worker.distinct.pluck(:panel)
 
- 		@fw = Worker.all.pluck(:email)   
+ 		@fw = Worker.all.pluck(:email)
    	    
    	# Extract data from the JSON
     flash_team_status = JSON.parse(@flash_team.status)
     @flash_team_json = flash_team_status['flash_teams_json']
-    #@flash_team_event = flash_team_status['flash_teams_json']['events'][@id_task]
     @flash_team_event = @flash_team_json['events'][@id_task]
     
     minutes = @flash_team_event['duration']
