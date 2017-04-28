@@ -1,6 +1,4 @@
 $("#hireBtn").click(function(){
-    console.log("CLICKED HIRE BUTTON");
-
     var flash_team_id = $("#flash_team_id").val();
 
     var html = "";
