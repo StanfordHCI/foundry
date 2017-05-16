@@ -26,9 +26,8 @@ function eventMousedown(task2idNum) {
        var modal_body = '<p id="task-text"></p>' +
        '<p><span id="task-edit-link"></span></p>';
 
-       var modal_footer =  '<button href=' + eventObj['gdrive'][1] +' class="bluelink" id="gdrive-footer-btn" target="_blank" style="float: left" onclick="logTaskOverviewGDriveBtnClick(' + task_id  + ')">Deliverables</button>' + 
+       var modal_footer =  '<button class="bluelink" id="gdrive-footer-btn" style="float: left" onclick="gDriveBtnClick(' + task_id  + ',\'' + eventObj['gdrive'][1] + '\')">Deliverables</button>' + 
        '<button class="greenlink" id="hire-task" style="float :left " onclick="hireForm('+task2idNum+')">Hire</button>' +
-       //'<button class="btn " id="duplicate-task" style="float :left " onclick="duplicateEvent('+task2idNum+', true)">Duplicate</button>' +
        createOptionsButton(task2idNum) + 
        '<button class="greenlink" id="start-end-task" style="float :right " onclick="confirm_show_docs('+task2idNum+')">Start</button>'+
        '<button class="bluelink" id="pause-resume-task" style="float :right " onclick="pauseTask('+task2idNum+')">Pause</button>'+
