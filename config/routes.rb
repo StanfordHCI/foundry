@@ -72,6 +72,7 @@ Foundry::Application.routes.draw do
     member do
       delete :destroy
       get :get_status
+      get :get_original_status
       post :update_event
       post :update_status
       post :update_original_status

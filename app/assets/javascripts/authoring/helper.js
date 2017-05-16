@@ -3,8 +3,7 @@
  * 
  */
 
-//MAKE SURE THE JSON IS UPDATED IN ITS CURRENT VERSION EVERYWHERE
-var flashTeamsJSON = {
+var flashTeamsJSONTemplate = {
     "title" : document.getElementById("ft-name").innerHTML,
     "id" : flash_team_id,
     "events": [],        //{"title", "id", "startTime", "duration", "notes", "members": [], "dri", "yPosition", inputs”:[], “outputs”:[]}
@@ -12,9 +11,10 @@ var flashTeamsJSON = {
     "folders": [],
     "interactions" : [],  //{"event1", "event2", "type", "description", "id"}
     "author": document.getElementById("ft-author-name").innerHTML//,
-   // "original_status": "original status",
-    //"original_json": "original json"
 };
+
+//MAKE SURE THE JSON IS UPDATED IN ITS CURRENT VERSION EVERYWHERE
+var flashTeamsJSON = $.extend(true, {}, flashTeamsJSONTemplate);
 
 function pressEnterKeyToSubmit(inputId, buttonId) {
 	$(inputId).keydown(function(event){

@@ -58,14 +58,6 @@ function handleAuthClick(event) {
 var googleDriveLink = function(){
     var gFolderBtn= document.getElementById("gFolder");
 
-    // if(in_progress){
-    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', true);
-    // }
-    // else{
-    //   $("#projectStatusText").toggleClass('projectStatusText-inactive', false);
-    // }
-
-
     if(!in_progress || !flashTeamsJSON.folder){
       if (current_user == "Author" && flashTeamsJSON["startTime"]){
         $("#authorize-button").html('Google Drive™ folder');
@@ -85,23 +77,16 @@ var googleDriveLink = function(){
       }else{
         $("#gFolder").css('display', 'none');
       }
-
-
-      
     }
 
     gFolderBtn.onclick=function(){
-        //console.log("is clicked");
-        if((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
+        if ((in_progress && flashTeamsJSON.folder) || (current_user == "Author" && flashTeamsJSON["startTime"])){
           logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON); 
           window.open(flashTeamsJSON.folder[1]);
-          
-
-        }else{
+        } else {
           logActivity("gFolderBtn.onclick=function()",'Clicked Google Drive Project Folder - Error Alert Triggered', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
           alert("Team hasn't started or folder hasn't been created yet.");
         }
-        
     }
 };
 
@@ -110,7 +95,6 @@ function createProjectFolder(){
   
   //if team has been ended in the past (e.g., the google drive folder already exists), don't create a new one
   if(!in_progress && flashTeamsJSON["folder"] != undefined && flashTeamsJSON["startTime"] != undefined){
-    //console.log('project folder already exists');
     return;
   }
 
@@ -127,10 +111,7 @@ function createProjectFolder(){
       });
       
       req.execute(function(resp) { 
-        //console.log("resp: " + resp);
-         //console.log("resp.id: " + resp.id);
          if(resp.id == undefined){
-           //console.log("resp.id is undefined: " + resp);
            return;
          }
 
@@ -139,18 +120,15 @@ function createProjectFolder(){
         insertPermission(folderArray[0], "me", "anyone", "writer");
         flashTeamsJSON.folder = folderArray;
         
-    updateStatus(); // don't put true or false here
+        updateStatus(); // don't put true or false here
         
-    addAllTaskFolders(flashTeamsJSON.folder[0])
+        addAllTaskFolders(flashTeamsJSON.folder[0])
 
-    googleDriveLink();
+        googleDriveLink();
 
-    logActivity("createProjectFolder()",'Created Project and Task Folders', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
+        logActivity("createProjectFolder()",'Created Project and Task Folders', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     });
-    
-    
-  }); 
-  
+  });
 }
 
 //Creates a subfolder for a particular task
@@ -176,12 +154,9 @@ function createTaskFolder(eventName, JSONId, parent_folder){
         insertPermission(folderArray[0], "me", "anyone", "writer");
         folderIds.push(folderArray);
 
-    updateStatus(); // don't put true or false here
-    });
-    
-    
+        updateStatus(); // don't put true or false here
+      });
   }); //end gapi.client.load
-  
 }
 
 //Adds all the task folders when the folder has started
