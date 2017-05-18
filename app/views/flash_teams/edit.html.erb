@@ -15,14 +15,14 @@
 
 	<!--Main Layout-->
 	<div class="container-fluid" style="min-width: 1300px;">
-		
+
 	<!-- video chat modal shows up after clicking on the video chat button -->
     <%= render :partial => "videochat_modal" %>
-       
+
     <!-- task modal shows up after clicking on a task -->
     <%= render :partial => "task_modal" %>
 
-    <!-- documentation modal shows up the first time the user logs in --> 
+    <!-- documentation modal shows up the first time the user logs in -->
     <%= render :partial => "doc_modal" %>
 
     <!-- hire modal shows up on clicking 'Hire Workers' above the timeline --> 
@@ -34,8 +34,8 @@
 
     <!-- request changes to team modal shows up after clicking on 'request a change' button -->
     <%= render :partial => "request_edit_worker_modal" %>
-  
-	
+
+
 	<!-- render header -->
 	<%= render :partial => "header", :locals => {:in_author_view => @in_author_view} %>
 	<!-- begin left sidebar -->
@@ -45,66 +45,67 @@
                            :in_expert_view => @in_expert_view,
                            :flash_team => @flash_team} %>
   <!-- end of left sidebar -->
-  	
+
 	<% if @in_author_view %>
 
-    <!-- render partial with confirm action alert --> 
+    <!-- render partial with confirm action alert -->
 		<%= render :partial => "confirm_action" %>
-     
-	    
+
+
 	    <div class="row-fluid" style="margin-top:64px">
 
 		<div style="margin-left:250px;" class="span9"> <!--Body Content-->
 		  <div id="timeline-wrapper">
 	    	<div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
-	          <!-- render partial with timeline --> 
+	          <!-- render partial with timeline -->
 		      <%= render :partial => "timeline" %>
 	        </div>
 	      </div>
         </div> <!-- end of body (e.g., class="span9") -->
-	
+
 	</div> <!-- end of div class="row-fluid" -->
-   
-<% end %> <!--end if in author view conditional--> 
-       
+
+<% end %> <!--end if in author view conditional-->
+
 <% if  @in_expert_view %>
-	     
+
 	     <!--Add the start/end button if in team lead view-->
 	     <% if @member_type == "pc" %>
 		     <div class="span7 offset1">
 				 <h4 class="text-center">FOUNDRY</h4>
-		     </div> 
+		     </div>
 		<% else %>
 			<div class="span10">
 				 <h4 class="text-center">FOUNDRY</h4>
-		     </div> 
+		     </div>
 	     <% end %>
-		
+
      </div>
 
 		<script> var flash_team_name="<%= @flash_team.name %>";</script>
-    
+
 		<div class="row-fluid">
-		
+
 		<!--sidebar-->
 
         <div class="span9"> <!--Body Content-->
           <div id="timeline-wrapper">
             <div id="timeline-container" style="overflow-x:scroll; overflow-y:scroll;">
-              <!-- render partial with timeline --> 
+              <!-- render partial with timeline -->
               <%= render :partial => "timeline" %>
               <%= render :partial => "confirm_action" %>
             </div>
           </div>
-		</div> <!-- end of body (e.g., class="span9") -->    
-		
+		</div> <!-- end of body (e.g., class="span9") -->
+
 	</div><!-- end of div class="row-fluid" -->
 
-<% end %> <!--end if in expert view conditional--> 
+<% end %> <!--end if in expert view conditional-->
 
 
 <div id="titleLength" style="visibility: hidden; "><span></span></div>
 </div> <!-- end of div class="container-fluid" -->
+<%= include_gon %>
 
 <%= javascript_include_tag "application" %>
 

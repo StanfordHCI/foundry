@@ -601,9 +601,18 @@ var loadData = function(){
     drawInteractions(); //START HERE, INT DEBUG
     googleDriveLink();
 };
-
+var retrieveSlackInfo = function(slack_info){
+    slackInfo = gon.slack_info;
+    flashTeamsJSON["slackInfo"] = {
+      "slackToken": slackInfo.access_token,
+      "slackChannel": slackInfo.incoming_webhook.channel,
+      "slackURL": slackInfo.incoming_webhook.url,
+    }
+};
 // user must call this startTeam(true, )
 var startTeam = function(firstTime){
+    console.log('check1')
+    if (gon.slack_info != null) retrieveSlackInfo(gon.slack_info);
     if(!in_progress) {
         //flashTeamsJSON["original_json"] = JSON.parse(JSON.stringify(flashTeamsJSON));
         //flashTeamsJSON["original_status"] = JSON.parse(JSON.stringify(loadedStatus));
@@ -612,6 +621,7 @@ var startTeam = function(firstTime){
         //updateStatus();
         //checkProjectFolder();
         updateOriginalStatus();
+    console.log('check2')
 		recordStartTime();
 		//checkProjectFolder();
         //addAllFolders();
@@ -626,6 +636,7 @@ var startTeam = function(firstTime){
 
         //added next line to disable the ticker
         updateStatus(true);
+        console.log('check3')
 
         logActivity("var startTeam = function(firstTime) - After Update Status",'Start Team - After Update Status', new Date().getTime(), current_user, chat_name, team_id, flashTeamsJSON);
     }

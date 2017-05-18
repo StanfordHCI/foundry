@@ -36,6 +36,14 @@ input.inputbox {
     padding: 50px 100px;
     letter-spacing: 5px;
 }
+.text_msg {
+    margin: 15 auto;
+    text-align: center;
+    color: black;
+    font-weight: 100;
+    font-size: 18px;
+    padding: 50px 100px;
+}
 .bottom_msg {
     margin: 0 auto;
     text-align: center;

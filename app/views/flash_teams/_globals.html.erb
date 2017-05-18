@@ -9,7 +9,7 @@ var scopes = [
     'https://www.googleapis.com/auth/drive.install'];
 
 var apiKey = '<%=ENV['GDRIVE_DEV_KEY']%>';
-    
+
 var firebaseURL = '<%=ENV['FIREBASE_URL']%>';
 
 var task_timer_interval = '<%=ENV['TASK_TIMER_INTERVAL']%>';
@@ -25,5 +25,12 @@ var slackPrivateUrls = {
 	'accenture': '<%=ENV['SLACK_URL_ACCENTURE']%>',
 	'truestory': '<%=ENV['SLACK_URL_TRUESTORY']%>'
 }
+
+var slackClientID = '<%=ENV['SLACK_APP_CLIENT_ID']%>'
+var slackClientSecret = '<%=ENV['SLACK_APP_CLIENT_SECRET']%>'
+
+var slackToken = ''
+var slackChannel = ''
+var slackURL = ''
 
 </script>
