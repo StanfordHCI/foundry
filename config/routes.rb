@@ -121,6 +121,7 @@ get '/flash_teams/:id/:event_id/listQueueForm' => 'flash_teams#listQueueForm'
       get :invited
       get :confirm_email
       post :register
+      get :invited_by_hiring_queue
     end
   end
 

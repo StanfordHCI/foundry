@@ -37,6 +37,11 @@ class UserMailer < ActionMailer::Base
   	  mail(:to => email, :subject => title+' is finished')
   end
 
+  def send_team_link_email(name, email_address, url)
+    @url = url
+    @name = name
+    mail(:to => email_address, :subject => 'Link to your foundry team')
+  end
 
   def send_confirmation_email(name, email_address, url)
   	@url = url
