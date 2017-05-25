@@ -44,6 +44,34 @@ class MembersController < ApplicationController
     end
   end
 
+  def invited_by_hiring_queue
+    email = params[:email]
+    uniq = params[:uniq]
+    id = params[:id_team]
+    if not uniq
+      render 'error'
+    end
+
+    # register member, with no confirmation email sent out
+    # since it is assumed the current user entered the system from their email to begin with
+    member, ok = register_helper(id, "new member", email, uniq, false)
+    if !ok
+      puts "failed to register new member"
+      return
+    end
+
+    member.email_confirmed = true
+    member.confirmationTime = Time.now
+    if member.save
+      # send email with link to team
+      url = url_for :controller => 'flash_teams', :action => 'edit', :id => id, :uniq => uniq
+      UserMailer.send_team_link_email(member.name, email, url).deliver
+      
+      # redirect user to team directly
+      login(uniq)
+    end
+  end
+
   def invited
   	@uniq = params[:uniq]
   	@id = params[:id]
@@ -87,6 +115,9 @@ class MembersController < ApplicationController
     end
 
     if member.email_confirmed then 
+      url = url_for :controller => 'flash_teams', :action => 'edit', :id => id, :uniq => uniq
+      UserMailer.send_team_link_email(member.name, email, url).deliver
+      
       login(uniq)
     end
   end
@@ -101,36 +132,37 @@ class MembersController < ApplicationController
     (member != nil and member.email_confirmed)
   end
 
+  def register_helper id, name, email, uniq, send_email
+    emails = Landing.where(:id_team=>id, :email=>email, :uniq=>uniq, :status=>'s')
+    emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
+    
+    if emails1.empty? or !emails.empty?
+      confirm_email_uniq = SecureRandom.uuid
+      # store email, uniq and confirm_email_uniq in db
+      member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
+      
+      if send_email # send confirmation email
+        url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
+        UserMailer.send_confirmation_email(name, email, url).deliver
+      end
+      
+      return member, true
+    end
+    
+    return nil, false
+  end
+
   def register
     id = params[:id]
     name = params[:name]
     email = params[:email]
     uniq = params[:uniq]
     @uniq = uniq
-    emails = Array.new
-    emails1 = Array.new
-    emails = Landing.where(:id_team=>id, :email=>email, :uniq=>uniq, :status=>'s')
-    emails1 = Landing.where(:id_team=>id, :uniq=>uniq, :status=>'s')
-    if emails1.empty? 
-      confirm_email_uniq = SecureRandom.uuid
-      # store email, uniq and confirm_email_uniq in db
-      member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
-      # send confirmation email
-      url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
-      UserMailer.send_confirmation_email(name, email, url).deliver
-    else
-      if emails.empty? 
-        flash.alert="The email address does not match our records. Please check and retry."
-        redirect_to :back
-      else
-        confirm_email_uniq = SecureRandom.uuid
-        # store email, uniq and confirm_email_uniq in db
-        member = Member.create(:name => name, :email => email, :uniq => uniq, :confirm_email_uniq => confirm_email_uniq)
-
-        # send confirmation email
-        url = url_for :action => 'confirm_email', :id => params[:id], :u => uniq, :cu => confirm_email_uniq, :email => email
-        UserMailer.send_confirmation_email(name, email, url).deliver
-      end
+    
+    member, ok = register_helper(id, name, email, uniq, true)
+    if !ok
+      flash.alert = "The email address does not match our records. Please check and retry."
+      redirect_to :back
     end
   end
 end
