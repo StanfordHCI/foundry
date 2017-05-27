@@ -39,14 +39,13 @@ function submitPullRequest(success){
         success: function(data){
             var flash_team_id = $("#flash_team_id").val();
             var user = chat_name;
-
-            var channel = "#foundry-notifications";
-            var notification_group = "@everyone";
-            var private_slack_url = slackPrivateUrls['stanfordhcigfx'];
-
             var teamUrl = defaultUrl + '/flash_teams/'+flash_team_id+'/edit?review=true';
-            var slackMsg = user + ' has submitted a pull request on Foundry. <' + teamUrl + '|Review the pull request on Foundry.>';
 
+            var channel = flashTeamsJSON["slackInfo"]["slackChannel"];
+            var notification_group = "Update";
+            var private_slack_url = flashTeamsJSON["slackInfo"]["slackURL"];
+
+            var slackMsg = user + ' has submitted a pull request on Foundry. <' + teamUrl + '|Review the pull request on Foundry.>';
             var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
             $.post(private_slack_url, payload).done(success);
         },
