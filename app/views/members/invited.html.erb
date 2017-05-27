@@ -11,7 +11,8 @@
 
 <div class="center">
 	<%= form_tag("/members/#{@id}/register", method: "post") do %>
-	   <table class="inputs">
+	   <%= hidden_field_tag 'uniq', @uniq %>
+       <table class="inputs">
 	   		<tr>
 	   			<td>
 	   				<%= text_field_tag :name, "", class: 'inputbox', placeholder: 'Full Name (e.g. John Smith)' %> <br />
@@ -29,12 +30,4 @@
 	        </tr>
 	   </table>
 	<% end %>
-</div>
-<div class="bottom_msg">
-  <p>
-    <br />
-    <i> * If you received this task via the instant hiring system, please use the same email address that you used to
-    <br />
-    register for the panels on Foundry (e.g., the email address where you received the task available email)</i>
-  </p>
 </div>

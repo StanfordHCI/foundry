@@ -56,8 +56,8 @@ class LandingsController < ApplicationController
 
     @task_members.each do |task_member|
       if task_member['role'] == @task_member
-        @invitationLink = task_member['invitation_link']
         @uniq = task_member['uniq']
+        @invitationLink = url_for :controller => 'members', :action => 'invited_by_hiring_queue', :id_team => @id_team, :uniq => @uniq, :email => @email
         break
       end
     end

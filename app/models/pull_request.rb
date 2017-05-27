@@ -6,12 +6,4 @@ class PullRequest < ActiveRecord::Base
     validates :status, presence: true
     validates :author_id, presence: true
     validates :timestamp, presence: true
-
-    enum status: {
-        created: 0,
-        conflicts: 1,
-        merged: 2,
-        rejected: 3,
-        canceled: 4
-    }
 end
