@@ -555,7 +555,7 @@ var postToSlack = function(event, update) {
         //slackMsg = notification_group + ': ' + user + ' has resumed *' + title + '* on Foundry. <' + teamUrl + '|See the task description on Foundry.> Issue a hearty \'Welcome back\'!';
         slackMsg = defaultMsg +  ' Issue a hearty \'Welcome back\'!';
     } else if (update == "requested a change") {
-        slackMsg = defaultMsg + ' Pinging @mkim17 for notification.';
+        slackMsg = defaultMsg + ' Pinging @junwonpk and @jay for notification.';
     }
 
     var payload = 'payload={\"channel\": \"' + channel + '\", \"username\": \"Foundry\", \"text\": \"' + slackMsg + '\", \"icon_emoji\": \":shipit:\", \"link_names\": 1}';
